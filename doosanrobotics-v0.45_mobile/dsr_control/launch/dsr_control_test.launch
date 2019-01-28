@@ -1,0 +1,33 @@
+<launch>
+    <env name="ROSCONSOLE_CONFIG_FILE"  value="$(find dsr_control)/config/console.conf"/>
+    <!-- -->
+    <rosparam file="$(find dsr_control)/config/dsr_control.yaml" command="load"/>
+    <!-- -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="/dsr" args="joint_position_controller joint_state_controller" />
+    <!-- -->
+    <node pkg="dsr_control" type="dsr_control_node" name="dsr" respawn="false" output="screen" >
+        <rosparam>
+            rate: 30
+            <!-- ipaddress: 192.168.0.232 -->
+	        ipaddress: 192.168.137.100
+            standby: 5000
+        </rosparam>
+    </node>
+
+    <!-- -->
+    <param name="robot_description" textfile="$(find dsr_description)/urdf/m1013.urdf" />
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          output="screen" respawn="false" >
+        <remap from="/joint_states" to="/dsr/joint_states" />
+    </node>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="TRUE"/>
+        <remap from="/joint_states" to="/dsr/joint_states" />
+    </node>
+
+    <node pkg="rqt_controller_manager" type="rqt_controller_manager" name="rqt_controller_manager" />
+</launch>
+
+

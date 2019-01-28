@@ -1,0 +1,9 @@
+# move_periodic  
+float64[6] amp              #   
+float64[6] periodic         #   
+float64    acc              # Acceleration 
+int8       repeat           #  
+int8       ref  #= 1        # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1 
+int8       syncType #=0      # SYNC = 0, ASYNC = 1
+---
+bool success
