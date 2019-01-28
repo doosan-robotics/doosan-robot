@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="rviz" default="true"/>
+  <arg name="world" default="empty.world"/>
+
+  <!-- Start Gazebo with an empty world. -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="$(arg gui)"/>
+    <arg name="world_name"   value="$(find dsr_launcher)/worlds/$(arg world)"/>
+  </include>
+
+  <!-- Spawn the arms. -->
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr01"/>
+    <arg name="model"         value="m1013"/>
+    <arg name="x"             value="2"/>
+    <arg name="y"             value="-4"/>
+    <arg name="yaw"           value="0.7"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr02"/>
+    <arg name="model"         value="m1509"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="-2"/>
+    <arg name="yaw"           value="1.57"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr03"/>
+    <arg name="model"         value="m0617"/>
+    <arg name="x"             value="0"/>
+    <arg name="y"             value="3"/>
+    <arg name="yaw"           value="2.5"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr04"/>
+    <arg name="model"         value="m0609"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="0.245"/>
+    <arg name="yaw"           value="1.5"/>
+  </include>
+
+  <!-- View in RVIZ. -->
+  <group if="$(arg rviz)">
+    <node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/>
+  </group>
+</launch>

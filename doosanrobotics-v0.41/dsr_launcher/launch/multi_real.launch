@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="rviz"  default="true"/>
+  <arg name="mode"  default="real"/>
+
+  <!-- Spawn the arms. -->
+  <include file="$(find dsr_bringup)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr01"/>
+    <arg name="model"         value="m1013"/>
+    <arg name="host"          value="192.168.0.101"/>
+    <arg name="mode"          value="$(arg mode)"/>
+    <arg name="x"             value="2"/>
+    <arg name="y"             value="-4"/>
+    <arg name="yaw"           value="0.7"/>
+  </include>
+  <include file="$(find dsr_bringup)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr02"/>
+    <arg name="model"         value="m1509"/>
+    <arg name="host"          value="192.168.137.34"/>
+    <arg name="mode"          value="$(arg mode)"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="-2"/>
+    <arg name="yaw"           value="1.57"/>
+  </include>
+  <include file="$(find dsr_bringup)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr03"/>
+    <arg name="model"         value="m0617"/>
+    <arg name="host"          value="192.168.137.25"/>
+    <arg name="mode"          value="$(arg mode)"/>
+    <arg name="x"             value="0"/>
+    <arg name="y"             value="3"/>
+    <arg name="yaw"           value="2.5"/>
+  </include>
+  <include file="$(find dsr_bringup)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr04"/>
+    <arg name="model"         value="m0609"/>
+    <arg name="host"          value="192.168.137.12"/>
+    <arg name="mode"          value="$(arg mode)"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="0.245"/>
+    <arg name="yaw"           value="1.5"/>
+  </include>
+
+  <!-- View in RVIZ. -->
+  <group if="$(arg rviz)">
+    <node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/>
+  </group>
+</launch>

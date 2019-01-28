@@ -1,0 +1,13 @@
+# move_spline_task  
+###float64[100][6] pos            # target
+std_msgs/Float64MultiArray[] pos  # target 
+int8            posCnt            # target cnt 
+float64[2]      vel               # Velocity 
+float64[2]      acc               # Acceleration 
+float64         time #= 0.0       # Time [sec] 
+int8            mode #= 0         # MOVE_MODE_ABSOLUTE=0, MOVE_MODE_RELATIVE=1 
+int8            ref  #= 0         # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1 
+int8            opt  #= 0         # SPLINE_VELOCITY_OPTION_DEFAULT=0, SPLINE_VELOCITY_OPTION_CONST=1 
+int8            syncType #=0      # SYNC = 0, ASYNC = 1
+---
+bool success

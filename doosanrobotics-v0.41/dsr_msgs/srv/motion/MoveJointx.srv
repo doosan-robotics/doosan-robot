@@ -1,0 +1,13 @@
+# move_jointx  
+float64[6] pos              # target  
+int8       sol              # SolutionSpace : 0~7
+float64    vel              # Velocity 
+float64    acc              # Acceleration 
+float64    time #= 0.0       # Time [sec] 
+int8       mode #= 0         # MOVE_MODE_ABSOLUTE=0, MOVE_MODE_RELATIVE=1 
+int8       ref  #= 0         # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1 
+float64    radius #=0.0      # Radius under blending mode  
+int8       blendType #= 0    # BLENDING_SPEED_TYPE_DUPLICATE=0, BLENDING_SPEED_TYPE_OVERRIDE=1
+int8       syncType #=0      # SYNC = 0, ASYNC = 1
+---
+bool success

@@ -1,0 +1,80 @@
+﻿--- doosan_ros_ver0.07 ----------------------------------------------------------------------------------
+
+
+--- doosan_ros_ver0.08 ----------------------------------------------------------------------------------
+1. 빌드문제 해결 
+  - dsr_control 내 CMakeList.txt 수정 참조 요.
+
+2. dsr_example 내 cpp, py 분리 
+  - rosrun dsr_example_cpp dsr_servie_test
+  - rosrun dsr_example_py dsr_servie_test.py
+
+
+
+--- doosan_ros_ver0.09 ----------------------------------------------------------------------------------
+1. move stop 구현
+  - 토픽으로 처리 
+  - rosrun dsr_example_cpp dsr_servie_test 동작 중 
+     "Ctrl - c" ->    바로 정지 
+2. 로봇 상태 모니터링 데이터 토픽 처리 중    
+
+
+--- doosan_ros_ver0.10 ----------------------------------------------------------------------------------
+1. dsr_moveit_config 4가지 모델 적용   
+  - dsr_control/launch 디렉토리 아래 4개 모델에 대하여 launch 파일 생성 (default m1013)
+
+    roslaunch dsr_control dsr_moveit.launch
+    roslaunch dsr_control dsr_moveit.launch robot_model:=m0609
+    roslaunch dsr_control dsr_moveit.launch robot_model:=m0617
+    roslaunch dsr_control dsr_moveit.launch robot_model:=m1013
+    roslaunch dsr_control dsr_moveit.launch robot_model:=m1509
+
+2. dsr_description 동작 안되는 문제 해결 적용
+  - Launch 파일 내부에서 조건문 처리하여 dsr_description 실행 시 remap 안되도록 수정
+    .dsr_description mxxxx.launch 에 <arg name="remap" default="False"/> 둠  
+    .dsr_description 단독 실행할때는 remap을 안하고(default="False"), dsr_control dsr_control.launch로 
+     할때는 remap을 하도록 함.   
+          <include file="$(find dsr_description)/launch/m0609.launch">
+          <arg name="remap" value="True"/>
+
+    <dsr_description>
+    roslaunch dsr_description m0609.launch
+    roslaunch dsr_description m0617.launch
+    roslaunch dsr_description m1013.launch
+    roslaunch dsr_description m1509.launch
+
+
+  - dsr_control.launch 에 모델 인자 처리 추가 (default m1013)  
+    roslaunch dsr_control dsr_control.launch 
+    roslaunch dsr_control dsr_control.launch robot_model:=m0609
+    roslaunch dsr_control dsr_control.launch robot_model:=m0617
+    roslaunch dsr_control dsr_control.launch robot_model:=m1013
+    roslaunch dsr_control dsr_control.launch robot_model:=m1509
+
+--- doosan_ros_ver0.11A ----------------------------------------------------------------------------------
+1. dsr_description mxxxx.launch 수정 
+    - dsr_control launch 에서 실행 시, joint_state_publisher 를 띄우지 않도록 수정        
+2. dsr_msgs srv 카테고리 화 
+    - <기존>
+        . srv 만 존재 
+    - <변경>
+        . srv/motion, srv/tool, srv/tcp, srv/io, srv/modbus, srv/drl     
+
+--- doosan_ros_ver0.12B ----------------------------------------------------------------------------------
+1. dsr_control service 연결 작업 추가 
+2. DRHWInterface::trajectoryCallback() Drfl.MoveSJ 로 연결
+
+
+--- doosan_ros_ver0.16A ----------------------------------------------------------------------------------
+1. dsr_control/dsr_control.launch 
+   - arg 명 변경 : robot_model -> model
+   - arg추가 : mode ( virtual or real)
+2. dsr_hw_interface.cpp 
+   - mode arg추가 반영 
+   - DRHWInterface::write : 로봇 초기 위치로 가는 것 막음
+3. dsr_robot.cpp 
+   /* 사용자 node에서 수신 하도록 변경
+   void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
+4. dsr_example_cpp 예제 파일 정리 
+    CDsrRobot class 기반 예제 파일로 변경  
+ 
