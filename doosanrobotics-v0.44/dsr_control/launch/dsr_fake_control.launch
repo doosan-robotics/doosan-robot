@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="ns" default="dsr"/>
+    <rosparam command="load"
+            file="$(find dsr_control)/config/dsr_control.yaml"
+            ns="$(arg ns)"
+    />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+      args="dsr_joint_position_controller" ns="$(arg ns)">
+    </node>
+
+</launch>

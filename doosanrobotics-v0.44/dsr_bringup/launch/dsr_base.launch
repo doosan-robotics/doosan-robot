@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns"    default="dsr"/>
+  <arg name="model" default="m1030"/>
+  <arg name="host"  default="192.168.137.100"/>
+  <arg name="mode"  default="virtual"/>
+  <arg name="x"     default="0"/>
+  <arg name="y"     default="0"/>
+  <arg name="z"     default="0"/>
+  <arg name="roll"  default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw"   default="0"/>
+
+  <include file="$(find dsr_control)/launch/dsr_control.launch">
+    <arg name="ns"    value="$(arg ns)"/>
+    <arg name="model" value="$(arg model)"/>
+    <arg name="host"  value="$(arg host)"/>
+    <arg name="mode"  value="$(arg mode)"/>
+  </include>
+
+  <!-- Generate the model for gazebo and publish the robots joint states. -->
+  <include file="$(find dsr_description)/launch/dsr_description.launch">
+    <arg name="ns"    value="$(arg ns)"/>
+    <arg name="model" value="$(arg model)"/>
+  </include>
+
+  <!-- Usage: static_transform_publisher x y z yaw pitch roll frame_id child_frame_id  period (milliseconds) -->
+  <node pkg="tf" type="static_transform_publisher" name="static_base_tf" ns="$(arg ns)"
+        args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/world 100"/>
+
+
+  <group if="$(eval arg('mode') == 'virtual')">
+    <node name="spawn_create_model" pkg="gazebo_ros" type="spawn_model" ns="$(arg ns)"
+    args="-x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)
+    -urdf -param /$(arg ns)/robot_description -model $(arg ns)"/>
+  </group>
+
+</launch>

@@ -1,0 +1,62 @@
+<launch>
+    <env name="ROSCONSOLE_CONFIG_FILE"  value="$(find dsr_control)/config/console.conf"/>
+    <arg name="ns" default="dsr"/>
+    <arg name="model" default="m1013"/>
+    <arg name="host" default="192.168.137.100"/>
+    <arg name="mode" default="virtual"/>
+    <!-- -->
+    <rosparam file="$(find dsr_control)/config/dsr_control.yaml" command="load" ns="$(arg ns)"/>
+    <!-- -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="$(arg ns)" args="dsr_joint_trajectory_controller dsr_joint_publisher"/>
+    <!-- -->
+
+    <node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)" respawn="false" output="screen" >
+        <rosparam param="name" subst_value="True">$(arg ns)</rosparam>
+        <rosparam param="model" subst_value="True">$(arg model)</rosparam>
+        <rosparam param="rate">10</rosparam>
+        <rosparam param="ipaddress" subst_value="True">$(arg host)</rosparam>
+        <rosparam param="standby">5000</rosparam>
+        <rosparam param="command">true</rosparam>
+        <rosparam param="mode" subst_value="True">$(arg mode)</rosparam>
+        <!--remap from="/dsr_joint_position_controller/command"
+               to="/$(arg ns)/dsr_joint_position_controller/command" /-->
+    </node>
+    <include file="$(find dsr_moveit_config)/launch/$(arg model)/$(arg model).launch" ns="$(arg ns)">
+    </include>
+
+    <!--group if="$(eval arg('mode') == 'virtual')">
+        <node pkg="dsr_control" type="dsr_control_node" name="dsr" respawn="false" output="screen" >
+            <rosparam>
+                rate: 10
+                ipaddress: 192.168.137.100
+                standby: 5000
+                mode: virtual
+            </rosparam>
+        </node>
+    </group>
+    <group if="$(eval arg('mode') == 'real')">
+        <node pkg="dsr_control" type="dsr_control_node" name="dsr" respawn="false" output="screen" >
+            <rosparam>
+                rate: 10
+                ipaddress: 192.168.137.100
+                standby: 5000
+                mode: real
+            </rosparam>
+        </node>
+    </group>
+
+    <group if="$(eval arg('model') == 'm0609')">
+        <include file="$(find dsr_moveit_config)/launch/m0609/m0609.launch"/>
+    </group>
+    <group if="$(eval arg('model') == 'm0617')">
+        <include file="$(find dsr_moveit_config)/launch/m0617/m0617.launch"/>
+    </group>
+    <group if="$(eval arg('model') == 'm1013')">
+        <include file="$(find dsr_moveit_config)/launch/m1013/m1013.launch"/>
+    </group>
+    <group if="$(eval arg('model') == 'm1509')">
+        <include file="$(find dsr_moveit_config)/launch/m1509/m1509.launch"/>
+    </group-->
+
+</launch>

@@ -1,0 +1,17 @@
+<package>
+  <name>dsr_launcher</name>
+  <version>0.0.1</version>
+  <description>dsr_launcher examples</description>
+  <maintainer email="bcc@todo.todo">bcc</maintainer>
+  <author     email="bcc@todo.todo">bcc</author>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>rviz</build_depend>
+
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>rviz</run_depend>
+</package>
