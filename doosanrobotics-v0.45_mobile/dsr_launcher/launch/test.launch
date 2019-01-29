@@ -11,7 +11,6 @@
 
   <arg name="ns"      default="dsr01"/>
   <arg name="model"   default="m1013"/>
-  <arg name="color"   default="white"/>
   <arg name="host"    default="192.168.137.100"/>
   <arg name="mode"    default="virtual"/>
   <arg name="mobile"  default="false"/>
@@ -26,6 +25,8 @@
     <arg name="use_sim_time" value="true"/>
     <arg name="gui"          value="$(arg gui)"/>
     <arg name="world_name"   value="$(find dsr_launcher)/worlds/$(arg world)"/>
+    <arg name="headless"    value="false"/>
+    <arg name="debug"       value="false"/>
   </include>
 
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
@@ -33,7 +34,6 @@
     <arg name="model"         value="$(arg model)"/>
     <arg name="host"          value="$(arg host)"/>
     <arg name="mode"          value="$(arg mode)"/>
-    <arg name="color"         value="$(arg color)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
     <arg name="x"             value="$(arg x)"/>
     <arg name="y"             value="$(arg y)"/>
