@@ -1,5 +1,0 @@
-# drl_start  
-int8 robotSystem
-string  code        #drl code       
----
-bool success
