@@ -3,7 +3,6 @@
 <launch>
   <arg name="ns"      default="dsr"/>
   <arg name="model"   default="m1030"/>
-  <arg name="color"   default="white"/>
   <arg name="host"    default="192.168.137.100"/>
   <arg name="mode"    default="virtual"/>
   <arg name="mobile"  default="false"/>
@@ -33,7 +32,6 @@
   <include file="$(find dsr_description)/launch/dsr_description.launch">
     <arg name="ns"      value="$(arg ns)"/>
     <arg name="model"   value="$(arg model)"/>
-    <arg name="color"   value="$(arg color)"/>
     <arg name="mobile"  value="$(arg mobile)"/>
   </include>
 
@@ -43,8 +41,12 @@
         args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/world 100" unless="$(arg mobile)"/>
 
   <!-- Mobile은 /base_link에 fixed되어 있으므로 map에 연결 -->
+  <!-- removed -->
+
+  <!-- odom tf를 사용하여 로봇 움직임을 rviz에서 표현 -->
   <node pkg="tf" type="static_transform_publisher" name="base_link_tf" ns="$(arg ns)"
-        args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/base_link 100" if="$(arg mobile)"/>
+        args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/odom 100" if="$(arg mobile)"/>
+
 
   <!-- Spawn the model into gazebo. -->
     <node name="spawn_create_model" pkg="gazebo_ros" type="spawn_model" ns="$(arg ns)"
