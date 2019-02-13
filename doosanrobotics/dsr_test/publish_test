@@ -1,0 +1,8 @@
+#rostopic pub /dsr/joint2_position/command std_msgs/Float64 "data: 1.0" --once
+sleep 3
+for x in *;do
+  rostopic pub /dsr/joint3_position/command std_msgs/Float64 "data: 1.0" --once
+  sleep 3
+  rostopic pub /dsr/joint3_position/command std_msgs/Float64 "data: -1.0" --once
+  sleep 3
+done;

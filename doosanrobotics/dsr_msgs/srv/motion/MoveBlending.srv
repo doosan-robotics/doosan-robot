@@ -1,0 +1,19 @@
+# move_blending  
+#float64[50][6] pos              # target
+
+#std_msgs/Float64MultiArray[] pos1   # target1 [50][6]
+#std_msgs/Float64MultiArray[] pos2   # target2 [50][6]
+#int8[50]       segment              # LINE=0 , CIRCLE=1
+#float64[50]    radius               # Radius of segment 
+
+std_msgs/Float64MultiArray[] segment #50 x (pos1[6]:pos2[6]:type[1]:radius[1])        
+
+int8           posCnt               # target cnt 
+float64[2]     vel                  # Velocity 
+float64[2]     acc                  # Acceleration 
+float64        time #= 0.0          # Time [sec] 
+int8           mode #= 0            # MOVE_MODE_ABSOLUTE=0, MOVE_MODE_RELATIVE=1 
+int8           ref  #= 0            # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1
+int8           syncType #=0         # SYNC = 0, ASYNC = 1
+---
+bool success

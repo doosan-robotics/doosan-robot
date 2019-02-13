@@ -1,0 +1,7 @@
+# config_create_tool  
+string          name        # tool name 
+float64         weight           #  
+float64[3]      cog              # 
+float64[6]      inertia          #  
+---
+bool success

@@ -1,0 +1,5 @@
+# set_tool_digital_output  
+int8       index    # 
+int8       value    #
+---
+bool success
