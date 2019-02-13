@@ -1,0 +1,15 @@
+<launch>
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find dsr_gazebo)/config/doosan_robot_controller.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+  output="screen" ns="/dsr" args="joint_state_controller
+                                      joint1_position
+                                      joint2_position
+                                      joint3_position
+                                      joint4_position
+                                      joint5_position
+                                      joint6_position"/>
+</launch>
+
