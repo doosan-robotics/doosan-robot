@@ -1,4 +1,0 @@
-# get_modbus_input  
-string      name    # 
----
-int32       value    # 

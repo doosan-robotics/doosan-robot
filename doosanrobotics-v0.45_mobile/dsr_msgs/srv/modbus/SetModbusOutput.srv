@@ -1,5 +1,0 @@
-# set_modbus_output  
-string      name    # 
-int32       value    # 
----
-bool        success
