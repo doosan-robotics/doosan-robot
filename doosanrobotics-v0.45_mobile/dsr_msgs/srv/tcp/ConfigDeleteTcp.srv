@@ -1,4 +1,0 @@
-# config_delete_tcp  
-string          name             # tcp name 
----
-bool success
