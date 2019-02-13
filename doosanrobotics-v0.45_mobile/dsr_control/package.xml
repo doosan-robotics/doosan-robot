@@ -25,8 +25,9 @@
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>hardware_interface</exec_depend>
   <exec_depend>roscpp</exec_depend>
-
-
+  <exec_depend>interactive_marker_twist_server</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>twist_mux</exec_depend>
   <export>
   </export>
 </package>
