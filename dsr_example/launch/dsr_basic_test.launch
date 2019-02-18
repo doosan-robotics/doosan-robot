@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="gui"   default="true"/>
+  <arg name="rviz"  default="true"/>
+  <arg name="world" default="empty.world"/>
+  <arg name="color" default="white"/>
+  <arg name="mode"  default="virtual"/>
+
+  <node pkg="dsr_example_cpp" type="dsr_basic_test" name="dsr_basic_test"/> 
+
+</launch>
