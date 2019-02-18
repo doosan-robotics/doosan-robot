@@ -1,0 +1,4 @@
+# config_delete_tool  
+string          name        # tool name 
+---
+bool success

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="m0609" >
+
+  <xacro:arg name="color"   default="white"/>
+  <xacro:property name="cr" value="$(arg color)"/>
+  <xacro:if value="${cr == 'white'}">
+     <xacro:include filename="$(find dsr_description)/xacro/macro.m0609.white.xacro" />
+  </xacro:if>
+  <xacro:if value="${cr == 'blue'}">
+     <xacro:include filename="$(find dsr_description)/xacro/macro.m0609.blue.xacro" />
+  </xacro:if>
+  <xacro:m0609 namespace="$(arg namespace)"/>
+
+  <link name="world" />
+
+  <!-- World fixed joint-->
+  <joint name="world_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_0"/>
+  </joint>
+
+</robot>
+

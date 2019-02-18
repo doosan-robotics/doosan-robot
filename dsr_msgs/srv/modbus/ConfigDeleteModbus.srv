@@ -1,0 +1,4 @@
+# config_delete_modbus  
+string      name       # mdbus name 
+---
+bool success

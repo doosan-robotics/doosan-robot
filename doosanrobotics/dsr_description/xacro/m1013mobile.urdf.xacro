@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="m1013mobile" >
-
-  <xacro:include filename="$(find dsr_description)/xacro/macro.m1013mobile.xacro" />
-
-  <xacro:m1013mobile namespace="$(arg namespace)"/>
-
-</robot>
