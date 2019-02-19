@@ -14,6 +14,11 @@
   <arg name="pitch"   default="0"/>
   <arg name="yaw"     default="0"/>
 
+  <!-- mobile-robot PID configurations from YAML file to parameter server -->
+  <group ns="$(arg ns)">
+    <rosparam file="$(find dsr_gazebo)/config/gazebo_ros_control_params.yaml" command="load"/>
+  </group>
+
   <!-- gazebo를 위한 controller -->
   <include file="$(find dsr_control)/launch/dsr_fake_control.launch">
     <arg name="ns" value="$(arg ns)"/>

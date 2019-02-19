@@ -25,10 +25,17 @@
   </include>
 
   <!-- gazebo를 위한 controller -->
-  <rosparam command="load" file="$(find dsr_control)/config/dsr_control.yaml" ns="$(arg ns)" />
-  <param name="$(arg ns)/dsr_velocity_controller/base_frame_id" value="$(arg ns)/base_link"/>
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-        args="dsr_velocity_controller dsr_joint_publisher" ns="$(arg ns)"/>
+  <!-- rosparam command="load" file="$(find dsr_control)/config/dsr_control.yaml" ns="$(arg ns)" /-->
+  <!-- param name="$(arg ns)/dsr_velocity_controller/base_frame_id" value="$(arg ns)/base_link"/-->
+  <!-- node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+        args="dsr_velocity_controller dsr_joint_publisher" ns="$(arg ns)"/-->
+  <group ns="$(arg ns)">
+    <rosparam file="$(find dsr_gazebo)/config/gazebo_ros_control_params.yaml" command="load"/>
+    <rosparam command="load" file="$(find dsr_control)/config/dsr_control.yaml"/>
+    <param name="$(arg ns)/dsr_velocity_controller/base_frame_id" value="$(arg ns)/base_link"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="dsr_velocity_controller dsr_joint_publisher"/>
+  </group>
 
   <!-- base_link에 twist marker를 표시 -->
   <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen" ns="$(arg ns)">
