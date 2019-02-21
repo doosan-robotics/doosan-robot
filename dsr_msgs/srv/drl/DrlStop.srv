@@ -1,0 +1,9 @@
+# drl_stop  
+#   <stop_mode>
+#       STOP_TYPE_QUICK_STO = 0
+#       STOP_TYPE_QUICK     = 1
+#       STOP_TYPE_SLOW      = 2
+#       STOP_TYPE_HOLD = STOP_TYPE_EMERGENCY = 3  
+int8    stop_mode       # stop_mode       
+---
+bool    success

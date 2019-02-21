@@ -1,0 +1,4 @@
+# get_ctrl_box_digital_input  
+int8        index    # 
+---
+bool        value    # 0=OFF, 1=ON

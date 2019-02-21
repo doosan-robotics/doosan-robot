@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!-- 멀티 ARM 또는 Mobile과 같이 사용하여 gazebo와 rviz를 실행 할때
+ 제어기와 연동 됨.
+ host를 정의 해야함. (초기 버전에는 simulation용 이였음. )
+ -->
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="rviz" default="true"/>
+  <arg name="world" default="empty.world"/>
+  <!-- Mobile를 사용한다면  -->
+  <arg name="mobile"  default="true"/>
+
+  <!-- Start Gazebo with an empty world. -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="$(arg gui)"/>
+    <arg name="world_name"   value="$(find dsr_launcher)/worlds/$(arg world)"/>
+  </include>
+
+  <!-- Spawn the arms or mobile -->
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr01"/>
+    <arg name="model"         value="m1013"/>
+    <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="x"             value="2"/>
+    <arg name="y"             value="-4"/>
+    <arg name="yaw"           value="0.7"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr02"/>
+    <arg name="model"         value="m1509"/>
+    <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="-2"/>
+    <arg name="yaw"           value="1.57"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr03"/>
+    <arg name="model"         value="m0617"/>
+    <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="x"             value="0"/>
+    <arg name="y"             value="3"/>
+    <arg name="yaw"           value="2.5"/>
+  </include>
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr04"/>
+    <arg name="model"         value="m0609"/>
+    <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="x"             value="1"/>
+    <arg name="y"             value="0.245"/>
+    <arg name="yaw"           value="1.5"/>
+  </include>
+
+  <!-- View in RVIZ. -->
+  <group if="$(arg rviz)">
+    <node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/>
+  </group>
+</launch>

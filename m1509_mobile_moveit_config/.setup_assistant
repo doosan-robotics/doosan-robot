@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: dsr_description
+    relative_path: xacro/mobile.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/mobile_robot.srdf
+  CONFIG:
+    author_name: doosan
+    author_email: kabkyoum.kim@doosan.com
+    generated_timestamp: 1547456511
