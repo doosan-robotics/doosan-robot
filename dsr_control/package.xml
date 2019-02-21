@@ -15,11 +15,13 @@
   <build_depend>controller_manager</build_depend>
   <build_depend>hardware_interface</build_depend>
   <build_depend>roscpp</build_depend>
+  <build_depend>moveit-msgs</build_depend>
 
   <build_export_depend>dsr_msgs</build_export_depend>
   <build_export_depend>controller_manager</build_export_depend>
   <build_export_depend>hardware_interface</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>moveit-msgs</build_export_depend>
 
   <exec_depend>dsr_msgs</exec_depend>
   <exec_depend>controller_manager</exec_depend>
@@ -30,6 +32,7 @@
   <exec_depend>interactive_marker_twist_server</exec_depend>
   <exec_depend>robot_localization</exec_depend>
   <exec_depend>twist_mux</exec_depend>
+  <exec_depend>moveit-msgs</exec_depend>
 
   <export>
   </export>
