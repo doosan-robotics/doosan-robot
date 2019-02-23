@@ -136,5 +136,6 @@ rosrun dsr_example_cpp m1013_on_mobile
 # diagnostic
 
 # etc
-KKK TEST 2 
+KKK TEST 3
+ 
 
