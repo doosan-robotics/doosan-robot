@@ -3,18 +3,13 @@
 <launch>
 	<arg name="ns" default="dsr" />
 	<arg name="model" default="m1013" />
-	<arg name="color"   default="white"/>
-    <arg name="mobile" default="false"/>
-    <arg name="gripper" default="none"/>
+	<arg name="color"   default="white"/>    
+        <arg name="mobile" default="false"/>
+	<arg name="gripper" default="none"/>
 
-    <group if="$(eval arg('gripper') != 'none')">
-        <param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model)$(arg gripper).urdf.xacro'
-	                       '--inorder' 'namespace:=$(arg ns)' color:=$(arg color)" unless="$(arg mobile)"/>
-    </group>
-    <group if="$(eval arg('gripper') == 'none')">
-        <param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro'
-	                       '--inorder' 'namespace:=$(arg ns)' color:=$(arg color)" unless="$(arg mobile)"/>
-    </group>
+
+    <param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro'
+	                       '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)" unless="$(arg mobile)"/>
 	<!-- ARM 모델  -->
 	
 	<!-- ARM + Mobile 모델 -->

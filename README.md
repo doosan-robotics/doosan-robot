@@ -12,9 +12,9 @@
 ### usage
 1. <dsr_description>
     roslaunch dsr_description m0609.launch
-    roslaunch dsr_description m0617.launch
-    roslaunch dsr_description m1013.launch
-    roslaunch dsr_description m1509.launch
+    roslaunch dsr_description m1013.launch color:=blue  # 색 변경
+    roslaunch dsr_description m1509.launch gripper:=robotiq_2f #robotiq 그리퍼 추가 -> 머지하면서 확인 필요! 
+    roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f #색 변경 및 그리퍼 추가 -> 머지하면서 확인 필요!
 
 2. <dsr_moveit_config>
     #old roslaunch dsr_moveit_config m0609.launch
@@ -136,6 +136,4 @@ rosrun dsr_example_cpp m1013_on_mobile
 # diagnostic
 
 # etc
-KKK TEST 3
- 
 
