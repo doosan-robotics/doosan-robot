@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="m1509" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="m1509" >
 
   <xacro:arg name="color"   default="white"/>
   <xacro:arg name="gripper" default="none"/>
@@ -12,12 +12,14 @@
   <xacro:if value="${cr == 'blue'}">
      <xacro:include filename="$(find dsr_description)/xacro/macro.m1509.blue.xacro" />
   </xacro:if>
-  <xacro:if value="${gr == 'robotiq_2f'}">
-     <xacro:include filename="$(find dsr_description)/xacro/robotiq_2f.urdf.xacro" />
-  </xacro:if>
+  
   <xacro:m1509 namespace="$(arg namespace)"/>
 
   <link name="world" />
+
+  <xacro:if value="${gr == 'robotiq_2f'}">
+     <xacro:include filename="$(find dsr_description)/xacro/robotiq_2f.urdf.xacro" />
+  </xacro:if>
 
   <!-- World fixed joint-->
   <joint name="world_fixed" type="fixed">

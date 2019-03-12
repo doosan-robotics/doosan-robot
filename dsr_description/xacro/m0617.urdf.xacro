@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="m0617" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="m0617" >
 
   <xacro:arg name="color"   default="white"/>
   <xacro:arg name="gripper" default="none"/>

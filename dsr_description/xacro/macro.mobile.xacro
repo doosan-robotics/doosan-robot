@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<robot name="mobile" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="mobile" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:include filename="$(find dsr_description)/config/macro.decorations.xacro" />
 	<xacro:include filename="$(find dsr_description)/config/macro.wheel.xacro" />
 	<xacro:property name="M_PI" value="3.14159" />

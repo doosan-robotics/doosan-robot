@@ -20,10 +20,10 @@
  -->
 <launch>
   <arg name="ns"    default="dsr"/>
-  <arg name="model" default="m1030"/>
-  <arg name="color" default="white"/>
   <arg name="host"  default="192.168.137.100"/>
   <arg name="mode"  default="virtual"/>
+  <arg name="model" default="m1030"/>
+  <arg name="color" default="white"/>
   <arg name="x"     default="0"/>
   <arg name="y"     default="0"/>
   <arg name="z"     default="0"/>

@@ -1,10 +1,16 @@
 <package>
   <name>dsr_launcher</name>
-  <version>0.4.5</version>
+  <version>0.9.0</version>
   <description>dsr_launcher examples</description>
-  <maintainer email="bcc@todo.todo">bcc</maintainer>
-  <author     email="bcc@todo.todo">bcc</author>
+
+  <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
+  <author email="jinhyuk.gong@doosan.com">Jin Hyuk Gong</author>
+  <author email="jeongwoo1.lee@doosan.com">Jeongwoo Lee</author>
+ 
+  <maintainer email="ros.robotics@doosan.com">Doosan Robotics</maintainer>
+
   <license>BSD</license>
+  <url type="website">http://wiki.ros.org/doosan_robotics</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

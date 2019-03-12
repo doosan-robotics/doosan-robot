@@ -1,5 +1,9 @@
 /*
-
+ *  Inferfaces for doosan robot controllor 
+  * Author: Kab Kyoum Kim (kabkyoum.kim@doosan.com)
+ *
+ * Copyright (c) 2019 Doosan Robotics
+ * Use of this source code is governed by the BSD, see LICENSE
 */
 
 #include "dsr_control/dsr_hw_interface.h"
@@ -9,6 +13,7 @@
 #include <sstream>
 
 CDRFL Drfl;
+Serial_comm ser_comm;
 
 bool g_bHasControlAuthority = FALSE;
 bool g_bTpInitailizingComplted = FALSE;
@@ -249,13 +254,13 @@ namespace dsr_control{
         ros::Publisher PubRobotError = node->advertise<dsr_msgs::RobotError>("/doosan_robot/error",100);
         dsr_msgs::RobotError msg;
 
-        ROS_INFO("[callback OnLogAlarm]");
-        ROS_INFO("  level : %d",(unsigned int)pLogAlarm->_iLevel );
-        ROS_INFO("  group : %d",(unsigned int)pLogAlarm->_iGroup );
-        ROS_INFO("  index : %d", pLogAlarm->_iIndex );
-        ROS_INFO("  param : %s", pLogAlarm->_szParam[0] );
-        ROS_INFO("  param : %s", pLogAlarm->_szParam[1] );
-        ROS_INFO("  param : %s", pLogAlarm->_szParam[2] );
+        ROS_ERROR("[callback OnLogAlarm]");
+        ROS_ERROR("  level : %d",(unsigned int)pLogAlarm->_iLevel );
+        ROS_ERROR("  group : %d",(unsigned int)pLogAlarm->_iGroup );
+        ROS_ERROR("  index : %d", pLogAlarm->_iIndex );
+        ROS_ERROR("  param : %s", pLogAlarm->_szParam[0] );
+        ROS_ERROR("  param : %s", pLogAlarm->_szParam[1] );
+        ROS_ERROR("  param : %s", pLogAlarm->_szParam[2] );
 
         g_stDrError.nLevel = (unsigned int)pLogAlarm->_iLevel;
         g_stDrError.nGroup = (unsigned int)pLogAlarm->_iGroup;
@@ -369,12 +374,21 @@ namespace dsr_control{
 
         private_nh_.getParam("name", m_strRobotName);
         private_nh_.getParam("model", m_strRobotModel);
+        private_nh_.getParam("gripper", m_strRobotGripper);
 
         ROS_INFO("name_space is %s, %s\n",m_strRobotName.c_str(), m_strRobotModel.c_str());
 
         ROS_INFO("[dsr_hw_interface] constructed");
-        ros::V_string arm_joint_names =
+        ros::V_string arm_joint_names;
+        if(m_strRobotGripper == "robotiq_2f"){
+            arm_joint_names =
+            boost::assign::list_of("joint1")("joint2")("joint3")("joint4")("joint5")("joint6")("robotiq_85_left_knuckle_joint").convert_to_container<ros::V_string>();
+        }
+        else if(m_strRobotGripper == "none")
+        {
+            arm_joint_names =
             boost::assign::list_of("joint1")("joint2")("joint3")("joint4")("joint5")("joint6").convert_to_container<ros::V_string>();
+        }
         for(unsigned int i = 0; i < arm_joint_names.size(); i++){
             hardware_interface::JointStateHandle jnt_state_handle(
                 arm_joint_names[i],
@@ -412,6 +426,11 @@ namespace dsr_control{
         m_sub_joint_trajectory = private_nh_.subscribe("dsr_joint_trajectory_controller/follow_joint_trajectory/goal", 10, &DRHWInterface::trajectoryCallback, this);
         // topic echo 명령으로 제어기에 전달
         m_sub_joint_position = private_nh_.subscribe("dsr_joint_position_controller/command", 10, &DRHWInterface::positionCallback, this);
+        
+        ros::NodeHandle nh_temp;
+        m_SubSerialRead = nh_temp.subscribe("serial_read", 100, &Serial_comm::read_callback, &ser_comm);
+        m_PubSerialWrite = nh_temp.advertise<std_msgs::String>("serial_write", 100);
+        
 
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
@@ -458,6 +477,16 @@ namespace dsr_control{
         m_nh_drl_service[1] = private_nh_.advertiseService("drl/drl_resume", &DRHWInterface::drl_resume_cb, this);
         m_nh_drl_service[2] = private_nh_.advertiseService("drl/drl_start", &DRHWInterface::drl_start_cb, this);
         m_nh_drl_service[3] = private_nh_.advertiseService("drl/drl_stop", &DRHWInterface::drl_stop_cb, this);
+
+        // Gripper Operations
+        m_nh_gripper_service[0] = private_nh_.advertiseService("gripper/robotiq_2f_open", &DRHWInterface::robotiq_2f_open_cb, this);
+        m_nh_gripper_service[1] = private_nh_.advertiseService("gripper/robotiq_2f_close", &DRHWInterface::robotiq_2f_close_cb, this);
+        m_nh_gripper_service[2] = private_nh_.advertiseService("gripper/robotiq_2f_move", &DRHWInterface::robotiq_2f_move_cb, this);
+
+        // Serial Operations
+        m_nh_serial_service[0] = private_nh_.advertiseService("gripper/serial_open", &DRHWInterface::serial_open_cb, this);
+        m_nh_serial_service[1] = private_nh_.advertiseService("gripper/serial_close", &DRHWInterface::serial_close_cb, this);   
+        m_nh_serial_service[2] = private_nh_.advertiseService("gripper/serial_send_data", &DRHWInterface::serial_send_data_cb, this);
 
         memset(&g_stDrState, 0x00, sizeof(DR_STATE)); 
         memset(&g_stDrError, 0x00, sizeof(DR_ERROR)); 
@@ -550,6 +579,9 @@ namespace dsr_control{
             joints[i].pos = deg2rad(pose->_fPosition[i]);	//update pos to Rviz
             msg.data.push_back(joints[i].pos);
         }
+        if(m_strRobotGripper != "none"){
+            msg.data.push_back(joints[6].pos);
+        }
         m_PubtoGazebo.publish(msg);
     }
     void DRHWInterface::write(ros::Duration& elapsed_time)
@@ -585,7 +617,6 @@ namespace dsr_control{
     //----- SIG Handler --------------------------------------------------------------
     void DRHWInterface::sigint_handler( int signo)
     {
-        ROS_INFO("[sigint_hangler] CloseConnection");
         ROS_INFO("[sigint_hangler] CloseConnection");
         ROS_INFO("[sigint_hangler] CloseConnection");
         ROS_INFO("[sigint_hangler] CloseConnection");
@@ -666,11 +697,11 @@ namespace dsr_control{
         std::array<float, NUM_JOINT> target_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJ ");
+            ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJ");
             res.success = Drfl.MoveJ(target_pos.data(), req.vel, req.acc, req.time, (MOVE_MODE)req.mode, req.radius, (BLENDING_SPEED_TYPE)req.blendType);   
         }
         else{
-            ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJAsync ");
+            ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJAsync");
             res.success = Drfl.MoveJAsync(target_pos.data(), req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (BLENDING_SPEED_TYPE)req.blendType);
         }
     }
@@ -684,7 +715,7 @@ namespace dsr_control{
         std::copy(req.acc.cbegin(), req.acc.cend(), target_acc.begin());
 
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movel_cb() called and calling Drfl.MoveL ");
+            ROS_INFO("DRHWInterface::movel_cb() called and calling Drfl.MoveL");
             res.success = Drfl.MoveL(target_pos.data(), target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
         }
         else{
@@ -697,7 +728,7 @@ namespace dsr_control{
         std::array<float, NUM_TASK> target_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movejx_cb() called and calling Drfl.MoveJX ");
+            ROS_INFO("DRHWInterface::movejx_cb() called and calling Drfl.MoveJX");
             res.success = Drfl.MoveJX(target_pos.data(), req.sol, req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);    
         }
         else{
@@ -721,11 +752,11 @@ namespace dsr_control{
         ///ROS_INFO("  <xxx pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[0][0],fTargetPos[0][1],fTargetPos[0][2],fTargetPos[0][3],fTargetPos[0][4],fTargetPos[0][5]);
         ///ROS_INFO("  <xxx pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[1][0],fTargetPos[1][1],fTargetPos[1][2],fTargetPos[1][3],fTargetPos[1][4],fTargetPos[1][5]);
         if(req.syncType == 0){   
-            ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveC ");
+            ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveC");
             res.success = Drfl.MoveC(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);      
         }
         else{
-            ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveCAsync ");
+            ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveCAsync");
             res.success = Drfl.MoveCAsync(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);  
         }
     }
@@ -740,11 +771,11 @@ namespace dsr_control{
             }
         }
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movesj_cb() called and calling Drfl.MoveSJ ");
+            ROS_INFO("DRHWInterface::movesj_cb() called and calling Drfl.MoveSJ");
             res.success = Drfl.MoveSJ(fTargetPos, req.posCnt, req.vel, req.acc, req.time, (MOVE_MODE)req.mode);
         }
         else{
-            ROS_INFO("DRHWInterface::movesj_cb() called and calling Drfl.MoveSJAsync ");
+            ROS_INFO("DRHWInterface::movesj_cb() called and calling Drfl.MoveSJAsync");
             res.success = Drfl.MoveSJAsync(fTargetPos, req.posCnt, req.vel, req.acc, req.time, (MOVE_MODE)req.mode);
         }
     }
@@ -767,11 +798,11 @@ namespace dsr_control{
             fTargetAcc[i] = req.acc[i];
         }
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movesx_cb() called and calling Drfl.MoveSX ");
+            ROS_INFO("DRHWInterface::movesx_cb() called and calling Drfl.MoveSX");
             res.success = Drfl.MoveSX(fTargetPos, req.posCnt, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (SPLINE_VELOCITY_OPTION)req.opt);
         }
         else{
-            ROS_INFO("DRHWInterface::movesx_cb() called and calling Drfl.MoveSXAsync ");
+            ROS_INFO("DRHWInterface::movesx_cb() called and calling Drfl.MoveSXAsync");
             res.success = Drfl.MoveSXAsync(fTargetPos, req.posCnt, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (SPLINE_VELOCITY_OPTION)req.opt);
         }
     }
@@ -808,11 +839,11 @@ namespace dsr_control{
         std::copy(req.acc.cbegin(), req.acc.cend(), target_acc.begin());
 
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::moveb_cb() called and calling Drfl.MoveB ");
+            ROS_INFO("DRHWInterface::moveb_cb() called and calling Drfl.MoveB");
             res.success = Drfl.MoveB(posb, req.posCnt, target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref);
         }
         else{
-            ROS_INFO("DRHWInterface::moveb_cb() called and calling Drfl.MoveBAsync ");
+            ROS_INFO("DRHWInterface::moveb_cb() called and calling Drfl.MoveBAsync");
             res.success = Drfl.MoveBAsync(posb, req.posCnt, target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref);
         }
     }
@@ -824,11 +855,11 @@ namespace dsr_control{
         std::copy(req.acc.cbegin(), req.acc.cend(), target_acc.begin());
 
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::movespiral_cb() called and calling Drfl.MoveSpiral ");
+            ROS_INFO("DRHWInterface::movespiral_cb() called and calling Drfl.MoveSpiral");
             res.success = Drfl.MoveSpiral((TASK_AXIS)req.taskAxis, req.revolution, req.maxRadius, req.maxLength, target_vel.data(), target_acc.data(), req.time, (MOVE_REFERENCE)req.ref);
         }
         else{
-            ROS_INFO("DRHWInterface::movespiral_cb() called and calling Drfl.MoveSpiralAsync ");
+            ROS_INFO("DRHWInterface::movespiral_cb() called and calling Drfl.MoveSpiralAsync");
             res.success = Drfl.MoveSpiralAsync((TASK_AXIS)req.taskAxis, req.revolution, req.maxRadius, req.maxLength, target_vel.data(), target_acc.data(), req.time, (MOVE_REFERENCE)req.ref);
         }
     }
@@ -839,11 +870,11 @@ namespace dsr_control{
         std::copy(req.amp.cbegin(), req.amp.cend(), target_amp.begin());
         std::copy(req.periodic.cbegin(), req.periodic.cend(), target_periodic.begin());
         if(req.syncType == 0){
-            ROS_INFO("DRHWInterface::moveperiodic_cb() called and calling Drfl.MovePeriodic ");
+            ROS_INFO("DRHWInterface::moveperiodic_cb() called and calling Drfl.MovePeriodic");
             res.success = Drfl.MovePeriodic(target_amp.data(), target_periodic.data(), req.acc, req.repeat, (MOVE_REFERENCE)req.ref);
         }
         else{
-            ROS_INFO("DRHWInterface::moveperiodic_cb() called and calling Drfl.MovePeriodicAsync ");
+            ROS_INFO("DRHWInterface::moveperiodic_cb() called and calling Drfl.MovePeriodicAsync");
             res.success = Drfl.MovePeriodicAsync(target_amp.data(), target_periodic.data(), req.acc, req.repeat, (MOVE_REFERENCE)req.ref);
         }
     }
@@ -980,4 +1011,76 @@ namespace dsr_control{
         ROS_INFO("DRHWInterface::config_delete_tool_cb() called and calling Drfl.ConfigDeleteTool");
         res.success = Drfl.ConfigDeleteTool(req.name);
     }
+    
+    //Gripper Service
+
+    bool DRHWInterface::robotiq_2f_move_cb(dsr_msgs::Robotiq2FMove::Request& req, dsr_msgs::Robotiq2FMove::Response& res)
+    {
+        ROS_INFO("DRHWInterface::gripper_move_cb() called and calling Nothing");
+/*
+        if(mode == "robotiq_2f"){
+            //Serial Communication
+            ser.Activation();
+            ros::Duration(0.1).sleep();
+            ser.Close();
+            ros::Duration(0.1).sleep();
+            ser.Open();
+        }
+*/
+        float goal_pos = req.width;
+        
+        while(abs(goal_pos - joints[6].pos) > 0.01){
+            if(goal_pos > joints[6].pos){    
+                joints[6].pos = joints[6].pos + 0.01;
+            }
+            else if(joints[6].pos > goal_pos){
+                joints[6].pos = joints[6].pos - 0.01;
+            }
+            ros::Duration(0.01).sleep();
+        }
+        res.success = true;
+    }
+    bool DRHWInterface::robotiq_2f_open_cb(dsr_msgs::Robotiq2FOpen::Request& req, dsr_msgs::Robotiq2FOpen::Response& res){
+        float goal_pos = 0.8;
+        while(abs(goal_pos - joints[6].pos) > 0.01){
+            if(goal_pos > joints[6].pos){    
+                joints[6].pos = joints[6].pos + 0.01;
+            }
+            else if(joints[6].pos > goal_pos){
+                joints[6].pos = joints[6].pos - 0.01;
+            }
+            ros::Duration(0.01).sleep();
+        }
+        res.success = true;
+        
+    }
+    bool DRHWInterface::robotiq_2f_close_cb(dsr_msgs::Robotiq2FClose::Request& req, dsr_msgs::Robotiq2FClose::Response& res){
+        float goal_pos = 0.0;
+
+        while(abs(goal_pos - joints[6].pos) > 0.01){
+            if(goal_pos > joints[6].pos){    
+                joints[6].pos = joints[6].pos + 0.01;
+            }
+            else if(joints[6].pos > goal_pos){
+                joints[6].pos = joints[6].pos - 0.01;
+            }
+            ros::Duration(0.01).sleep();
+        }
+        res.success = true;
+    }
+
+    bool DRHWInterface::serial_open_cb(dsr_msgs::SerialOpen::Request& req, dsr_msgs::SerialOpen::Response& res){
+    }
+
+    bool DRHWInterface::serial_close_cb(dsr_msgs::SerialClose::Request& req, dsr_msgs::SerialClose::Response& res){
+
+    }
+
+    bool DRHWInterface::serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response &res){
+        std_msgs::String send_data;
+        send_data.data = req.data;
+        m_PubSerialWrite.publish(send_data);
+        res.success = true;
+    }
+
 }

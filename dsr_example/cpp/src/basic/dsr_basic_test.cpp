@@ -1,3 +1,11 @@
+/*
+ * [c++ example basic] basic test for doosan robot
+ * Author: Kab Kyoum Kim (kabkyoum.kim@doosan.com)
+ *
+ * Copyright (c) 2019 Doosan Robotics
+ * Use of this source code is governed by the BSD, see LICENSE
+*/
+
 #include <ros/ros.h>
 #include <signal.h>
 #include <boost/thread/thread.hpp>
@@ -20,6 +28,7 @@
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
 
+#include "dsr_util.h"
 #include "dsr_robot.h"
 
 using namespace std;
@@ -455,31 +464,6 @@ int move_wait()
     return 0; 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void SigHandler(int sig)
-{
-    // Do some custom action.
-    // For example, publish a stop message to some other nodes.
-  
-    // All the default sigint handler does is call shutdown()
-    ROS_INFO("shutdown time! sig=%d",sig);
-    ROS_INFO("shutdown time! sig=%d",sig);
-    ROS_INFO("shutdown time! sig=%d",sig);
-    //ros::ServiceClient srvMoveStop = nh.serviceClient<dsr_msgs::MoveStop>("/dsr01m1013/motion/move_stop");
-    //nh;
-
-    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
-    ros::Publisher pubRobotStop = node->advertise<dsr_msgs::RobotStop>("/"+ROBOT_ID +ROBOT_MODEL+"/stop",100);
-    
-    dsr_msgs::RobotStop msg;
-    
-    msg.stop_mode  = STOP_TYPE_QUICK;
-    pubRobotStop.publish(msg);
-    
-    ros::shutdown();
-}
-
 void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
 {
     static int sn_cnt =0;
@@ -520,19 +504,59 @@ void thread_subscriber()
     */
 }
 
+void SigHandler(int sig)
+{
+    // Do some custom action.
+    // For example, publish a stop message to some other nodes.
+  
+    // All the default sigint handler does is call shutdown()
+    ROS_INFO("shutdown time! sig=%d",sig);
+    ROS_INFO("shutdown time! sig=%d",sig);
+    ROS_INFO("shutdown time! sig=%d",sig);
+    //ros::ServiceClient srvMoveStop = nh.serviceClient<dsr_msgs::MoveStop>("/dsr01m1013/motion/move_stop");
+
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::Publisher pubRobotStop = node->advertise<dsr_msgs::RobotStop>("/"+ROBOT_ID +ROBOT_MODEL+"/stop",100);
+    
+    dsr_msgs::RobotStop msg;
+    
+    msg.stop_mode  = STOP_TYPE_QUICK;
+    pubRobotStop.publish(msg);
+    
+    ros::shutdown();
+}
+
 int main(int argc, char** argv)
 {
     //----- set target robot --------------- 
-    const string my_robot_id    = "dsr01";
-    const string my_robot_model = "m1013";
+    string my_robot_id    = "dsr01";
+    string my_robot_model = "m1013";
+    if(1 == argc){
+        ROS_INFO("default arguments: dsr01 m1013");
+    }
+    else{
+        if(3 != argc){
+            ROS_ERROR("invalid arguments: <ns> <model> (ex) dsr01 m1013");
+            exit(1);
+        }
+        for (int i = 1; i < argc; i++){
+            printf("argv[%d] = %s\n", i, argv[i]);
+        }
+        my_robot_id    = argv[1];
+        my_robot_model = argv[2];
+    }  
+    //std::cout << "my_robot_id= " << my_robot_id << ", my_robot_model= " << my_robot_model << endl;
     SET_ROBOT(my_robot_id, my_robot_model);
 
+    //----- init ROS ---------------------- 
     int rate_sub = 1;    // 1 Hz = 1 sec
     int nPubRate = 100;  // 100 Hz (10ms)
-
     int i=0, nRes=0; 
     ros::init(argc, argv, "dsr_basic_test_cpp", ros::init_options::NoSigintHandler);  
     ros::NodeHandle nh("~");
+    // Override the default ros sigint handler.
+    // This must be set after the first NodeHandle is created.
+    signal(SIGINT, SigHandler);
 
     ros::Publisher  pubRobotStop = nh.advertise<dsr_msgs::RobotStop>("/"+ROBOT_ID +ROBOT_MODEL+"/stop",10);
     ///ros::Subscriber subRobotState = nh.subscribe("/"+ROBOT_ID +ROBOT_MODEL+"/state", 100, msgRobotState_cb);
@@ -544,7 +568,6 @@ int main(int argc, char** argv)
     // spawn another thread
     boost::thread thread_sub(thread_subscriber);
 
-    signal(SIGINT, SigHandler);
     /* 
     if(argc !=3)
     {
@@ -554,6 +577,7 @@ int main(int argc, char** argv)
     }
     */
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
     float p1[6]={0.0,};                             //joint
     float p2[6]={0.0, 0.0, 90.0, 0.0, 90.0, 0.0};   //joint
     

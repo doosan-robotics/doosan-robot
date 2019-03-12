@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="m0609mobile" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="m0609mobile" >
 
   <xacro:arg name="color"   default="white"/>
   <xacro:arg name="gripper" default="none"/>
@@ -13,6 +13,9 @@
   </xacro:if>
   <xacro:if value="${cr == 'blue'}">
     <xacro:include filename="$(find dsr_description)/xacro/macro.m0609mobile.blue.xacro" />
+  </xacro:if>
+  <xacro:if value="${gr == 'robotiq_2f'}">
+     <xacro:include filename="$(find dsr_description)/xacro/robotiq_2f.urdf.xacro" />
   </xacro:if>
 
   <xacro:m0609mobile namespace="$(arg namespace)"/>

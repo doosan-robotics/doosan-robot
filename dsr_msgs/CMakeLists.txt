@@ -55,6 +55,13 @@ add_service_files(
     ./drl/DrlPause.srv
     ./drl/DrlResume.srv
 
+    ./gripper/Robotiq2FClose.srv
+    ./gripper/Robotiq2FOpen.srv
+    ./gripper/Robotiq2FMove.srv
+    ./gripper/SerialClose.srv
+    ./gripper/SerialOpen.srv
+    ./gripper/SerialSendData.srv
+
 )
 
 generate_messages(

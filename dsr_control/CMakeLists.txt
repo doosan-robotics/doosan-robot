@@ -6,11 +6,12 @@ find_package(catkin REQUIRED COMPONENTS
   dsr_msgs
   controller_manager
   hardware_interface
+  serial
   roscpp
 )
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp
+  CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp serial
 )
 
 SET( COMMON_INC_FILES
@@ -21,6 +22,10 @@ SET( COMMON_LIB_FILES
   ../common/lib
 )
 
+SET( SERIAL_SRC_FILES
+  ../common/src/dsr_serial.cpp
+)
+
 
 include_directories(
   include
@@ -29,6 +34,7 @@ include_directories(
 )
 
 SET( SRC_FILES
+  ${SERIAL_SRC_FILES}
   src/dsr_hw_interface.cpp
   src/dsr_control_node.cpp
 )

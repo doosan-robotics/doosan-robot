@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="mobile" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mobile" >
   <xacro:include filename="$(find dsr_description)/config/macro.gazebo.xacro" />
   <xacro:include filename="$(find dsr_description)/xacro/macro.mobile.xacro" />
 

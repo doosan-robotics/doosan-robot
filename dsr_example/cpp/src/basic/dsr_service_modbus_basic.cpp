@@ -1,4 +1,10 @@
-
+/*
+ * [c++ example basic] modbus test for doosan robot
+ * Author: Jin Hyuk Gong (jinhyuk.gong@doosan.com)
+ *
+ * Copyright (c) 2019 Doosan Robotics
+ * Use of this source code is governed by the BSD, see LICENSE
+*/
 
 #include <ros/ros.h>
 #include <signal.h>
@@ -204,17 +210,24 @@ int config_delete_modbus(string strName)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void mySigintHandler(int sig)
+
+void thread_subscriber()
+{
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::MultiThreadedSpinner spinner(2);
+    spinner.spin();
+}
+
+void SigHandler(int sig)
 {
     // Do some custom action.
     // For example, publish a stop message to some other nodes.
   
     // All the default sigint handler does is call shutdown()
-    ROS_INFO("shutdown time!");
-    ROS_INFO("shutdown time!");
-    ROS_INFO("shutdown time!");
+    ROS_INFO("shutdown time! sig=%d",sig);
+    ROS_INFO("shutdown time! sig=%d",sig);
+    ROS_INFO("shutdown time! sig=%d",sig);
     //ros::ServiceClient srvMoveStop = nh.serviceClient<dsr_msgs::MoveStop>("/dsr01m1013/motion/move_stop");
-    //nh;
 
     ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
     ros::Publisher pubRobotStop = node->advertise<dsr_msgs::RobotStop>("/"+ROBOT_ID +ROBOT_MODEL+"/stop",100);
@@ -227,34 +240,42 @@ void mySigintHandler(int sig)
     ros::shutdown();
 }
 
-
-void thread_subscriber()
-{
-    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
-    ros::MultiThreadedSpinner spinner(2);
-    spinner.spin();
-}
-
 int main(int argc, char** argv)
 {
     //----- set target robot --------------- 
-    const string my_robot_id    = "dsr01";
-    const string my_robot_model = "m1013";
+    string my_robot_id    = "dsr01";
+    string my_robot_model = "m1013";
+    if(1 == argc){
+        ROS_INFO("default arguments: dsr01 m1013");
+    }
+    else{
+        if(3 != argc){
+            ROS_ERROR("invalid arguments: <ns> <model> (ex) dsr01 m1013");
+            exit(1);
+        }
+        for (int i = 1; i < argc; i++){
+            printf("argv[%d] = %s\n", i, argv[i]);
+        }
+        my_robot_id    = argv[1];
+        my_robot_model = argv[2];
+    }  
+    //std::cout << "my_robot_id= " << my_robot_id << ", my_robot_model= " << my_robot_model << endl;
     SET_ROBOT(my_robot_id, my_robot_model);
 
+    //----- init ROS ---------------------- 
     int rate_sub = 1;    // 1 Hz = 1 sec
     int nPubRate = 100;  // 100 Hz (10ms)
-
     int i=0, nRes=0; 
     ros::init(argc, argv, "dsr_service_modbus_basic_cpp", ros::init_options::NoSigintHandler);  
     ros::NodeHandle nh("~");
-
+    // Override the default ros sigint handler.
+    // This must be set after the first NodeHandle is created.
+    signal(SIGINT, SigHandler);
     ros::Publisher  pubRobotStop = nh.advertise<dsr_msgs::RobotStop>("/"+ROBOT_ID +ROBOT_MODEL+"/stop",10);
 
     // spawn another thread
     boost::thread thread_sub(thread_subscriber);
 
-    signal(SIGINT, mySigintHandler);
     /* 
     if(argc !=3)
     {
@@ -263,6 +284,8 @@ int main(int argc, char** argv)
         return 1;
     }
     */
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
     config_create_modbus("di1", "192.168.137.50", 502, MODBUS_REGISTER_TYPE_DISCRETE_INPUTS, 3);
     config_create_modbus("do1", "192.168.137.50", 502, MODBUS_REGISTER_TYPE_COILS, 3);
     config_create_modbus("ro1", "192.168.137.50", 502, MODBUS_REGISTER_TYPE_HOLDING_REGISTER, 7);

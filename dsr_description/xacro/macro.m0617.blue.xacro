@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<robot name="m0617" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="m0617" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:include filename="$(find dsr_description)/config/macro.gazebo.xacro" />
 	<xacro:include filename="$(find dsr_description)/config/macro.transmission.xacro" />
 	<xacro:include filename="$(find dsr_description)/config/macro.materials.xacro" />

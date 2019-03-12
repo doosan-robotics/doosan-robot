@@ -1,31 +1,37 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dsr_control</name>
-  <version>0.4.5</version>
+  <version>0.9.0</version>
   <description>The dsr_control package</description>
 
-  <maintainer email="bcc@todo.todo">bcc</maintainer>
+  <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
+  <author email="jinhyuk.gong@doosan.com">Jin Hyuk Gong</author>
+  <author email="jeongwoo1.lee@doosan.com">Jeongwoo Lee</author>
 
-  <license>TODO</license>
+  <maintainer email="ros.robotics@doosan.com">Doosan Robotics</maintainer>
+
+  <license>BSD</license>
+  <url type="website">http://wiki.ros.org/doosan_robotics</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-
 
   <build_depend>dsr_msgs</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>hardware_interface</build_depend>
+  <build_depend>serial</build_depend>
   <build_depend>roscpp</build_depend>
 
   <build_export_depend>dsr_msgs</build_export_depend>
   <build_export_depend>controller_manager</build_export_depend>
   <build_export_depend>hardware_interface</build_export_depend>
+  <build_export_depend>serial</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
 
   <exec_depend>dsr_msgs</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>hardware_interface</exec_depend>
+  <exec_depend>serial</exec_depend>
   <exec_depend>roscpp</exec_depend>
-
 
   <export>
   </export>

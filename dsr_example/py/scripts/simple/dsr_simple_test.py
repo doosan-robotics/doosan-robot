@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# ##
+# @brief    [py example simple] motion basic test for doosan robot
+# @author   Kab Kyoum Kim (kabkyoum.kim@doosan.com)   
+
 import rospy
 import os
 import threading, time

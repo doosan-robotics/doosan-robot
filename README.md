@@ -17,22 +17,23 @@
     roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f #색 변경 및 그리퍼 추가 -> 머지하면서 확인 필요!
 
 2. <dsr_moveit_config>
-    #old roslaunch dsr_moveit_config m0609.launch
-    #old roslaunch dsr_moveit_config m0617.launch
-    #old roslaunch dsr_moveit_config m1013.launch
-    #old roslaunch dsr_moveit_config m1509.launch
-    roslaunch dsr_control dsr_moveit.launch model:=m0609
-    roslaunch dsr_control dsr_moveit.launch model:=m0617
-    roslaunch dsr_control dsr_moveit.launch model:=m1013
-    roslaunch dsr_control dsr_moveit.launch model:=m1509
+    - arguments  
+    color:=   ROBOT_COLOR     <white / blue>                defalut = white             
+
+    roslaunch moveit_config_m0609 m0609.launch 
+    roslaunch moveit_config_m0617 m0617.launch
+    roslaunch moveit_config_m1013 m1013.launch color:=blue
+    roslaunch moveit_config_m1509 m1509.launch
 
 3. <dsr_control> (default model:= m1013, default mode:= virtual)
-    (1) dsr_control + dsr_description
-      roslaunch dsr_control dsr_control.launch 
-      roslaunch dsr_control dsr_control.launch model:=m0609 mode:=virtual
-      roslaunch dsr_control dsr_control.launch model:=m0617 mode:=virtual
-      roslaunch dsr_control dsr_control.launch model:=m1013 mode:=virtual
-      roslaunch dsr_control dsr_control.launch model:=m1509 mode:=virtual
+    - arguments  
+    host:=    ROBOT_IP                                      defalut = 192,168.137.100  
+    mode:=    OPERATION MODE  <virtual / real>              defalut = virtual
+    model:=   ROBOT_MODEL     <m0609 / 0617/ m1013 / m1509> defalut = m1013
+    color:=   ROBOT_COLOR     <white / blue>                defalut = white             
+    gripper:= USE_GRIPPER     <none / robotiq_2f>           defalut = none 
+    mobile:=  USE_MOBILE      <none / husky>                defalut = none
+
     (2) dsr_control + dsr_moveit_config
       roslaunch dsr_control dsr_moveit.launch
       roslaunch dsr_control dsr_moveit.launch model:=m0609 mode:=virtual
@@ -40,12 +41,75 @@
       roslaunch dsr_control dsr_moveit.launch model:=m1013 mode:=virtual
       roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
 
-4. <dsr_example>  
-  - rosrun dsr_example_cpp dsr_servie_motion_basic
-  - rosrun dsr_example_py dsr_servie_motion_basic.py
-  - roslaunch dsr_example multi_gazebo.launch
-  - roslaunch dsr_example multi_virtual.launch
-  - roslaunch dsr_example multi_real.launch
+4. <dsr_launcher>   
+    - arguments  
+    host:=    ROBOT_IP                                      defalut = 192,168.137.100  
+    mode:=    OPERATION MODE  <virtual / real>              defalut = virtual
+    model:=   ROBOT_MODEL     <m0609 / 0617/ m1013 / m1509> defalut = m1013
+    color:=   ROBOT_COLOR     <white / blue>                defalut = white             
+    gripper:= USE_GRIPPER     <none / robotiq_2f>           defalut = none 
+    mobile:=  USE_MOBILE      <none / husky>                defalut = none
+  
+    - roslaunch dsr_launcher single_robot_rviz.launch        
+    - roslaunch dsr_launcher single_robot_gazebo.launch  
+    - roslaunch dsr_launcher single_robot_rviz_gazebo.launch 
+
+    - roslaunch dsr_launcher multi_robot_rviz.launch  
+    - roslaunch dsr_launcher multi_robot_gazebo.launch  
+    - roslaunch dsr_launcher multi_robot_rviz_gazebo.launch 
+
+4. <dsr_example>   
+  4.1 single robot 
+    <launch> 
+      single robot in rviz          : roslaunch dsr_launcher single_robot_rviz.launch model:=m1013 color:=white 
+      single robot in gazebo        : roslaunch dsr_launcher single_robot_gazebo.launch model:=m1013 color:=blue
+      single robot in rviz + gazebo : roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white 
+    <run application node> 
+      <cpp>
+        basic  example : rosrun dsr_example_cpp single_robot_basic dsr01 m1013
+        simple example : rosrun dsr_example_cpp single_robot_simple dsr01 m1013  
+      <py> 
+        basic  example : rosrun dsr_example_py single_robot_basic.py dsr01 m1013
+        simple example : rosrun dsr_example_py single_robot_simple.py dsr01 m1013  
+    <ex>
+      roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
+      rosrun dsr_example_cpp single_robot_simple dsr01 m1013   
+  4.2 multi robot 
+    <launch> 
+      multi robot in rviz          : roslaunch dsr_launcher multi_robot_rviz.launch  
+      multi robot in gazebo        : roslaunch dsr_launcher multi_robot_gazebo.launch 
+      multi robot in rviz + gazebo : roslaunch dsr_launcher multi_robot_rviz_gazebo.launch 
+    <run application node> 
+      <cpp>
+        basic  example : rosrun dsr_example_cpp multi_robot_basic
+        simple example : rosrun dsr_example_cpp multi_robot_simple  
+      <py> 
+        basic  example : rosrun dsr_example_py multi_robot_basic.py 
+        simple example : rosrun dsr_example_py multi_robot_simple.py  
+    <ex>
+      roslaunch dsr_launcher multi_robot_rviz_gazebo.launch 
+      rosrun dsr_example_cpp multi_robot   
+
+  4.3 robot + mobile
+    - insert argument mobile:=true 
+    4.3.1 single robot on mobile 
+        - roslaunch dsr_launcher rviz_single_robot.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue mobile:=husky
+        <run application node> 
+          <cpp>
+            rosrun dsr_example_cpp single_robot_mobile  
+          <python>
+            rosrun dsr_example_py single_robot_mobile  
+    4.3.1 multi robot on mobile 
+        - roslaunch dsr_launcher rviz_multi_robot.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue mobile:=husky
+        <run application node> 
+          <cpp>
+            rosrun dsr_example_cpp multi_robot_mobile  
+          <python>
+            rosrun dsr_example_py multi_robot_mobile  
+
+  4.4 using gripper 
+    - insert argument gripper:=true 
+
 
 5. <dsr_apps>  
   - rosrun dsr_apps_cpp app_watch

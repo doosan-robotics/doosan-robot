@@ -1,6 +1,11 @@
 /*
-
+ * dsr_control_node 
+ * Author: Kab Kyoum Kim (kabkyoum.kim@doosan.com)
+ *
+ * Copyright (c) 2019 Doosan Robotics
+ * Use of this source code is governed by the BSD, see LICENSE
 */
+
 #include <signal.h>
 #include "dsr_control/dsr_hw_interface.h"
 #include <controller_manager/controller_manager.h>
@@ -37,7 +42,7 @@ int main(int argc, char** argv)
     pArm = new DRHWInterface(private_nh);
 
     if(!pArm->init() ){
-        ROS_ERROR("[dsr_control] Error initializing robot model, quitting");
+        ROS_ERROR("[dsr_control] Error initializing robot");
         return -1;
     }
     ///controller_manager::ControllerManager cm(&arm, nh);

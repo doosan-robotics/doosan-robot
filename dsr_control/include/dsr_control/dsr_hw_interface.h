@@ -1,6 +1,40 @@
-/*
-
-*/
+/*********************************************************************
+ *
+ *  Inferfaces for doosan robot controllor 
+ * Author: Kab Kyoum Kim (kabkyoum.kim@doosan.com)
+ *
+ * Software License Agreement (BSD License)
+ *
+ *  Copyright (c) 2019, Doosan Robotics
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *   * Neither the name of the Georgia Institute of Technology nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ *********************************************************************/
 
 #ifndef DR_HW_INTERFACE_H
 #define DR_HW_INTERFACE_H
@@ -69,6 +103,16 @@
 #include <dsr_msgs/GetCurrentTool.h>
 #include <dsr_msgs/SetCurrentTool.h>
 
+//gripper
+#include <dsr_msgs/Robotiq2FOpen.h>
+#include <dsr_msgs/Robotiq2FClose.h>
+#include <dsr_msgs/Robotiq2FMove.h>
+
+//serial
+#include <dsr_msgs/SerialOpen.h>
+#include <dsr_msgs/SerialClose.h>
+#include <dsr_msgs/SerialSendData.h>
+
 // moveit
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <moveit_msgs/RobotTrajectory.h>
@@ -78,6 +122,7 @@
 
 ///#include "DRFL.h"
 #include "../../../common/include/DRFL.h"
+#include "../../../common/include/dsr_serial.h"
 
 #ifndef PI
 #define PI 3.14159265359
@@ -143,6 +188,7 @@ namespace dsr_control{
 
         std::string m_strRobotName;
         std::string m_strRobotModel;
+        std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
         ros::ServiceServer m_nh_move_service[10];
@@ -151,15 +197,19 @@ namespace dsr_control{
         ros::ServiceServer m_nh_drl_service[4];
         ros::ServiceServer m_nh_tcp_service[4];
         ros::ServiceServer m_nh_tool_service[4];
+        ros::ServiceServer m_nh_gripper_service[10];
+        ros::ServiceServer m_nh_serial_service[4];
 
         //----- Publisher -------------------------------------------------------------
         ros::Publisher m_PubRobotState;
         ros::Publisher m_PubRobotError;
         ros::Publisher m_PubtoGazebo;
+        ros::Publisher m_PubSerialWrite;
 
         //----- Subscriber ------------------------------------------------------------
         ros::Subscriber m_sub_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
+        ros::Subscriber m_SubSerialRead;
 
         // ROS Interface
         hardware_interface::JointStateInterface jnt_state_interface;
@@ -238,6 +288,16 @@ namespace dsr_control{
         bool drl_start_cb(dsr_msgs::DrlStart::Request& req, dsr_msgs::DrlStart::Response& res);
         bool drl_stop_cb(dsr_msgs::DrlStop::Request& req, dsr_msgs::DrlStop::Response& res);
         bool drl_resume_cb(dsr_msgs::DrlResume::Request& req, dsr_msgs::DrlResume::Response& res);
+
+        //----- Gripper
+        bool robotiq_2f_open_cb(dsr_msgs::Robotiq2FOpen::Request& req, dsr_msgs::Robotiq2FOpen::Response& res);
+        bool robotiq_2f_close_cb(dsr_msgs::Robotiq2FClose::Request& req, dsr_msgs::Robotiq2FClose::Response& res);
+        bool robotiq_2f_move_cb(dsr_msgs::Robotiq2FMove::Request& req, dsr_msgs::Robotiq2FMove::Response& res);
+
+        //----- Serial
+        bool serial_open_cb(dsr_msgs::SerialOpen::Request& req, dsr_msgs::SerialOpen::Response& res);
+        bool serial_close_cb(dsr_msgs::SerialClose::Request& req, dsr_msgs::SerialClose::Response& res);
+        bool serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response& res);
 
     };
 }

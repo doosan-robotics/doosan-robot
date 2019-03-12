@@ -1,3 +1,11 @@
+/*
+ * class of doosan robot control 
+ * Author: Kab Kyoum Kim (kabkyoum.kim@doosan.com)
+ *
+ * Copyright (c) 2019 Doosan Robotics
+ * Use of this source code is governed by the BSD, see LICENSE
+*/
+
 #include "../include/dsr_robot.h"
 
 using namespace DSR_Robot;
