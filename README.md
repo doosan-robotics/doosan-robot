@@ -4,12 +4,13 @@
 1. apt-get update **Package Update**
 2. apt-get install openssh-server
 3. gedit /etc/ssh/sshd_config
- > PermitRootLogin Yes
+> PermitRootLogin Yes
 4. service ssh restart
 5. apt-get install vsftpd
 6. gedit /etc/vsftpd.conf
- > write_enable=YES
- > local_umask=022
+> write_enable=YES \n
+
+> local_umask=022
 7. service vsftpd start
 8. sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu  
 9. (lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
