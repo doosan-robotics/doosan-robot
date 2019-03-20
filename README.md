@@ -71,7 +71,7 @@ roslaunch dsr_description m1013.launch color:=blue # 색 변경
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f #robotiq 그리퍼 추가 -> 머지하면서 확인 필요!
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f #색 변경 및 그리퍼 추가 -> 머지하면서 확인 필요!
 ```
-##### dsr_moveit_config
+#### dsr_moveit_config
 > ###### __arguments__
    >color:= ROBOT_COLOR <white  /  blue> defalut = white
    
@@ -180,6 +180,12 @@ roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virt
   <python>
     rosrun dsr_example_py pick_and_place_simple
 ```
+- Serial Test(Loopback)
+```bash
+rosrun dsr_example_cpp serial_example_node ttyUSB0 115200
+rostopic echo /serial_read
+rostopic pub /serial_write std_msgs/String 'data: 100'
+```
 
 
 #### ~~dsr_apps~~
@@ -214,9 +220,6 @@ roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virt
     <arg name="yaw" value="0.7"/>
   </include>
 ```  
-
-#### moveit 실행
-   roslaunch dsr_control dsr_moveit.launch model:=m0609
 
 #### 멀티 로봇 Command로 실행
 ```bash
