@@ -1,22 +1,29 @@
 [doosan robotics](http://www.doosanrobotics.com/kr/)
 ================
 ### installation
-1. apt-get update **Package Update**
+#### package update
+1. apt-get update
+#### ssh-server 설치
 2. apt-get install openssh-server
 3. gedit /etc/ssh/sshd_config
-> PermitRootLogin Yes
+>> PermitRootLogin Yes
+#### FTP 설치
 4. service ssh restart
 5. apt-get install vsftpd
 6. gedit /etc/vsftpd.conf
-> write_enable=YES \n
-
-> local_umask=022
+>> write_enable=YES
+>> local_umask=022
 7. service vsftpd start
+#### packages.ros.org의 Software 설치 허용
 8. sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu  
 9. (lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+#### Key 입력
 10. sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+#### ROS Kinetic 설치
 11. sudo apt-get install ros-kinetic-desktop-full
+#### ROS Kinetic 설치 확인
 12. apt-cache search ros-kinetic
+#### Environment Setup
 13. echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc source ~/.bashrc
 
 ### build
