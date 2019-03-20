@@ -3,25 +3,30 @@
 ================
 ## Contents
   [Installation](#chapter-1)
+  
   [Build](#chapter-2)
+  
   [Usage](#chapter-3)
 
 ## installation <a id="chapter-1"></a>
 #### package update
-apt-get update
+    apt-get update
 #### ssh-server 설치
-apt-get install openssh-server
-gedit /etc/ssh/sshd_config
-> PermitRootLogin Yes
+    apt-get install openssh-server
+    gedit /etc/ssh/sshd_config
+> sshd_config 내용 추가
+>> PermitRootLogin Yes
 #### FTP 설치
-service ssh restart
-apt-get install vsftpd
-gedit /etc/vsftpd.conf
+    service ssh restart
+    apt-get install vsftpd
+    gedit /etc/vsftpd.conf
+> vsftpd.conf 내용 추가
 
-> write_enable=YES
-> local_umask=022
+>> write_enable=YES
 
-service vsftpd start
+>> local_umask=022
+    
+    service vsftpd start
 #### packages.ros.org의 Software 설치 허용
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu
 (lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
