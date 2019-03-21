@@ -2,38 +2,10 @@
 
 
 ## Contents
-  #### [Installation](#chapter-1)
   
   #### [Build](#chapter-2)
   
   #### [Usage](#chapter-3)
-
-# *installation* <a id="chapter-1"></a>
-#### package update
-    apt-get update
-#### ssh-server 설치
-    apt-get install openssh-server
-    gedit /etc/ssh/sshd_config
-> PermitRootLogin Yes
-#### FTP 설치
-    service ssh restart
-    apt-get install vsftpd
-    gedit /etc/vsftpd.conf
-> write_enable=YES  
-> local_umask=022  
-    
-    service vsftpd start
-#### packages.ros.org의 Software 설치 허용
-    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu
-    (lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-#### Key 입력
-    sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-#### ROS Kinetic 설치
-    sudo apt-get install ros-kinetic-desktop-full
-#### ROS Kinetic 설치 확인
-    apt-cache search ros-kinetic
-#### Environment Setup
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc source ~/.bashrc
 
 # *build* <a id="chapter-2"></a>
     mkdir -p dr_ws/src & cd dr_ws/src
@@ -42,7 +14,7 @@
     rosdep install --from-paths rs --ignore-src --rosdistro kinetic -r -y 
     catkin_make
     source ./devel/setup.bash
-#### package 수동 설치
+#### package list
     sudo apt-get install ros-kinetic-rqt*
     sudo apt-get install ros-kinetic-moveit*
     sudo apt-get install ros-kinetic-industrial-core
@@ -67,9 +39,9 @@
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
-roslaunch dsr_description m1013.launch color:=blue # 색 변경
-roslaunch dsr_description m1509.launch gripper:=robotiq_2f #robotiq 그리퍼 추가 -> 머지하면서 확인 필요!
-roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f #색 변경 및 그리퍼 추가 -> 머지하면서 확인 필요!
+roslaunch dsr_description m1013.launch color:=blue # Change Color
+roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
+roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
 ```
 #### dsr_moveit_config
 > ###### __arguments__
@@ -200,28 +172,28 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
     rosrun dsr_test_cpp dsr_test
 ```bash
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
-    <arg name="ns" value="dsr01"/> #고유 ID
-    <arg name="model" value="m1013"/> #로봇 모델
-    <arg name="host" value="192.168.137.100"/> #로봇 제어기 IP주소
-    <arg name="mode" value="virtual"/> #로봇 제어기 모드 
-    #가제보에서의 위치와 자세
+    <arg name="ns" value="dsr01"/> # Robot ID
+    <arg name="model" value="m1013"/> # Robot Model
+    <arg name="host" value="192.168.137.100"/> # Robot IP
+    <arg name="mode" value="virtual"/> # Robot Controller Mode 
+    # Position & Posture in Gazebo
     <arg name="x" value="2"/>
     <arg name="y" value="-4"/>
     <arg name="yaw" value="0.7"/>
   </include>
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
-    <arg name="ns" value="dsr02"/> #두번째 고유 ID
-    <arg name="model" value="m1013"/> #두번째 로봇 모델
-    <arg name="host" value="192.168.137.102"/> #두번째 로봇 제어기 IP주소
-    <arg name="mode" value="virtual"/> #두번째 로봇 제어기 모드
-    #두번째 위치와 자세
+    <arg name="ns" value="dsr02"/> # Secondary Robot ID
+    <arg name="model" value="m1013"/> # Secondary Robot Model
+    <arg name="host" value="192.168.137.102"/> # Secondary Robot IP
+    <arg name="mode" value="virtual"/> # Secondary Robot Controller Mode
+    # Secondary Position & Posture in Gazebo
     <arg name="x" value="2"/>
     <arg name="y" value="-4"/>
     <arg name="yaw" value="0.7"/>
   </include>
 ```  
 
-#### 멀티 로봇 Command로 실행
+#### Run multi-robot by command line
 ```bash
 roslaunch dsr_launcher test.launch
 rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64MultiArray "layout:
@@ -232,7 +204,7 @@ rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64Multi
     data_offset: 0
 data: [10, 10, 40, 10, 60, 10]"
 ```
-#### call service
+#### Service Call
 ```bash
 rosservice call /dsr/set_joint_move "jointAngle: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 jointVelocity: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -240,14 +212,14 @@ jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 radius: 0.0"
 ```
 
-#### 모바일 로봇 실행
-+ 추가 패키지 설치 for kinetic
+#### Run Mobile Robot 
++ Install external package for kinetic
 ```python  
 sudo apt install ros-kinetic-interactive-markers
 sudo apt install ros-kinetic-interactive-marker-twist-server
 sudo apt install ros-kinetic-twist-mux ros-kinetic-twist-mux-msgs ros-kinetic-robot-localization
 ```
-+ 추가 패키지 설치 for melodic
++ Install external package for melodic
 ```python      
 sudo apt install ros-melodic-interactive-markers
 sudo apt install ros-melodic-twist-mux ros-melodic-twist-mux-msgs ros-melodic-robot-localization      
@@ -260,6 +232,7 @@ cd ~/catkin_ws
 catkin_make
 source ~/catkin_ws/devel/setup.bash
 ```
+
 ```bash
 #roslaunch dsr_launcher multi_gazebo.launch mobile:=true
 roslaunch dsr_launcher mobile_m1013.launch
