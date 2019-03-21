@@ -167,7 +167,7 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 #### ~~dsr_test~~
     rosrun dsr_test_cpp dsr_test
     
-#### gazebo+rviz+virtual(dsr)함께 실행 하는
+#### gazebo+rviz+virtual
     roslaunch dsr_example test.launch
     rosrun dsr_test_cpp dsr_test
 ```bash
