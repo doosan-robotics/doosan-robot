@@ -19,9 +19,6 @@
     sudo apt-get install ros-kinetic-moveit*
     sudo apt-get install ros-kinetic-industrial-core
     sudo apt-get install ros-kinetic-gazebo-ros-control
-    sudo apt-get install ros-kinetic-dynamixel-sdk
-    sudo apt-get install ros-kinetic-dynamixel-workbench-toolbox
-    sudo apt-get install ros-kinetic-robotis-math
     sudo apt-get install ros-kinetic-joint-state-controller 
     sudo apt-get install ros-kinetic-effort-controllers 
     sudo apt-get install ros-kinetic-position-controllers 
