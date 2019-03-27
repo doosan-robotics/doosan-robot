@@ -43,8 +43,4 @@
   <build_depend>dynamixel_workbench_toolbox</build_depend>
   <build_depend>robotis_math</build_depend>
   <build_depend>joint_state_controllers</build_depend>
-
-  <export>
-    <metapackage/>
-  </export>
 </package>
