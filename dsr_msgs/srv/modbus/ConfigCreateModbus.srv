@@ -1,7 +1,7 @@
 # config_create_modbus  
 string      name       # mdbus name 
 string      ip
-int8        port          
+int32        port          
 int8        reg_type
 int8        index
 int8        value

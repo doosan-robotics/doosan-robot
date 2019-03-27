@@ -1500,7 +1500,7 @@ def _move_wait(time):
 
 ##############################################################################################################################
 
-def add_modbus_signal(ip, port, name, reg_type, index, value=0):
+def add_modbus_signal(name, ip, port, reg_type, index, value=0):
     # ip
     if type(ip) != str:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : ip")
@@ -1877,7 +1877,7 @@ def del_tool(name):
     return ret
 
 def drl_script_run(robotSystem, code):
-    if type(name) != str:
+    if type(code) != str:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
 
     # ROS service call
@@ -1886,7 +1886,7 @@ def drl_script_run(robotSystem, code):
     return ret
 
 def drl_script_stop(stop_mode):
-    if type(name) != str:
+    if type(stop_mode) != str:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
 
     # ROS service call

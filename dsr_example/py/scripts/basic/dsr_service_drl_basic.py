@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ##
@@ -19,6 +18,10 @@ from dsr_msgs.srv import *
 
 ROBOT_ID     = "dsr01"
 ROBOT_MODEL  = "m1013"
+
+ROBOT_SYSTEM_VIRTUAL = 1
+ROBOT_SYSTEM_REAL = 0
+
 def SET_ROBOT(id, model):
     ROBOT_ID = id; ROBOT_MODEL= model   
 
@@ -60,12 +63,12 @@ if __name__ == "__main__":
     drl_stop = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_stop', DrlStop)
     drl_resume = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_resume', DrlResume)
     drl_pause = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_pause', DrlPause)
-    
-    drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n";
-    drlCodeHome = "movej([0,0,0,0,0,0])\n";
-    
-    while not rospy.is_shutdown():
-        drl_start(ROBOT_SYSTEM_VIRTUAL, drl_CodeMove + drl_CodeHome)
+
+    move_joint  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_joint', MoveJoint)
+
+    drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
+    drlCodeHome = "movej([0,0,0,0,0,0])\n"
+    drl_start(ROBOT_SYSTEM_VIRTUAL, drlCodeMove + drlCodeHome)
 
     print 'good bye!'
     print 'good bye!'

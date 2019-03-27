@@ -9,12 +9,13 @@ import os
 import threading, time
 import sys
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
 
 # for single robot 
 
 ROBOT_SYSTEM_VIRTUAL = 1
 ROBOT_SYSTEM_REAL = 0
+
 ROBOT_ID     = "dsr01"
 ROBOT_MODEL  = "m1013"
 import DR_init
@@ -58,7 +59,7 @@ def thread_subscriber():
     #rospy.spinner(2)    
   
 if __name__ == "__main__":
-    rospy.init_node('dsr_simple_test_py')
+    rospy.init_node('dsr_service_drl_simple_py')
     rospy.on_shutdown(shutdown)
 
     t1 = threading.Thread(target=thread_subscriber)
@@ -66,29 +67,10 @@ if __name__ == "__main__":
     t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
-    p0=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    p1=[0.0, 0.0, 90.0, 0.0, 90.0 , 0.0]                           
-    p2=[180.0, 0.0, 90, 0.0, 90.0, 0.0] 
-    
-    x1=[0, 0, -200, 0, 0, 0]
-    x2=[0, 0, 200, 0, 0, 0]
-    velx=[50, 50]
-    accx=[100, 100]
 
-    
+    drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
+    drlCodeReset = "movej([0,0,0,0,0,0])\n"
+    drl_script_run(ROBOT_SYSTEM_VIRTUAL, drlCodeMove + drlCodeReset)
     while not rospy.is_shutdown():
-        movej(p0, 60, 30)
-        movej(p1, 60, 30)
-        
-        movel(x1, velx, accx, 2, 0.0, MOVE_REFERENCE_BASE, MOVE_MODE_RELATIVE)
-        gripper_move(0.4)
-        rospy.sleep(1)
-        movel(x2, velx, accx, 2, 0.0, MOVE_REFERENCE_BASE, MOVE_MODE_RELATIVE)
-
-        movej(p2, 60, 30, 3)
-        movel(x1, velx, accx, 2, 0.0, MOVE_REFERENCE_BASE, MOVE_MODE_RELATIVE)
-        gripper_move(0.0)
-        rospy.sleep(1)
-        movel(x2, velx, accx, 2, 0.0, MOVE_REFERENCE_BASE, MOVE_MODE_RELATIVE)
-
+        pass
     print 'good bye!'

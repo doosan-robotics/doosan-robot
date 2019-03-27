@@ -53,7 +53,7 @@ if __name__ == "__main__":
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
     
     #print 'wait services'
-    rospy.wait_for_service('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_joint')
+    #rospy.wait_for_service('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_joint')
 
     move_joint  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_joint', MoveJoint)
     move_jointx = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_jointx', MoveJointx)
