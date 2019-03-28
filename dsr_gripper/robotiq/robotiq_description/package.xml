@@ -4,7 +4,7 @@
 
   <name>robotiq_description</name>
 
-  <version>0.9.2</version>
+  <version>0.9.3</version>
   <description>
     The robotiq_description package. It has been adapted from:
     https://github.com/StanleyInnovation/robotiq_85_gripper
