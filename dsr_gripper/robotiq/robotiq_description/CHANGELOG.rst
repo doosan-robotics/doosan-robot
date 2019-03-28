@@ -2,5 +2,8 @@
 Changelog for package robotiq_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.9.1 (2019-03-27)
 ------------------
