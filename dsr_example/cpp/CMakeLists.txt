@@ -117,6 +117,12 @@ SET( SRC_FILES_MULTI_ROBOT_MOBILE
   ${COMMON_SRC_FILES}
   src/mobile/multi_robot_mobile.cpp
 )
+SET( SRC_FILES_SINGLE_ROBOT_MOBILE_CIRCLE
+  ${COMMON_SRC_FILES}
+  src/mobile/single_robot_mobile_circle.cpp
+)
+
+
 
 #---- demo src -----------------------------
 SET( SRC_SIMPLE_DANCE_M1013
@@ -223,6 +229,11 @@ target_link_libraries(single_robot_mobile ${catkin_LIBRARIES})
 add_executable(multi_robot_mobile ${SRC_FILES_MULTI_ROBOT_MOBILE})
 add_dependencies(multi_robot_mobile ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(multi_robot_mobile ${catkin_LIBRARIES})
+
+add_executable(single_robot_mobile_circle ${SRC_FILES_SINGLE_ROBOT_MOBILE_CIRCLE})
+add_dependencies(single_robot_mobile_circle ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(single_robot_mobile_circle ${catkin_LIBRARIES})
+
 
 
 #----- demo -------------------------------------------------------------------------------------------

@@ -32,16 +32,24 @@ static void thread_mobile()
 
     srand(time(0));
     geometry_msgs::Twist msg;
+    float x_odom = 0;
+    float z_angular = 0;
+    msg.linear.x = 10;
 
+    int time_cnt = 0;
     while(ros::ok())
     {
-        msg.linear.x = double(rand())/double(RAND_MAX);
-        msg.linear.y = double(rand())/double(RAND_MAX);
-        msg.angular.z = 2*double(rand())/double(RAND_MAX) - 1;
+        msg.linear.x = x_odom;
+        msg.angular.z = z_angular;
         pubMobile.publish(msg);
-
+	x_odom = x_odom + 0.1;
+        if(time_cnt > 1)
+        {
+            z_angular = z_angular + 0.005;
+        }
         //ROS_INFO("thread_mobile running...");
         time_sleep(0.1);
+        time_cnt++;
     }
 
 }
@@ -76,7 +84,7 @@ int main(int argc, char** argv)
     SET_ROBOT(my_robot_id, my_robot_model);
 
     //----- init ROS ---------------------- 
-    ros::init(argc, argv, "single_robot_mobile_cpp", ros::init_options::NoSigintHandler);  
+    ros::init(argc, argv, "single_robot_mobile_circle_cpp", ros::init_options::NoSigintHandler);  
     ros::NodeHandle nh("~");
     // Override the default ros sigint handler.
     // This must be set after the first NodeHandle is created.
@@ -155,9 +163,9 @@ int main(int argc, char** argv)
 
     }
 
-    ROS_INFO("single_robot_mobile_cpp finished !!!!!!!!!!!!!!!!!!!!!");
-    ROS_INFO("single_robot_mobile_cpp finished !!!!!!!!!!!!!!!!!!!!!");
-    ROS_INFO("single_robot_mobile_cpp finished !!!!!!!!!!!!!!!!!!!!!");
+    ROS_INFO("single_robot_mobile_circle_cpp finished !!!!!!!!!!!!!!!!!!!!!");
+    ROS_INFO("single_robot_mobile_circle_cpp finished !!!!!!!!!!!!!!!!!!!!!");
+    ROS_INFO("single_robot_mobile_circle_cpp finished !!!!!!!!!!!!!!!!!!!!!");
 
     ///if(&robot) delete (&robot); 
     thread_sub.join();
