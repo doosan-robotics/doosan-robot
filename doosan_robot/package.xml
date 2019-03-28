@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<package format="2">
-  <name>doosan_robotics</name>
+<package>
+  <name>doosan_robot</name>
   <version>0.9.2</version>
   <description>ROS packages for Doosan Robot</description>
 

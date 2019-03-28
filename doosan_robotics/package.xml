@@ -16,6 +16,19 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <exec_depend>dsr_bringup</exec_depend>
+  <exec_depend>dsr_control</exec_depend>
+  <exec_depend>dsr_description</exec_depend>
+  <exec_depend>robotiq_description</exec_depend>
+  <exec_depend>dsr_launcher</exec_depend>
+  <exec_depend>dsr_example_py</exec_depend>
+  <exec_depend>dsr_example_cpp</exec_depend>
+  <exec_depend>dsr_gazebo</exec_depend>
+  <exec_depend>moveit_config_m0609</exec_depend>
+  <exec_depend>moveit_config_m0617</exec_depend>
+  <exec_depend>moveit_config_m1013</exec_depend>
+  <exec_depend>moveit_config_m1509</exec_depend>
+  
   <build_depend>ros_control</build_depend>
   <build_depend>ros_controllers</build_depend>
   <build_depend>position_controllers</build_depend>
