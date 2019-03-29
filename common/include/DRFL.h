@@ -82,7 +82,8 @@ namespace DRAFramework
         DRFL_API void _DestroyRobotControl(LPROBOTCONTROL pCtrl);
 
         // connection
-        DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100");
+        ///DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100");
+        DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100", unsigned int usPort=12345);
         DRFL_API void _CloseConnection(LPROBOTCONTROL pCtrl);
 
         ////////////////////////////////////////////////////////////////////////////
@@ -277,7 +278,8 @@ namespace DRAFramework
         virtual ~CDRFL() { _DestroyRobotControl(_rbtCtrl);   }
 
         // connection
-        bool OpenConnection(string strIpAddr = "192.168.137.100") { return _OpenConnection(_rbtCtrl, strIpAddr.c_str()); };
+        //bool OpenConnection(string strIpAddr = "192.168.137.100") { return _OpenConnection(_rbtCtrl, strIpAddr.c_str()); };
+        bool OpenConnection(string strIpAddr = "192.168.137.100", unsigned int usPort = 12345) { return _OpenConnection(_rbtCtrl, strIpAddr.c_str(), usPort); };
         void CloseConnection() { _CloseConnection(_rbtCtrl); }
 
 
