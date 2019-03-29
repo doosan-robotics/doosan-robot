@@ -8,10 +8,11 @@
   #### [Usage](#chapter-3)
 
 # *build* <a id="chapter-2"></a>
-    mkdir -p dr_ws/src & cd dr_ws/src
-    git clone or download & unzip
-    cd ..
-    rosdep install --from-paths rs --ignore-src --rosdistro kinetic -r -y 
+    mkdir -p /home/path/to/your/workspace
+    catkin_init_workspace
+    git clone https://github.com/doosan-robotics/doosan-robot
+    cd /home/path/to/your/workspace
+    rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y 
     catkin_make
     source ./devel/setup.bash
 #### package list
@@ -34,12 +35,14 @@
 
 # *usage* <a id="chapter-3"></a>
 #### DRCF Emulator
+If you don`t have real doosan controller, you must excute our emulator. 
+Emulator has local IP(127.0.0.1).
 ```bash
 cd /home/path/to/workspace/doosan-robot/common/bin/DRCF
-sudo ./DRCF64   ## 64bits OS
+sudo ./DRCF64 <port>   ## 64bits OS
 or 
-sudo ./DRCF32   ## 32bits OS
-```
+sudo ./DRCF32 <port>   ## 32bits OS
+``` 
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -59,6 +62,7 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
 >host:= ROBOT_IP defalut = 192,168.137.100   
+host:= ROBOT_PORT default = 12345
 mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
 model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
 color:= ROBOT_COLOR <white  /  blue> defalut = white  
@@ -74,19 +78,21 @@ mobile:= USE_MOBILE <none  /  husky> defalut = none
       
 #### dsr_launcher
 ---
-> ###### __arguments__
-    >host:= ROBOT_IP defalut = 192,168.137.100   
+__If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
+> ###### __arguments__    
+   >host:= ROBOT_IP defalut = 192.168.137.100  ##Emulator IP = 127.0.0.1   
+    port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
     model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
     color:= ROBOT_COLOR <white  /  blue> defalut = white  
     gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
     mobile:= USE_MOBILE <none  /  husky> defalut = none  
 
-    roslaunch dsr_launcher single_robot_rviz.launch
-    roslaunch dsr_launcher single_robot_gazebo.launch
-    roslaunch dsr_launcher single_robot_rviz_gazebo.launch
+    roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
+    roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.137.100
+    roslaunch dsr_launcher single_robot_rviz_gazebo.launch gripper:=robotiq_2f mobile:=husky
     roslaunch dsr_launcher multi_robot_rviz.launch
-    roslaunch dsr_launcher multi_robot_gazebo.launch
+    roslaunch dsr_launcher multi_robot_gazebo.launch model:=m0609
     roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
 ---
 #### dsr_example
@@ -163,13 +169,6 @@ rostopic echo /serial_read
 rostopic pub /serial_write std_msgs/String 'data: 100'
 ```
 
-
-#### ~~dsr_apps~~
-    rosrun dsr_apps_cpp app_watch
-    rosrun dsr_apps_cpp app_watch.py
-    
-#### ~~dsr_test~~
-    rosrun dsr_test_cpp dsr_test
     
 #### gazebo+rviz+virtual
     roslaunch dsr_example test.launch
@@ -179,6 +178,7 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
     <arg name="ns" value="dsr01"/> # Robot ID
     <arg name="model" value="m1013"/> # Robot Model
     <arg name="host" value="192.168.137.100"/> # Robot IP
+    <arg name="port" value="12345"/> # Robot Port
     <arg name="mode" value="virtual"/> # Robot Controller Mode 
     # Position & Posture in Gazebo
     <arg name="x" value="2"/>
@@ -189,6 +189,7 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
     <arg name="ns" value="dsr02"/> # Secondary Robot ID
     <arg name="model" value="m1013"/> # Secondary Robot Model
     <arg name="host" value="192.168.137.102"/> # Secondary Robot IP
+    <arg name="port" value="12346"/> # Robot Port
     <arg name="mode" value="virtual"/> # Secondary Robot Controller Mode
     # Secondary Position & Posture in Gazebo
     <arg name="x" value="2"/>
