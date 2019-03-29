@@ -33,6 +33,13 @@
     sudo apt-get install ros-kinetic-robot-localization
 
 # *usage* <a id="chapter-3"></a>
+#### DRCF Emulator
+```bash
+cd /home/path/to/workspace/doosan-robot/common/bin/DRCF
+sudo ./DRCF64   ## 64bits OS
+or 
+sudo ./DRCF32   ## 32bits OS
+```
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
