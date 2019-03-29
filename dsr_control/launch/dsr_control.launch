@@ -2,7 +2,8 @@
 
 <launch>
 	<arg name="ns" default="dsr"/>
-	<arg name="host" default="192.168.137.100"/>
+	<arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
 	<arg name="mode" default="virtual"/>
 	<arg name="model" default="m1013"/>
 	<arg name="color" default="color"/>
@@ -28,7 +29,8 @@
 		<param name="rate" value="10" />
 		<param name="standby" value="5000" />
 		<param name="command" value="true" />
-		<param name="ipaddress" value="$(arg host)" />
+		<param name="host" value="$(arg host)" />
+		<param name="port" value="$(arg port)"/>
 		<param name="mode" value="$(arg mode)" />
 		<param name="model" value="$(arg model)" />
                 <param name="gripper" value="$(arg gripper)"/>

@@ -13,7 +13,7 @@
 using namespace dsr_control;
 
 int g_nKill_dsr_control = false; 
-void dsr_control_sigintHandler(int sig)
+void SigHandler(int sig)
 {
     // Do some custom action.
     // For example, publish a stop message to some other nodes.
@@ -30,12 +30,22 @@ void dsr_control_sigintHandler(int sig)
 
 int main(int argc, char** argv)
 {
-    signal(SIGINT, dsr_control_sigintHandler);
-
+    //----- init ROS ---------------------- 
     ///ros::init(argc, argv, "dsr_control_node");
     ros::init(argc, argv, "dsr_control_node", ros::init_options::NoSigintHandler);
     ros::NodeHandle private_nh("~");
     ///ros::NodeHandle nh("/dsr_control");
+    // Override the default ros sigint handler.
+    // This must be set after the first NodeHandle is created.
+    signal(SIGINT, SigHandler);
+
+    //----- get param ---------------------
+    int rate;
+    private_nh.param<int>("rate", rate, 50);
+    ROS_INFO("rate is %d\n", rate);
+    ros::Rate r(rate);
+
+    
 
     ///dsr_control::DRHWInterface arm(nh);
     DRHWInterface* pArm = NULL;
@@ -50,10 +60,10 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    int rate;
-    private_nh.param<int>("rate", rate, 50);
-    ROS_INFO("rate is %d\n", rate);
-    ros::Rate r(rate);
+//    int rate;
+//    private_nh.param<int>("rate", rate, 50);
+//    ROS_INFO("rate is %d\n", rate);
+//    ros::Rate r(rate);
 
     ros::Time last_time;
     ros::Time curr_time;
@@ -62,7 +72,7 @@ int main(int argc, char** argv)
 
     ROS_INFO("[dsr_control] controller_manager is updating!");
 
-    while(ros::ok() && (g_nKill_dsr_control==false))
+    while(ros::ok() && (false==g_nKill_dsr_control))
     ///while(g_nKill_dsr_control==false)
     {
         try{

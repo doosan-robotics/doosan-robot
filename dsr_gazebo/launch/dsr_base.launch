@@ -2,7 +2,8 @@
 
 <launch>
   <arg name="ns" default="dsr"/>
-  <arg name="host" default="192.168.137.100"/>
+  <arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
   <arg name="mode" default="virtual"/>
   <arg name="model" default="m1013"/>
   <arg name="color" default="white"/>
@@ -33,6 +34,7 @@
     <include file="$(find dsr_control)/launch/dsr_control.launch">
       <arg name="ns"            value="$(arg ns)"/>
       <arg name="host"          value="$(arg host)"/>
+      <arg name="port"          value="$(arg port)"/>
       <arg name="mode"          value="$(arg mode)"/>
       <arg name="model"         value="$(arg model)"/>
       <arg name="color"         value="$(arg color)"/>

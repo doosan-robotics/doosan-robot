@@ -1396,7 +1396,7 @@ def _move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR
 
     # ROS service call
     if __ROS__:
-        ret = _ros_move_spiral(axis, rev, rmax, lmax, _vel, _acc, _time, ref, _async)
+        ret = _ros_move_spiral(rev, rmax, lmax, _vel, _acc, _time, axis, ref, _async)
     else:    
         ret = PythonMgr.py_move_spiral(rev, rmax, lmax, _vel, _acc, _time, axis, ref, _async)
         print_ext_result("{0} = PythonMgr.py_move_spiral(rev:{1}, rmax:{2}, lmax:{3}, vel:{4}, acc:{5}, time:{6}, axis:{7}, ref:{8}, async:{9})" \
@@ -2966,7 +2966,7 @@ class CDsrRobot:
 
         # ROS service call
         if __ROS__:
-            ret = self._ros_move_spiral(axis, rev, rmax, lmax, _vel, _acc, _time, ref, _async)
+            ret = self._ros_move_spiral(rev, rmax, lmax, _vel, _acc, _time, axis, ref, _async)
         else:    
             ret = PythonMgr.py_move_spiral(rev, rmax, lmax, _vel, _acc, _time, axis, ref, _async)
             print_ext_result("{0} = PythonMgr.py_move_spiral(rev:{1}, rmax:{2}, lmax:{3}, vel:{4}, acc:{5}, time:{6}, axis:{7}, ref:{8}, async:{9})" \

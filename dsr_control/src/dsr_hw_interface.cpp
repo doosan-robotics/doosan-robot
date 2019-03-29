@@ -515,6 +515,7 @@ namespace dsr_control{
     bool DRHWInterface::init()
     {
         ROS_INFO("[dsr_hw_interface] init() ==> setup callback fucntion");
+        int nServerPort = 12345;
 
         //--- doosan API's call-back fuctions : Only work within 50msec in call-back functions
         Drfl.SetOnTpInitializingCompleted(OnTpInitializingCompletedCB);
@@ -527,15 +528,19 @@ namespace dsr_control{
         Drfl.SetOnMonitoringAccessControl(OnMonitoringAccessControlCB);
         Drfl.SetOnLogAlarm(OnLogAlarm);
         ROS_INFO("[dsr_hw_interface] init() ==> arm is standby");
-        std::string ipaddress;
+        std::string host;
         std::string mode;
-        private_nh_.getParam("ipaddress", ipaddress);
+        private_nh_.getParam("host", host);
+        private_nh_.param<int>("port", nServerPort, 12345);
+
         private_nh_.param<bool>("command", bCommand_, false);
         private_nh_.getParam("mode", mode);
 
-        ROS_INFO("ipaddress %s, bCommand: %d, mode: %s\n", ipaddress.c_str(), bCommand_, mode.c_str());
+        //for test host = "127.0.0.1";
 
-        if(Drfl.OpenConnection(ipaddress))
+        ROS_INFO("host %s, port=%d bCommand: %d, mode: %s\n", host.c_str(), nServerPort, bCommand_, mode.c_str());
+
+        if(Drfl.OpenConnection(host, nServerPort))
         {
             //--- Get version ---            
             SYSTEM_VERSION tSysVerion = {'\0', };

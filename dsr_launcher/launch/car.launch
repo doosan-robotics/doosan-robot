@@ -5,12 +5,19 @@
   <arg name="rviz"  default="true"/>
   <arg name="world" default="car.world"/>
 
-  <arg name="host1" default="192.168.137.100"/>
-  <arg name="host2" default="192.168.137.101"/>
-  <arg name="host3" default="192.168.137.102"/>
-  <arg name="host4" default="192.168.137.103"/>
-  <arg name="host5" default="192.168.137.104"/>
-  <arg name="host6" default="192.168.137.105"/>
+  <arg name="host1" default="127.0.0.1"/>
+  <arg name="host2" default="127.0.0.1"/>
+  <arg name="host3" default="127.0.0.1"/>
+  <arg name="host4" default="127.0.0.1"/>
+  <arg name="host5" default="127.0.0.1"/>
+  <arg name="host6" default="127.0.0.1"/>
+
+  <arg name="port1" default="12345"/>
+  <arg name="port2" default="12346"/>
+  <arg name="port3" default="12347"/>
+  <arg name="port4" default="12348"/>
+  <arg name="port5" default="12349"/>
+  <arg name="port6" default="12350"/>
 
   <arg name="mode1" default="virtual"/>
   <arg name="mode2" default="virtual"/>
@@ -48,10 +55,11 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr01"/>
     <arg name="host"          value="$(arg host1)"/>
+    <arg name="port"          value="$(arg port1)"/>
     <arg name="mode"          value="$(arg mode1)"/>
     <arg name="model"         value="$(arg model1)"/>
     <arg name="color"         value="$(arg color1)"/>
-    <arg name="gripper"       value="$(arg gripper)"/>
+    <arg name="gripper"       value="robotiq_2f"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="-1.5"/>
@@ -64,10 +72,11 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr02"/>
     <arg name="host"          value="$(arg host2)"/>
+    <arg name="port"          value="$(arg port2)"/>
     <arg name="mode"          value="$(arg mode2)"/>
     <arg name="model"         value="$(arg model2)"/>
     <arg name="color"         value="$(arg color2)"/>
-    <arg name="gripper"       value="$(arg gripper)"/>
+    <arg name="gripper"       value="none"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="0"/>
@@ -80,10 +89,11 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr03"/>
     <arg name="host"          value="$(arg host3)"/>
+    <arg name="port"          value="$(arg port3)"/>
     <arg name="mode"          value="$(arg mode3)"/>
     <arg name="model"         value="$(arg model3)"/>
     <arg name="color"         value="$(arg color3)"/>
-    <arg name="gripper"       value="$(arg gripper)"/>
+    <arg name="gripper"       value="none"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="1.5"/>
@@ -96,6 +106,7 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr04"/>
     <arg name="host"          value="$(arg host4)"/>
+    <arg name="port"          value="$(arg port4)"/>
     <arg name="mode"          value="$(arg mode4)"/>
     <arg name="model"         value="$(arg model4)"/>
     <arg name="color"         value="$(arg color4)"/>
@@ -112,6 +123,7 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr05"/>
     <arg name="host"          value="$(arg host5)"/>
+    <arg name="port"          value="$(arg port5)"/>
     <arg name="mode"          value="$(arg mode5)"/>
     <arg name="model"         value="$(arg model5)"/>
     <arg name="color"         value="$(arg color5)"/>
@@ -128,6 +140,7 @@
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns"            value="dsr06"/>
     <arg name="host"          value="$(arg host6)"/>
+    <arg name="port"          value="$(arg port6)"/>
     <arg name="mode"          value="$(arg mode6)"/>
     <arg name="model"         value="$(arg model6)"/>
     <arg name="color"         value="$(arg color6)"/>

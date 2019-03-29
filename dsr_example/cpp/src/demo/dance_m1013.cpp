@@ -80,7 +80,7 @@ int main(int argc, char** argv)
     float J04r4[6] = {-90.0, 0.0, -0.0, 0.0, 0.0, -0.0};
 
     float J05r[6] = {-144.0, -4.0, -84.8, -90.9, 54.0, -1.1};
-    float J06r[6];
+
     float J07r[6] = {-152.4, 12.4, -78.6, 18.7, -68.3, -37.7};
     float J08r[6] = {-90.0, 30.0, -120.0, -90.0, -90.0, 0.0};
 
@@ -122,31 +122,31 @@ int main(int argc, char** argv)
         robot.movel(X3, velx, accx, 2.5);
         
         for(int i=0; i<2; i++){
-            robot.movel(X2, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50);
-            robot.movel(X1, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50);
+            robot.movel(X2, velx, accx, 2.5, 50, MOVE_REFERENCE_BASE, MOVE_MODE_ABSOLUTE);
+            robot.movel(X1, velx, accx, 1.5, 50, MOVE_REFERENCE_BASE, MOVE_MODE_ABSOLUTE);
             robot.movel(X0, velx, accx, 2.5);
-            robot.movel(X1, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50);
-            robot.movel(X2, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50);
-            robot.movel(X3, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50);
+            robot.movel(X1, velx, accx, 2.5, 50, MOVE_REFERENCE_BASE, MOVE_MODE_ABSOLUTE);
+            robot.movel(X2, velx, accx, 1.5, 50, MOVE_REFERENCE_BASE, MOVE_MODE_ABSOLUTE);
+            robot.movel(X3, velx, accx, 2.5, 50, MOVE_REFERENCE_BASE, MOVE_MODE_ABSOLUTE);
         }
 
         robot.movej(J00, 60, 60, 6);
 
-        robot.movej(J01r, 0, 0, 2, MOVE_MODE_ABSOLUTE, 100);
-        robot.movej(J02r, 0, 0, 2, MOVE_MODE_ABSOLUTE, 50); 
+        robot.movej(J01r, 0, 0, 2, 100);
+        robot.movej(J02r, 0, 0, 2, 50); 
         robot.movej(J03r, 0, 0, 2);
 
         robot.movej(J04r, 0, 0, 1.5);
-        robot.movej(J04r1, 0, 0, 2, MOVE_MODE_ABSOLUTE, 50);
-        robot.movej(J04r2, 0, 0, 4, MOVE_MODE_ABSOLUTE, 50);
-        robot.movej(J04r3, 0, 0, 4, MOVE_MODE_ABSOLUTE, 50);
+        robot.movej(J04r1, 0, 0, 2, 50);
+        robot.movej(J04r2, 0, 0, 4, 50);
+        robot.movej(J04r3, 0, 0, 4, 50);
         robot.movej(J04r4, 0, 0, 2);
 
-        robot.movej(J05r, 0, 0, 2.5, MOVE_MODE_ABSOLUTE, 100); 
-        robot.movel(dREL1, velx, accx, 1, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_TOOL, 50); 
-        robot.movel(dREL2, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_TOOL, 100); 
+        robot.movej(J05r, 0, 0, 2.5, 100); 
+        robot.movel(dREL1, velx, accx, 1, 50, MOVE_REFERENCE_TOOL, MOVE_MODE_ABSOLUTE); 
+        robot.movel(dREL2, velx, accx, 1.5, 100, MOVE_REFERENCE_TOOL, MOVE_MODE_ABSOLUTE); 
 
-        robot.movej(J07r, 60, 60, 1.5, MOVE_MODE_ABSOLUTE, 100); 
+        robot.movej(J07r, 60, 60, 1.5, 100); 
         robot.movej(J08r, 60, 60, 2);
 
         robot.movej(JEnd, 60, 60, 4);
@@ -155,15 +155,15 @@ int main(int argc, char** argv)
         robot.move_spiral(3, 200, 100, vel_spi, acc_spi, 0, TASK_AXIS_X, MOVE_REFERENCE_TOOL);
 
         robot.movel(x01, velx, accx, 2);
-        robot.movel(x04, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100);
-        robot.movel(x03, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100);
-        robot.movel(x02, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100);
+        robot.movel(x04, velx, accx, 2, 100, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE);
+        robot.movel(x03, velx, accx, 2, 100, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE);
+        robot.movel(x02, velx, accx, 2, 100, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE);
         robot.movel(x01, velx, accx, 2);
         for(int i=0; i<6; i++){
             x0204c[0][i] = x02[i];
             x0204c[1][i] = x04[i];
         }
-        robot.movec(x0204c, velx, accx, 4 , MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 360);
+        robot.movec(x0204c, velx, accx, 4, 360, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE);
 
     }
 

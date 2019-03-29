@@ -4,7 +4,8 @@
   <arg name="gui"   default="true"/>
   <arg name="rviz"  default="true"/>
   <arg name="world" default="empty.world"/>
-  <arg name="host" default="192.168.137.100"/>
+  <arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
   <arg name="mode" default="virtual"/>
   <arg name="model" default="m1013"/>
   <arg name="color" default="white"/>
@@ -22,8 +23,9 @@
   <!-- Spawn the arms. -->
   <!-- include file="$(find dsr_bringup)/launch/dsr_base.launch"-->
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
-    <arg name="ns"            value="dsr01"/>
+    <arg name="ns"            value="dsr05"/>
     <arg name="host"          value="$(arg host)"/>
+    <arg name="port"          value="$(arg port)"/>
     <arg name="mode"          value="$(arg mode)"/>
     <arg name="model"         value="$(arg model)"/>
     <arg name="color"         value="$(arg color)"/>

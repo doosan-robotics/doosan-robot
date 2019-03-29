@@ -83,7 +83,6 @@ if __name__ == "__main__":
     J04r4 = [-90.0, 0.0, -0.0, 0.0, 0.0, -0.0]
 
     J05r = [-144.0, -4.0, -84.8, -90.9, 54.0, -1.1]
-    J06r
     J07r = [-152.4, 12.4, -78.6, 18.7, -68.3, -37.7]
     J08r = [-90.0, 30.0, -120.0, -90.0, -90.0, 0.0]
 
@@ -112,50 +111,52 @@ if __name__ == "__main__":
     x03 = [423.6, -265.5, 651.2, 76.1, -180.0, 76.1]
     x04 = [423.6, 34.5, 351.2, 81.3, -180.0, 81.3]
     x0204c = [x02, x04]
+
     while not rospy.is_shutdown():
-        movej(JReady, 20, 20)
+        movej(JReady, v=20, a=20)
 
-        movej(J1, 0, 0, 3)
-        movel(X3, velx, accx, 2.5)
+        movej(J1, v=0, a=0, t=3)
+        movel(X3, velx, accx, t=2.5)
         
-        fori in range(0, 1):
-            movel(X2, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50)
-            movel(X1, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50)
-            movel(X0, velx, accx, 2.5)
-            movel(X1, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50)
-            movel(X2, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50)
-            movel(X3, velx, accx, 2.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 50)
+        for i in range(0, 1):
+            movel(X2, velx, accx, t=2.5, radius=50, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+            movel(X1, velx, accx, t=1.5, radius=50, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+            movel(X0, velx, accx, t=2.5) 
+            movel(X1, velx, accx, t=2.5, radius=50, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+            movel(X2, velx, accx, t=1.5, radius=50, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+            movel(X3, velx, accx, t=2.5, radius=50, ref=DR_BASE, mod=DR_MV_MOD_ABS)
         
 
-        movej(J00, 60, 60, 6)
+        movej(J00, v=60, a=60, t=6)
 
-        movej(J01r, 0, 0, 2, MOVE_MODE_ABSOLUTE, 100)
-        movej(J02r, 0, 0, 2, MOVE_MODE_ABSOLUTE, 50) 
-        movej(J03r, 0, 0, 2)
+        movej(J01r, v=0, a=0, t=2, radius=100, mod=DR_MV_MOD_ABS)
+        movej(J02r, v=0, a=0, t=2, radius=50, mod=DR_MV_MOD_ABS) 
+        movej(J03r, v=0, a=0, t=2)
 
-        movej(J04r, 0, 0, 1.5)
-        movej(J04r1, 0, 0, 2, MOVE_MODE_ABSOLUTE, 50)
-        movej(J04r2, 0, 0, 4, MOVE_MODE_ABSOLUTE, 50)
-        movej(J04r3, 0, 0, 4, MOVE_MODE_ABSOLUTE, 50)
-        movej(J04r4, 0, 0, 2)
+        movej(J04r, v=0, a=0, t=1.5)
+        movej(J04r1, v=0, a=0, t=2, radius=50, mod=DR_MV_MOD_ABS)
+        movej(J04r2, v=0, a=0, t=4, radius=50, mod=DR_MV_MOD_ABS)
+        movej(J04r3, v=0, a=0, t=4, radius=50, mod=DR_MV_MOD_ABS)
+        movej(J04r4, v=0, a=0, t=2)
 
-        movej(J05r, 0, 0, 2.5, MOVE_MODE_ABSOLUTE, 100) 
-        movel(dREL1, velx, accx, 1, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_TOOL, 50) 
-        movel(dREL2, velx, accx, 1.5, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_TOOL, 100) 
+        movej(J05r, v=0, a=0, t=2.5, radius=100, mod=DR_MV_MOD_ABS) 
+        movel(dREL1, velx, accx, t=1, radius=50, ref=DR_TOOL, mod=DR_MV_MOD_ABS) 
+        movel(dREL2, velx, accx, t=1.5, radius=100, ref=DR_TOOL, mod=DR_MV_MOD_ABS) 
 
-        movej(J07r, 60, 60, 1.5, MOVE_MODE_ABSOLUTE, 100) 
-        movej(J08r, 60, 60, 2)
+        movej(J07r, v=60, a=60, t=1.5, radius=100, mod=DR_MV_MOD_ABS) 
+        movej(J08r, v=60, a=60, t=2)
 
-        movej(JEnd, 60, 60, 4)
+        movej(JEnd, v=60, a=60, t=4)
 
-        move_periodic(amp, period, 0, 1, MOVE_REFERENCE_TOOL)
-        move_spiral(3, 200, 100, vel_spi, acc_spi, 0, TASK_AXIS_X, MOVE_REFERENCE_TOOL)
+        move_periodic(amp, period, 0, 1, ref=DR_TOOL)
+        move_spiral(rev=3, rmax=200, lmax=100, v=vel_spi, a=acc_spi, t=0, axis=DR_AXIS_X, ref=DR_TOOL)
 
-        movel(x01, velx, accx, 2)
-        movel(x04, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100)
-        movel(x03, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100)
-        movel(x02, velx, accx, 2, MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 100)
-        movel(x01, velx, accx, 2)  
-        movec(x0204c, velx, accx, 4 , MOVE_MODE_ABSOLUTE, MOVE_REFERENCE_BASE, 360)
+        movel(x01, velx, accx, t=2)
+        movel(x04, velx, accx, t=2, radius=100, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+        movel(x03, velx, accx, t=2, radius=100, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+        movel(x02, velx, accx, t=2, radius=100, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+        movel(x01, velx, accx, t=2)  
+
+        movec(pos1=x02, pos2=x04, v=velx, a=accx, t=4, radius=360, mod=DR_MV_MOD_ABS, ref=DR_BASE)
 
     print 'good bye!'
