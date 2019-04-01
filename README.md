@@ -8,7 +8,8 @@
   #### [Usage](#chapter-3)
 
 # *build* <a id="chapter-2"></a>
-    mkdir -p /home/path/to/your/workspace
+    mkdir -p /home/path/to/your/workspace/src   ### We recoomand the /home/<user_home>/catkin_ws/src
+    cd /home/path/to/your/workspace/src
     catkin_init_workspace
     git clone https://github.com/doosan-robotics/doosan-robot
     cd /home/path/to/your/workspace
@@ -16,7 +17,7 @@
     catkin_make
     source ./devel/setup.bash
 #### package list
-    ros-kinetic-rqt*
+    sudo apt-get install ros-kinetic-rqt*
     ros-kinetic-moveit*
     ros-kinetic-industrial-core
     ros-kinetic-gazebo-ros-control
