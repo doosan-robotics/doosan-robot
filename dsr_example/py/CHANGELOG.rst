@@ -2,8 +2,8 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2019-04-01)
+------------------
 * Emulator commit
 * Merge pull request `#10 <https://github.com/doosan-robotics/doosan-robot/issues/10>`_ from gavanderhoorn/patch-1
   Thank you for your commit!

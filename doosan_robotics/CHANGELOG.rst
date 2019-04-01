@@ -2,8 +2,8 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2019-04-01)
+------------------
 * edit package
 * Contributors: doosan-robotics
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>doosan_robot</name>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
   <description>ROS packages for Doosan Robot</description>
 
   <maintainer email="ros.robotics@doosan.com">Doosan Robotics</maintainer>

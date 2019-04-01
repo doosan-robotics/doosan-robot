@@ -2,8 +2,8 @@
 Changelog for package dsr_example_cpp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2019-04-01)
+------------------
 * Emulator commit
 * example added
 * Contributors: doosan-robotics

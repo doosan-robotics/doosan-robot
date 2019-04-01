@@ -2,8 +2,8 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.4 (2019-04-01)
+------------------
 * Update car.launch
 * Update single_robot_rviz_gazebo.launch
 * Update single_robot_rviz.launch
