@@ -59,7 +59,7 @@
     <arg name="mode"          value="$(arg mode1)"/>
     <arg name="model"         value="$(arg model1)"/>
     <arg name="color"         value="$(arg color1)"/>
-    <arg name="gripper"       value="robotiq_2f"/>
+    <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="-1.5"/>
@@ -76,7 +76,7 @@
     <arg name="mode"          value="$(arg mode2)"/>
     <arg name="model"         value="$(arg model2)"/>
     <arg name="color"         value="$(arg color2)"/>
-    <arg name="gripper"       value="none"/>
+    <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="0"/>
@@ -93,7 +93,7 @@
     <arg name="mode"          value="$(arg mode3)"/>
     <arg name="model"         value="$(arg model3)"/>
     <arg name="color"         value="$(arg color3)"/>
-    <arg name="gripper"       value="none"/>
+    <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="1.5"/>
