@@ -16,22 +16,22 @@
     catkin_make
     source ./devel/setup.bash
 #### package list
-    sudo apt-get install ros-kinetic-rqt*
-    sudo apt-get install ros-kinetic-moveit*
-    sudo apt-get install ros-kinetic-industrial-core
-    sudo apt-get install ros-kinetic-gazebo-ros-control
-    sudo apt-get install ros-kinetic-joint-state-controller 
-    sudo apt-get install ros-kinetic-effort-controllers 
-    sudo apt-get install ros-kinetic-position-controllers 
-    sudo apt-get install ros-kinetic-ros-controllers
-    sudo apt-get install ros-kinetic-ros-control
-    sudo apt-get install ros-kinetic-serial
-    sudo apt-get install ros-kinetic-lms1xx
-    sudo apt-get install ros-kinetic-interactive-marker-twist-server
-    sudo apt-get install ros-kinetic-twist-mux
-    sudo apt-get install ros-kinetic-imu-tools
-    sudo apt-get install ros-kinetic-controller-manager
-    sudo apt-get install ros-kinetic-robot-localization
+    ros-kinetic-rqt*
+    ros-kinetic-moveit*
+    ros-kinetic-industrial-core
+    ros-kinetic-gazebo-ros-control
+    ros-kinetic-joint-state-controller 
+    ros-kinetic-effort-controllers 
+    ros-kinetic-position-controllers 
+    ros-kinetic-ros-controllers
+    ros-kinetic-ros-control
+    ros-kinetic-serial
+    ros-kinetic-lms1xx
+    ros-kinetic-interactive-marker-twist-server
+    ros-kinetic-twist-mux
+    ros-kinetic-imu-tools
+    ros-kinetic-controller-manager
+    ros-kinetic-robot-localization
 
 # *usage* <a id="chapter-3"></a>
 #### DRCF Emulator
