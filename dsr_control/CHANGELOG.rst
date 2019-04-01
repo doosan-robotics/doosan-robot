@@ -2,6 +2,11 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Emulator commit
+* Contributors: doosan-robotics
+
 0.9.3 (2019-03-28)
 ------------------
 

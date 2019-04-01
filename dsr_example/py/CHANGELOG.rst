@@ -2,6 +2,15 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Emulator commit
+* Merge pull request `#10 <https://github.com/doosan-robotics/doosan-robot/issues/10>`_ from gavanderhoorn/patch-1
+  Thank you for your commit!
+* example added
+* example: fix actionlib_msgs dependency typo.
+* Contributors: G.A. vd. Hoorn, doosan robotics ros master, doosan-robotics
+
 0.9.3 (2019-03-28)
 ------------------
 
