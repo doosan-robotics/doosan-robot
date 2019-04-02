@@ -19,7 +19,6 @@
   <exec_depend>dsr_bringup</exec_depend>
   <exec_depend>dsr_control</exec_depend>
   <exec_depend>dsr_description</exec_depend>
-  <exec_depend>robotiq_description</exec_depend>
   <exec_depend>dsr_launcher</exec_depend>
   <exec_depend>dsr_example_py</exec_depend>
   <exec_depend>dsr_example_cpp</exec_depend>
