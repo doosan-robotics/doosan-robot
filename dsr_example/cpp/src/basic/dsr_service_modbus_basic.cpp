@@ -98,7 +98,7 @@ int movej(float fTargetPos[NUM_JOINT],
     srv.request.syncType = nSyncType;
     if(srvMoveJoint.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -123,7 +123,7 @@ int set_modbus_output(string strName,
 
     if(srvSetModbusOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -144,7 +144,7 @@ int get_modbus_input(string strName)
     srv.request.name = strName;
     if(srvGetModbusInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.value: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.value: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -175,7 +175,7 @@ int config_create_modbus(string strName,
 
     if(srvConfigCreateModbus.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -197,7 +197,7 @@ int config_delete_modbus(string strName)
 
     if(srvConfigDeleteModbus.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else

@@ -68,6 +68,3 @@ if __name__ == "__main__":
             set_modbus_output("ro1", 30)
 
     print 'good bye!'
-    print 'good bye!'
-    print 'good bye!' 
-

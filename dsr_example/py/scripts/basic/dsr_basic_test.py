@@ -134,7 +134,3 @@ if __name__ == "__main__":
         move_blending(mb_seg, posCnt, velx, accx, time, ref, mode, syncType)
 
     print 'good bye!'
-    print 'good bye!'
-    print 'good bye!' 
-
-

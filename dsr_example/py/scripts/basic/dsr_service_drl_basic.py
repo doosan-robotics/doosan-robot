@@ -71,7 +71,3 @@ if __name__ == "__main__":
     drl_start(ROBOT_SYSTEM_VIRTUAL, drlCodeMove + drlCodeHome)
 
     print 'good bye!'
-    print 'good bye!'
-    print 'good bye!' 
-
-

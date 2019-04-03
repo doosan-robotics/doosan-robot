@@ -58,14 +58,14 @@ int movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float
     srv.request.blendType = nBlendingType; 
     srv.request.syncType = nSyncType;
 
-    ROS_INFO("service call: /dsr01m1013/motion/move_joint");
-    ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
-    ROS_INFO("  <vel> %7.3f , <acc> %7.3f, <time> %7.3f",srv.request.vel, srv.request.acc, srv.request.time);
-    ROS_INFO("  <mode> %d , <radius> %7.3f, <blendType> %d",srv.request.mode, srv.request.radius, srv.request.blendType);
+    //ROS_INFO("service call: /dsr01m1013/motion/move_joint");
+    //ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
+    //ROS_INFO("  <vel> %7.3f , <acc> %7.3f, <time> %7.3f",srv.request.vel, srv.request.acc, srv.request.time);
+    //ROS_INFO("  <mode> %d , <radius> %7.3f, <blendType> %d",srv.request.mode, srv.request.radius, srv.request.blendType);
 
     if(srvMoveJoint.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -109,7 +109,7 @@ int movel(float fTargetPos[NUM_JOINT], float fTargetVel[2], float fTargetAcc[2],
 
     if(srvMoveLine.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -146,7 +146,7 @@ int movejx(float fTargetPos[NUM_TASK], float fTargetVel, float fTargetAcc, float
 
     if(srvMoveJointx.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -207,7 +207,7 @@ int movec(float fTargetPos[2][NUM_TASK], float fTargetVel[2], float fTargetAcc[2
 
     if(srvMoveCircle.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -251,7 +251,7 @@ int movesj(float fTargetPos[MAX_SPLINE_POINT][NUM_JOINT], int nPosCount, float f
 
     if(srvMoveSplineJoint.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -299,7 +299,7 @@ int movesx(float fTargetPos[MAX_SPLINE_POINT][NUM_TASK], int nPosCount, float fT
 
     if(srvMoveSplineTask.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -353,7 +353,7 @@ int moveb(MOVE_POSB* fTargetPos, int nPosCount, float fTargetVel[2], float fTarg
 
     if(srvMoveBlending.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -392,7 +392,7 @@ int move_spiral(float fRevolution, float fMaxRadius, float fMaxLength, float fTa
     srv.request.syncType = nSyncType;
 
     if(srvMoveSpiral.call(srv)){
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else{
@@ -425,7 +425,7 @@ int move_periodic(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float f
 
     if(srvMovePeriodic.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -451,7 +451,7 @@ int move_wait()
 
     if(srvMoveWait.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else

@@ -79,7 +79,7 @@ int drl_pause()
 
     if(srvDrlPause.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -99,7 +99,7 @@ int drl_resume()
 
     if(srvDrlResume.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -123,7 +123,7 @@ int drl_start(int nRobotSystem,
 
     if(srvDrlStart.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -145,7 +145,7 @@ int drl_stop(int nStopMode = STOP_TYPE_QUICK)
 
     if(srvDrlStop.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else

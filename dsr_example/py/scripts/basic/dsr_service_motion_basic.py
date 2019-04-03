@@ -69,15 +69,8 @@ def amovejx(fTargetPos, fTargetVel, fTargetAcc, fTargetTime=0.0,
 
 def  movec(fTargetPos, fTargetVel, fTargetAcc, fTargetTime = 0.0, fBlendingRadius = 0.0, 
            nMoveReference = MOVE_REFERENCE_BASE, nMoveMode = MOVE_MODE_ABSOLUTE, fAngle1 = 0.0, fAngle2 = 0.0, nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE, nSyncType = 0):
-
-    print("XXXXXXXXXXXXXX fTargetPos[0] = {0}".format(fTargetPos[0]))
-    print("XXXXXXXXXXXXXX fTargetPos[1] = {0}".format(fTargetPos[1]))
-
     #_circle_pos = _ros_listToFloat64MultiArray([fTargetPos[0], fTargetPos[1]])
     _circle_pos = _ros_listToFloat64MultiArray(fTargetPos)
-
-    print("XXXXXXXXXXXXXX _circle_pos = {0}".format(_circle_pos))
-
     return srv_move_circle(_circle_pos, fTargetVel, fTargetAcc, fTargetTime, fBlendingRadius, nMoveReference, nMoveMode, fAngle1, fAngle2, nBlendingType, 0)
 def amovec(fTargetPos, fTargetVel, fTargetAcc, fTargetTime = 0.0, fBlendingRadius = 0.0,
            nMoveReference = MOVE_REFERENCE_BASE, nMoveMode = MOVE_MODE_ABSOLUTE, fAngle1 = 0.0, fAngle2 = 0.0, nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE, nSyncType = 0):
@@ -90,11 +83,6 @@ def  movesj(fTargetPos, nPosCount, fTargetVel, fTargetAcc, fTargetTime = 0.0,
             nMoveMode = MOVE_MODE_ABSOLUTE, nSyncType = 0):
 
     _spline_joint_pos = _ros_listToFloat64MultiArray(fTargetPos)
-
-    print("XXXXXXXXXXXXXX _spline_joint_pos = {0}".format(_spline_joint_pos) )
-    print("XXXXXXXXXXXXXX len(fTargetPos) = {0}".format(len(fTargetPos)) )
-    print("XXXXXXXXXXXXXX len(_spline_joint_pos) = {0}".format(len(_spline_joint_pos)) )
-
     return srv_move_spline_joint(_spline_joint_pos, len(_spline_joint_pos), fTargetVel, fTargetAcc, fTargetTime, nMoveMode, 0)
 def amovesj(fTargetPos, nPosCount, fTargetVel, fTargetAcc, fTargetTime = 0.0, 
             nMoveMode = MOVE_MODE_ABSOLUTE, nSyncType = 0):
@@ -114,11 +102,7 @@ def amovesx(fTargetPos, nPosCount, fTargetVel, fTargetAcc, fTargetTime = 0.0,
 
 def  moveb(fTargetPos, nPosCount, fTargetVel, fTargetAcc, fTargetTime = 0.0,
            nMoveMode = MOVE_MODE_ABSOLUTE, nMoveReference = MOVE_REFERENCE_BASE, nSyncType = 0):
-
     _moveb_pos = _ros_listToFloat64MultiArray(fTargetPos)
-
-    print("XXXXXXXXXXXXXX _moveb_pos = {0}".format(_moveb_pos) )
-    print("XXXXXXXXXXXXXX len(fTargetPos) = {0}".format(len(_moveb_pos)) )
     return srv_move_blending(_moveb_pos, len(_moveb_pos), fTargetVel, fTargetAcc, fTargetTime, nMoveMode, nMoveReference, 0)
 def amoveb(fTargetPos, nPosCount, fTargetVel, fTargetAcc, fTargetTime = 0.0,
            nMoveMode = MOVE_MODE_ABSOLUTE, nMoveReference = MOVE_REFERENCE_BASE, nSyncType = 0):
@@ -333,7 +317,3 @@ if __name__ == "__main__":
     '''
 
     print 'good bye!'
-    print 'good bye!'
-    print 'good bye!' 
-
-

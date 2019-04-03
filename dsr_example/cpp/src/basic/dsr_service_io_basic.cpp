@@ -99,7 +99,7 @@ int movej(float fTargetPos[NUM_JOINT],
 
     if(srvMoveJoint.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -124,7 +124,7 @@ int set_digital_output(int nGpioIndex,
     
     if(srvSetCtrlBoxDigitalOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -146,7 +146,7 @@ int get_digital_input(int nGpioIndex)
 
     if(srvGetCtrlBoxDigitalInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -170,7 +170,7 @@ int set_tool_digital_output(int nGpioIndex,
 
     if(srvSetToolDigitalOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -192,7 +192,7 @@ int get_tool_digital_input(int nGpioIndex)
 
     if(srvGetToolDigitalInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -216,7 +216,7 @@ int set_analog_output(int nGpioChannel,
 
     if(srvSetCtrlBoxAnalogOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -238,7 +238,7 @@ int get_analog_input(int nGpioChannel)
 
     if(srvGetCtrlBoxAnalogInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -262,7 +262,7 @@ int set_analog_output_type(int nGpioChannel,
 
     if(srvSetCtrlBoxAnalogOutputType.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -286,7 +286,7 @@ int set_analog_input_type(int nGpioChannel,
 
     if(srvSetCtrlBoxAnalogInputType.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else

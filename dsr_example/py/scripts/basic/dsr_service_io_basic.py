@@ -68,6 +68,3 @@ if __name__ == "__main__":
         pass
 
     print 'good bye!'
-    print 'good bye!'
-    print 'good bye!' 
-

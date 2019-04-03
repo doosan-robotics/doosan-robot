@@ -35,7 +35,7 @@ int gripper_send_data(string send_data){
     
     if(srvSerialSendData.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else

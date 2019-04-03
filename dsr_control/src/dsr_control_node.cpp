@@ -45,8 +45,6 @@ int main(int argc, char** argv)
     ROS_INFO("rate is %d\n", rate);
     ros::Rate r(rate);
 
-    
-
     ///dsr_control::DRHWInterface arm(nh);
     DRHWInterface* pArm = NULL;
     pArm = new DRHWInterface(private_nh);
@@ -93,13 +91,10 @@ int main(int argc, char** argv)
         }
     }
 
-    ROS_INFO("[dsr_control] Good-bye!");
-    ROS_INFO("[dsr_control] Good-bye!");
-    ROS_INFO("[dsr_control] Good-bye!");
-
     spinner.stop();
+    //if(pArm) delete(pArm);
 
-///kkk    if(pArm) delete(pArm);    //멀티로봇에서 if(pArm) delete(pArm) 하면 에러가 날까???????????????????????
+    ROS_INFO("[dsr_control] Good-bye!");
 
     return 0;
 }

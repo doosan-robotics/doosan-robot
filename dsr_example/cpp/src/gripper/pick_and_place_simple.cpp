@@ -35,7 +35,7 @@ int gripper_move(bool flag)
 
         if(srvRobotiq2FOpen.call(srvOpen))
         {         
-            ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srvOpen.response.success);
+            //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srvOpen.response.success);
             return (srvOpen.response.success);
         }
         else
@@ -51,7 +51,7 @@ int gripper_move(bool flag)
         
         if(srvRobotiq2FClose.call(srvClose))
         {         
-            ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srvClose.response.success);
+            //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srvClose.response.success);
             return (srvClose.response.success);
         }
         else

@@ -53,7 +53,7 @@ int CDsrRobot::_movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTarg
 
     if(srvMoveJoint.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -94,14 +94,14 @@ int CDsrRobot::_movel(float fTargetPos[NUM_JOINT], float fTargetVel[2], float fT
     srv.request.blendType = nBlendingType; 
     srv.request.syncType = nSyncType;
 
-    ROS_INFO("service call: %s/motion/move_line",m_strSrvNamePrefix.c_str());
-    ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
-    ROS_INFO("  <vel> %7.3f,%7.3f <acc> %7.3f,%7.3f <time> %7.3f",srv.request.vel[0],srv.request.vel[1],srv.request.acc[0],srv.request.acc[1], srv.request.time);
-    ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType);
+    //ROS_INFO("service call: %s/motion/move_line",m_strSrvNamePrefix.c_str());
+    //ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
+    //ROS_INFO("  <vel> %7.3f,%7.3f <acc> %7.3f,%7.3f <time> %7.3f",srv.request.vel[0],srv.request.vel[1],srv.request.acc[0],srv.request.acc[1], srv.request.time);
+    //ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType);
 
     if(srvMoveLine.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -139,14 +139,14 @@ int CDsrRobot::_movejx(float fTargetPos[NUM_TASK], float fTargetVel, float fTarg
     srv.request.blendType = nBlendingType;
     srv.request.sol = nSolSpace;
 
-    ROS_INFO("service call: %s/motion/move_jointx",m_strSrvNamePrefix.c_str());
-    ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
-    ROS_INFO("  <vel> %7.3f <acc> %7.3f <time> %7.3f",srv.request.vel,srv.request.acc, srv.request.time);
-    ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d, <sol> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType, srv.request.sol);
+    //ROS_INFO("service call: %s/motion/move_jointx",m_strSrvNamePrefix.c_str());
+    //ROS_INFO("  <pos> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0],srv.request.pos[1],srv.request.pos[2],srv.request.pos[3],srv.request.pos[4],srv.request.pos[5]);
+    //ROS_INFO("  <vel> %7.3f <acc> %7.3f <time> %7.3f",srv.request.vel,srv.request.acc, srv.request.time);
+    //ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d, <sol> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType, srv.request.sol);
 
     if(srvMoveJointx.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -184,11 +184,10 @@ int CDsrRobot::_movec(float fTargetPos[2][NUM_TASK], float fTargetVel[2], float 
         poses.push_back(pos);
     }
 
-    ROS_INFO("  <xxx pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[0][0],fTargetPos[0][1],fTargetPos[0][2],fTargetPos[0][3],fTargetPos[0][4],fTargetPos[0][5]);
-    ROS_INFO("  <xxx pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[1][0],fTargetPos[1][1],fTargetPos[1][2],fTargetPos[1][3],fTargetPos[1][4],fTargetPos[1][5]);
-
-    ROS_INFO("  <pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",poses[0].data[0],poses[0].data[1],poses[0].data[2],poses[0].data[3],poses[0].data[4],poses[0].data[5]);
-    ROS_INFO("  <pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",poses[1].data[0],poses[1].data[1],poses[1].data[2],poses[1].data[3],poses[1].data[4],poses[1].data[5]);
+    //ROS_INFO("  <xxx pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[0][0],fTargetPos[0][1],fTargetPos[0][2],fTargetPos[0][3],fTargetPos[0][4],fTargetPos[0][5]);
+    //ROS_INFO("  <xxx pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[1][0],fTargetPos[1][1],fTargetPos[1][2],fTargetPos[1][3],fTargetPos[1][4],fTargetPos[1][5]);
+    //ROS_INFO("  <pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",poses[0].data[0],poses[0].data[1],poses[0].data[2],poses[0].data[3],poses[0].data[4],poses[0].data[5]);
+    //ROS_INFO("  <pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",poses[1].data[0],poses[1].data[1],poses[1].data[2],poses[1].data[3],poses[1].data[4],poses[1].data[5]);
 
     srv.request.pos = poses;
     for(int i=0; i<2; i++){
@@ -202,15 +201,15 @@ int CDsrRobot::_movec(float fTargetPos[2][NUM_TASK], float fTargetVel[2], float 
     srv.request.blendType = nBlendingType;
     srv.request.syncType = nSyncType;
 
-    ROS_INFO("service call: %s/motion/move_circle",m_strSrvNamePrefix.c_str());
-    ROS_INFO("  <pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0].data[0],srv.request.pos[0].data[1],srv.request.pos[0].data[2],srv.request.pos[0].data[3],srv.request.pos[0].data[4],srv.request.pos[0].data[5]);
-    ROS_INFO("  <pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[1].data[0],srv.request.pos[1].data[1],srv.request.pos[1].data[2],srv.request.pos[1].data[3],srv.request.pos[1].data[4],srv.request.pos[1].data[5]);
-    ROS_INFO("  <vel> %7.3f,%7.3f <acc> %7.3f,%7.3f <time> %7.3f",srv.request.vel[0],srv.request.vel[1],srv.request.acc[0],srv.request.acc[1], srv.request.time);
-    ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType);
+    //ROS_INFO("service call: %s/motion/move_circle",m_strSrvNamePrefix.c_str());
+    //ROS_INFO("  <pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[0].data[0],srv.request.pos[0].data[1],srv.request.pos[0].data[2],srv.request.pos[0].data[3],srv.request.pos[0].data[4],srv.request.pos[0].data[5]);
+    //ROS_INFO("  <pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",srv.request.pos[1].data[0],srv.request.pos[1].data[1],srv.request.pos[1].data[2],srv.request.pos[1].data[3],srv.request.pos[1].data[4],srv.request.pos[1].data[5]);
+    //ROS_INFO("  <vel> %7.3f,%7.3f <acc> %7.3f,%7.3f <time> %7.3f",srv.request.vel[0],srv.request.vel[1],srv.request.acc[0],srv.request.acc[1], srv.request.time);
+    //ROS_INFO("  <mode> %d, <ref> %d, <radius> %7.3f, <blendType> %d",srv.request.mode,srv.request.ref, srv.request.radius, srv.request.blendType);
 
     if(srvMoveCircle.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -258,7 +257,7 @@ int CDsrRobot::_movesj(float fTargetPos[MAX_SPLINE_POINT][NUM_JOINT], int nPosCo
 
     if(srvMoveSplineJoint.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -310,7 +309,7 @@ int CDsrRobot::_movesx(float fTargetPos[MAX_SPLINE_POINT][NUM_TASK], int nPosCou
 
     if(srvMoveSplineTask.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -367,7 +366,7 @@ int CDsrRobot::_moveb(MOVE_POSB* fTargetPos, int nPosCount, float fTargetVel[2],
 
     if(srvMoveBlending.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -408,7 +407,7 @@ int CDsrRobot::_move_spiral(float fRevolution, float fMaxRadius, float fMaxLengt
     srv.request.syncType = nSyncType;
 
     if(srvMoveSpiral.call(srv)){
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else{
@@ -446,7 +445,7 @@ int CDsrRobot::_move_periodic(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TA
 
     if(srvMovePeriodic.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -469,7 +468,7 @@ int CDsrRobot::move_wait()
     
     if(srvMoveWait.call(srv))
     {
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -497,7 +496,7 @@ int CDsrRobot::config_create_tcp(string strName, float fTargetPos[NUM_TASK])
 
     if(srvConfigCreateTcp.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -519,7 +518,7 @@ int CDsrRobot::config_delete_tcp(string strName)
 
     if(srvConfigDeleteTcp.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -541,7 +540,7 @@ int CDsrRobot::set_current_tcp(string strName)
     ROS_INFO("set current tcp name is : %s", strName.c_str());
     if(srvSetCurrentTcp.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -561,7 +560,7 @@ string CDsrRobot::get_current_tcp()
 
     if(srvGetCurrentTcp.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %s\n", (srv.response.info).c_str());
+        //ROS_INFO("receive srv, srv.response.success: %s\n", (srv.response.info).c_str());
         return (srv.response.info);
     }
     else
@@ -595,7 +594,7 @@ int CDsrRobot::config_create_tool(string strName,
 
     if(srvConfigCreateTool.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -616,7 +615,7 @@ int CDsrRobot::config_delete_tool(string strName)
     srv.request.name = strName;
     if(srvConfigDeleteTool.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -637,7 +636,7 @@ int CDsrRobot::set_current_tool(string strName)
     srv.request.name = strName;
     if(srvSetCurrentTool.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -657,7 +656,7 @@ string CDsrRobot::get_current_tool()
 
     if(srvGetCurrentTool.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %s\n", srv.response.info.c_str());
+        //ROS_INFO("receive srv, srv.response.success: %s\n", srv.response.info.c_str());
         return (srv.response.info);
     }
     else
@@ -682,7 +681,7 @@ int CDsrRobot::set_digital_output(int nGpioIndex, bool bGpioValue)
     
     if(srvSetCtrlBoxDigitalOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -704,7 +703,7 @@ int CDsrRobot::get_digital_input(int nGpioIndex)
 
     if(srvGetCtrlBoxDigitalInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -727,7 +726,7 @@ int CDsrRobot::set_tool_digital_output(int nGpioIndex, bool bGpioValue)
 
     if(srvSetToolDigitalOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -749,7 +748,7 @@ int CDsrRobot::get_tool_digital_input(int nGpioIndex)
 
     if(srvGetToolDigitalInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -772,7 +771,7 @@ int CDsrRobot::set_analog_output(int nGpioChannel, float fGpioValue)
 
     if(srvSetCtrlBoxAnalogOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -794,7 +793,7 @@ int CDsrRobot::get_analog_input(int nGpioChannel)
 
     if(srvGetCtrlBoxAnalogInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -817,7 +816,7 @@ int CDsrRobot::set_analog_output_type(int nGpioChannel, int nGpioMode)
 
     if(srvSetCtrlBoxAnalogOutputType.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -840,7 +839,7 @@ int CDsrRobot::set_analog_input_type(int nGpioChannel, int nGpioMode)
 
     if(srvSetCtrlBoxAnalogInputType.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -874,7 +873,7 @@ int CDsrRobot::config_create_modbus(string strName,
 
     if(srvConfigCreateModbus.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -896,7 +895,7 @@ int CDsrRobot::config_delete_modbus(string strName)
 
     if(srvConfigDeleteModbus.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -920,7 +919,7 @@ int CDsrRobot::set_modbus_output(string strName,
 
     if(srvSetModbusOutput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -941,7 +940,7 @@ int CDsrRobot::get_modbus_input(string strName)
     srv.request.name = strName;
     if(srvGetModbusInput.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.value);
         return (srv.response.value);
     }
     else
@@ -966,7 +965,7 @@ int CDsrRobot::drl_start(int nRobotSystem, string strCode)
 
     if(srvDrlStart.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -988,7 +987,7 @@ int CDsrRobot::drl_stop(int nStopMode/* = STOP_TYPE_QUICK*/)
 
     if(srvDrlStop.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -1008,7 +1007,7 @@ int CDsrRobot::drl_pause()
 
     if(srvDrlPause.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
@@ -1028,7 +1027,7 @@ int CDsrRobot::drl_resume()
 
     if(srvDrlResume.call(srv))
     {         
-        ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
         return (srv.response.success);
     }
     else
