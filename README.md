@@ -28,7 +28,7 @@ sudo ./DRCF64 <port>   ## 64bits OS
 or 
 sudo ./DRCF32 <port>   ## 32bits OS
 ``` 
-![alt text](https://user-images.githubusercontent.com/47092672/55542661-7bcb8f80-5702-11e9-83e5-5331f6fdfa6e.PNG)
+![alt text]<img src="https://user-images.githubusercontent.com/47092672/55542661-7bcb8f80-5702-11e9-83e5-5331f6fdfa6e.PNG" width="40%">
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
