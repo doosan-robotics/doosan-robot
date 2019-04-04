@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gripper" >
-  <xacro:include filename="$(find robotiq_description)/urdf/robotiq_85_gripper.urdf.xacro"/>
+  <xacro:include filename="$(find dsr_description)/xacro/robotiq_85_gripper.urdf.xacro"/>
     <!--  + Reference frame: at the middle (4mm) -->
   <link name="robotiq_coupler">
     <visual>
       <geometry>
-        <mesh filename="package://robotiq_description/meshes/robotiq_85_coupler.stl" />
+        <mesh filename="package://dsr_description/meshes/gripper/robotiq/85_2f/robotiq_85_coupler.stl" />
       </geometry>
       <material name="dr_white"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://robotiq_description/meshes/robotiq_85_coupler.stl" />
+        <mesh filename="package://dsr_description/meshes/gripper/robotiq/85_2f/robotiq_85_coupler.stl" />
       </geometry>
     </collision>
     <inertial>
