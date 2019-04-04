@@ -45,7 +45,7 @@
     <arg name="port"          value="12346"/>
     <arg name="mode"          value="$(arg mode)"/>
     <arg name="model"         value="$(arg model)"/>
-    <arg name="color"         value="$(arg color)"/>
+    <arg name="color"         value="blue"/>
     <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 

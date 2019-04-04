@@ -4,7 +4,7 @@
   <arg name="gui"   default="true"/>
   <arg name="rviz"  default="true"/>
   <arg name="world" default="empty.world"/>
-  <arg name="ns"    default="dsr"/>
+  <arg name="ns"    default="dsr01"/>
   <arg name="host" default="127.0.0.1"/>
   <arg name="port" default="12345"/>
   <arg name="mode" default="virtual"/>
