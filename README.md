@@ -28,6 +28,7 @@ sudo ./DRCF64 <port>   ## 64bits OS
 or 
 sudo ./DRCF32 <port>   ## 32bits OS
 ``` 
+![alt text](https://user-images.githubusercontent.com/47092672/55542661-7bcb8f80-5702-11e9-83e5-5331f6fdfa6e.PNG)
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -35,7 +36,8 @@ roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
 ```
-![alt text](https://user-images.githubusercontent.com/47092672/55541836-c2b88580-5700-11e9-80cd-145888347e0c.png)
+![alt text](https://user-images.githubusercontent.com/47092672/55542662-7bcb8f80-5702-11e9-9970-8ced9d3a30b9.PNG)
+![alt text](https://user-images.githubusercontent.com/47092672/55542660-7b32f900-5702-11e9-8bdb-54c7618e8014.PNG)
 #### dsr_moveit_config
 > ###### __arguments__
    >color:= ROBOT_COLOR <white  /  blue> defalut = white
