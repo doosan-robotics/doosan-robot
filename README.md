@@ -35,6 +35,7 @@ roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
 ```
+![alt text](https://user-images.githubusercontent.com/47092672/55541836-c2b88580-5700-11e9-80cd-145888347e0c.png)
 #### dsr_moveit_config
 > ###### __arguments__
    >color:= ROBOT_COLOR <white  /  blue> defalut = white
