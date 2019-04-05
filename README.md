@@ -15,6 +15,7 @@
     rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y 
     catkin_make
     source ./devel/setup.bash
+
 #### package list
     sudo apt-get install ros-kinetic-rqt* ros-kinetic-moveit* ros-kinetic-industrial-core ros-kinetic-gazebo-ros-control ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-serial ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
 
@@ -31,6 +32,7 @@ sudo ./DRCF32 <port>   ## 32bits OS
 
 > _$ sudo ./DRCF 12345_
 > <img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
+
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -41,9 +43,9 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
 
 > $ _roslaunch dsr_description m1013.launch_ 
 <img src="https://user-images.githubusercontent.com/47092672/55622394-0f708f00-57db-11e9-8625-a344513a5d3a.png" width="70%">
->+ In dsr_description, the user can use joint_state_publisher to move the robot.
->+ [Joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
 
+> + In dsr_description, the user can use joint_state_publisher to move the robot.
+> + [Joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
 > $ _roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f_ 
 <img src="https://user-images.githubusercontent.com/47092672/55613991-fcec5a80-57c6-11e9-86ec-49726e58ee18.png" width="70%">
 
