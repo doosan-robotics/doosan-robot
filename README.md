@@ -28,7 +28,10 @@ sudo ./DRCF64 <port>   ## 64bits OS
 or 
 sudo ./DRCF32 <port>   ## 32bits OS
 ``` 
+
 <img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
+
+   
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -36,6 +39,7 @@ roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
 ```
+   
 
 >roslaunch dsr_description m0609.launch 
 
