@@ -1,13 +1,7 @@
 # [Doosan robotics](http://www.doosanrobotics.com/kr/)
 
 
-## Contents
-  
-  #### [Build](#chapter-2)
-  
-  #### [Usage](#chapter-3)
-
-# *build* <a id="chapter-2"></a>
+# *build* 
     mkdir -p /home/path/to/your/workspace/src   ### We recoomand the /home/<user_home>/catkin_ws/src
     cd /home/path/to/your/workspace/src
     catkin_init_workspace
@@ -245,6 +239,7 @@ radius: 0.0"
 ```
 
 # demo
-
+<img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
+<img src="https://user-images.githubusercontent.com/47092672/55624380-9ecc7100-57e0-11e9-8854-f6d8ca3561e7.png" width="80%">
 
 # etc
