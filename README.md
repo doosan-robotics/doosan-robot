@@ -29,9 +29,8 @@ or
 sudo ./DRCF32 <port>   ## 32bits OS
 ``` 
 
-<img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
-
-   
+> _$ sudo ./DRCF 12345_
+> <img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -39,35 +38,38 @@ roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
 ```
-   
 
->roslaunch dsr_description m0609.launch 
+> $ _roslaunch dsr_description m1013.launch_ 
+<img src="https://user-images.githubusercontent.com/47092672/55622394-0f708f00-57db-11e9-8625-a344513a5d3a.png" width="70%">
+>+ In dsr_description, the user can use joint_state_publisher to move the robot.
+>+ [Joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
 
-
-<img src="https://user-images.githubusercontent.com/47092672/55613989-fcec5a80-57c6-11e9-9803-40e87301d613.png" width="70%">
-
->roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f 
-
+> $ _roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f_ 
 <img src="https://user-images.githubusercontent.com/47092672/55613991-fcec5a80-57c6-11e9-86ec-49726e58ee18.png" width="70%">
+
 
 #### dsr_moveit_config
 > ###### __arguments__
-   >color:= ROBOT_COLOR <white  /  blue> defalut = white
-   
+   >color:= ROBOT_COLOR <white  /  blue> defalut = white  
     roslaunch moveit_config_m0609 m0609.launch
     roslaunch moveit_config_m0617 m0617.launch
     roslaunch moveit_config_m1013 m1013.launch color:=blue
     roslaunch moveit_config_m1509 m1509.launch
     
+    
+<img src="https://user-images.githubusercontent.com/47092672/55613994-fd84f100-57c6-11e9-97eb-49d1d7c9e32c.png" width="70%">
+
+
+
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host:= ROBOT_IP defalut = 192,168.137.100   
-host:= ROBOT_PORT default = 12345
-mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
-color:= ROBOT_COLOR <white  /  blue> defalut = white  
-gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
-mobile:= USE_MOBILE <none  /  husky> defalut = none  
+>host := ROBOT_IP defalut = 192,168.137.100   
+port := ROBOT_PORT default = 12345  
+mode := OPERATION MODE <virtual  /  real> defalut = virtual  
+model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
+color := ROBOT_COLOR <white  /  blue> defalut = white  
+gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
+mobile := USE_MOBILE <none  /  husky> defalut = none  
 
 #### dsr_control + dsr_moveit_config
     roslaunch dsr_control dsr_moveit.launch
@@ -77,7 +79,7 @@ mobile:= USE_MOBILE <none  /  husky> defalut = none
     roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
       
 #### dsr_launcher
----
+
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
    >host:= ROBOT_IP defalut = 192.168.137.100  ##Emulator IP = 127.0.0.1   
@@ -94,7 +96,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
     roslaunch dsr_launcher multi_robot_rviz.launch
     roslaunch dsr_launcher multi_robot_gazebo.launch model:=m0609
     roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
----
+    
 #### dsr_example
 ###### single robot
     <launch>
@@ -112,6 +114,9 @@ __If you don`t have real doosan controller, you must execute emulator before run
       roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
       rosrun dsr_example_cpp single_robot_simple dsr01 m1013
 
+> _$ rosalunch single robot_
+
+
 ###### multi robot
     <launch>
       multi robot in rviz : roslaunch dsr_launcher multi_robot_rviz.launch
@@ -128,6 +133,9 @@ __If you don`t have real doosan controller, you must execute emulator before run
         roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
         rosrun dsr_example_cpp multi_robot  
 
+> _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
+> <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
+
 ###### robot + mobile
 > insert argument mobile:=husky
 - single robot on mobile
@@ -140,6 +148,10 @@ roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virt
   <python>
     rosrun dsr_example_py single_robot_mobile
 ```
+
+> _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
+> <img src="https://user-images.githubusercontent.com/47092672/55622399-10092580-57db-11e9-9ee0-f3c04a5569de.png" width="70%">
+
 - multi robot on mobile
 ```bash
 roslaunch dsr_launcher multi_robot_rviz.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue mobile:=husky
@@ -150,6 +162,10 @@ roslaunch dsr_launcher multi_robot_rviz.launch host:=192.168.137.100 mode:=virtu
   <python>
     rosrun dsr_example_py multi_robot_mobile  
 ```
+
+> _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
+> <img src="https://user-images.githubusercontent.com/47092672/55622397-10092580-57db-11e9-8fe8-4d711725ac45.png" width="70%">
+> 
 ###### robot + gripper
 > insert argument gripper:=robotiq_2f  
 - single robot + gripper
@@ -217,6 +233,6 @@ jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 radius: 0.0"
 ```
 
-# diagnostic
+# 
 
 # etc
