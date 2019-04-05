@@ -51,7 +51,7 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
 
 > $ _roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f_ 
 
-<img src="https://user-images.githubusercontent.com/47092672/55613991-fcec5a80-57c6-11e9-86ec-49726e58ee18.png" width="70%">
+<img src="https://user-images.githubusercontent.com/47092672/55624467-f7037300-57e0-11e9-930a-ec929de3a0fa.png" width="70%">
 
 
 #### dsr_moveit_config
@@ -122,7 +122,8 @@ __If you don`t have real doosan controller, you must execute emulator before run
       roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
       rosrun dsr_example_cpp single_robot_simple dsr01 m1013
 
-> _$ rosalunch single robot_
+> _$ rosalunch single_robot_gazebo.launch_
+> <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
 
 
 ###### multi robot
