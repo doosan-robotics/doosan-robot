@@ -139,6 +139,8 @@ __If you don`t have real doosan controller, you must execute emulator before run
         rosrun dsr_example_cpp multi_robot  
 
 > _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
+
+> _$ rosrun dsr_example_cpp multi_robot_
 > <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
 
 ###### robot + gripper
