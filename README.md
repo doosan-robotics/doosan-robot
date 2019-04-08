@@ -116,7 +116,8 @@ __If you don`t have real doosan controller, you must execute emulator before run
       roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
       rosrun dsr_example_cpp single_robot_simple dsr01 m1013
 
-> _$ roslaunch dsr_launcher single_robot_gazebo.launch_
+> _$ roslaunch dsr_launcher single_robot_rviz_gazebo.launch_
+> _$ rosrun dsr_example_cpp single_robot_simple_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
 
 
