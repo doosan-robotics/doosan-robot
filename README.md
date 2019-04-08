@@ -147,13 +147,13 @@ __If you don`t have real doosan controller, you must execute emulator before run
 > insert argument gripper:=robotiq_2f  
 - single robot + gripper
 ```bash
-roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue gripper:=robotiq_2f
+roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
   <cpp>
-    rosrun dsr_example_cpp pick_and_place_simple
+    rosrun dsr_example_cpp pick_and_place
   <python>
-    rosrun dsr_example_py pick_and_place_simple
+    rosrun dsr_example_py pick_and_place
 ```
 - Serial Test(Loopback)
 ```bash
