@@ -168,7 +168,7 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 > insert argument mobile:=husky
 - single robot on mobile
 ```bash
-roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue mobile:=husky
+roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
   
 <run application node>
   <cpp>
@@ -182,7 +182,7 @@ roslaunch dsr_launcher single_robot_rviz.launch host:=192.168.137.100 mode:=virt
 
 - multi robot on mobile
 ```bash
-roslaunch dsr_launcher multi_robot_rviz.launch host:=192.168.137.100 mode:=virtual model:=m1013 color:=blue mobile:=husky
+roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
 <run application node>
   <cpp>
