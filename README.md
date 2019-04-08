@@ -16,9 +16,9 @@
 # *usage* <a id="chapter-3"></a>
 #### DRCF Emulator
 If you don`t have real doosan controller, you must excute our emulator. 
-Emulator has local IP(127.0.0.1).
+Emulator has local IP(127.0.0.1) default port=12345. 
 ```bash
-cd /home/path/to/workspace/doosan-robot/common/bin/DRCF
+cd ~/catkin_ws/doosan-robot/common/bin/DRCF
 sudo ./DRCF64 <port>   ## 64bits OS
 or 
 sudo ./DRCF32 <port>   ## 32bits OS
