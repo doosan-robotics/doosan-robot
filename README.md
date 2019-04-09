@@ -32,7 +32,7 @@ sudo ./DRCF32 <port>   ## 32bits OS
 roslaunch dsr_description m0609.launch    
 roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
-roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper 필요!
+roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper
 ```
 
 > $ _roslaunch dsr_description m1013.launch_ 
