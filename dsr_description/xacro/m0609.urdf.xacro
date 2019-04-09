@@ -22,6 +22,7 @@
 
   <xacro:if value="${gr == 'robotiq_2f'}">
      <xacro:include filename="$(find dsr_description)/xacro/robotiq_2f.urdf.xacro" />
+     
   </xacro:if>
 
   <!-- World fixed joint-->
