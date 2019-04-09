@@ -2,9 +2,7 @@
 
 
 # *build* 
-    mkdir -p /home/path/to/your/workspace/src   ### We recoomand the /home/<user_home>/catkin_ws/src
-    cd /home/path/to/your/workspace/src
-    catkin_init_workspace
+    cd -/catkin_ws/src   ### We recoomand the /home/<user_home>/catkin_ws/src
     git clone https://github.com/doosan-robotics/doosan-robot
     rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y 
     catkin_make
