@@ -12,7 +12,7 @@
   <arg name="host5" default="127.0.0.1"/>
   <arg name="host6" default="127.0.0.1"/>
 
-  <arg name="port1" default="12351"/>
+  <arg name="port1" default="12345"/>
   <arg name="port2" default="12346"/>
   <arg name="port3" default="12347"/>
   <arg name="port4" default="12348"/>
@@ -40,7 +40,7 @@
   <arg name="color5" default="blue"/>
   <arg name="color6" default="blue"/>
 
-  <arg name="gripper" default="robotiq_2f"/>
+  <arg name="gripper" default="none"/>
   <arg name="mobile" default="none"/>
 
 
@@ -59,7 +59,7 @@
     <arg name="mode"          value="$(arg mode1)"/>
     <arg name="model"         value="$(arg model1)"/>
     <arg name="color"         value="$(arg color1)"/>
-    <arg name="gripper"       value="robotiq_2f"/>
+    <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
 
     <arg name="x"             value="-1.5"/>
