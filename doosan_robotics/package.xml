@@ -16,7 +16,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>dsr_bringup</exec_depend>
   <exec_depend>dsr_control</exec_depend>
   <exec_depend>dsr_description</exec_depend>
   <exec_depend>dsr_launcher</exec_depend>
@@ -43,7 +42,6 @@
   <build_depend>moveit_runtime</build_depend>
   <build_depend>moveit_plugins</build_depend>
   <build_depend>moveit_setup_assistant</build_depend>
-  <build_depend>lms1xx</build_depend>
   <build_depend>interactive_marker_twist_server</build_depend>
   <build_depend>twist_mux</build_depend>
   <build_depend>controller_manager</build_depend>

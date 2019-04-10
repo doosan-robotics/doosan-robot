@@ -57,6 +57,7 @@
     <include file="$(find dsr_control)/launch/dsr_control.launch">
       <arg name="ns"            value="$(arg ns)"/>
       <arg name="host"          value="$(arg host)"/>
+      <arg name="port"          value="$(arg port)"/>
       <arg name="mode"          value="$(arg mode)"/>
       <arg name="model"         value="$(arg model)"/>
       <arg name="color"         value="$(arg color)"/>

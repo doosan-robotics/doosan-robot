@@ -529,7 +529,7 @@ namespace dsr_control{
         std::string host;
         std::string mode;
         private_nh_.getParam("host", host);
-        private_nh_.param<int>("port", nServerPort, 12345);
+        private_nh_.getParam("port", nServerPort);
 
         private_nh_.param<bool>("command", bCommand_, false);
         private_nh_.getParam("mode", mode);
