@@ -482,10 +482,8 @@ namespace dsr_control{
         m_nh_gripper_service[1] = private_nh_.advertiseService("gripper/robotiq_2f_close", &DRHWInterface::robotiq_2f_close_cb, this);
         m_nh_gripper_service[2] = private_nh_.advertiseService("gripper/robotiq_2f_move", &DRHWInterface::robotiq_2f_move_cb, this);
 
-        // Serial Operations
-        m_nh_serial_service[0] = private_nh_.advertiseService("gripper/serial_open", &DRHWInterface::serial_open_cb, this);
-        m_nh_serial_service[1] = private_nh_.advertiseService("gripper/serial_close", &DRHWInterface::serial_close_cb, this);   
-        m_nh_serial_service[2] = private_nh_.advertiseService("gripper/serial_send_data", &DRHWInterface::serial_send_data_cb, this);
+        // Serial Operations  
+        m_nh_serial_service[0] = private_nh_.advertiseService("gripper/serial_send_data", &DRHWInterface::serial_send_data_cb, this);
 
         memset(&g_stDrState, 0x00, sizeof(DR_STATE)); 
         memset(&g_stDrError, 0x00, sizeof(DR_ERROR)); 
@@ -1069,12 +1067,6 @@ namespace dsr_control{
             ros::Duration(0.01).sleep();
         }
         res.success = true;
-    }
-
-    bool DRHWInterface::serial_open_cb(dsr_msgs::SerialOpen::Request& req, dsr_msgs::SerialOpen::Response& res){
-    }
-
-    bool DRHWInterface::serial_close_cb(dsr_msgs::SerialClose::Request& req, dsr_msgs::SerialClose::Response& res){
     }
 
     bool DRHWInterface::serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response &res){

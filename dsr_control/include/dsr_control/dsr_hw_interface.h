@@ -109,8 +109,6 @@
 #include <dsr_msgs/Robotiq2FMove.h>
 
 //serial
-#include <dsr_msgs/SerialOpen.h>
-#include <dsr_msgs/SerialClose.h>
 #include <dsr_msgs/SerialSendData.h>
 
 // moveit
@@ -295,8 +293,6 @@ namespace dsr_control{
         bool robotiq_2f_move_cb(dsr_msgs::Robotiq2FMove::Request& req, dsr_msgs::Robotiq2FMove::Response& res);
 
         //----- Serial
-        bool serial_open_cb(dsr_msgs::SerialOpen::Request& req, dsr_msgs::SerialOpen::Response& res);
-        bool serial_close_cb(dsr_msgs::SerialClose::Request& req, dsr_msgs::SerialClose::Response& res);
         bool serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response& res);
 
     };

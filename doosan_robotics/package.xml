@@ -28,25 +28,17 @@
   <exec_depend>moveit_config_m1013</exec_depend>
   <exec_depend>moveit_config_m1509</exec_depend>
   
-  <build_depend>ros_control</build_depend>
-  <build_depend>ros_controllers</build_depend>
   <build_depend>position_controllers</build_depend>
-  <build_depend>industrial_core</build_depend>
   <build_depend>effort_controllers</build_depend>
   <build_depend>moveit_commander</build_depend>
   <build_depend>moveit_core</build_depend>
   <build_depend>moveit_experimental</build_depend>
   <build_depend>moveit_kinematics</build_depend>
-  <build_depend>moveit_planners</build_depend>
-  <build_depend>moveit_ros</build_depend>
-  <build_depend>moveit_runtime</build_depend>
-  <build_depend>moveit_plugins</build_depend>
   <build_depend>moveit_setup_assistant</build_depend>
   <build_depend>interactive_marker_twist_server</build_depend>
+  <build_depend>lms1xx</build_depend>
   <build_depend>twist_mux</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>robot_localization</build_depend>
   <build_depend>gazebo_ros_control</build_depend>
-  <build_depend>gazebo_ros_pkgs</build_depend>
-  <build_depend>rqt</build_depend>
 </package>

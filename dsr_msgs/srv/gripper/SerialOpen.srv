@@ -1,8 +1,0 @@
-string port
-uint32 timeout
-uint32 baudrate
-uint32 bytesize
-uint32 paritysize
-uint32 stopbits
----
-bool success

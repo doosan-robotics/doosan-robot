@@ -96,8 +96,6 @@
 #include <dsr_msgs/Robotiq2FOpen.h>
 #include <dsr_msgs/Robotiq2FClose.h>
 #include <dsr_msgs/Robotiq2FMove.h>
-#include <dsr_msgs/SerialOpen.h>
-#include <dsr_msgs/SerialClose.h>
 #include <dsr_msgs/SerialSendData.h>
 
 #include "DRFL.h"
