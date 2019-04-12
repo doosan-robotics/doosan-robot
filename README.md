@@ -241,8 +241,10 @@ radius: 0.0"
 ```
 # manuals
 
-[Manual(kor)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=view&target=Doosan_Robotics_ROS_Manual_ver0.91_190412C%28Kor.%29.pdf)
-[Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=view&target=Doosan_Robotics_ROS_Manual_ver0.91_190412C%28EN.%29.pdf)
+[Manual(kor)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver0.91_190412C%28Kor.%29.pdf)
+
+
+[Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver0.91_190412C%28EN.%29.pdf)
 
 # demo
 
