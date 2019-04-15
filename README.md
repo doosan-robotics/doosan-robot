@@ -1,15 +1,20 @@
 # [Doosan robotics](http://www.doosanrobotics.com/kr/)
 
-
 # *build* 
-    cd -/catkin_ws/src   ### We recoomand the /home/<user_home>/catkin_ws/src
+    ### We recoomand the /home/<user_home>/catkin_ws/src
+    cd -/catkin_ws/src
     git clone https://github.com/doosan-robotics/doosan-robot
     rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y 
     catkin_make
     source ./devel/setup.bash
 
 #### package list
-    sudo apt-get install ros-kinetic-rqt* ros-kinetic-moveit* ros-kinetic-industrial-core ros-kinetic-gazebo-ros-control ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-serial ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
+    sudo apt-get install ros-kinetic-rqt* ros-kinetic-moveit* ros-kinetic-industrial-core ros-kinetic-gazebo-ros-control ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-serial
+    
+__packages for mobile robot__
+
+    sudo apt-get ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
+
 
 # *usage* <a id="chapter-3"></a>
 #### DRCF Emulator
