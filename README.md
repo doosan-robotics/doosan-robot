@@ -27,7 +27,7 @@ or
 sudo ./DRCF32 <port>   ## 32bits OS
 ``` 
 
-> _$ sudo ./DRCF 12345_
+> _$ sudo ./DRCF64 12345_
 
 > <img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
 
