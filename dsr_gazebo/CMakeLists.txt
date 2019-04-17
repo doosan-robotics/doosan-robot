@@ -1,7 +1,5 @@
-set (dirs
-  actor
-  city_terrain
-  ocean
-)
+cmake_minimum_required(VERSION 2.8.3)
+project(dsr_gazebo)
+find_package(catkin REQUIRED)
 
-INSTALL(DIRECTORY ${dirs} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/citysim-${CITYSIM_MAJOR_VERSION}/models)
+catkin_package()
