@@ -60,7 +60,9 @@
 
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>rospy</exec_depend>
- 
+  <build_depend>dsr_msgs</build_depend>
+  <build_export_depend>dsr_msgs</build_export_depend>
+  <exec_depend>dsr_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
