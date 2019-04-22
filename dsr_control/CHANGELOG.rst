@@ -2,8 +2,8 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.5 (2019-04-22)
+------------------
 * edit dsr_msgs
 * update multinode gripper and delete dsr bringup
 * remove urdf

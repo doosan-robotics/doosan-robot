@@ -2,8 +2,8 @@
 Changelog for package dsr_example_cpp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.5 (2019-04-22)
+------------------
 * add dsr_msgs
 * 20190403 update
 * 20190403 update

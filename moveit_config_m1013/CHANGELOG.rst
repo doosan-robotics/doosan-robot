@@ -2,8 +2,8 @@
 Changelog for package moveit_config_m1013
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.5 (2019-04-22)
+------------------
 * 20190403 update
 * 20190403 update
 * Contributors: doosan-robotics
