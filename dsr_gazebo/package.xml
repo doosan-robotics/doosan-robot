@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dsr_gazebo</name>
-  <version>0.10.0</version>
+  <version>0.9.6</version>
   <description>The dsr_gazebo package</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
