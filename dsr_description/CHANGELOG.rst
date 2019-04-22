@@ -2,6 +2,15 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add robotiq plugin
+* remove urdf
+* Add robotiq_gripper
+* 20190403 update
+* 20190403 update
+* Contributors: doosan-robotics
+
 0.9.4 (2019-04-01)
 ------------------
 

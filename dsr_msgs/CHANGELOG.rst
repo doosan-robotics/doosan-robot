@@ -2,6 +2,13 @@
 Changelog for package dsr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* edit dsr_msgs
+* 20190403 update
+* 20190403 update
+* Contributors: doosan-robotics
+
 0.9.4 (2019-04-01)
 ------------------
 * Emulator commit
