@@ -156,7 +156,7 @@ roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
   <cpp>
     rosrun dsr_example_cpp pick_and_place
   <python>
-    rosrun dsr_example_py pick_and_place
+    rosrun dsr_example_py pick_and_place.py
 ```
 - Serial Test(Loopback)
 ```bash
@@ -177,7 +177,7 @@ roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
   <cpp>
     rosrun dsr_example_cpp single_robot_mobile
   <python>
-    rosrun dsr_example_py single_robot_mobile
+    rosrun dsr_example_py single_robot_mobile.py
 ```
 
 > _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
@@ -191,7 +191,7 @@ roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
   <cpp>
     rosrun dsr_example_cpp multi_robot_mobile
   <python>
-    rosrun dsr_example_py multi_robot_mobile  
+    rosrun dsr_example_py multi_robot_mobile.py  
 ```
 
 > _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
