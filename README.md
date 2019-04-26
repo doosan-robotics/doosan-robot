@@ -253,6 +253,15 @@ radius: 0.0"
 
 # demo
 
+### Service Pack
+
+For use the Gripper, Mobile, Car examples, you need to setup the service pack. The service pack can be setup using the doosan-robot / common / servicepack / auto_setup script.
+    
+    cd ~/catkin_ws/src/doosan-robot/common/servicepack
+    ./auto_setup
+    
+When the script is executed, modeling files, plug-in, and example files related to gripper, demo, and mobile are set.
+
 ### Doosan-Robots In Gazebo
 
 <img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
