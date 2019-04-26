@@ -176,10 +176,6 @@ add_dependencies(single_robot_basic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin
 target_link_libraries(single_robot_basic ${catkin_LIBRARIES})
 
 #----- simple ---------------------------------------------------------------------------------------------
-add_executable(dance_m1013 ${SRC_SIMPLE_DANCE_M1013})
-add_dependencies(dance_m1013 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(dance_m1013 ${catkin_LIBRARIES})
-
 add_executable(dsr_service_drl_simple ${SRC_FILES_DRL_SIMPLE})
 add_dependencies(dsr_service_drl_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(dsr_service_drl_simple ${catkin_LIBRARIES})
@@ -256,3 +252,7 @@ target_link_libraries(m1013x2_sync2 ${catkin_LIBRARIES})
 add_executable(multi_robot ${SRC_FILES_MULTI_ROBOT})
 add_dependencies(multi_robot ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(multi_robot ${catkin_LIBRARIES})
+
+add_executable(dance_m1013 ${SRC_SIMPLE_DANCE_M1013})
+add_dependencies(dance_m1013 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(dance_m1013 ${catkin_LIBRARIES})
