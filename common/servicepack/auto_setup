@@ -7,7 +7,7 @@ cp -arp * ~/catkin_ws/src/doosan-robot/dsr_example/cpp/src
 cd ../
 echo "Copying cpp CmakeLists.txt to doosan-robot/dsr_example/cpp......"
 #cp -f CMakeLists.txt ~/catkin_ws/src/doosan-robot/dsr_example/cpp
-cat CMakeLists.txt >> ~/catkin_ws/src/doosan-robot/dsr_example/cpp/CMakeLists.txt
+cat demo_cmake.txt >> ~/catkin_ws/src/doosan-robot/dsr_example/cpp/CMakeLists.txt
 
 echo "Copying cpp CmakeLists.txt to doosan-robot/dsr-example/py/scripts......"
 cd ~/catkin_ws/src/doosan-robot/common/servicepack
