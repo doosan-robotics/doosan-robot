@@ -1,0 +1,24 @@
+echo "auto_setup run"
+
+echo "Copying demo cpp to doosan-robot/dsr_example/cpp/src......"
+cd ~/catkin_ws/src/doosan-robot/common/servicepack
+cd demos/cpp/src   #cpp example copy
+cp -arp * ~/catkin_ws/src/doosan-robot/dsr_example/cpp/src
+cd ../
+echo "Copying cpp CmakeLists.txt to doosan-robot/dsr_example/cpp......"
+cp -f CMakeLists.txt ~/catkin_ws/src/doosan-robot/dsr_example/cpp
+
+echo "Copying cpp CmakeLists.txt to doosan-robot/dsr-example/py/scripts......"
+cd ~/catkin_ws/src/doosan-robot/common/servicepack
+cd demos/py/scripts   #python example copy
+cp -arp * ~/catkin_ws/src/doosan-robot/dsr_example/py/scripts
+cd ../
+echo "Copying py CmakeLists.txt to doosan-robot/dsr-example/py......"
+cp -f CMakeLists.txt ~/catkin_ws/src/doosan-robot/dsr_example/py
+
+echo "Copying gazebo car model to ~/.gazebo/models"
+cd ~/catkin_ws/src/doosan-robot/common/servicepack
+cd model
+cp -arp * ~/.gazebo/models
+
+
