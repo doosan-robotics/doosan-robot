@@ -787,7 +787,7 @@ def _movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_
 
     # ROS service call
     if __ROS__: 
-        ret = _ros_movel(_pos, _vel, _acc, _time, mod, _ref, ra, qcommand, _async) 
+        ret = _ros_movel(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, _async) 
     else:    
         ret = PythonMgr.py_movel(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, qcommand, _async)
         print_ext_result("{0} = PythonMgr.py_movel(pos:{1}, vel:{2}, acc:{3}, time:{4}, radius:{5}, ref:{6}, mod:{7}, ra:{8}, qcommand:{9}, async:{10})" \
@@ -2358,7 +2358,7 @@ class CDsrRobot:
 
         # ROS service call
         if __ROS__: 
-            ret = self._ros_movel(_pos, _vel, _acc, _time, mod, _ref, ra, qcommand, _async) 
+            ret = self._ros_movel(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, _async) 
         else:    
             ret = PythonMgr.py_movel(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, qcommand, _async)
             print_ext_result("{0} = PythonMgr.py_movel(pos:{1}, vel:{2}, acc:{3}, time:{4}, radius:{5}, ref:{6}, mod:{7}, ra:{8}, qcommand:{9}, async:{10})" \
