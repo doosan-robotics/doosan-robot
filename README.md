@@ -67,7 +67,7 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
 
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host := ROBOT_IP defalut = 192,168.137.100   
+>host := ROBOT_IP defalut = 192.168.137.100   
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> defalut = virtual  
 model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
