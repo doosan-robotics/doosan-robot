@@ -159,7 +159,9 @@ namespace dsr_control{
         for (int i = 0; i < NUM_JOINT; i++){
             if(pData){  
                g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];    
-               ///g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tWorld._fActualPos[i];    
+               g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tTool._fActualPos[0][i];    
+               g_stDrState.fJointSpeed[i]  = pData->_tCtrl._tJoint._fActualVel[i];
+               g_stDrState.fTaskSpeed[i]   = pData->_tCtrl._tTool._fActualVel[i];
             }
         }
     }
@@ -304,15 +306,17 @@ namespace dsr_control{
         for (int i = 0; i < NUM_JOINT; i++)
         {
             msg.current_posj[i]    = m_stDrState.fCurrentPosj[i];
-            ///msg.current_posx[i]    = m_stDrState.fCurrentPosx[i];
+            msg.current_posx[i]    = m_stDrState.fCurrentPosx[i];
+            msg.joint_speed[i]     = m_stDrState.fJointSpeed[i];
+            msg.task_speed[i]      = m_stDrState.fTaskSpeed[i];
         }
+    
         msg.io_control_box      = m_stDrState.nIoControlBox;
         //msg.io_modbus;    GJH
         //msg.error;        GJH
         msg.access_control      = m_stDrState.nAccessControl;
         msg.homming_completed   = m_stDrState.bHommingCompleted;
         msg.tp_initialized      = m_stDrState.bTpInitialized; 
-        msg.speed               = m_stDrState.nSpeed;
         msg.mastering_need      = m_stDrState.bMasteringNeed;
         msg.drl_stopped         = m_stDrState.bDrlStopped;
         msg.disconnected        = m_stDrState.bDisconnected;

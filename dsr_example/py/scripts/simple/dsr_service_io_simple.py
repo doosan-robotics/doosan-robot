@@ -38,18 +38,18 @@ def msgRobotState_cb(msg):
         print("  robot_state       : %d" % (msg.robot_state))
         print("  robot_state_str   : %s" % (msg.robot_state_str))
         print("  current_posj      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posj[0],msg.current_posj[1],msg.current_posj[2],msg.current_posj[3],msg.current_posj[4],msg.current_posj[5]))
-        #print("  current_posx      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posx[0],msg.current_posx[1],msg.current_posx[2],msg.current_posx[3],msg.current_posx[4],msg.current_posx[5]))
-
-        #print("  io_control_box    : %d" % (msg.io_control_box))
+        print("  current_posx      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posx[0],msg.current_posx[1],msg.current_posx[2],msg.current_posx[3],msg.current_posx[4],msg.current_posx[5]))
+        print("  io_control_box    : %d" % (msg.io_control_box))
         ##print("  io_modbus         : %d" % (msg.io_modbus))
         ##print("  error             : %d" % (msg.error))
-        #print("  access_control    : %d" % (msg.access_control))
-        #print("  homming_completed : %d" % (msg.homming_completed))
-        #print("  tp_initialized    : %d" % (msg.tp_initialized))
-        print("  speed             : %d" % (msg.speed))
-        #print("  mastering_need    : %d" % (msg.mastering_need))
-        #print("  drl_stopped       : %d" % (msg.drl_stopped))
-        #print("  disconnected      : %d" % (msg.disconnected))
+        print("  access_control    : %d" % (msg.access_control))
+        print("  homming_completed : %d" % (msg.homming_completed))
+        print("  tp_initialized    : %d" % (msg.tp_initialized))
+        print("  joint_speed       : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.joint_speed[0],msg.joint_speed[1],msg.joint_speed[2],msg.joint_speed[3],msg.joint_speed[4],msg.joint_speed[5]))
+        print("  joint_speed       : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.task_speed[0],msg.task_speed[1],msg.task_speed[2],msg.task_speed[3],msg.task_speed[4],msg.task_speed[5]))
+        print("  mastering_need    : %d" % (msg.mastering_need))
+        print("  drl_stopped       : %d" % (msg.drl_stopped))
+        print("  disconnected      : %d" % (msg.disconnected))
 msgRobotState_cb.count = 0
 
 def thread_subscriber():

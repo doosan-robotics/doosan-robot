@@ -40,7 +40,7 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
         ROS_INFO("  access_control    : %d", msg->access_control);
         ROS_INFO("  homming_completed : %d", msg->homming_completed);
         ROS_INFO("  tp_initialized    : %d", msg->tp_initialized);
-        ROS_INFO("  speed             : %d", msg->speed);
+        //ROS_INFO("  speed             : %d", msg->speed);
         ROS_INFO("  mastering_need    : %d", msg->mastering_need);
         ROS_INFO("  drl_stopped       : %d", msg->drl_stopped);
         ROS_INFO("  disconnected      : %d", msg->disconnected);

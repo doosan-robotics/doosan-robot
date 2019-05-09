@@ -35,13 +35,18 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
         ROS_INFO("  robot_state_str   : %s", msg->robot_state_str.c_str());
         ROS_INFO("  current_posj      :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posj[0] ,msg->current_posj[1] ,msg->current_posj[2]
                                                                              ,msg->current_posj[3] ,msg->current_posj[4] ,msg->current_posj[5] );
+        ROS_INFO("  current_posx      :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posx[0] ,msg->current_posx[1] ,msg->current_posx[2]
+                                                                             ,msg->current_posx[3] ,msg->current_posx[4] ,msg->current_posx[5] );
         ROS_INFO("  io_control_box    : %d", msg->io_control_box);
         //ROS_INFO("  io_modbus         : %d", msg->io_modbus);
         //ROS_INFO("  error             : %d", msg->error);
         ROS_INFO("  access_control    : %d", msg->access_control);
         ROS_INFO("  homming_completed : %d", msg->homming_completed);
         ROS_INFO("  tp_initialized    : %d", msg->tp_initialized);
-        ROS_INFO("  speed             : %d", msg->speed);
+        ROS_INFO("  joint_speed       :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->joint_speed[0] ,msg->joint_speed[1] ,msg->joint_speed[2]
+                                                                             ,msg->joint_speed[3] ,msg->joint_speed[4] ,msg->joint_speed[5] );
+        ROS_INFO("  task_speed        :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->task_speed[0] ,msg->task_speed[1] ,msg->task_speed[2]
+                                                                             ,msg->task_speed[3] ,msg->task_speed[4] ,msg->task_speed[5] );
         ROS_INFO("  mastering_need    : %d", msg->mastering_need);
         ROS_INFO("  drl_stopped       : %d", msg->drl_stopped);
         ROS_INFO("  disconnected      : %d", msg->disconnected);

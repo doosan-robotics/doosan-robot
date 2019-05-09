@@ -148,7 +148,8 @@ typedef struct {
     int     nAccessControl;
     bool    bHommingCompleted;
     bool    bTpInitialized;
-    int     nSpeed;
+    float   fJointSpeed[6];
+    float   fTaskSpeed[6];
     bool    bMasteringNeed;
     bool    bDrlStopped;
     bool    bDisconnected;

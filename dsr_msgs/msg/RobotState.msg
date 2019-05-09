@@ -8,7 +8,8 @@ int32       io_control_box
 int32 	    access_control
 bool	    homming_completed
 bool	    tp_initialized
-int8	    speed
+float64[6]  joint_speed
+float64[6]  task_speed
 int8	    mastering_need
 bool	    drl_stopped
 bool	    disconnected
