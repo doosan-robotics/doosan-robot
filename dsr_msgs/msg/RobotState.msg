@@ -2,8 +2,12 @@ int32       robot_state
 string      robot_state_str
 float64[6]  current_posj
 float64[6]  current_posx
-int32       io_control_box
+int8[16]    ctrlbox_digital_input
+int8[16]    ctrlbox_digital_output
+int8[6]     flange_digital_input
+int8[6]     flange_digital_output
 #####       io_modbus           # GJH
+ModbusState[] modbus_state
 #####       error               # GJH
 int32 	    access_control
 bool	    homming_completed

@@ -36,7 +36,7 @@ def msgRobotState_cb(msg):
         print("  robot_state_str   : %s" % (msg.robot_state_str))
         print("  current_posj      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posj[0],msg.current_posj[1],msg.current_posj[2],msg.current_posj[3],msg.current_posj[4],msg.current_posj[5]))
         print("  current_posx      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posx[0],msg.current_posx[1],msg.current_posx[2],msg.current_posx[3],msg.current_posx[4],msg.current_posx[5]))
-        print("  io_control_box    : %d" % (msg.io_control_box))
+        #print("  io_control_box    : %d" % (msg.io_control_box))
         ##print("  io_modbus         : %d" % (msg.io_modbus))
         ##print("  error             : %d" % (msg.error))
         print("  access_control    : %d" % (msg.access_control))

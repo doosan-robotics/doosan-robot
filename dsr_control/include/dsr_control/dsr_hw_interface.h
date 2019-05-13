@@ -142,8 +142,14 @@ typedef struct {
     char    strRobotState[MAX_SYMBOL_SIZE];
     float   fCurrentPosj[NUM_JOINT];
     float   fCurrentPosx[NUM_TASK];
-    int     nIoControlBox;
+    bool    bCtrlBoxDigitalOutput[16];
+    bool    bCtrlBoxDigitalInput[16];
+    bool    bFlangeDigitalOutput[6];
+    bool    bFlangeDigitalInput[6];
     //io_modbus           # GJH
+    int     nRegCount;
+    string  strModbusSymbol[100];
+    int     nModbusValue[100];
     //error               # GJH
     int     nAccessControl;
     bool    bHommingCompleted;

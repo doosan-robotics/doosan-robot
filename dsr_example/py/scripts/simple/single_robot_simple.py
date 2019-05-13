@@ -32,21 +32,42 @@ def msgRobotState_cb(msg):
 
     if (0==(msgRobotState_cb.count % 100)): 
         rospy.loginfo("________ ROBOT STATUS ________")
-        print("  robot_state       : %d" % (msg.robot_state))
-        print("  robot_state_str   : %s" % (msg.robot_state_str))
-        print("  current_posj      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posj[0],msg.current_posj[1],msg.current_posj[2],msg.current_posj[3],msg.current_posj[4],msg.current_posj[5]))
-        print("  current_posx      : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posx[0],msg.current_posx[1],msg.current_posx[2],msg.current_posx[3],msg.current_posx[4],msg.current_posx[5]))
-        print("  io_control_box    : %d" % (msg.io_control_box))
-        ##print("  io_modbus         : %d" % (msg.io_modbus))
-        ##print("  error             : %d" % (msg.error))
-        print("  access_control    : %d" % (msg.access_control))
-        print("  homming_completed : %d" % (msg.homming_completed))
-        print("  tp_initialized    : %d" % (msg.tp_initialized))
-        print("  joint_speed       : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.joint_speed[0],msg.joint_speed[1],msg.joint_speed[2],msg.joint_speed[3],msg.joint_speed[4],msg.joint_speed[5]))
-        print("  joint_speed       : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.task_speed[0],msg.task_speed[1],msg.task_speed[2],msg.task_speed[3],msg.task_speed[4],msg.task_speed[5]))
-        print("  mastering_need    : %d" % (msg.mastering_need))
-        print("  drl_stopped       : %d" % (msg.drl_stopped))
-        print("  disconnected      : %d" % (msg.disconnected))
+        print("  robot_state           : %d" % (msg.robot_state))
+        print("  robot_state_str       : %s" % (msg.robot_state_str))
+        print("  current_posj          : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posj[0],msg.current_posj[1],msg.current_posj[2],msg.current_posj[3],msg.current_posj[4],msg.current_posj[5]))
+        print("  current_posx          : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.current_posx[0],msg.current_posx[1],msg.current_posx[2],msg.current_posx[3],msg.current_posx[4],msg.current_posx[5]))
+        #print digital i/o
+        sys.stdout.write("  ctrlbox_digital_input : ")
+        for i in range(0 , 16):
+            sys.stdout.write("%d " % msg.ctrlbox_digital_input[i])
+        print ##end line
+        sys.stdout.write("  ctrlbox_digital_output: ")
+        for i in range(0 , 16):
+            sys.stdout.write("%d " % msg.ctrlbox_digital_output[i])
+        print
+        sys.stdout.write("  flange_digital_input  : ")
+        for i in range(0 , 6):
+            sys.stdout.write("%d " % msg.flange_digital_input[i])
+        print
+        sys.stdout.write("  flange_digital_output : ")
+        for i in range(0 , 6):
+            sys.stdout.write("%d " % msg.flange_digital_output[i])
+        print
+        #print modbus i/o
+        sys.stdout.write("  modbus_state          : ")
+        for i in (0 , len(msg.modbus_state)-1):
+            sys.stdout.write("[" + msg.modbus_state[i].modbus_symbol)
+            sys.stdout.write(", %d] " % msg.modbus_state[i].modbus_value)
+        print
+
+        print("  access_control        : %d" % (msg.access_control))
+        print("  homming_completed     : %d" % (msg.homming_completed))
+        print("  tp_initialized        : %d" % (msg.tp_initialized))
+        print("  joint_speed           : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.joint_speed[0],msg.joint_speed[1],msg.joint_speed[2],msg.joint_speed[3],msg.joint_speed[4],msg.joint_speed[5]))
+        print("  joint_speed           : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" % (msg.task_speed[0],msg.task_speed[1],msg.task_speed[2],msg.task_speed[3],msg.task_speed[4],msg.task_speed[5]))
+        print("  mastering_need        : %d" % (msg.mastering_need))
+        print("  drl_stopped           : %d" % (msg.drl_stopped))
+        print("  disconnected          : %d" % (msg.disconnected))
 msgRobotState_cb.count = 0
 
 def thread_subscriber():

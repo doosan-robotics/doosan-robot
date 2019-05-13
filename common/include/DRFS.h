@@ -143,9 +143,9 @@ typedef struct _MONITORING_MISC
 {
     /* inner clock counter */
     double                       _dSyncTime;
-    /* Digtal Input data */
+    /* Flange Digtal Input data */
     unsigned char                _iActualDI[NUM_FLANGE_IO];
-    /* Digtal output data */
+    /* Flange Digtal output data */
     unsigned char                _iActualDO[NUM_FLANGE_IO];
     /* brake state */
     unsigned char                _iActualBK[NUM_JOINT];

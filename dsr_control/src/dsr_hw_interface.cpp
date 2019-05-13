@@ -100,20 +100,22 @@ namespace dsr_control{
 
     void DRHWInterface::OnMonitoringCtrlIOCB (const LPMONITORING_CTRLIO pCtrlIO)
     {
-        int nIoCtlBox = 0x0;
-        for (int i = 0; i < NUM_DIGITAL; i++)
-        {
-            cout << "[callback OnMonitoringCtrlIOCB] DI#"<< i << ": " << pCtrlIO->_tInput._iActualDI[i] << endl;
-            nIoCtlBox += (pCtrlIO->_tInput._iActualDI[i] << i);
+        for (int i = 0; i < NUM_DIGITAL; i++){
+            if(pCtrlIO){  
+                g_stDrState.bCtrlBoxDigitalOutput[i] = pCtrlIO->_tOutput._iTargetDO[i];  
+                g_stDrState.bCtrlBoxDigitalInput[i]  = pCtrlIO->_tInput._iActualDI[i];  
+            }
         }
-
-        g_stDrState.nIoControlBox = nIoCtlBox;
     }
 
     void DRHWInterface::OnMonitoringModbusCB (const LPMONITORING_MODBUS pModbus)
     {
-        for (int i = 0; i < pModbus->_iRegCount; i++)
+        g_stDrState.nRegCount = pModbus->_iRegCount;
+        for (int i = 0; i < pModbus->_iRegCount; i++){
             cout << "[callback OnMonitoringModbusCB] " << pModbus->_tRegister[i]._szSymbol <<": " << pModbus->_tRegister[i]._iValue<< endl;
+            g_stDrState.strModbusSymbol[i] = pModbus->_tRegister[i]._szSymbol;
+            g_stDrState.nModbusValue[i]    = pModbus->_tRegister[i]._iValue;
+        }
     }
 
     void DRHWInterface::OnMonitoringDataCB(const LPMONITORING_DATA pData)
@@ -158,10 +160,17 @@ namespace dsr_control{
 
         for (int i = 0; i < NUM_JOINT; i++){
             if(pData){  
-               g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];    
-               g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tTool._fActualPos[0][i];    
-               g_stDrState.fJointSpeed[i]  = pData->_tCtrl._tJoint._fActualVel[i];
-               g_stDrState.fTaskSpeed[i]   = pData->_tCtrl._tTool._fActualVel[i];
+                g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];    
+                g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tTool._fActualPos[0][i];    
+                g_stDrState.fJointSpeed[i]  = pData->_tCtrl._tJoint._fActualVel[i];
+                g_stDrState.fTaskSpeed[i]   = pData->_tCtrl._tTool._fActualVel[i];
+            }
+        }
+
+        for (int i = 0; i < NUM_FLANGE_IO; i++){
+            if(pData){
+                g_stDrState.bFlangeDigitalInput[i]  = pData->_tMisc._iActualDI[i];
+                g_stDrState.bFlangeDigitalOutput[i] = pData->_tMisc._iActualDO[i];
             }
         }
     }
@@ -171,7 +180,7 @@ namespace dsr_control{
         //This function is called when the state changes.
         //ROS_INFO("DRHWInterface::OnMonitoringStateCB");    
         // Only work within 50msec
-
+        ROS_INFO("On Monitor State");
         switch((unsigned char)eState)
         {
 #if 0 // TP initializing logic, Don't use in API level. (If you want to operate without TP, use this logic)       
@@ -197,7 +206,9 @@ namespace dsr_control{
             }
             break;
         case STATE_SAFE_OFF:
-            if (g_bHasControlAuthority) Drfl.SetRobotControl(CONTROL_SERVO_ON);
+            if (g_bHasControlAuthority){
+                Drfl.SetRobotControl(CONTROL_SERVO_ON);
+            } 
             break;
         case STATE_SAFE_STOP2:
             if (g_bHasControlAuthority) Drfl.SetRobotControl(CONTROL_RECOVERY_SAFE_STOP);
@@ -236,6 +247,8 @@ namespace dsr_control{
             OnMonitoringStateCB(Drfl.GetRobotState());
             break;
         case MONITORING_ACCESS_CONTROL_DENY:
+            ROS_INFO("Access control deny !!!!!!!!!!!!!!!");
+            break;
         case MONITORING_ACCESS_CONTROL_LOSS:
             g_bHasControlAuthority = FALSE;
             if (g_bTpInitailizingComplted) {
@@ -253,7 +266,7 @@ namespace dsr_control{
     {
         //This function is called when an error occurs.    
         ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();  
-        ros::Publisher PubRobotError = node->advertise<dsr_msgs::RobotError>("/doosan_robot/error",100);
+        ros::Publisher PubRobotError = node->advertise<dsr_msgs::RobotError>("error",100);
         dsr_msgs::RobotError msg;
 
         ROS_ERROR("[callback OnLogAlarm]");
@@ -297,6 +310,7 @@ namespace dsr_control{
     int DRHWInterface::MsgPublisher_RobotState()
     {
         dsr_msgs::RobotState msg;
+        dsr_msgs::ModbusState modbus_state;
         memcpy(&m_stDrState, &g_stDrState, sizeof(DR_STATE));
          
         msg.robot_state         = m_stDrState.nRobotState;
@@ -310,9 +324,20 @@ namespace dsr_control{
             msg.joint_speed[i]     = m_stDrState.fJointSpeed[i];
             msg.task_speed[i]      = m_stDrState.fTaskSpeed[i];
         }
-    
-        msg.io_control_box      = m_stDrState.nIoControlBox;
+        for (int i = 0; i < NUM_DIGITAL; i++){
+            msg.ctrlbox_digital_input[i]    = m_stDrState.bCtrlBoxDigitalInput[i];
+            msg.ctrlbox_digital_output[i]   = m_stDrState.bCtrlBoxDigitalOutput[i];    
+        }
+        for (int i = 0; i < NUM_FLANGE_IO; i++){
+            msg.flange_digital_input[i]     = m_stDrState.bFlangeDigitalInput[i];
+            msg.flange_digital_output[i]    = m_stDrState.bFlangeDigitalOutput[i];
+        }
         //msg.io_modbus;    GJH
+        for (int i = 0; i < m_stDrState.nRegCount; i++){
+            modbus_state.modbus_symbol   = m_stDrState.strModbusSymbol[i];
+            modbus_state.modbus_value    = m_stDrState.nModbusValue[i];
+            msg.modbus_state.push_back(modbus_state);
+        }
         //msg.error;        GJH
         msg.access_control      = m_stDrState.nAccessControl;
         msg.homming_completed   = m_stDrState.bHommingCompleted;
@@ -516,7 +541,7 @@ namespace dsr_control{
     {
         ROS_INFO("[dsr_hw_interface] init() ==> setup callback fucntion");
         int nServerPort = 12345;
-
+        ROS_INFO("INIT@@@@@@@@@@@@@@@@@@@@@@@@@2");
         //--- doosan API's call-back fuctions : Only work within 50msec in call-back functions
         Drfl.SetOnTpInitializingCompleted(OnTpInitializingCompletedCB);
         Drfl.SetOnHommingCompleted(OnHommingCompletedCB);
@@ -555,7 +580,7 @@ namespace dsr_control{
                 usleep(delay);
             }
 
-            //--- Set Robot mode : NANUAL
+            //--- Set Robot mode : MANUAL
             assert(Drfl.SetRobotMode(ROBOT_MODE_MANUAL));
 
             //--- Set Robot mode : virual or real 

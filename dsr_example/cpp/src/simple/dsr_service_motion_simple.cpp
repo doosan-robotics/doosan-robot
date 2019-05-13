@@ -34,7 +34,7 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
         ROS_INFO("  robot_state_str   : %s", msg->robot_state_str.c_str());
         ROS_INFO("  current_posj      :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posj[0] ,msg->current_posj[1] ,msg->current_posj[2]
                                                                              ,msg->current_posj[3] ,msg->current_posj[4] ,msg->current_posj[5] );
-        ROS_INFO("  io_control_box    : %d", msg->io_control_box);
+        //ROS_INFO("  io_control_box    : %d", msg->io_control_box);
         //ROS_INFO("  io_modbus         : %d", msg->io_modbus);
         //ROS_INFO("  error             : %d", msg->error);
         ROS_INFO("  access_control    : %d", msg->access_control);
