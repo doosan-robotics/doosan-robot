@@ -13,6 +13,7 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 #include <dsr_msgs/RobotState.h>
 #include <dsr_msgs/RobotStop.h>
@@ -38,6 +39,7 @@ string ROBOT_ID     = "dsr01";
 string ROBOT_MODEL  = "m1013";
 void SET_ROBOT(string id, string model) {ROBOT_ID = id; ROBOT_MODEL= model;}   
 //---------------------------------------------------------------------------
+std::string temp_data = "";
 
 int movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, float fBlendingRadius = 0.f,
           int nMoveMode = MOVE_MODE_ABSOLUTE, int nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE, int nSyncType = 0)             
@@ -472,25 +474,51 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
     if(0==(sn_cnt % 100))
     {  
         ROS_INFO("________ ROBOT STATUS ________");
-        ROS_INFO("  robot_state       : %d", msg->robot_state);
-        ROS_INFO("  robot_state_str   : %s", msg->robot_state_str.c_str());
-        ROS_INFO("  current_posj      :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posj[0] ,msg->current_posj[1] ,msg->current_posj[2]
+        ROS_INFO("  robot_state           : %d", msg->robot_state);
+        ROS_INFO("  robot_state_str       : %s", msg->robot_state_str.c_str());
+        ROS_INFO("  current_posj          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posj[0] ,msg->current_posj[1] ,msg->current_posj[2]
                                                                              ,msg->current_posj[3] ,msg->current_posj[4] ,msg->current_posj[5] );
-        ROS_INFO("  current_posx      :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posx[0] ,msg->current_posx[1] ,msg->current_posx[2]
-                                                                             ,msg->current_posx[3] ,msg->current_posx[4] ,msg->current_posx[5] );
-        //ROS_INFO("  io_control_box    : %d", msg->io_control_box);
-        //ROS_INFO("  io_modbus         : %d", msg->io_modbus);
-        //ROS_INFO("  error             : %d", msg->error);
-        ROS_INFO("  access_control    : %d", msg->access_control);
-        ROS_INFO("  homming_completed : %d", msg->homming_completed);
-        ROS_INFO("  tp_initialized    : %d", msg->tp_initialized);
-        ROS_INFO("  joint_speed       :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->joint_speed[0] ,msg->joint_speed[1] ,msg->joint_speed[2]
+        ROS_INFO("  current_posx          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posx[0] ,msg->current_posx[1] ,msg->current_posx[2]
+                                                                             ,msg->current_posx[3] ,msg->current_posx[4] ,msg->current_posx[5] );              
+        temp_data = "";
+        for(int i = 0; i < 16; i++){
+            temp_data += (std::to_string(msg->ctrlbox_digital_input[i]) + " ");
+        }
+        ROS_INFO("  ctrlbox_digital_input : %s", temp_data.c_str());
+
+        temp_data = "";
+        for(int i = 0; i < 16; i++){
+            temp_data += (std::to_string(msg->ctrlbox_digital_output[i]) + " ");
+        }
+        ROS_INFO("  ctrlbox_digital_output : %s", temp_data.c_str());
+
+        temp_data = "";
+        for(int i = 0; i < 6; i++){
+            temp_data += (std::to_string(msg->flange_digital_input[i]) + " ");
+        }
+        ROS_INFO("  flange_digital_input : %s", temp_data.c_str());
+        
+        temp_data = "";
+        for(int i = 0; i < 6; i++){
+            temp_data += (std::to_string(msg->flange_digital_output[i]) + " ");
+        }
+        ROS_INFO("  flange_digital_output : %s", temp_data.c_str());
+
+        temp_data = "";
+        for(int i = 0; i < msg->modbus_state.size(); i++){
+            temp_data += ("[" + msg->modbus_state[i].modbus_symbol + " , " + std::to_string(msg->modbus_state[i].modbus_value) + "] ");
+        }
+        ROS_INFO("  modbus_state : %s", temp_data.c_str());
+        ROS_INFO("  access_control        : %d", msg->access_control);
+        ROS_INFO("  homming_completed     : %d", msg->homming_completed);
+        ROS_INFO("  tp_initialized        : %d", msg->tp_initialized);
+        ROS_INFO("  joint_speed           :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->joint_speed[0] ,msg->joint_speed[1] ,msg->joint_speed[2]
                                                                              ,msg->joint_speed[3] ,msg->joint_speed[4] ,msg->joint_speed[5] );
-        ROS_INFO("  task_speed        :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->task_speed[0] ,msg->task_speed[1] ,msg->task_speed[2]
+        ROS_INFO("  task_speed            :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->task_speed[0] ,msg->task_speed[1] ,msg->task_speed[2]
                                                                              ,msg->task_speed[3] ,msg->task_speed[4] ,msg->task_speed[5] );
-        ROS_INFO("  mastering_need    : %d", msg->mastering_need);
-        ROS_INFO("  drl_stopped       : %d", msg->drl_stopped);
-        ROS_INFO("  disconnected      : %d", msg->disconnected);
+        ROS_INFO("  mastering_need        : %d", msg->mastering_need);
+        ROS_INFO("  drl_stopped           : %d", msg->drl_stopped);
+        ROS_INFO("  disconnected          : %d", msg->disconnected);
     }
 } 
 
