@@ -476,10 +476,39 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
         ROS_INFO("________ ROBOT STATUS ________");
         ROS_INFO("  robot_state           : %d", msg->robot_state);
         ROS_INFO("  robot_state_str       : %s", msg->robot_state_str.c_str());
-        ROS_INFO("  current_posj          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posj[0] ,msg->current_posj[1] ,msg->current_posj[2]
-                                                                             ,msg->current_posj[3] ,msg->current_posj[4] ,msg->current_posj[5] );
-        ROS_INFO("  current_posx          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->current_posx[0] ,msg->current_posx[1] ,msg->current_posx[2]
-                                                                             ,msg->current_posx[3] ,msg->current_posx[4] ,msg->current_posx[5] );              
+        ROS_INFO("  current_posj          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f", msg->current_posj[0], msg->current_posj[1] ,msg->current_posj[2]
+                                                                                 , msg->current_posj[3], msg->current_posj[4] ,msg->current_posj[5] );
+        ROS_INFO("  current_velj          : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->current_velj[0], msg->current_velj[1], msg->current_velj[2], msg->current_velj[3],msg->current_velj[4],msg->current_velj[5]);
+        ROS_INFO("  joint_abs             : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->joint_abs[0],msg->joint_abs[1],msg->joint_abs[2],msg->joint_abs[3],msg->joint_abs[4],msg->joint_abs[5]);
+        ROS_INFO("  joint_err             : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->joint_err[0],msg->joint_err[1],msg->joint_err[2],msg->joint_err[3],msg->joint_err[4],msg->joint_err[5]);
+        ROS_INFO("  target_posj           : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->target_posj[0],msg->target_posj[1],msg->target_posj[2],msg->target_posj[3],msg->target_posj[4],msg->target_posj[5]);
+        ROS_INFO("  target_velj           : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->target_velj[0],msg->target_velj[1],msg->target_velj[2],msg->target_velj[3],msg->target_velj[4],msg->target_velj[5]);    
+        ROS_INFO("  current_posx          :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f", msg->current_posx[0] ,msg->current_posx[1] ,msg->current_posx[2]
+                                                                                 , msg->current_posx[3] ,msg->current_posx[4] ,msg->current_posx[5]);             
+        ROS_INFO("  current_velx          : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->current_velx[0],msg->current_velx[1],msg->current_velx[2],msg->current_velx[3],msg->current_velx[4],msg->current_velx[5]);
+        ROS_INFO("  task_err              : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->task_err[0],msg->task_err[1],msg->task_err[2],msg->task_err[3],msg->task_err[4],msg->task_err[5]);
+        ROS_INFO("  solution_space        : %d" ,(msg->solution_space));
+
+        temp_data = "";
+        for(int i = 0; i < 3; i++){
+            temp_data += ("dim[" + std::to_string(i) + "] [");
+            for(int j = 0; j < 3; j++){
+                temp_data += (std::to_string(msg->rotation_matrix[i].data[j]) + " ");
+            }
+            temp_data += "] ";
+        }
+        ROS_INFO("  rotation_matrix       : %s", temp_data.c_str());
+        ROS_INFO("  dynamic_tor           : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->dynamic_tor[0],msg->dynamic_tor[1],msg->dynamic_tor[2],msg->dynamic_tor[3],msg->dynamic_tor[4],msg->dynamic_tor[5]);
+        ROS_INFO("  actual_jts            : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->actual_jts[0],msg->actual_jts[1],msg->actual_jts[2],msg->actual_jts[3],msg->actual_jts[4],msg->actual_jts[5]);
+        ROS_INFO("  actual_ejt            : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->actual_ejt[0],msg->actual_ejt[1],msg->actual_ejt[2],msg->actual_ejt[3],msg->actual_ejt[4],msg->actual_ejt[5]);
+        ROS_INFO("  actual_ett            : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->actual_ett[0],msg->actual_ett[1],msg->actual_ett[2],msg->actual_ett[3],msg->actual_ett[4],msg->actual_ett[5]);
+        ROS_INFO("  sync_time             : %7.3f" , msg->sync_time);
+        ROS_INFO("  actual_bk             : %d %d %d %d %d %d" , msg->actual_bk[0],msg->actual_bk[1],msg->actual_bk[2],msg->actual_bk[3],msg->actual_bk[4],msg->actual_bk[5]);
+        ROS_INFO("  actual_bt             : %d %d %d %d %d " , msg->actual_bt[0],msg->actual_bt[1],msg->actual_bt[2],msg->actual_bt[3],msg->actual_bt[4]);
+        ROS_INFO("  actual_mc             : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->actual_mc[0],msg->actual_mc[1],msg->actual_mc[2],msg->actual_mc[3],msg->actual_mc[4],msg->actual_mc[5]);
+        ROS_INFO("  actual_mt             : %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f" , msg->actual_mt[0],msg->actual_mt[1],msg->actual_mt[2],msg->actual_mt[3],msg->actual_mt[4],msg->actual_mt[5]);
+
+
         temp_data = "";
         for(int i = 0; i < 16; i++){
             temp_data += (std::to_string(msg->ctrlbox_digital_input[i]) + " ");
@@ -512,10 +541,6 @@ void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
         ROS_INFO("  access_control        : %d", msg->access_control);
         ROS_INFO("  homming_completed     : %d", msg->homming_completed);
         ROS_INFO("  tp_initialized        : %d", msg->tp_initialized);
-        ROS_INFO("  joint_speed           :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->joint_speed[0] ,msg->joint_speed[1] ,msg->joint_speed[2]
-                                                                             ,msg->joint_speed[3] ,msg->joint_speed[4] ,msg->joint_speed[5] );
-        ROS_INFO("  task_speed            :  %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",msg->task_speed[0] ,msg->task_speed[1] ,msg->task_speed[2]
-                                                                             ,msg->task_speed[3] ,msg->task_speed[4] ,msg->task_speed[5] );
         ROS_INFO("  mastering_need        : %d", msg->mastering_need);
         ROS_INFO("  drl_stopped           : %d", msg->drl_stopped);
         ROS_INFO("  disconnected          : %d", msg->disconnected);

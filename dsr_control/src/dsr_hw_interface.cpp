@@ -157,13 +157,48 @@ namespace dsr_control{
         pData->_tMisc._fActualMC[NUM_JOINT];            // motor input current
         pData->_tMisc._fActualMT[NUM_JOINT];            // motro current temperature
         */
+        g_stDrState.nActualMode = pData->_tCtrl._tState._iActualMode;
+        g_stDrState.nActualSpace = pData->_tCtrl._tState._iActualSpace;
 
         for (int i = 0; i < NUM_JOINT; i++){
             if(pData){  
                 g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];    
                 g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tTool._fActualPos[0][i];    
-                g_stDrState.fJointSpeed[i]  = pData->_tCtrl._tJoint._fActualVel[i];
-                g_stDrState.fTaskSpeed[i]   = pData->_tCtrl._tTool._fActualVel[i];
+                g_stDrState.fCurrentVelj[i] = pData->_tCtrl._tJoint._fActualVel[i];
+                g_stDrState.fCurrentVelx[i] = pData->_tCtrl._tTool._fActualVel[i];
+                g_stDrState.fJointAbs[i]    = pData->_tCtrl._tJoint._fActualAbs[i];
+                g_stDrState.fJointErr[i]    = pData->_tCtrl._tJoint._fActualErr[i];
+                g_stDrState.fTargetPosj[i]  = pData->_tCtrl._tJoint._fTargetPos[i];
+                g_stDrState.fTargetVelj[i]  = pData->_tCtrl._tJoint._fTargetVel[i];
+
+                g_stDrState.fTaskErr[i]     = pData->_tCtrl._tTool._fActualErr[i];
+                g_stDrState.fTargetPosx[i]  = pData->_tCtrl._tTool._fTargetPos[i];
+                g_stDrState.fTargetVelx[i]  = pData->_tCtrl._tTool._fTargetVel[i];
+
+                g_stDrState.fDynamicTor[i]  = pData->_tCtrl._tTorque._fDynamicTor[i];
+                g_stDrState.fActualJTS[i]   = pData->_tCtrl._tTorque._fActualJTS[i];
+                g_stDrState.fActualEJT[i]   = pData->_tCtrl._tTorque._fActualEJT[i];
+                g_stDrState.fActualETT[i]   = pData->_tCtrl._tTorque._fActualETT[i];
+
+                g_stDrState.nActualBK[i]    = pData->_tMisc._iActualBK[i]; 
+                g_stDrState.fActualMC[i]    = pData->_tMisc._fActualMC[i];
+                g_stDrState.fActualMT[i]    = pData->_tMisc._fActualMT[i];
+            }
+        }
+        for (int i = 5; i < NUM_BUTTON; i++){
+            if(pData){
+                g_stDrState.nActualBT[i]    = pData->_tMisc._iActualBT[i];  
+            }
+        }
+
+        g_stDrState.nSolutionSpace  = pData->_tCtrl._tTool._iSolutionSpace;    
+        g_stDrState.dSyncTime       = pData->_tMisc._dSyncTime;  
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(pData){
+                    g_stDrState.fRotationMatrix[j][i] = pData->_tCtrl._tTool._fRotationMatrix[j][i];
+                }
             }
         }
 
@@ -316,13 +351,48 @@ namespace dsr_control{
         msg.robot_state         = m_stDrState.nRobotState;
         msg.robot_state_str     = m_stDrState.strRobotState;
         ///printf("[%s,%s] msg.robot_state_str =%s m_stDrState.strRobotState=%s\n",m_strRobotName.c_str(),m_strRobotModel.c_str(),msg.robot_state_str.c_str(),m_stDrState.strRobotState);
+        msg.actual_mode         = m_stDrState.nActualMode;
+        msg.actual_space        = m_stDrState.nActualSpace;
 
         for (int i = 0; i < NUM_JOINT; i++)
         {
             msg.current_posj[i]    = m_stDrState.fCurrentPosj[i];
+            msg.current_velj[i]    = m_stDrState.fCurrentVelj[i];
+            msg.joint_abs[i]       = m_stDrState.fJointAbs[i];
+            msg.joint_err[i]       = m_stDrState.fJointErr[i];
+            msg.target_posj[i]     = m_stDrState.fTargetPosj[i];
+            msg.target_velj[i]     = m_stDrState.fTargetVelj[i];
+
             msg.current_posx[i]    = m_stDrState.fCurrentPosx[i];
-            msg.joint_speed[i]     = m_stDrState.fJointSpeed[i];
-            msg.task_speed[i]      = m_stDrState.fTaskSpeed[i];
+            msg.current_velx[i]    = m_stDrState.fCurrentVelx[i];
+            msg.task_err[i]        = m_stDrState.fTaskErr[i];
+            msg.target_velx[i]     = m_stDrState.fTargetVelx[i];
+            msg.target_posx[i]     = m_stDrState.fTargetPosx[i];
+
+            msg.dynamic_tor[i]     = m_stDrState.fDynamicTor[i];
+            msg.actual_jts[i]      = m_stDrState.fActualJTS[i];
+            msg.actual_ejt[i]      = m_stDrState.fActualEJT[i];
+            msg.actual_ett[i]      = m_stDrState.fActualETT[i];
+
+
+            msg.actual_bk[i]       = m_stDrState.nActualBK[i];
+            msg.actual_mc[i]       = m_stDrState.fActualMC[i];
+            msg.actual_mt[i]       = m_stDrState.fActualMT[i];
+        }
+        msg.solution_space      = m_stDrState.nSolutionSpace;
+        msg.sync_time           = m_stDrState.dSyncTime;
+        std_msgs::Float64MultiArray arr;
+
+        for (int i = 0; i < 3; i++){
+            arr.data.clear();
+            for (int j = 0; j < 3; j++){
+                arr.data.push_back(m_stDrState.fRotationMatrix[i][j]);
+            }
+            msg.rotation_matrix.push_back(arr);
+        }
+        
+        for (int i = 0; i < NUM_BUTTON; i++){
+            msg.actual_bt[i] = m_stDrState.nActualBT[i];
         }
         for (int i = 0; i < NUM_DIGITAL; i++){
             msg.ctrlbox_digital_input[i]    = m_stDrState.bCtrlBoxDigitalInput[i];

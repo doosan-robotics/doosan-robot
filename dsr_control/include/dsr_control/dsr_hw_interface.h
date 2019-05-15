@@ -142,10 +142,38 @@ typedef struct {
     char    strRobotState[MAX_SYMBOL_SIZE];
     float   fCurrentPosj[NUM_JOINT];
     float   fCurrentPosx[NUM_TASK];
+
+    int     nActualMode;
+    int     nActualSpace;
+    
+    float   fJointAbs[NUM_JOINT];
+    float   fJointErr[NUM_JOINT];
+    float   fTargetPosj[NUM_JOINT];
+    float   fTargetVelj[NUM_JOINT];
+    float   fCurrentVelj[NUM_JOINT];
+
+    float   fTaskErr[NUM_TASK];
+    float   fTargetPosx[NUM_TASK];
+    float   fTargetVelx[NUM_TASK];
+    float   fCurrentVelx[NUM_TASK];
+    int     nSolutionSpace;
+    float   fRotationMatrix[3][3];
+
+    float   fDynamicTor[NUM_JOINT];
+    float   fActualJTS[NUM_JOINT];
+    float   fActualEJT[NUM_JOINT];
+    float   fActualETT[NUM_JOINT];
+
+    double  dSyncTime;
+    int     nActualBK[NUM_JOINT];
+    int     nActualBT[NUM_BUTTON];
+    float   fActualMC[NUM_JOINT];
+    float   fActualMT[NUM_JOINT];
     bool    bCtrlBoxDigitalOutput[16];
     bool    bCtrlBoxDigitalInput[16];
     bool    bFlangeDigitalOutput[6];
     bool    bFlangeDigitalInput[6];
+
     //io_modbus           # GJH
     int     nRegCount;
     string  strModbusSymbol[100];
@@ -154,8 +182,6 @@ typedef struct {
     int     nAccessControl;
     bool    bHommingCompleted;
     bool    bTpInitialized;
-    float   fJointSpeed[6];
-    float   fTaskSpeed[6];
     bool    bMasteringNeed;
     bool    bDrlStopped;
     bool    bDisconnected;
