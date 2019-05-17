@@ -1,4 +1,5 @@
 # get_modbus_input  
-string      name    # 
+# This service reads the signal from the Modbus system.
+string      name    # modbus signal symbol
 ---
-int32       value    # 
+int32       value    # modbus signal value

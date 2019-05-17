@@ -1088,9 +1088,6 @@ namespace dsr_control{
     bool DRHWInterface::get_current_tcp_cb(dsr_msgs::GetCurrentTcp::Request& req, dsr_msgs::GetCurrentTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tcp_cb() called and calling Drfl.GetCurrentTCP");
-        std::string current_tcp  = Drfl.GetCurrentTCP();
-        std::cout << "Drfl.GetCurrentTCP()" << endl;
-        std::cout << current_tcp << endl;
         res.info = Drfl.GetCurrentTCP();
     }
     bool DRHWInterface::config_create_tcp_cb(dsr_msgs::ConfigCreateTcp::Request& req, dsr_msgs::ConfigCreateTcp::Response& res)
@@ -1113,8 +1110,6 @@ namespace dsr_control{
     bool DRHWInterface::get_current_tool_cb(dsr_msgs::GetCurrentTool::Request& req, dsr_msgs::GetCurrentTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tool_cb() called and calling Drfl.GetCurrentTool %s", Drfl.GetCurrentTool().c_str());
-        ROS_INFO("get_curent_tool!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        std::cout << Drfl.GetCurrentTool() << endl;
         res.info = Drfl.GetCurrentTool();
     }
     bool DRHWInterface::config_create_tool_cb(dsr_msgs::ConfigCreateTool::Request& req, dsr_msgs::ConfigCreateTool::Response& res)

@@ -455,11 +455,7 @@ namespace DRAFramework
         // set robot tcp information
         bool SetCurrentTCP(string strSymbol) { return _SetCurrentTCP(_rbtCtrl, strSymbol.c_str()); };
         // get robot tcp information
-        string GetCurrentTCP() { 
-            std::cout << "in the GetCurrentTCP" << endl;
-            std::cout << _GetCurrentTCP(_rbtCtrl) << endl;
-            std::cout << string(_GetCurrentTCP(_rbtCtrl)) << endl;
-            return string(_GetCurrentTCP(_rbtCtrl)); };  
+        string GetCurrentTCP() { return string(_GetCurrentTCP(_rbtCtrl)); };  
         // add robot tcp information
         bool ConfigCreateTCP(string strSymbol, float fPostion[NUM_TASK]) { return _ConfigCreateTCP(_rbtCtrl, strSymbol.c_str(), fPostion); };
         // del robot tcp information

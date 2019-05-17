@@ -1,4 +1,4 @@
 # set_current_tcp  
-string         name 
+string         name # tcp name
 ---
 bool           success

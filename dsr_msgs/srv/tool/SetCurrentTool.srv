@@ -1,4 +1,4 @@
 # set_current_tool  
-string          name        #  
+string          name        # tool name
 ---
 bool            success

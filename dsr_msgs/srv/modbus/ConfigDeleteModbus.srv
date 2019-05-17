@@ -1,4 +1,6 @@
-# config_delete_modbus  
-string      name       # mdbus name 
+# config_delete_modbus 
+# It is a service to delete the Modbus I / O signal information registered 
+# in advance in the robot controller 
+string      name       # modbus signal symbol 
 ---
 bool success

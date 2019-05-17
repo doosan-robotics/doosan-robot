@@ -13,7 +13,7 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m1013"
+ROBOT_MODEL  = "m0609"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
@@ -109,16 +109,20 @@ if __name__ == "__main__":
     #t1 = threading.Thread(target=thread_subscriber)
     #t1.daemon = True 
     #t1.start()
+    set_tcp  = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/tcp/set_current_tcp', SetCurrentTcp)
     get_tool = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+ '/tool/get_current_tool', GetCurrentTool)
-    get_tcp = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+ '/tcp/get_current_tcp', GetCurrenttTCP)
+    get_tcp = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+ '/tcp/get_current_tcp', GetCurrentTcp)
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
     fCog = [10.0, 10.0, 10.0]
     finertia = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    add_tool("aaaa", 5.3, fCog, finertia)
-    set_tool("aaaa")
+    p0 =[0, 0, 0, 0, 0, 0]
+    add_tcp("tcp1", p0)
+    add_tool("tool1", 5.3, fCog, finertia)
+    set_tool("tool1")
+    set_tcp("tcp1")
+    print(get_tool())
+    print(get_tcp())
     while not rospy.is_shutdown():
-        print(get_tool())
-        print(get_tcp())
         pass
 
     print 'good bye!'
