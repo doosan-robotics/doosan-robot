@@ -529,7 +529,9 @@ namespace dsr_control{
         m_SubSerialRead = nh_temp.subscribe("serial_read", 100, &Serial_comm::read_callback, &ser_comm);
         m_PubSerialWrite = nh_temp.advertise<std_msgs::String>("serial_write", 100);
         
-
+        // system Operations
+        m_nh_system[0] = private_nh_.advertiseService("system/set_robot_mode", &DRHWInterface::set_robot_mode_cb, this);
+        m_nh_system[1] = private_nh_.advertiseService("system/get_robot_mode", &DRHWInterface::get_robot_mode_cb, this);
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -575,7 +577,8 @@ namespace dsr_control{
         m_nh_drl_service[1] = private_nh_.advertiseService("drl/drl_resume", &DRHWInterface::drl_resume_cb, this);
         m_nh_drl_service[2] = private_nh_.advertiseService("drl/drl_start", &DRHWInterface::drl_start_cb, this);
         m_nh_drl_service[3] = private_nh_.advertiseService("drl/drl_stop", &DRHWInterface::drl_stop_cb, this);
-
+        m_nh_drl_service[4] = private_nh_.advertiseService("drl/get_drl_state", &DRHWInterface::get_drl_state_cb, this);
+        
         // Gripper Operations
         m_nh_gripper_service[0] = private_nh_.advertiseService("gripper/robotiq_2f_open", &DRHWInterface::robotiq_2f_open_cb, this);
         m_nh_gripper_service[1] = private_nh_.advertiseService("gripper/robotiq_2f_close", &DRHWInterface::robotiq_2f_close_cb, this);
@@ -790,6 +793,15 @@ namespace dsr_control{
     }
 
     //----- Service Call-back functions ------------------------------------------------------------
+
+    bool DRHWInterface::set_robot_mode_cb(dsr_msgs::SetRobotMode::Request& req, dsr_msgs::SetRobotMode::Response& res){
+        res.success = Drfl.SetRobotMode((ROBOT_MODE)req.robot_mode);
+    }
+    
+    bool DRHWInterface::get_robot_mode_cb(dsr_msgs::GetRobotMode::Request& req, dsr_msgs::GetRobotMode::Response& res){
+        res.robot_mode = Drfl.GetRobotMode();
+    }
+
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
         std::array<float, NUM_JOINT> target_pos;
@@ -1064,6 +1076,10 @@ namespace dsr_control{
         //ROS_INFO("DRHWInterface::drl_resume_cb() called and calling Drfl.DrlResume");
         res.success = Drfl.PlayDrlResume();
     }
+    bool DRHWInterface::get_drl_state_cb(dsr_msgs::GetDrlState::Request& req, dsr_msgs::GetDrlState::Response& res)
+    {
+        res.drl_state = Drfl.GetProgramState();
+    }
     bool DRHWInterface::set_current_tcp_cb(dsr_msgs::SetCurrentTcp::Request& req, dsr_msgs::SetCurrentTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_current_tcp_cb() called and calling Drfl.SetCurrentTCP");
@@ -1072,6 +1088,9 @@ namespace dsr_control{
     bool DRHWInterface::get_current_tcp_cb(dsr_msgs::GetCurrentTcp::Request& req, dsr_msgs::GetCurrentTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tcp_cb() called and calling Drfl.GetCurrentTCP");
+        std::string current_tcp  = Drfl.GetCurrentTCP();
+        std::cout << "Drfl.GetCurrentTCP()" << endl;
+        std::cout << current_tcp << endl;
         res.info = Drfl.GetCurrentTCP();
     }
     bool DRHWInterface::config_create_tcp_cb(dsr_msgs::ConfigCreateTcp::Request& req, dsr_msgs::ConfigCreateTcp::Response& res)
@@ -1094,6 +1113,8 @@ namespace dsr_control{
     bool DRHWInterface::get_current_tool_cb(dsr_msgs::GetCurrentTool::Request& req, dsr_msgs::GetCurrentTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tool_cb() called and calling Drfl.GetCurrentTool %s", Drfl.GetCurrentTool().c_str());
+        ROS_INFO("get_curent_tool!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        std::cout << Drfl.GetCurrentTool() << endl;
         res.info = Drfl.GetCurrentTool();
     }
     bool DRHWInterface::config_create_tool_cb(dsr_msgs::ConfigCreateTool::Request& req, dsr_msgs::ConfigCreateTool::Response& res)

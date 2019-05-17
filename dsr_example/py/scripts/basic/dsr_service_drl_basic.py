@@ -17,7 +17,7 @@ from dsr_msgs.msg import *
 from dsr_msgs.srv import *
 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m1013"
+ROBOT_MODEL  = "m0609"
 
 ROBOT_SYSTEM_VIRTUAL = 1
 ROBOT_SYSTEM_REAL = 0
@@ -68,6 +68,6 @@ if __name__ == "__main__":
 
     drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
     drlCodeHome = "movej([0,0,0,0,0,0])\n"
-    drl_start(ROBOT_SYSTEM_VIRTUAL, drlCodeMove + drlCodeHome)
+    drl_start(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeHome)
 
     print 'good bye!'

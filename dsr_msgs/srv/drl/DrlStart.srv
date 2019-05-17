@@ -1,5 +1,5 @@
-# drl_start  
-int8 robotSystem
-string  code        #drl code       
+# drl_script_run  
+int8 robotSystem    # Robot System Mode 0 : Virtual, 1 : Real
+string  code        # drl code       
 ---
 bool success

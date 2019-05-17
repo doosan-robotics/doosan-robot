@@ -105,12 +105,14 @@ def thread_subscriber():
 if __name__ == "__main__":
     rospy.init_node('single_robot_simple_py')
     rospy.on_shutdown(shutdown)
-
+    set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
     t1 = threading.Thread(target=thread_subscriber)
     t1.daemon = True 
     t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
+
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
 
     set_velx(30,20)  # set global task speed: 30(mm/sec), 20(deg/sec)
     set_accx(60,40)  # set global task accel: 60(mm/sec2), 40(deg/sec2)
@@ -165,13 +167,14 @@ if __name__ == "__main__":
 
     while not rospy.is_shutdown():
         movej(p2, vel=100, acc=100)
-        movejx(x1, vel=30, acc=60, sol=0)
-        movel(x2, velx, accx)
-        movec(c1, c2, velx, accx)
-        movesj(qlist, vel=100, acc=100)
-        movesx(xlist, vel=100, acc=100)
-        move_spiral(rev=9.5,rmax=20.0,lmax=50.0,time=20.0,axis=DR_AXIS_Z,ref=DR_TOOL)
-        move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
-        moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+       # movejx(x1, vel=30, acc=60, sol=0)
+        #movel(x2, velx, accx)
+        movej(p1, vel=100, acc=100)
+       # movec(c1, c2, velx, accx)
+       # movesj(qlist, vel=100, acc=100)
+       # movesx(xlist, vel=100, acc=100)
+       # move_spiral(rev=9.5,rmax=20.0,lmax=50.0,time=20.0,axis=DR_AXIS_Z,ref=DR_TOOL)
+       # move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
+       # moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
     print 'good bye!'

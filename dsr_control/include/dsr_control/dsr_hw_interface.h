@@ -57,6 +57,9 @@
 #include <dsr_msgs/RobotStop.h>
 
 // service
+//system
+#include <dsr_msgs/SetRobotMode.h>
+#include <dsr_msgs/GetRobotMode.h>
 // motion
 #include <dsr_msgs/MoveJoint.h>
 #include <dsr_msgs/MoveLine.h>
@@ -89,6 +92,7 @@
 #include <dsr_msgs/DrlStart.h>
 #include <dsr_msgs/DrlStop.h>
 #include <dsr_msgs/DrlResume.h>
+#include <dsr_msgs/GetDrlState.h>
 
 
 //tcp
@@ -222,10 +226,11 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
+        ros::ServiceServer m_nh_system[4];
         ros::ServiceServer m_nh_move_service[10];
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
-        ros::ServiceServer m_nh_drl_service[4];
+        ros::ServiceServer m_nh_drl_service[10];
         ros::ServiceServer m_nh_tcp_service[4];
         ros::ServiceServer m_nh_tool_service[4];
         ros::ServiceServer m_nh_gripper_service[10];
@@ -271,7 +276,10 @@ namespace dsr_control{
         DR_STATE m_stDrState;
         DR_ERROR m_stDrError;
 
-        //----- Service Call-back functions ----------------------------------------------
+        //----- Service Call-back functions ----------------------------------------------.
+        //----- System
+        bool set_robot_mode_cb(dsr_msgs::SetRobotMode::Request& req, dsr_msgs::SetRobotMode::Response& res);
+        bool get_robot_mode_cb(dsr_msgs::GetRobotMode::Request& req, dsr_msgs::GetRobotMode::Response& res);
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
@@ -319,6 +327,7 @@ namespace dsr_control{
         bool drl_start_cb(dsr_msgs::DrlStart::Request& req, dsr_msgs::DrlStart::Response& res);
         bool drl_stop_cb(dsr_msgs::DrlStop::Request& req, dsr_msgs::DrlStop::Response& res);
         bool drl_resume_cb(dsr_msgs::DrlResume::Request& req, dsr_msgs::DrlResume::Response& res);
+        bool get_drl_state_cb(dsr_msgs::GetDrlState::Request& req, dsr_msgs::GetDrlState::Response& res);
 
         //----- Gripper
         bool robotiq_2f_open_cb(dsr_msgs::Robotiq2FOpen::Request& req, dsr_msgs::Robotiq2FOpen::Response& res);

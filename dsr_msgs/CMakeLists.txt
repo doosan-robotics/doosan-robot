@@ -16,6 +16,10 @@ add_message_files(
 
 add_service_files(
     FILES
+
+    ./system/SetRobotMode.srv
+    ./system/GetRobotMode.srv
+
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv
     ./motion/MoveJointx.srv
@@ -55,6 +59,7 @@ add_service_files(
     ./drl/DrlStop.srv
     ./drl/DrlPause.srv
     ./drl/DrlResume.srv
+    ./drl/GetDrlState.srv
 
     ./gripper/Robotiq2FClose.srv
     ./gripper/Robotiq2FOpen.srv

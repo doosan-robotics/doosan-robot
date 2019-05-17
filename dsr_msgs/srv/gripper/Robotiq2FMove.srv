@@ -1,3 +1,5 @@
-float64 width
+# robotiq_2f_move
+# open or close the virtual robotiq gripper by input value(width)   
+float64 width # 0.0(open) ~ 0.8(close)
 ---
 bool success

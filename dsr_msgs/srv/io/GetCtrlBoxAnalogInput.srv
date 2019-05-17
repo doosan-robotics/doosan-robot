@@ -1,4 +1,4 @@
-# gget_analog_input 
+# get_analog_input 
 int8        channel    # 
 ---
 float64     value

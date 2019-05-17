@@ -1831,7 +1831,7 @@ def set_tool(name):
 
     # ROS service call
     if __ROS__:
-        ret = _ros_get_current_tool(name)    
+        ret = _ros_set_current_tool(name)    
     else:
         ret = PythonMgr.py_set_tool(name)
         print_ext_result("{0} = PythonMgr.py_set_tool(name:{1})".format(ret, name))
@@ -1877,7 +1877,7 @@ def del_tool(name):
     return ret
 
 def drl_script_run(robotSystem, code):
-    if type(name) != str:
+    if type(code) != str:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
 
     # ROS service call
@@ -1886,27 +1886,21 @@ def drl_script_run(robotSystem, code):
     return ret
 
 def drl_script_stop(stop_mode):
-    if type(name) != str:
-        raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
-
+    if type(stop_mode) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : stop_mode")
+    print("drl_script_stop")
     # ROS service call
     if __ROS__:
         ret = _ros_drl_stop(stop_mode)  
     return ret
 
 def drl_script_pause():
-    if type(name) != str:
-        raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
-
     # ROS service call
     if __ROS__:
         ret = _ros_drl_pause()  
     return ret
 
 def drl_script_resume():
-    if type(name) != str:
-        raise DR_Error(DR_ERROR_TYPE, "Invalid type : name")
-
     # ROS service call
     if __ROS__:
         ret = _ros_drl_resume()  

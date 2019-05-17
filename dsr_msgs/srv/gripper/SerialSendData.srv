@@ -1,3 +1,6 @@
+# serial_send_data
+# send byte data to other device 
+# you can operate the real-robotiq gripper by modbus rtu
 string data
 ---
 bool success
