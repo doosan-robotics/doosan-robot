@@ -13,7 +13,7 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m0609"
+ROBOT_MODEL  = "m1013"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
