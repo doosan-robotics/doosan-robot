@@ -46,6 +46,10 @@ print("_topic_name_prefix ={0}".format(_topic_name_prefix))
 ############### connect to dsr_control (ros service) ####################################################################### 
 ####rospy.wait_for_service(_srv_name_prefix +"/motion/move_joint")
 
+#  system Operations
+_ros_set_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_mode", SetRobotMode)
+_ros_get_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
+
 #  motion Operations
 _ros_movej                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_joint", MoveJoint)
 _ros_movel                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_line", MoveLine)
@@ -91,6 +95,7 @@ _ros_drl_pause                  = rospy.ServiceProxy(_srv_name_prefix +"/drl/drl
 _ros_drl_resume                 = rospy.ServiceProxy(_srv_name_prefix +"/drl/drl_resume", DrlResume)                 #new
 _ros_drl_start                  = rospy.ServiceProxy(_srv_name_prefix +"/drl/drl_start", DrlStart)                   #new
 _ros_drl_stop                   = rospy.ServiceProxy(_srv_name_prefix +"/drl/drl_stop", DrlStop)                     #new
+_ros_get_drl_state              = rospy.ServiceProxy(_srv_name_prefix +"/drl/get_drl_state", GetDrlState)
 
 ########################################################################################################################################
 
@@ -422,7 +427,22 @@ def _ros_listToFloat64MultiArray(list_src):
     #print(_res)
     #print(len(_res))
     return _res
+##### SYSTEM ##############################################################################################################################
+def set_robot_mode(robot_mode):
+    if type(robot_mode) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_mode")
 
+    # ROS service call
+    if __ROS__:
+        ret = _ros_set_robot_mode(robot_mode)
+    return ret
+
+def get_robot_mode():
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_robot_mode()
+    return ret
 ##### MOTION ##############################################################################################################################
 def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
     ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
@@ -1814,10 +1834,16 @@ def set_tcp(name):
 
     # ROS service call
     if __ROS__:
-        ret = _ros_get_current_tcp(name) 
+        ret = _ros_set_current_tcp(name) 
     else:
         ret = PythonMgr.py_set_tcp(name)
         print_ext_result("{0} = PythonMgr.py_set_tcp(name:{1})".format(ret, name))
+    return ret
+
+def get_tcp():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_current_tcp() 
     return ret
 
 def set_tool(name):
@@ -1837,6 +1863,11 @@ def set_tool(name):
         print_ext_result("{0} = PythonMgr.py_set_tool(name:{1})".format(ret, name))
     return ret
 
+def get_tool():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_current_tool() 
+    return ret
 
 ###########################################################################################################
 
@@ -1906,6 +1937,11 @@ def drl_script_resume():
         ret = _ros_drl_resume()  
     return ret
 
+def get_drl_state():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_drl_state()  
+    return ret
 
 ########################################################################################################################################
 ########################################################################################################################################
@@ -1921,6 +1957,10 @@ class CDsrRobot:
 
         ############### connect to dsr_control (ros service) ####################################################################### 
         #rospy.wait_for_service(self._srv_name_prefix +"/motion/move_joint")
+        
+        # system Operations
+        self._ros_set_robot_mode            = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_mode", SetRobotMode)
+        self._ros_get_robot_mode            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
 
         #  motion Operations
         self._ros_movej                      = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_joint", MoveJoint)
@@ -1966,7 +2006,8 @@ class CDsrRobot:
         self._ros_drl_pause                  = rospy.ServiceProxy(self._srv_name_prefix +"/drl/drl_pause", DrlPause)                   #new
         self._ros_drl_resume                 = rospy.ServiceProxy(self._srv_name_prefix +"/drl/drl_resume", DrlResume)                 #new
         self._ros_drl_start                  = rospy.ServiceProxy(self._srv_name_prefix +"/drl/drl_start", DrlStart)                   #new
-        self._ros_drl_stop                   = rospy.ServiceProxy(self._srv_name_prefix +"/drl/drl_stop", DrlStop)                     #new
+        self._ros_drl_stop                   = rospy.ServiceProxy(self._srv_name_prefix +"/drl/drl_stop", DrlStop)   
+        self._ros_get_drl_state              = rospy.ServiceProxy(self._srv_name_prefix +"/drl/get_drl_state", GetDrlState)       #new
         ########################################################################################################################################
 
         self._g_blend_state = False
@@ -1987,7 +2028,21 @@ class CDsrRobot:
 
         self._g_analog_output_mode_ch1 = -1
         self._g_analog_output_mode_ch2 = -1
+    ##### SYSTEM ##############################################################################################################################
+    def set_robot_mode(self, robot_mode):
+        if type(robot_mode) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_mode")
 
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_set_robot_mode(robot_mode)
+        return ret
+
+    def get_robot_mode(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_robot_mode()
+        return ret
     ##### MOTION ##############################################################################################################################
     def movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
         ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
@@ -3381,10 +3436,20 @@ class CDsrRobot:
 
         # ROS service call
         if __ROS__:
-            ret = self._ros_get_current_tcp(name) 
+            ret = self._ros_set_current_tcp(name) 
         else:
             ret = PythonMgr.py_set_tcp(name)
             print_ext_result("{0} = PythonMgr.py_set_tcp(name:{1})".format(ret, name))
+        return ret
+    
+    def get_tcp(self):
+        # not check value (register : 2byte...)
+        # if val != ON and val != OFF:
+        #    raise DR_Error(DR_ERROR_VALUE, "Invalid value : val")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_current_tcp() 
         return ret
 
     def set_tool(self, name):
@@ -3398,10 +3463,16 @@ class CDsrRobot:
 
         # ROS service call
         if __ROS__:
-            ret = self._ros_get_current_tool(name)    
+            ret = self._ros_set_current_tool(name)    
         else:
             ret = PythonMgr.py_set_tool(name)
             print_ext_result("{0} = PythonMgr.py_set_tool(name:{1})".format(ret, name))
+        return ret
+
+    def get_tool(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_current_tool()
         return ret
 
 
@@ -3477,4 +3548,10 @@ class CDsrRobot:
         # ROS service call
         if __ROS__:
             ret = self._ros_drl_resume()  
+        return ret
+
+    def get_drl_state():
+    # ROS service call
+        if __ROS__:
+            ret = self._ros_get_drl_state()  
         return ret

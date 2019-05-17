@@ -124,9 +124,9 @@ def thread_subscriber():
 if __name__ == "__main__":
     rospy.init_node('single_robot_simple_py')
     rospy.on_shutdown(shutdown)
-    set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
-    get_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/get_robot_mode', GetRobotMode)
-    get_drl_state   = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/drl/get_drl_state', GetDrlState)
+    #set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
+    #get_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/get_robot_mode', GetRobotMode)
+    #get_drl_state   = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/drl/get_drl_state', GetDrlState)
     #t1 = threading.Thread(target=thread_subscriber)
     #t1.daemon = True 
     #t1.start()
@@ -136,11 +136,12 @@ if __name__ == "__main__":
   #  if get_robot_mode() != ROBOT_MODE_AUTONOMOUS :
     set_robot_mode(ROBOT_MODE_AUTONOMOUS)
     res = drl_script_run(ROBOT_SYSTEM_REAL, fileRead())
-    print("#################" + str(res) + "###############")
+    #print("#################" + str(res) + "###############")
     
     while not rospy.is_shutdown():
-        print(get_drl_state())
-        print(get_robot_mode())
+        pass
+        #print(get_drl_state())
+        #print(get_robot_mode())
         #print(fileRead())
     #drl_script_stop(stop_mode=STOP_TYPE_QUICK)
     print 'good bye!'
