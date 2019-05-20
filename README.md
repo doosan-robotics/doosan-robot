@@ -22,7 +22,7 @@ __packages for mobile robot__
 If you don`t have real doosan controller, you must excute our emulator. 
 Emulator has local IP(127.0.0.1) default port=12345. 
 ```bash
-cd ~/catkin_ws/doosan-robot/common/bin/DRCF
+cd ~/catkin_ws/src/doosan-robot/common/bin/DRCF
 sudo ./DRCF64 <port>   ## 64bits OS
 or 
 sudo ./DRCF32 <port>   ## 32bits OS
