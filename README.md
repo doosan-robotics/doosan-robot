@@ -2,9 +2,10 @@
 
 # *build* 
     ### We recoomand the /home/<user_home>/catkin_ws/src
-    cd -/catkin_ws/src
+    cd ~/catkin_ws/src
     git clone https://github.com/doosan-robotics/doosan-robot
-    rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y 
+    rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y
+    cd ~/catkin_ws
     catkin_make
     source ./devel/setup.bash
 
