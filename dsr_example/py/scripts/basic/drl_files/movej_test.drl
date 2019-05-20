@@ -1,0 +1,12 @@
+#drl script 파일 불러다가  (movej movel movec정도) 
+
+#dsr_example
+
+set_velj(60)
+set_accj(30)
+p1 = posj(0,0,0,0,0,0)
+p2 = posj(0,0,90,0,90,0)
+
+movej(p1)
+movej(p2)
+

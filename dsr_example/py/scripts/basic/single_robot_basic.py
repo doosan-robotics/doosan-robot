@@ -67,6 +67,8 @@ if __name__ == "__main__":
     move_spiral = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_spiral', MoveSpiral)
     move_periodic = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_periodic', MovePeriodic)
 
+    set_robot_mode = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/system/set_robot_mode', SetRobotMode)
+    
     time= 0.0; mode=0; ref=0; radius=0.0; blendType=0; syncType=0
     vel=30; acc=30; sol=0
     angle1=0.0; angle2=0.0
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     
     mb_seg = _ros_listToFloat64MultiArray([seg1, seg2, seg3])
     posCnt = len(mb_seg)
-    
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
     while not rospy.is_shutdown():
         move_joint(p2, vel, acc, time, radius, mode, blendType, syncType) 
         move_jointx(x1, sol, vel, acc, time, radius, ref, mode, blendType, syncType)
