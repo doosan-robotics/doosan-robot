@@ -160,7 +160,6 @@ int main(int argc, char** argv)
     ROS_INFO("single_robot_simple_cpp finished !!!!!!!!!!!!!!!!!!!!!");
     ROS_INFO("single_robot_simple_cpp finished !!!!!!!!!!!!!!!!!!!!!");
 
-    ///if(&robot) delete (&robot); 
     thread_sub.join();
     
     ROS_INFO("single_robot_simple_cpp finished !!!!!!!!!!!!!!!!!!!!!");

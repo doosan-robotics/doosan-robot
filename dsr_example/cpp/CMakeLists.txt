@@ -60,7 +60,14 @@ SET( SRC_FILES_SINGLE_ROBOT_BASIC
   ${COMMON_SRC_FILES}
   src/basic/single_robot_basic.cpp
 )
-
+SET( SRC_FILES_DRL_READER_BASIC
+  ${COMMON_SRC_FILES}
+  src/basic/drl_reader_basic.cpp
+)
+SET( SRC_FILES_TOOL_BASIC
+  ${COMMON_SRC_FILES}
+  src/basic/dsr_service_tool_basic.cpp
+)
 #---- simple src --------------------------
 SET( SRC_SIMPLE_TEST
   ${COMMON_SRC_FILES}
@@ -86,7 +93,14 @@ SET( SRC_FILES_SINGLE_ROBOT_SIMPLE
   ${COMMON_SRC_FILES}
   src/simple/single_robot_simple.cpp
 )
-
+SET( SRC_FILES_DRL_READER_SIMPLE
+  ${COMMON_SRC_FILES}
+  src/simple/drl_reader_simple.cpp
+)
+SET( SRC_FILES_TOOL_SIMPLE
+  ${COMMON_SRC_FILES}
+  src/simple/dsr_service_tool_simple.cpp
+)
 #----- basic --------------------------------------------------------------------------------------------
 add_executable(dsr_basic_test ${SRC_FILES_BASIC_TEST})
 add_dependencies(dsr_basic_test ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -112,6 +126,14 @@ add_executable(single_robot_basic ${SRC_FILES_SINGLE_ROBOT_BASIC})
 add_dependencies(single_robot_basic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(single_robot_basic ${catkin_LIBRARIES})
 
+add_executable(drl_reader_basic ${SRC_FILES_DRL_READER_BASIC})
+add_dependencies(drl_reader_basic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(drl_reader_basic ${catkin_LIBRARIES})
+
+add_executable(dsr_service_tool_basic ${SRC_FILES_TOOL_BASIC})
+add_dependencies(dsr_service_tool_basic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(dsr_service_tool_basic ${catkin_LIBRARIES})
+
 #----- simple ---------------------------------------------------------------------------------------------
 add_executable(dsr_service_drl_simple ${SRC_FILES_DRL_SIMPLE})
 add_dependencies(dsr_service_drl_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -136,6 +158,15 @@ target_link_libraries(dsr_simple_test ${catkin_LIBRARIES})
 add_executable(single_robot_simple ${SRC_FILES_SINGLE_ROBOT_SIMPLE})
 add_dependencies(single_robot_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(single_robot_simple ${catkin_LIBRARIES})
+
+add_executable(drl_reader_simple ${SRC_FILES_DRL_READER_SIMPLE})
+add_dependencies(drl_reader_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(drl_reader_simple ${catkin_LIBRARIES})
+
+add_executable(dsr_service_tool_simple ${SRC_FILES_TOOL_SIMPLE})
+add_dependencies(dsr_service_tool_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(dsr_service_tool_simple ${catkin_LIBRARIES})
+
 #---- gripper src --------------------------
 SET( SRC_SIMPLE_PICK_AND_PLACE
   ${COMMON_SRC_FILES}

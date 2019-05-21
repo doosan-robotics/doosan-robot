@@ -52,6 +52,10 @@
 #include <dsr_msgs/RobotError.h>
 #include <dsr_msgs/RobotState.h>
 #include <dsr_msgs/RobotStop.h>
+#include <dsr_msgs/ModbusState.h>
+
+#include <dsr_msgs/SetRobotMode.h>
+#include <dsr_msgs/GetRobotMode.h>
 
 #include <dsr_msgs/MoveJoint.h>
 #include <dsr_msgs/MoveLine.h>
@@ -92,6 +96,7 @@
 #include <dsr_msgs/DrlStart.h>
 #include <dsr_msgs/DrlStop.h>
 #include <dsr_msgs/DrlResume.h>
+#include <dsr_msgs/GetDrlState.h>
 
 #include <dsr_msgs/Robotiq2FOpen.h>
 #include <dsr_msgs/Robotiq2FClose.h>
@@ -112,7 +117,9 @@ namespace DSR_Robot{
             virtual ~CDsrRobot();
 
             int stop(int nMode = STOP_TYPE_QUICK);
-
+            //----- system
+            int set_robot_mode(int robot_mode = ROBOT_MODE_MANUAL);
+            int get_robot_mode();
             //----- sync motion
             int movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, float fBlendingRadius = 0.f,
                       int nMoveMode = MOVE_MODE_ABSOLUTE, int nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);             
@@ -206,6 +213,7 @@ namespace DSR_Robot{
             int drl_stop(int nStopMode = STOP_TYPE_QUICK);
             int drl_pause();
             int drl_resume();
+            int get_drl_state();
 
         private:
             int _movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime, float fBlendingRadius, int nMoveMode, int nBlendingType, int nSyncType); 

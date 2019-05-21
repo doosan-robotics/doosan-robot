@@ -1,4 +1,4 @@
 # get_current_tool  
-# none 
+# It is a service to fetch the currently set tool information from the robot controller
 ---
 string         info # tool name

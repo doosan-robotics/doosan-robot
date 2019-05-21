@@ -1,4 +1,4 @@
 # drl_script_resume  
-# None       
+# It is a service to resume the currently paused DRL program in the robot controller.    
 ---
 bool success

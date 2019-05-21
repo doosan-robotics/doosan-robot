@@ -21,6 +21,46 @@ int CDsrRobot::stop(int nMode/*=STOP_TYPE_QUICK*/)
     return 0;
 }
 
+int CDsrRobot::set_robot_mode(int robot_mode){
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::ServiceClient srvSetRobotMode = node->serviceClient<dsr_msgs::SetRobotMode>(m_strSrvNamePrefix + "/system/set_robot_mode");
+    dsr_msgs::SetRobotMode srv;
+
+    srv.request.robot_mode = robot_mode;
+
+    if(srvSetRobotMode.call(srv))
+    {         
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        return (srv.response.success);
+    }
+    else
+    {    
+        ROS_ERROR("Failed to call service dr_control_service : set_robot_mode\n");
+        ros::shutdown();  
+        return -1;
+    }
+    return 0;
+}
+
+int CDsrRobot::get_robot_mode(){
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::ServiceClient srvGetRobotMode = node->serviceClient<dsr_msgs::GetRobotMode>(m_strSrvNamePrefix + "/system/get_robot_mode");
+    dsr_msgs::GetRobotMode srv;
+
+    if(srvGetRobotMode.call(srv))
+    {         
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        return (srv.response.robot_mode);
+    }
+    else
+    {    
+        ROS_ERROR("Failed to call service dr_control_service : get_robot_mode\n");
+        ros::shutdown();  
+        return -1;
+    }
+    return 0;
+}
+
 int CDsrRobot::movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime/*=0.f*/, float fBlendingRadius/*=0.f*/, int nMoveMode/*=MOVE_MODE_ABSOLUTE*/, int nBlendingType/*=BLENDING_SPEED_TYPE_DUPLICATE*/)
 {
     return _movej(fTargetPos, fTargetVel, fTargetAcc, fTargetTime, fBlendingRadius, nMoveMode, nBlendingType, 0);
@@ -634,6 +674,7 @@ int CDsrRobot::set_current_tool(string strName)
     dsr_msgs::SetCurrentTool srv;
 
     srv.request.name = strName;
+    ROS_INFO("set current tool name is : %s", strName.c_str());
     if(srvSetCurrentTool.call(srv))
     {         
         //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
@@ -1033,6 +1074,25 @@ int CDsrRobot::drl_resume()
     else
     {    
         ROS_ERROR("Failed to call service dr_control_service : drl_resume\n");
+        ros::shutdown();  
+        return -1;
+    }
+    return 0;
+}
+
+int CDsrRobot::get_drl_state(){
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::ServiceClient srvGetDrlState = node->serviceClient<dsr_msgs::GetDrlState>(m_strSrvNamePrefix + "/drl/get_drl_state");
+    dsr_msgs::GetDrlState srv;
+
+    if(srvGetDrlState.call(srv))
+    {         
+        //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
+        return (srv.response.drl_state);
+    }
+    else
+    {    
+        ROS_ERROR("Failed to call service dr_control_service : get_drl_state\n");
         ros::shutdown();  
         return -1;
     }

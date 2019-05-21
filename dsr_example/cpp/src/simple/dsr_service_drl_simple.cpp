@@ -23,7 +23,7 @@ string ROBOT_ID     = "dsr01";
 string ROBOT_MODEL  = "m1013";
 void SET_ROBOT(string id, string model) {ROBOT_ID = id; ROBOT_MODEL= model;}   
 //---------------------------------------------------------------------------
-
+CDsrRobot *temp;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void msgRobotState_cb(const dsr_msgs::RobotState::ConstPtr& msg)
 {
@@ -94,7 +94,9 @@ void SigHandler(int sig)
 {
     // Do some custom action.
     // For example, publish a stop message to some other nodes.
-  
+    temp->drl_stop();
+    temp->set_robot_mode(ROBOT_MODE_MANUAL);
+    ROS_INFO("DRL_STOP !!!!!!");
     // All the default sigint handler does is call shutdown()
     ROS_INFO("shutdown time!");
     ROS_INFO("shutdown time!");
@@ -154,19 +156,13 @@ int main(int argc, char** argv)
     std::string drlCodeReset = "movej([0,0,0,0,0,0])\n";
     std::string mode;
     int _rate;
-    nh.getParam("/dsr/mode", mode);
-    ROS_INFO("current mode is : %s", mode.c_str());
-    if(mode == "real"){
-        robot.drl_start(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeReset);    
-    }
-    else{
-        robot.drl_start(ROBOT_SYSTEM_VIRTUAL, drlCodeMove + drlCodeReset);
-    }
-    //robot.drl_start(ROBOT_SYSTEM_VIRTUAL, drlCodeReset); 
-
+    robot.set_robot_mode(ROBOT_MODE_AUTONOMOUS);
+    robot.drl_start(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeReset);    
+    temp = &robot;
     while(ros::ok())
     {            
     }
+
     thread_sub.join();
     ROS_INFO("dsr_service_test finished !!!!!!!!!!!!!!!!!!!!!");
     return 0;

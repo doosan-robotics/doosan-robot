@@ -1,9 +1,9 @@
 # move_periodic  
-float64[6] amp              #   
-float64[6] periodic         #   
-float64    acc              # Acceleration 
-int8       repeat           #  
+float64[6] amp              # Amplitude (motion between -amp and +amp) [mm] or [deg]   
+float64[6] periodic         # Period (time for 1 cycle) [sec]
+float64    acc              # Acc-, dec- time [sec] 
+int8       repeat           # Repetition count 
 int8       ref  #= 1        # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1 
-int8       syncType #=0      # SYNC = 0, ASYNC = 1
+int8       syncType #=0     # SYNC = 0, ASYNC = 1
 ---
 bool success
