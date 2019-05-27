@@ -19,6 +19,13 @@ add_service_files(
 
     ./system/SetRobotMode.srv
     ./system/GetRobotMode.srv
+    ./system/SetRobotSystem.srv
+    ./system/GetRobotSystem.srv
+    ./system/SetRobotSpeedMode.srv
+    ./system/GetRobotSpeedMode.srv
+    ./system/GetCurrentPose.srv
+    ./system/GetCurrentSolutionSpace.srv
+    ./system/SetSafeStopResetType.srv
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv
@@ -30,6 +37,7 @@ add_service_files(
     ./motion/MoveSpiral.srv
     ./motion/MovePeriodic.srv
     ./motion/MoveWait.srv
+    ./motion/Jog.srv
 
     ./tool/ConfigCreateTool.srv
     ./tool/ConfigDeleteTool.srv

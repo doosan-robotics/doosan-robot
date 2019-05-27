@@ -60,6 +60,14 @@
 //system
 #include <dsr_msgs/SetRobotMode.h>
 #include <dsr_msgs/GetRobotMode.h>
+#include <dsr_msgs/SetRobotSystem.h>
+#include <dsr_msgs/GetRobotSystem.h>
+#include <dsr_msgs/SetRobotSpeedMode.h>
+#include <dsr_msgs/GetRobotSpeedMode.h>
+#include <dsr_msgs/GetCurrentPose.h>
+#include <dsr_msgs/GetCurrentSolutionSpace.h>
+#include <dsr_msgs/SetSafeStopResetType.h>
+
 // motion
 #include <dsr_msgs/MoveJoint.h>
 #include <dsr_msgs/MoveLine.h>
@@ -71,6 +79,7 @@
 #include <dsr_msgs/MoveSpiral.h>
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
+#include <dsr_msgs/Jog.h>
 //io
 #include <dsr_msgs/SetCtrlBoxDigitalOutput.h>
 #include <dsr_msgs/GetCtrlBoxDigitalInput.h>
@@ -178,11 +187,10 @@ typedef struct {
     bool    bFlangeDigitalOutput[6];
     bool    bFlangeDigitalInput[6];
 
-    //io_modbus           # GJH
     int     nRegCount;
     string  strModbusSymbol[100];
     int     nModbusValue[100];
-    //error               # GJH
+  
     int     nAccessControl;
     bool    bHommingCompleted;
     bool    bTpInitialized;
@@ -226,8 +234,8 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
-        ros::ServiceServer m_nh_system[4];
-        ros::ServiceServer m_nh_move_service[10];
+        ros::ServiceServer m_nh_system[12];
+        ros::ServiceServer m_nh_move_service[12];
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
         ros::ServiceServer m_nh_drl_service[10];
@@ -280,6 +288,14 @@ namespace dsr_control{
         //----- System
         bool set_robot_mode_cb(dsr_msgs::SetRobotMode::Request& req, dsr_msgs::SetRobotMode::Response& res);
         bool get_robot_mode_cb(dsr_msgs::GetRobotMode::Request& req, dsr_msgs::GetRobotMode::Response& res);
+        bool set_robot_system_cb(dsr_msgs::SetRobotSystem::Request& req, dsr_msgs::SetRobotSystem::Response& res);
+        bool get_robot_system_cb(dsr_msgs::GetRobotSystem::Request& req, dsr_msgs::GetRobotSystem::Response& res);
+        bool set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res);
+        bool get_robot_speed_mode_cb(dsr_msgs::GetRobotSpeedMode::Request& req, dsr_msgs::GetRobotSpeedMode::Response& res);
+        bool get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res);
+        bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);
+        bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
+        
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
@@ -291,6 +307,7 @@ namespace dsr_control{
         bool movespiral_cb(dsr_msgs::MoveSpiral::Request& req, dsr_msgs::MoveSpiral::Response& res);
         bool moveperiodic_cb(dsr_msgs::MovePeriodic::Request& req, dsr_msgs::MovePeriodic::Response& res);
         bool movewait_cb(dsr_msgs::MoveWait::Request& req, dsr_msgs::MoveWait::Response& res);
+        bool jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res);
         
 
         //----- TCP

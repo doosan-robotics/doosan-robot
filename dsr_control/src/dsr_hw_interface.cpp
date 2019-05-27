@@ -532,6 +532,14 @@ namespace dsr_control{
         // system Operations
         m_nh_system[0] = private_nh_.advertiseService("system/set_robot_mode", &DRHWInterface::set_robot_mode_cb, this);
         m_nh_system[1] = private_nh_.advertiseService("system/get_robot_mode", &DRHWInterface::get_robot_mode_cb, this);
+        m_nh_system[2] = private_nh_.advertiseService("system/set_robot_system", &DRHWInterface::set_robot_system_cb, this);
+        m_nh_system[3] = private_nh_.advertiseService("system/get_robot_system", &DRHWInterface::get_robot_system_cb, this);
+        m_nh_system[4] = private_nh_.advertiseService("system/set_robot_speed_mode", &DRHWInterface::set_robot_speed_mode_cb, this);
+        m_nh_system[5] = private_nh_.advertiseService("system/get_robot_speed_mode", &DRHWInterface::get_robot_speed_mode_cb, this);
+        m_nh_system[6] = private_nh_.advertiseService("system/get_current_pose", &DRHWInterface::get_current_pose_cb, this);
+        m_nh_system[7] = private_nh_.advertiseService("system/get_current_solution_space", &DRHWInterface::get_current_solution_space_cb, this);
+        m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
+
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -543,7 +551,7 @@ namespace dsr_control{
         m_nh_move_service[7] = private_nh_.advertiseService("motion/move_spiral", &DRHWInterface::movespiral_cb, this);
         m_nh_move_service[8] = private_nh_.advertiseService("motion/move_periodic", &DRHWInterface::moveperiodic_cb, this);
         m_nh_move_service[9] = private_nh_.advertiseService("motion/move_wait", &DRHWInterface::movewait_cb, this);
-
+        m_nh_move_service[10]= private_nh_.advertiseService("motion/jog", &DRHWInterface::jog_cb, this);
         //  GPIO Operations
         m_nh_io_service[0] = private_nh_.advertiseService("io/set_digital_output", &DRHWInterface::set_digital_output_cb, this);
         m_nh_io_service[1] = private_nh_.advertiseService("io/get_digital_input", &DRHWInterface::get_digital_input_cb, this);
@@ -802,6 +810,30 @@ namespace dsr_control{
         res.robot_mode = Drfl.GetRobotMode();
     }
 
+    bool DRHWInterface::set_robot_system_cb(dsr_msgs::SetRobotSystem::Request& req, dsr_msgs::SetRobotSystem::Response& res){
+        res.success = Drfl.SetRobotSystem((ROBOT_SYSTEM)req.robot_system);
+    }
+    bool DRHWInterface::get_robot_system_cb(dsr_msgs::GetRobotSystem::Request& req, dsr_msgs::GetRobotSystem::Response& res){
+        res.robot_system = Drfl.GetRobotSystem();
+    }
+    bool DRHWInterface::set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res){
+        res.success = Drfl.SetRobotSpeedMode((SPEED_MODE)req.speed_mode);
+    }
+    bool DRHWInterface::get_robot_speed_mode_cb(dsr_msgs::GetRobotSpeedMode::Request& req, dsr_msgs::GetRobotSpeedMode::Response& res){
+        res.speed_mode = Drfl.GetRobotSpeedMode();
+    }
+    bool DRHWInterface::get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res){
+        float fTargetPos[6];
+        for(int i = 0; i < NUM_TASK; i++){
+        }
+    }
+    bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res){
+        res.solution_space = Drfl.GetCurrentSolutionSpace();
+    }
+    bool DRHWInterface::set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res){
+        Drfl.SetSafeStopResetType((SAFE_STOP_RESET_TYPE)req.reset_type); //no return ???
+        res.success = true;
+    }
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
         std::array<float, NUM_JOINT> target_pos;
@@ -996,6 +1028,10 @@ namespace dsr_control{
         res.success = Drfl.MoveWait();
     }
 
+    bool DRHWInterface::jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res)
+    {
+        res.success = Drfl.Jog((JOG_AXIS)req.jog_axis, (MOVE_REFERENCE)req.move_reference, req.vel);
+    }
     bool DRHWInterface::set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_digital_output_cb() called and calling Drfl.SetCtrlBoxDigitalOutput");

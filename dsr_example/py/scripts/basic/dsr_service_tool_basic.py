@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ##
-# @brief    [py example simple] motion basic test for doosan robot
-# @author   Kab Kyoum Kim (kabkyoum.kim@doosan.com)   
+# @brief    [py example basic] tool basic test for doosan robot
+# @author   Jin Hyuk Gong (jinhyuk.gong@doosan.com)   
 
 import rospy
 import os
@@ -10,8 +10,6 @@ import threading, time
 from std_msgs.msg import String,Int32,Int32MultiArray,Float64,Float64MultiArray,MultiArrayLayout,MultiArrayDimension
 import sys
 sys.dont_write_bytecode = True
-#sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
-#from DSR_ROBOT import *
 
 from dsr_msgs.msg import *
 from dsr_msgs.srv import *

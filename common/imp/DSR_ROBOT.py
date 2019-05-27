@@ -49,6 +49,14 @@ print("_topic_name_prefix ={0}".format(_topic_name_prefix))
 #  system Operations
 _ros_set_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_mode", SetRobotMode)
 _ros_get_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
+_ros_set_robot_system           = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_system", SetRobotSystem)
+_ros_get_robot_system           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_system", GetRobotSystem)
+_ros_set_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedMode)
+_ros_get_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedMode)
+_ros_set_safe_stop_reset_type   = rospy.ServiceProxy(_srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
+#_ros_get_last_alarm             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
+_ros_get_current_pose           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+_ros_get_current_solution_space = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_solution_space", GetCurrentSolutionSpace)
 
 #  motion Operations
 _ros_movej                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_joint", MoveJoint)
@@ -61,6 +69,7 @@ _ros_moveb                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/
 _ros_move_spiral                = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_spiral", MoveSpiral)
 _ros_move_periodic              = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_periodic", MovePeriodic)
 _ros_move_wait                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_wait", MoveWait)
+_ros_jog                        = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog", Jog)
 
 #  GPIO Operations
 _ros_set_digital_output         = rospy.ServiceProxy(_srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -443,6 +452,67 @@ def get_robot_mode():
     if __ROS__:
         ret = _ros_get_robot_mode()
     return ret
+
+def set_robot_system(robot_system):
+    if type(robot_system) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_system")
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_set_robot_system(robot_system)
+    return ret
+
+def get_robot_system():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_robot_system()
+    return ret
+
+def set_robot_speed_mode(speed_mode):
+    if type(speed_mode) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed_mode")
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_set_robot_speed_mode(speed_mode)
+    return ret
+
+def get_robot_speed_mode():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_robot_speed_mode()
+    return ret
+
+def set_safe_stop_reset_type(reset_type):
+    if type(reset_type) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : reset_type")
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_set_safe_stop_reset_type(reset_type)
+    return ret
+
+def get_current_pose(space_type):
+    if type(space_type) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : space_type")
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_current_pose(space_type)
+    return ret
+
+def get_current_solution_space():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_current_solution_space()
+    return ret
+
+#def get_last_alarm():
+    # ROS service call
+#    if __ROS__:
+#        ret = _ros_get_last_alarm()
+#    return ret
+
 ##### MOTION ##############################################################################################################################
 def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
     ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
@@ -1518,6 +1588,23 @@ def _move_wait(time):
         print_ext_result("{0} = PythonMgr.py_mwait(time:{1})".format(ret, dr_form(time)))
     return ret
 
+def jog(jog_axis, ref=0, vel=0):
+    ret = _jog(jog_axis, ref, vel)
+    return ret
+
+def _jog(jog_axis, ref, vel):
+    if type(jog_axis) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis")
+
+    if type(ref) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
+
+    # ROS service call
+    if __ROS__:
+        ret = _ros_jog(jog_axis, ref, vel) 
+    return ret
+
+
 ##############################################################################################################################
 
 def add_modbus_signal(ip, port, name, reg_type, index, value=0):
@@ -1961,6 +2048,14 @@ class CDsrRobot:
         # system Operations
         self._ros_set_robot_mode            = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_mode", SetRobotMode)
         self._ros_get_robot_mode            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
+        self._ros_set_robot_system          = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_system", SetRobotSystem)
+        self._ros_get_robot_system          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_system", GetRobotSystem)
+        self._ros_set_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedmode)
+        self._ros_get_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedmode)
+        self._ros_set_safe_stop_reset_type  = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
+        #self._ros_get_last_alarm            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
+        self._ros_get_current_pose          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+        self._ros_get_current_solution_space= rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_solution_space", GetCurrentSolutionSpace)
 
         #  motion Operations
         self._ros_movej                      = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_joint", MoveJoint)
@@ -1973,6 +2068,7 @@ class CDsrRobot:
         self._ros_move_spiral                = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_spiral", MoveSpiral)
         self._ros_move_periodic              = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_periodic", MovePeriodic)
         self._ros_move_wait                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_wait", MoveWait)
+        self._ros_jog                        = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog", Jog)
 
         #  GPIO Operations
         self._ros_set_digital_output         = rospy.ServiceProxy(self._srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -2043,6 +2139,67 @@ class CDsrRobot:
         if __ROS__:
             ret = self._ros_get_robot_mode()
         return ret
+
+        
+    def set_robot_system(self, robot_system):
+        if type(robot_system) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_system")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_set_robot_system(robot_system)
+        return ret
+
+    def get_robot_system(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_robot_system()
+        return ret
+
+    def set_robot_speed_mode(self, speed_mode):
+        if type(speed_mode) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed_mode")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_set_robot_speed_mode(speed_mode)
+        return ret
+
+    def get_robot_speed_mode(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_robot_speed_mode()
+        return ret
+
+    def set_safe_stop_reset_type(self, reset_type):
+        if type(reset_type) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : reset_type")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_set_safe_stop_reset_type(reset_type)
+        return ret
+
+    def get_current_pose(self, space_type):
+        if type(space_type) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : space_type")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_current_pose(space_type)
+        return ret
+
+    def get_current_solution_space(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_current_solution_space()
+        return ret
+
+    #def get_last_alarm(self):
+        # ROS service call
+    #    if __ROS__:
+    #        ret = self._ros_get_last_alarm()
+    #    return ret
     ##### MOTION ##############################################################################################################################
     def movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
         ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
@@ -3120,6 +3277,15 @@ class CDsrRobot:
             print_ext_result("{0} = PythonMgr.py_mwait(time:{1})".format(ret, dr_form(time)))
         return ret
 
+    def jog(self, jog_axis, ref=0, vel=0):
+        ret = self._jog(jog_axis, ref, vel)
+        return ret
+
+    def _jog(self, jog_axis, ref, vel):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_jog(jog_axis, ref, vel)
+        return ret
     ##############################################################################################################################
 
     def add_modbus_signal(self, ip, port, name, reg_type, index, value=0):
