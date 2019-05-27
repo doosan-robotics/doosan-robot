@@ -1588,11 +1588,11 @@ def _move_wait(time):
         print_ext_result("{0} = PythonMgr.py_mwait(time:{1})".format(ret, dr_form(time)))
     return ret
 
-def jog(jog_axis, ref=0, vel=0):
-    ret = _jog(jog_axis, ref, vel)
+def jog(jog_axis, ref=0, speed=0):
+    ret = _jog(jog_axis, ref, speed)
     return ret
 
-def _jog(jog_axis, ref, vel):
+def _jog(jog_axis, ref, speed):
     if type(jog_axis) != int:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis")
 
@@ -1601,7 +1601,7 @@ def _jog(jog_axis, ref, vel):
 
     # ROS service call
     if __ROS__:
-        ret = _ros_jog(jog_axis, ref, vel) 
+        ret = _ros_jog(jog_axis, ref, speed) 
     return ret
 
 
@@ -3277,14 +3277,14 @@ class CDsrRobot:
             print_ext_result("{0} = PythonMgr.py_mwait(time:{1})".format(ret, dr_form(time)))
         return ret
 
-    def jog(self, jog_axis, ref=0, vel=0):
-        ret = self._jog(jog_axis, ref, vel)
+    def jog(self, jog_axis, ref=0, speed=0):
+        ret = self._jog(jog_axis, ref, speed)
         return ret
 
-    def _jog(self, jog_axis, ref, vel):
+    def _jog(self, jog_axis, ref, speed):
         # ROS service call
         if __ROS__:
-            ret = self._ros_jog(jog_axis, ref, vel)
+            ret = self._ros_jog(jog_axis, ref, speed)
         return ret
     ##############################################################################################################################
 

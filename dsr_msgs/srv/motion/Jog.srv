@@ -1,8 +1,6 @@
-int8 jog_axis          # 0 : JOINT_1, 1 : JOINT_2, 2 : JOINT_3
-                       # 3 : JOINT_4, 4 : JOINT_5, 5 : JOINT_6
-                       # 6 : TASK_X,  7 : TASK_Y,  8 : TASK_Z
-                       # 9 : TASK_RX, 10: TASK_RY, 11: TASK_RZ
+int8 jog_axis          # 0 ~ 5 : JOINT 1 ~ 6 
+                       # 6 ~ 11: TASK 1 ~ 6 (X,Y,Z,rx,ry,rz)
 int8 move_reference    # 0 : MOVE_REFERENCE_BASE, 1 : MOVE_REFERENCE_TOOL
-float64 vel            # set velocity: [deg/sec]
+float64 speed          # jog speed [%] : + forward , 0=stop, - backward  
 ---
 bool success
