@@ -17,7 +17,7 @@ ROBOT_SYSTEM_VIRTUAL = 1
 ROBOT_SYSTEM_REAL = 0
 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m0609"
+ROBOT_MODEL  = "m1013"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
-
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
     drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
     drlCodeReset = "movej([0,0,0,0,0,0])\n"
     drl_script_run(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeReset)

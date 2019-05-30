@@ -17,7 +17,7 @@ from dsr_msgs.msg import *
 from dsr_msgs.srv import *
 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m0609"
+ROBOT_MODEL  = "m1013"
 
 ROBOT_SYSTEM_VIRTUAL = 1
 ROBOT_SYSTEM_REAL = 0
@@ -29,7 +29,8 @@ def shutdown():
     print "shutdown time!"
     print "shutdown time!"
     print "shutdown time!"
-
+    drl_stop(stop_mode=1)
+    set_robot_mode(0) # ROBOT_MODE_MANUAL
     pub_stop.publish(stop_mode=1) #STOP_TYPE_QUICK)
     return 0
 
@@ -55,19 +56,19 @@ if __name__ == "__main__":
 
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
-    
-    #print 'wait services'
-    rospy.wait_for_service('/'+ROBOT_ID +ROBOT_MODEL+'/drl/drl_start')
 
     drl_start = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_start', DrlStart)
     drl_stop = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_stop', DrlStop)
-    drl_resume = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_resume', DrlResume)
-    drl_pause = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_pause', DrlPause)
+    #drl_resume = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_resume', DrlResume)
+    #drl_pause = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/drl/drl_pause', DrlPause)
+    set_robot_mode = rospy.ServiceProxy('/'+ROBOT_ID + ROBOT_MODEL + '/system/set_robot_mode', SetRobotMode)
 
-    move_joint  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/motion/move_joint', MoveJoint)
+    set_robot_mode(1) #ROBOT_MODE_AUTONOMOUS
 
     drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
     drlCodeHome = "movej([0,0,0,0,0,0])\n"
     drl_start(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeHome)
-
+    
+    while not rospy.is_shutdown():
+        pass
     print 'good bye!'
