@@ -338,7 +338,6 @@ namespace dsr_control{
         //ROS_INFO("receive msg.stop_mode = %d", msg->stop_mode);
         //ROS_INFO("receive msg.stop_mode = %d", msg->stop_mode);
         ROS_INFO("receive msg.stop_mode = %d", msg->stop_mode);
-    
         Drfl.MoveStop((STOP_TYPE)msg->stop_mode);
     } 
 
@@ -726,8 +725,18 @@ namespace dsr_control{
     }
 
     //----- SIG Handler --------------------------------------------------------------
-    void DRHWInterface::sigint_handler( int signo)
+    void DRHWInterface::sigint_handler(int signo)
     {
+        ROS_INFO("SIG HANDLER !!!!!!!!!");
+
+        ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+        ros::Publisher pubRobotStop = node->advertise<dsr_msgs::RobotStop>("/"+m_strRobotName +m_strRobotModel+"/stop",100);
+        
+        dsr_msgs::RobotStop msg;
+        
+        msg.stop_mode  = STOP_TYPE_QUICK;
+        pubRobotStop.publish(msg);
+
         ROS_INFO("[sigint_hangler] CloseConnection");
         ROS_INFO("[sigint_hangler] CloseConnection");
         ROS_INFO("[sigint_hangler] CloseConnection");

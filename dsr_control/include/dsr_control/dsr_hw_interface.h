@@ -225,6 +225,8 @@ namespace dsr_control{
         static void OnMonitoringAccessControlCB(const MONITORING_ACCESS_CONTROL eAccCtrl);
         static void OnLogAlarm(LPLOG_ALARM pLogAlarm);
 
+        std::string GetRobotName();
+        std::string GetRobotModel();
 
     private:
         ros::NodeHandle private_nh_;

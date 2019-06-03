@@ -56,6 +56,14 @@
 
 #include <dsr_msgs/SetRobotMode.h>
 #include <dsr_msgs/GetRobotMode.h>
+#include <dsr_msgs/SetRobotSystem.h>
+#include <dsr_msgs/GetRobotSystem.h>
+#include <dsr_msgs/SetRobotSpeedMode.h>
+#include <dsr_msgs/GetRobotSpeedMode.h>
+#include <dsr_msgs/SetSafeStopResetType.h>
+#include <dsr_msgs/GetCurrentPose.h>
+#include <dsr_msgs/GetCurrentSolutionSpace.h>
+//#include <dsr_msgs/GetLastAlarm.h>
 
 #include <dsr_msgs/MoveJoint.h>
 #include <dsr_msgs/MoveLine.h>
@@ -67,6 +75,7 @@
 #include <dsr_msgs/MoveSpiral.h>
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
+#include <dsr_msgs/Jog.h>
 
 #include <dsr_msgs/ConfigCreateTcp.h>
 #include <dsr_msgs/ConfigDeleteTcp.h>
@@ -120,6 +129,14 @@ namespace DSR_Robot{
             //----- system
             int set_robot_mode(int robot_mode = ROBOT_MODE_MANUAL);
             int get_robot_mode();
+            int set_robot_system(int robot_system = ROBOT_SYSTEM_VIRTUAL);
+            int get_robot_system();
+            int set_robot_speed_mode(int speed_mode = SPEED_NORMAL_MODE);
+            int get_robot_speed_mode();
+            int set_safe_stop_reset_type(int reset_type = SAFE_STOP_RESET_TYPE_DEFAULT);
+            int get_current_pose(int space_type = ROBOT_SPACE_JOINT);
+            int get_current_solution_space();
+            //int get_last_alarm();
             //----- sync motion
             int movej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, float fBlendingRadius = 0.f,
                       int nMoveMode = MOVE_MODE_ABSOLUTE, int nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);             
@@ -148,7 +165,7 @@ namespace DSR_Robot{
             int move_periodic(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime = 0.f, 
                               int nRepeat = 1, int nMoveReference = MOVE_REFERENCE_TOOL);
  
-
+            int jog(int jog_axis, int move_reference = MOVE_REFERENCE_BASE, int speed = 10);
             //----- async motion
             int amovej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, float fBlendingRadius = 0.f,
                       int nMoveMode = MOVE_MODE_ABSOLUTE, int nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);             
