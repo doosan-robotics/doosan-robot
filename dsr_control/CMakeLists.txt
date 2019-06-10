@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(dsr_control)
 add_compile_options(-std=c++11)
 
+catkin_python_setup()
+
 find_package(catkin REQUIRED COMPONENTS
   dsr_msgs
   controller_manager
