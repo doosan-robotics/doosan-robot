@@ -62,3 +62,19 @@ add_dependencies(dsr_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_E
 
 target_link_libraries(dsr_control_node ${catkin_LIBRARIES})
 target_link_libraries(dsr_control_node DRFL PocoFoundation PocoNet)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILE_MATCHING PATTERN "*.h"
+   PATTERN ".svn" EXCLUDE
+)
+
+install(TARGETS ${PROJECT_NAME} dsr_control_node
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch
+   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
