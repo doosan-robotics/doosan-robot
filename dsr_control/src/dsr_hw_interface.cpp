@@ -538,7 +538,7 @@ namespace dsr_control{
         m_nh_system[6] = private_nh_.advertiseService("system/get_current_pose", &DRHWInterface::get_current_pose_cb, this);
         m_nh_system[7] = private_nh_.advertiseService("system/get_current_solution_space", &DRHWInterface::get_current_solution_space_cb, this);
         m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
-
+        m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -832,8 +832,8 @@ namespace dsr_control{
         res.speed_mode = Drfl.GetRobotSpeedMode();
     }
     bool DRHWInterface::get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res){
-        float fTargetPos[6];
         for(int i = 0; i < NUM_TASK; i++){
+            res.pos[i] = Drfl.GetCurrentPose((ROBOT_SPACE)req.space_type)->_fPosition[i];
         }
     }
     bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res){
@@ -843,6 +843,16 @@ namespace dsr_control{
         Drfl.SetSafeStopResetType((SAFE_STOP_RESET_TYPE)req.reset_type); //no return ???
         res.success = true;
     }
+    bool DRHWInterface::get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res){
+        res.log_alarm.level = Drfl.GetLastAlarm()->_iLevel;
+        res.log_alarm.group = Drfl.GetLastAlarm()->_iGroup;
+        res.log_alarm.index = Drfl.GetLastAlarm()->_iIndex;
+        for(int i = 0; i < 3; i++){
+            std::string str_temp(Drfl.GetLastAlarm()->_szParam[i]);
+            res.log_alarm.param[i] = str_temp;
+        }
+    }
+
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
         std::array<float, NUM_JOINT> target_pos;

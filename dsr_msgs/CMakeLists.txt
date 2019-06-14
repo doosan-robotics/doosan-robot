@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
     FILES
+    LogAlarm.msg
     ModbusState.msg
     RobotError.msg
     RobotState.msg
@@ -26,6 +27,7 @@ add_service_files(
     ./system/GetCurrentPose.srv
     ./system/GetCurrentSolutionSpace.srv
     ./system/SetSafeStopResetType.srv
+    ./system/GetLastAlarm.srv
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv

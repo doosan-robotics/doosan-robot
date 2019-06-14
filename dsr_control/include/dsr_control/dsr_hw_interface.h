@@ -67,6 +67,7 @@
 #include <dsr_msgs/GetCurrentPose.h>
 #include <dsr_msgs/GetCurrentSolutionSpace.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
+#include <dsr_msgs/GetLastAlarm.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -297,7 +298,8 @@ namespace dsr_control{
         bool get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res);
         bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);
         bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
-        
+        bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
+
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
