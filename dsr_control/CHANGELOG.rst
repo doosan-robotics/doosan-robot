@@ -2,8 +2,8 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.7 (2019-06-17)
+------------------
 * add serial example node in the service pack
 * delete dsr_control_test.launch
 * dsr_control CMakeLists.txt

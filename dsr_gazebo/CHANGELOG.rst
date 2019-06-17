@@ -2,8 +2,8 @@
 Changelog for package dsr_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.7 (2019-06-17)
+------------------
 * dsr_example_py directory modified
 * Contributors: doosan-robotics
 

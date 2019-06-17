@@ -2,8 +2,8 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.7 (2019-06-17)
+------------------
 * add serial example node in the service pack
 * dsr_example_py directory modified
 * .cpp example is no longer supported

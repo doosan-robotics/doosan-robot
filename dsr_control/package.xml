@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dsr_control</name>
-  <version>0.9.6</version>
+  <version>0.9.7</version>
   <description>The dsr_control package</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
