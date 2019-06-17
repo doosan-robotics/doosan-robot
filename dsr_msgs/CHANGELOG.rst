@@ -2,6 +2,19 @@
 Changelog for package dsr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add serial example node in the service pack
+* update jog
+* update jog.srv
+* update example and comment
+* update DRFL.lib64
+* 20190517 update
+* update monitoring data
+* update monitoring data
+* update monitoring message
+* Contributors: doosan-robotics
+
 0.9.5 (2019-04-22)
 ------------------
 * edit dsr_msgs
