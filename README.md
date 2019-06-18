@@ -76,7 +76,6 @@ color := ROBOT_COLOR <white  /  blue> defalut = white
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
 
-
 #### dsr_control + dsr_moveit_config
     roslaunch dsr_control dsr_moveit.launch
     roslaunch dsr_control dsr_moveit.launch model:=m0609 mode:=virtual
@@ -110,19 +109,15 @@ __If you don`t have real doosan controller, you must execute emulator before run
       single robot in gazebo : roslaunch dsr_launcher single_robot_gazebo.launch model:=m1013 color:=blue
       single robot in rviz + gazebo : roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
     <run application node>
-      <cpp>
-        basic example : rosrun dsr_example_cpp single_robot_basic dsr01 m1013
-        simple example : rosrun dsr_example_cpp single_robot_simple dsr01 m1013
       <py>
-        basic example : rosrun dsr_example_py single_robot_basic.py dsr01 m1013
         simple example : rosrun dsr_example_py single_robot_simple.py dsr01 m1013
     <ex>
       roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
-      rosrun dsr_example_cpp single_robot_simple dsr01 m1013
+      rosrun dsr_example_py single_robot_simple.py
 
 > _$ roslaunch dsr_launcher single_robot_rviz_gazebo.launch_
 
-> _$ rosrun dsr_example_cpp single_robot_simple_
+> _$ rosrun dsr_example_py single_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
 
 
@@ -132,19 +127,15 @@ __If you don`t have real doosan controller, you must execute emulator before run
       multi robot in gazebo : roslaunch dsr_launcher multi_robot_gazebo.launch
       multi robot in rviz + gazebo : roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
     <run application node>
-      <cpp>
-        basic example : rosrun dsr_example_cpp multi_robot_basic
-        simple example : rosrun dsr_example_cpp multi_robot_simple
       <py>
-        basic example : rosrun dsr_example_py multi_robot_basic.py
         simple example : rosrun dsr_example_py multi_robot_simple.py
       <ex>
         roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-        rosrun dsr_example_cpp multi_robot  
+        rosrun dsr_example_py multi_robot.py  
 
 > _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
 
-> _$ rosrun dsr_example_cpp multi_robot_
+> _$ rosrun dsr_example_py multi_robot.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
 
 ###### robot + gripper
@@ -154,14 +145,12 @@ __If you don`t have real doosan controller, you must execute emulator before run
 roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
-  <cpp>
-    rosrun dsr_example_cpp pick_and_place
   <python>
     rosrun dsr_example_py pick_and_place.py
 ```
 - Serial Test(Loopback)
 ```bash
-rosrun dsr_example_cpp serial_example_node ttyUSB0 115200
+rosrun serial_example_node serial_example_node ttyUSB0 115200
 rostopic echo /serial_read
 rostopic pub /serial_write std_msgs/String 'data: 100'
 ```
@@ -175,8 +164,6 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
   
 <run application node>
-  <cpp>
-    rosrun dsr_example_cpp single_robot_mobile
   <python>
     rosrun dsr_example_py single_robot_mobile.py
 ```
@@ -189,8 +176,6 @@ roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
 roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
 <run application node>
-  <cpp>
-    rosrun dsr_example_cpp multi_robot_mobile
   <python>
     rosrun dsr_example_py multi_robot_mobile.py  
 ```
@@ -200,8 +185,8 @@ roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
     
 #### gazebo+rviz+virtual
-    roslaunch dsr_example test.launch
-    rosrun dsr_test_cpp dsr_test
+    roslaunch dsr_launcher single_robot_rviz_gazebo.launch
+    rosrun dsr_example_py single_robot_simple.py
 ```bash
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns" value="dsr01"/> # Robot ID
