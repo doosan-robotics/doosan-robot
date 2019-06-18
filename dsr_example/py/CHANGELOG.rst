@@ -2,8 +2,8 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.8 (2019-06-18)
+------------------
 * change dsr_example_py dir
 * Contributors: doosan-robotics
 

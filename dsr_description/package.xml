@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dsr_description</name>
-  <version>0.9.7</version>
+  <version>0.9.8</version>
   <description>The dsr_description package</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
