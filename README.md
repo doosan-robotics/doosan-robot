@@ -109,8 +109,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
       single robot in gazebo : roslaunch dsr_launcher single_robot_gazebo.launch model:=m1013 color:=blue
       single robot in rviz + gazebo : roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
     <run application node>
-      <py>
-        simple example : rosrun dsr_example_py single_robot_simple.py dsr01 m1013
+      rosrun dsr_example_py single_robot_simple.py dsr01 m1013
     <ex>
       roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
       rosrun dsr_example_py single_robot_simple.py
@@ -127,9 +126,8 @@ __If you don`t have real doosan controller, you must execute emulator before run
       multi robot in gazebo : roslaunch dsr_launcher multi_robot_gazebo.launch
       multi robot in rviz + gazebo : roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
     <run application node>
-      <py>
-        simple example : rosrun dsr_example_py multi_robot_simple.py
-      <ex>
+      rosrun dsr_example_py multi_robot_simple.py
+    <ex>
         roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
         rosrun dsr_example_py multi_robot.py  
 
@@ -145,8 +143,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
 roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
-  <python>
-    rosrun dsr_example_py pick_and_place.py
+  rosrun dsr_example_py pick_and_place.py
 ```
 - Serial Test(Loopback)
 ```bash
@@ -164,8 +161,7 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
   
 <run application node>
-  <python>
-    rosrun dsr_example_py single_robot_mobile.py
+  rosrun dsr_example_py single_robot_mobile.py
 ```
 
 > _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
@@ -176,8 +172,7 @@ roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
 roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
 <run application node>
-  <python>
-    rosrun dsr_example_py multi_robot_mobile.py  
+  rosrun dsr_example_py multi_robot_mobile.py  
 ```
 
 > _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
