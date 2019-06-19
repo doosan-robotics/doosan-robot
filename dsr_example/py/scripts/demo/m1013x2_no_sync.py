@@ -95,13 +95,13 @@ if __name__ == "__main__":
     pub_stop_r1 = rospy.Publisher('/'+ robot_id1 + robot_model1 +'/stop', RobotStop, queue_size=10)           
     pub_stop_r2 = rospy.Publisher('/'+ robot_id2 + robot_model2 +'/stop', RobotStop, queue_size=10)           
 
-    t1 = threading.Thread(target=thread_subscriber_r1, args=(robot_id1, robot_model1))
-    t1.daemon = True 
-    t1.start()
+    #t1 = threading.Thread(target=thread_subscriber_r1, args=(robot_id1, robot_model1))
+    #t1.daemon = True 
+    #t1.start()
 
-    t2 = threading.Thread(target=thread_subscriber_r2, args=(robot_id2, robot_model2))
-    t2.daemon = True 
-    t2.start()
+    #t2 = threading.Thread(target=thread_subscriber_r2, args=(robot_id2, robot_model2))
+    #t2.daemon = True 
+    #t2.start()
 
     #----------------------------------------------------------------------
     JReady = posj(0, -20, 110, 0, 60, 0)
