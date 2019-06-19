@@ -12,7 +12,7 @@ import random
 from geometry_msgs.msg import Twist
 
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"

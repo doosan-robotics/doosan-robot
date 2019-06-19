@@ -54,7 +54,7 @@ _ros_get_robot_system           = rospy.ServiceProxy(_srv_name_prefix +"/system/
 _ros_set_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedMode)
 _ros_get_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedMode)
 _ros_set_safe_stop_reset_type   = rospy.ServiceProxy(_srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
-#_ros_get_last_alarm             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
+_ros_get_last_alarm             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
 _ros_get_current_pose           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
 _ros_get_current_solution_space = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_solution_space", GetCurrentSolutionSpace)
 
@@ -507,11 +507,11 @@ def get_current_solution_space():
         ret = _ros_get_current_solution_space()
     return ret
 
-#def get_last_alarm():
-    # ROS service call
-#    if __ROS__:
-#        ret = _ros_get_last_alarm()
-#    return ret
+def get_last_alarm():
+     #ROS service call
+    if __ROS__:
+        ret = _ros_get_last_alarm()
+    return ret
 
 ##### MOTION ##############################################################################################################################
 def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
@@ -2053,7 +2053,7 @@ class CDsrRobot:
         self._ros_set_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedMode)
         self._ros_get_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedMode)
         self._ros_set_safe_stop_reset_type  = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
-        #self._ros_get_last_alarm            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
+        self._ros_get_last_alarm            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
         self._ros_get_current_pose          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
         self._ros_get_current_solution_space= rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_solution_space", GetCurrentSolutionSpace)
 
@@ -2195,11 +2195,11 @@ class CDsrRobot:
             ret = self._ros_get_current_solution_space()
         return ret
 
-    #def get_last_alarm(self):
+    def get_last_alarm(self):
         # ROS service call
-    #    if __ROS__:
-    #        ret = self._ros_get_last_alarm()
-    #    return ret
+        if __ROS__:
+            ret = self._ros_get_last_alarm()
+        return ret
     ##### MOTION ##############################################################################################################################
     def movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
         ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
