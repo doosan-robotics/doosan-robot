@@ -13,6 +13,8 @@
 
   <license>BSD</license>
   <url type="website">http://wiki.ros.org/doosan_robotics</url>
+  <url type="bugtracker">https://github.com/doosan-robotics/doosan-robot/issues</url>
+  <url type="repository">https://github.com/doosan-robotics/doosan-robot</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 
@@ -41,3 +43,4 @@
   <build_depend>robot_localization</build_depend>
   <build_depend>gazebo_ros_control</build_depend>
 </package>
+

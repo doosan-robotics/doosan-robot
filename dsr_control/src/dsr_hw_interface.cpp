@@ -551,6 +551,9 @@ namespace dsr_control{
         m_nh_move_service[8] = private_nh_.advertiseService("motion/move_periodic", &DRHWInterface::moveperiodic_cb, this);
         m_nh_move_service[9] = private_nh_.advertiseService("motion/move_wait", &DRHWInterface::movewait_cb, this);
         m_nh_move_service[10]= private_nh_.advertiseService("motion/jog", &DRHWInterface::jog_cb, this);
+        m_nh_move_service[11]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
+        m_nh_move_service[12]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
+        m_nh_move_service[13]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
         //  GPIO Operations
         m_nh_io_service[0] = private_nh_.advertiseService("io/set_digital_output", &DRHWInterface::set_digital_output_cb, this);
         m_nh_io_service[1] = private_nh_.advertiseService("io/get_digital_input", &DRHWInterface::get_digital_input_cb, this);
@@ -1051,6 +1054,22 @@ namespace dsr_control{
     {
         res.success = Drfl.Jog((JOG_AXIS)req.jog_axis, (MOVE_REFERENCE)req.move_reference, req.speed);
     }
+
+    bool DRHWInterface::move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res)
+    {
+        res.success = Drfl.MoveStop((STOP_TYPE)req.stop_mode);
+    }
+
+    bool DRHWInterface::move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res)
+    {
+        res.success = Drfl.MoveResume();
+    }
+    
+    bool DRHWInterface::move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res)
+    {
+        res.success = Drfl.MovePause();
+    }
+
     bool DRHWInterface::set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_digital_output_cb() called and calling Drfl.SetCtrlBoxDigitalOutput");

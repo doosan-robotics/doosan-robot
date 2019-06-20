@@ -81,6 +81,10 @@
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
 #include <dsr_msgs/Jog.h>
+#include <dsr_msgs/MovePause.h>
+#include <dsr_msgs/MoveStop.h>
+#include <dsr_msgs/MoveResume.h>
+
 //io
 #include <dsr_msgs/SetCtrlBoxDigitalOutput.h>
 #include <dsr_msgs/GetCtrlBoxDigitalInput.h>
@@ -238,7 +242,7 @@ namespace dsr_control{
 
         //----- Service ---------------------------------------------------------------
         ros::ServiceServer m_nh_system[12];
-        ros::ServiceServer m_nh_move_service[12];
+        ros::ServiceServer m_nh_move_service[20];
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
         ros::ServiceServer m_nh_drl_service[10];
@@ -312,7 +316,9 @@ namespace dsr_control{
         bool moveperiodic_cb(dsr_msgs::MovePeriodic::Request& req, dsr_msgs::MovePeriodic::Response& res);
         bool movewait_cb(dsr_msgs::MoveWait::Request& req, dsr_msgs::MoveWait::Response& res);
         bool jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res);
-        
+        bool move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res);
+        bool move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res);
+        bool move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res);
 
         //----- TCP
         bool set_current_tcp_cb(dsr_msgs::SetCurrentTcp::Request& req, dsr_msgs::SetCurrentTcp::Response& res);

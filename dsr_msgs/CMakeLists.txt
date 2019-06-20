@@ -40,6 +40,9 @@ add_service_files(
     ./motion/MovePeriodic.srv
     ./motion/MoveWait.srv
     ./motion/Jog.srv
+    ./motion/MoveStop.srv
+    ./motion/MovePause.srv
+    ./motion/MoveResume.srv
 
     ./tool/ConfigCreateTool.srv
     ./tool/ConfigDeleteTool.srv
