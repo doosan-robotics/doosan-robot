@@ -299,35 +299,60 @@ namespace dsr_control{
 
     void DRHWInterface::OnLogAlarm(LPLOG_ALARM pLogAlarm)
     {
-        //This function is called when an error occurs.    
-        ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();  
-        ros::Publisher PubRobotError = node->advertise<dsr_msgs::RobotError>("error",100);
+        //This function is called when an error occurs.
+        ros::NodeHandlePtr node=boost::make_shared<ros::NodeHandle>();
+        ros::Publisher PubRobotError=node->advertise<dsr_msgs::RobotError>("error",100);
         dsr_msgs::RobotError msg;
 
-        ROS_ERROR("[callback OnLogAlarm]");
-        ROS_ERROR("  level : %d",(unsigned int)pLogAlarm->_iLevel );
-        ROS_ERROR("  group : %d",(unsigned int)pLogAlarm->_iGroup );
-        ROS_ERROR("  index : %d", pLogAlarm->_iIndex );
-        ROS_ERROR("  param : %s", pLogAlarm->_szParam[0] );
-        ROS_ERROR("  param : %s", pLogAlarm->_szParam[1] );
-        ROS_ERROR("  param : %s", pLogAlarm->_szParam[2] );
+        switch(pLogAlarm->_iLevel)
+        {
+        case LOG_LEVEL_SYSINFO:
+            ROS_INFO("[callback OnLogAlarm]");
+            ROS_INFO(" level : %d",(unsigned int)pLogAlarm->_iLevel);
+            ROS_INFO(" group : %d",(unsigned int)pLogAlarm->_iGroup);
+            ROS_INFO(" index : %d", pLogAlarm->_iIndex);
+            ROS_INFO(" param : %s", pLogAlarm->_szParam[0] );
+            ROS_INFO(" param : %s", pLogAlarm->_szParam[1] );
+            ROS_INFO(" param : %s", pLogAlarm->_szParam[2] );
+            break;
+        case LOG_LEVEL_SYSWARN:
+            ROS_WARN("[callback OnLogAlarm]");
+            ROS_WARN(" level : %d",(unsigned int)pLogAlarm->_iLevel);
+            ROS_WARN(" group : %d",(unsigned int)pLogAlarm->_iGroup);
+            ROS_WARN(" index : %d", pLogAlarm->_iIndex);
+            ROS_WARN(" param : %s", pLogAlarm->_szParam[0] );
+            ROS_WARN(" param : %s", pLogAlarm->_szParam[1] );
+            ROS_WARN(" param : %s", pLogAlarm->_szParam[2] );
+            break;
+        case LOG_LEVEL_SYSERROR:
+        default:
+            ROS_ERROR("[callback OnLogAlarm]");
+            ROS_ERROR(" level : %d",(unsigned int)pLogAlarm->_iLevel);
+            ROS_ERROR(" group : %d",(unsigned int)pLogAlarm->_iGroup);
+            ROS_ERROR(" index : %d", pLogAlarm->_iIndex);
+            ROS_ERROR(" param : %s", pLogAlarm->_szParam[0] );
+            ROS_ERROR(" param : %s", pLogAlarm->_szParam[1] );
+            ROS_ERROR(" param : %s", pLogAlarm->_szParam[2] );
+            break;
+        }
 
-        g_stDrError.nLevel = (unsigned int)pLogAlarm->_iLevel;
-        g_stDrError.nGroup = (unsigned int)pLogAlarm->_iGroup;
-        g_stDrError.nCode  = pLogAlarm->_iIndex;
-        strncpy(g_stDrError.strMsg1, pLogAlarm->_szParam[0], MAX_STRING_SIZE); 
-        strncpy(g_stDrError.strMsg2, pLogAlarm->_szParam[1], MAX_STRING_SIZE); 
-        strncpy(g_stDrError.strMsg3, pLogAlarm->_szParam[2], MAX_STRING_SIZE); 
+        g_stDrError.nLevel=(unsigned int)pLogAlarm->_iLevel;
+        g_stDrError.nGroup=(unsigned int)pLogAlarm->_iGroup;
+        g_stDrError.nCode=pLogAlarm->_iIndex;
+        strncpy(g_stDrError.strMsg1, pLogAlarm->_szParam[0], MAX_STRING_SIZE);
+        strncpy(g_stDrError.strMsg2, pLogAlarm->_szParam[1], MAX_STRING_SIZE);
+        strncpy(g_stDrError.strMsg3, pLogAlarm->_szParam[2], MAX_STRING_SIZE);
 
-        msg.level = g_stDrError.nLevel;
-        msg.group = g_stDrError.nGroup;
-        msg.code  = g_stDrError.nCode;
-        msg.msg1  = g_stDrError.strMsg1;  
-        msg.msg2  = g_stDrError.strMsg2;
-        msg.msg3  = g_stDrError.strMsg3;
+        msg.level=g_stDrError.nLevel;
+        msg.group=g_stDrError.nGroup;
+        msg.code=g_stDrError.nCode;
+        msg.msg1=g_stDrError.strMsg1;
+        msg.msg2=g_stDrError.strMsg2;
+        msg.msg3=g_stDrError.strMsg3;
 
         PubRobotError.publish(msg);
     }
+
     //----- register the call-back functions end -------------------------------------
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
