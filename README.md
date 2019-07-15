@@ -105,9 +105,12 @@ __If you don`t have real doosan controller, you must execute emulator before run
 #### dsr_example
 ###### single robot
     <launch>
-      single robot in rviz : roslaunch dsr_launcher single_robot_rviz.launch model:=m1013 color:=white
-      single robot in gazebo : roslaunch dsr_launcher single_robot_gazebo.launch model:=m1013 color:=blue
-      single robot in rviz + gazebo : roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
+      single robot in rviz : 
+      roslaunch dsr_launcher single_robot_rviz.launch model:=m1013 color:=white
+      single robot in gazebo : 
+      roslaunch dsr_launcher single_robot_gazebo.launch model:=m1013 color:=blue
+      single robot in rviz + gazebo : 
+      roslaunch dsr_launcher single_robot_rviz_gazebo.launch model:=m1013 color:=white
     <run application node>
       rosrun dsr_example_py single_robot_simple.py dsr01 m1013
     <ex>
