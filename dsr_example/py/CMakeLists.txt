@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
 #  message_generation
 # actionlib_msgs
+  sensor_msgs
   dsr_msgs  
 )
 
