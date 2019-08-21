@@ -9,7 +9,7 @@
   <arg name="robot_description" default="robot_description"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro --inorder namespace:=dsr color:=$(arg color) gripper:=$(arg gripper) '$(find dsr_description)/xacro/m1509.urdf.xacro'"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro --inorder namespace:=dsr01m1509 color:=$(arg color) gripper:=$(arg gripper) '$(find dsr_description)/xacro/m1509.urdf.xacro'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic" textfile="$(find moveit_config_m1509)/config/m1509.srdf" />
