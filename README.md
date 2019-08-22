@@ -30,7 +30,7 @@ or
 
 > _$ ./DRCF64 12345_
 
-> <img src="https://user-images.githubusercontent.com/47092672/55616587-17293700-57cd-11e9-9c47-605f4aaf9336.PNG" width="80%">
+> <img src="https://user-images.githubusercontent.com/47092672/63494967-dc186d80-c4f9-11e9-967d-519656457499.jpg" width="80%">
 
 
 #### dsr_description
