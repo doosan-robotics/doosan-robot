@@ -74,7 +74,7 @@ def joy_cb(msg):
 ##
     if msg.buttons[7] == 1 and msg.buttons[6] == 1:
         r.movej(targetPos, 50, 50)
-    elif msg.buttons[8] == 1:
+    elif msg.buttons[10] == 1:
         r.movej(hommingPos, 50, 50)
     
     if msg.axes[4] != 0 or msg.axes[0] != 0 or msg.axes[1] != 0:
