@@ -26,7 +26,7 @@
 
 	<node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)$(arg model)" respawn="false" output="screen">
 		<param name="name" value="$(arg ns)" />
-		<param name="rate" value="10" />
+		<param name="rate" value="100" />
 		<param name="standby" value="5000" />
 		<param name="command" value="true" />
 		<param name="host" value="$(arg host)" />
