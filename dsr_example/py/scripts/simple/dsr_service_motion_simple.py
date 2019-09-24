@@ -23,7 +23,7 @@ def shutdown():
     print "shutdown time!"
     print "shutdown time!"
     print "shutdown time!"
-
+    set_robot_mode(ROBOT_MODE_MANUAL)
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
-
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
     set_velx(30,20)  # set global task speed: 30(mm/sec), 20(deg/sec)
     set_accx(60,40)  # set global task accel: 60(mm/sec2), 40(deg/sec2)
 
@@ -164,6 +164,7 @@ if __name__ == "__main__":
     b_list1 = [seg11, seg12, seg14, seg15, seg16] 
 
     while not rospy.is_shutdown():
+
         movej(p2, vel=100, acc=100)
         movejx(x1, vel=30, acc=60, sol=0)
         movel(x2, velx, accx)

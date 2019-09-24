@@ -23,7 +23,7 @@ def shutdown():
     print "shutdown time!"
     print "shutdown time!"
     print "shutdown time!"
-
+    set_robot_mode(ROBOT_MODE_MANUAL)
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
 
@@ -105,7 +105,6 @@ def thread_subscriber():
 if __name__ == "__main__":
     rospy.init_node('single_robot_simple_py')
     rospy.on_shutdown(shutdown)
-    set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
     t1 = threading.Thread(target=thread_subscriber)
     t1.daemon = True 
     t1.start()
