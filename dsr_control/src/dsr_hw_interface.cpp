@@ -564,6 +564,9 @@ namespace dsr_control{
         m_nh_system[7] = private_nh_.advertiseService("system/get_current_solution_space", &DRHWInterface::get_current_solution_space_cb, this);
         m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
         m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
+        m_nh_system[10]= private_nh_.advertiseService("system/get_robot_state", &DRHWInterface::get_robot_state_cb, this);
+        m_nh_system[11]= private_nh_.advertiseService("system/manage_access_control", &DRHWInterface::manage_access_control_cb, this);
+        m_nh_system[12]= private_nh_.advertiseService("system/set_robot_control", &DRHWInterface::set_robot_control_cb, this);
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -880,7 +883,18 @@ namespace dsr_control{
             res.log_alarm.param[i] = str_temp;
         }
     }
-
+    bool DRHWInterface::get_robot_state_cb(dsr_msgs::GetRobotState::Request& req, dsr_msgs::GetRobotState::Response& res)
+    {
+        res.robot_state = Drfl.GetRobotState();
+    }
+    bool DRHWInterface::set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res)
+    {
+        res.success = Drfl.SetRobotControl((ROBOT_CONTROL)req.robot_control);
+    }
+    bool DRHWInterface::manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res)
+    {
+        res.success = Drfl.ManageAccessControl((MANAGE_ACCESS_CONTROL)req.manage_access_control);
+    }
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
         std::array<float, NUM_JOINT> target_pos;

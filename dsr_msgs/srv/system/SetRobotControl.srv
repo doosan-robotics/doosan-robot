@@ -1,0 +1,3 @@
+int8 robot_control
+---
+bool success
