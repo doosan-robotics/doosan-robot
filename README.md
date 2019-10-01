@@ -14,7 +14,7 @@
     
 __packages for mobile robot__
 
-    sudo apt-get install ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
+    sudo apt-get ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
 
 
 # *usage* <a id="chapter-3"></a>
@@ -149,7 +149,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
 roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
-  rosrun dsr_example_py pick_and_place_simple.py
+  rosrun dsr_example_py pick_and_place.py
 ```
 - Serial Test(Loopback)
 ```bash

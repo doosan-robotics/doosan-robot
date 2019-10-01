@@ -68,9 +68,6 @@
 #include <dsr_msgs/GetCurrentSolutionSpace.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetLastAlarm.h>
-#include <dsr_msgs/GetRobotState.h>
-#include <dsr_msgs/ManageAccessControl.h>
-#include <dsr_msgs/SetRobotControl.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -244,7 +241,7 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
-        ros::ServiceServer m_nh_system[20];
+        ros::ServiceServer m_nh_system[12];
         ros::ServiceServer m_nh_move_service[20];
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
@@ -306,9 +303,6 @@ namespace dsr_control{
         bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);
         bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
         bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
-        bool get_robot_state_cb(dsr_msgs::GetRobotState::Request& req, dsr_msgs::GetRobotState::Response& res);
-        bool manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res);
-        bool set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res);
 
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);

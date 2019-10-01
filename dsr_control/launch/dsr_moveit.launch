@@ -9,7 +9,13 @@
     <arg name="gripper" default="none"/>
     <arg name="mobile" default="none"/>
     <arg name="yaml" default="dsr_control"/>
-    
+
+	<!-- Run Doosan Robot emulator in virtual mode -->
+        <group if="$(eval arg('mode') == 'virtual')">         	
+            <node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"  ns="$(arg ns)"
+                                    args="$(arg port) $(arg model)" />
+	</group>
+
     <!-- dsr controller 로드  -->
     <rosparam file="$(find dsr_control)/config/dsr_control.yaml" command="load" ns="$(arg ns)$(arg model)"/>
     <!-- trajectory controller, joint_state 실행  -->

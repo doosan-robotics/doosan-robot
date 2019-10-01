@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <!-- View in RVIZ. -->
-  <node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/>
-  
-</launch>

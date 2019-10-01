@@ -43,7 +43,6 @@ int main(int argc, char** argv)
     int rate;
     private_nh.param<int>("rate", rate, 100);
     ROS_INFO("rate is %d\n", rate);
-
     ros::Rate r(rate);
 
     ///dsr_control::DRHWInterface arm(nh);

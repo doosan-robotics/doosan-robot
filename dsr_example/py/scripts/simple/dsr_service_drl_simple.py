@@ -13,6 +13,9 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 
+ROBOT_SYSTEM_VIRTUAL = 1
+ROBOT_SYSTEM_REAL = 0
+
 ROBOT_ID     = "dsr01"
 ROBOT_MODEL  = "m1013"
 import DR_init
@@ -24,7 +27,7 @@ def shutdown():
     print "shutdown time!"
     print "shutdown time!"
     print "shutdown time!"
-    set_robot_mode(ROBOT_MODE_MANUAL)
+
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
 
@@ -111,12 +114,11 @@ if __name__ == "__main__":
     t1.daemon = True 
     t1.start()
 
-    pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)   
-            
+    pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
     set_robot_mode(ROBOT_MODE_AUTONOMOUS)
     drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
     drlCodeReset = "movej([0,0,0,0,0,0])\n"
-    
+    drl_script_run(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeReset)
     while not rospy.is_shutdown():
-        drl_script_run(get_robot_mode().robot_system, drlCodeMove + drlCodeReset)
+        pass
     print 'good bye!'
