@@ -564,6 +564,7 @@ namespace dsr_control{
         m_nh_system[7] = private_nh_.advertiseService("system/get_current_solution_space", &DRHWInterface::get_current_solution_space_cb, this);
         m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
         m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
+        m_nh_system[10]= private_nh_.advertiseService("system/get_robot_state", &DRHWInterface::get_robot_state_cb, this);
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -681,6 +682,14 @@ namespace dsr_control{
             ROS_INFO("DRCF version = %s",tSysVerion._szController);
             ROS_INFO("DRFL version = %s",Drfl.GetLibraryVersion());
 
+            //--- Get DRCF version & convert to integer  ---            
+            m_nVersionDRCF = 0; 
+            int k=0;
+            for(int i=strlen(tSysVerion._szController); i>0; i--)
+                if(tSysVerion._szController[i]>='0' && tSysVerion._szController[i]<='9')
+                    m_nVersionDRCF += (tSysVerion._szController[i]-'0')*pow(10.0,k++);
+            ROS_INFO("m_nVersionDRCF = %d\n", m_nVersionDRCF);   
+
             //--- Check Robot State : STATE_STANDBY ---               
             int delay;
             ros::param::param<int>("~standby", delay, 5000);
@@ -778,6 +787,12 @@ namespace dsr_control{
 
     void DRHWInterface::trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg)
     {
+        int nCurrentState = (int)Drfl.GetRobotMode();
+        int nChangedState = 0;
+        if(nCurrentState != (int)ROBOT_MODE_AUTONOMOUS){
+            Drfl.SetRobotMode(ROBOT_MODE_AUTONOMOUS);
+            nChangedState = 1;
+        }
         ROS_INFO("callback: Trajectory received");
         ROS_INFO("  msg->goal.trajectory.points.size() =%d",(int)msg->goal.trajectory.points.size());   //=10 가변젹 
         ROS_INFO("  msg->goal.trajectory.joint_names.size() =%d",(int)msg->goal.trajectory.joint_names.size()); //=6
@@ -786,7 +801,9 @@ namespace dsr_control{
         float targetTime = 0.0;
 
         float fTargetPos[MAX_SPLINE_POINT][NUM_JOINT] = {0.0, };
+        float fNewTargetPos[MAX_SPLINE_POINT][NUM_JOINT] = {0.0, };
         int nCntTargetPos =0; 
+        int nAdjustTargetCnt=0;
 
         nCntTargetPos = msg->goal.trajectory.points.size();
         if(nCntTargetPos > MAX_SPLINE_POINT)
@@ -811,23 +828,33 @@ namespace dsr_control{
             ROS_INFO("[trajectory] [%02d : %.3f] %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",i ,targetTime
                 ,rad2deg(msg->goal.trajectory.points[i].positions[0]) ,rad2deg(msg->goal.trajectory.points[i].positions[1]), rad2deg(msg->goal.trajectory.points[i].positions[2])
                 ,rad2deg(msg->goal.trajectory.points[i].positions[3]) ,rad2deg(msg->goal.trajectory.points[i].positions[4]), rad2deg(msg->goal.trajectory.points[i].positions[5]) );
+	    //Optimal Target Adjustment for Doosan Robot 
+            if(i%4 == 0 || i == msg->goal.trajectory.points.size()-1){
+		    for(int j = 0; j < msg->goal.trajectory.joint_names.size(); j++)    //=6    
+		    {
+		        //ROS_INFO("[trajectory] %d-pos: %7.3f", j, msg->goal.trajectory.points[i].positions[j]);
+		        /* todo
+		        get a position & time_from_start
+		        convert radian to degree the position
+		        run MoveJ(position, time_From_start)
+		        */
+		        degrees[j] = rad2deg( msg->goal.trajectory.points[i].positions[j] );
 
-            for(int j = 0; j < msg->goal.trajectory.joint_names.size(); j++)    //=6    
-            {
-                //ROS_INFO("[trajectory] %d-pos: %7.3f", j, msg->goal.trajectory.points[i].positions[j]);
-                /* todo
-                get a position & time_from_start
-                convert radian to degree the position
-                run MoveJ(position, time_From_start)
-                */
-                degrees[j] = rad2deg( msg->goal.trajectory.points[i].positions[j] );
-
-                fTargetPos[i][j] = degrees[j];
-
+		        fNewTargetPos[k][j] = degrees[j];
+	             }                
+		nAdjustTargetCnt++;
+                 
             }
         }
-        Drfl.MoveSJ(fTargetPos, nCntTargetPos, 0.0, 0.0, targetTime, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
-
+        ROS_INFO("Adjusted Trajectory");
+        for(int i = 0; i<nAdjustTargetCnt; i++){
+           
+	    ROS_INFO("[adj trajectory] [%02d] %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",i 
+				,fNewTargetPos[i][0] ,fNewTargetPos[i][1], fNewTargetPos[i][2]
+				,fNewTargetPos[i][3] ,fNewTargetPos[i][4], fNewTargetPos[i][5] );
+        } 
+        Drfl.MoveSJ(fNewTargetPos, nAdjustTargetCnt, 0.0, 0.0, targetTime, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
+  	//Drfl.MoveSJ(fTargetPos, nAdjustTargetCnt, 120.0, 240.0, 0, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
         //Drfl.MoveJAsync(degrees.data(), 30, 30, 0, MOVE_MODE_ABSOLUTE, BLENDING_SPEED_TYPE_OVERRIDE);
         /*
         for(int i = 0; i < NUM_JOINT; i++){
@@ -835,6 +862,9 @@ namespace dsr_control{
             cmd_[i] = joints[i].cmd;
         }
         */
+        if(nChangedState == 1){
+            Drfl.SetRobotMode((ROBOT_MODE)nCurrentState);
+        }
     }
 
     //----- Service Call-back functions ------------------------------------------------------------
@@ -852,6 +882,9 @@ namespace dsr_control{
     }
     bool DRHWInterface::get_robot_system_cb(dsr_msgs::GetRobotSystem::Request& req, dsr_msgs::GetRobotSystem::Response& res){
         res.robot_system = Drfl.GetRobotSystem();
+    }
+    bool DRHWInterface::get_robot_state_cb(dsr_msgs::GetRobotState::Request& req, dsr_msgs::GetRobotState::Response& res){
+        res.robot_state = Drfl.GetRobotState();
     }
     bool DRHWInterface::set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res){
         res.success = Drfl.SetRobotSpeedMode((SPEED_MODE)req.speed_mode);
@@ -1098,41 +1131,49 @@ namespace dsr_control{
     bool DRHWInterface::set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_digital_output_cb() called and calling Drfl.SetCtrlBoxDigitalOutput");
+        req.index -=1;
         res.success = Drfl.SetCtrlBoxDigitalOutput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index, req.value);
     }
     bool DRHWInterface::get_digital_input_cb(dsr_msgs::GetCtrlBoxDigitalInput::Request& req, dsr_msgs::GetCtrlBoxDigitalInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_digital_input_cb() called and calling Drfl.GetCtrlBoxDigitalInput");
+        req.index -=1;
         res.value = Drfl.GetCtrlBoxDigitalInput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index);
     }
     bool DRHWInterface::set_tool_digital_output_cb(dsr_msgs::SetToolDigitalOutput::Request& req, dsr_msgs::SetToolDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_tool_digital_output_cb() called and calling Drfl.SetToolDigitalOutput");
+        req.index -=1;
         res.success = Drfl.SetToolDigitalOutput((GPIO_TOOL_DIGITAL_INDEX)req.index, req.value);
     }
     bool DRHWInterface::get_tool_digital_input_cb(dsr_msgs::GetToolDigitalInput::Request& req, dsr_msgs::GetToolDigitalInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_tool_digital_input_cb() called and calling Drfl.GetToolDigitalInput");
+        req.index -=1;
         res.value = Drfl.GetToolDigitalInput((GPIO_TOOL_DIGITAL_INDEX)req.index);
     }
     bool DRHWInterface::set_analog_output_cb(dsr_msgs::SetCtrlBoxAnalogOutput::Request& req, dsr_msgs::SetCtrlBoxAnalogOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_analog_output_cb() called and calling Drfl.SetCtrlBoxAnalogOutput");
+        req.channel -=1;
         res.success = Drfl.SetCtrlBoxAnalogOutput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, req.value);
     }
     bool DRHWInterface::get_analog_input_cb(dsr_msgs::GetCtrlBoxAnalogInput::Request& req, dsr_msgs::GetCtrlBoxAnalogInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_analog_input_cb() called and calling Drfl.GetCtrlBoxAnalogInput");
+        req.channel -=1;
         res.value = Drfl.GetCtrlBoxAnalogInput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel);
     }
     bool DRHWInterface::set_analog_output_type_cb(dsr_msgs::SetCtrlBoxAnalogOutputType::Request& req, dsr_msgs::SetCtrlBoxAnalogOutputType::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_analog_output_type_cb() called and calling Drfl.SetCtrlBoxAnalogOutputType");
+        req.channel -=1;
         res.success = Drfl.SetCtrlBoxAnalogOutputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
     }
     bool DRHWInterface::set_analog_input_type_cb(dsr_msgs::SetCtrlBoxAnalogInputType::Request& req, dsr_msgs::SetCtrlBoxAnalogInputType::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_analog_input_type_cb() called and calling Drfl.SetCtrlBoxAnalogInputType");
+        req.channel -=1;
         res.success = Drfl.SetCtrlBoxAnalogInputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
     }
     bool DRHWInterface::set_modbus_output_cb(dsr_msgs::SetModbusOutput::Request& req, dsr_msgs::SetModbusOutput::Response& res)
@@ -1148,7 +1189,10 @@ namespace dsr_control{
     bool DRHWInterface::config_create_modbus_cb(dsr_msgs::ConfigCreateModbus::Request& req, dsr_msgs::ConfigCreateModbus::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_create_modbus_cb() called and calling Drfl.ConfigCreateModbus");
-        res.success = Drfl.ConfigCreateModbus(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value);
+        if(m_nVersionDRCF >= 20400)
+            res.success = Drfl.ConfigCreateModbusEx(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value, (int)req.slave_id);
+        else 
+            res.success = Drfl.ConfigCreateModbus(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value);
     }
     bool DRHWInterface::config_delete_modbus_cb(dsr_msgs::ConfigDeleteModbus::Request& req, dsr_msgs::ConfigDeleteModbus::Response& res)
     {
