@@ -220,7 +220,7 @@ namespace DSR_Robot{
             int set_analog_input_type(int nGpioChannel, int nGpioMode);
 
             //----- MODBUS
-            int config_create_modbus(string strName, string strIP, int nPort, int nRegType, int nRegIndex, int nRegValue = 0);
+            int config_create_modbus(string strName, string strIP, int nPort, int nRegType, int nRegIndex, int nRegValue = 0, int nSlaveID =255);
             int config_delete_modbus(string strName);
             int set_modbus_output(string strName, int nValue);
             int get_modbus_input(string strName);

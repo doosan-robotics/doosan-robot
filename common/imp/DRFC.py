@@ -44,7 +44,6 @@ sys.dont_write_bytecode = True
 #
 # Robot configuration
 #
-
 NUM_JOINT                             = 6
 NUM_TASK                              = 6
 NUM_FLANGE_IO                         = 6
@@ -52,26 +51,21 @@ NUM_BUTTON                            = 5
                                       
 #                                     
 # string                              
-#                                     
-                                      
+#                                                                          
 MAX_STRING_SIZE                       = 256
 MAX_SYMBOL_SIZE                       = 32
                                       
 #                                     
 # I/O configuration                   
 #                                     
-                                      
 NUM_DIGITAL                           = 16
 NUM_ANALOG                            = 2
 NUM_SWITCH                            = 3
 NUM_SAFETY_IN                         = 2
 NUM_ENCORDER                          = 2
 NUM_POWER_OUT                         = 1
-                                      
-MAX_MODBUS_TOTAL_REGISTERS            = 100
-                                      
+MAX_MODBUS_TOTAL_REGISTERS            = 100                                      
 MAX_MOVEB_POINT                       = 50
-                                      
 MAX_SPLINE_POINT                      = 100
                                       
 #                                     
@@ -164,11 +158,21 @@ TASK_AXIS_X                           = 0
 TASK_AXIS_Y                           = 1
 TASK_AXIS_Z                           = 2
                                       
-                                      
+#
+# reference coordinate
+COORDINATE_SYSTEM_BASE                = 0
+COORDINATE_SYSTEM_TOOL                = 1
+COORDINATE_SYSTEM_WORLD               = 2
+COORDINATE_SYSTEM_USER_MIN            = 101
+COORDINATE_SYSTEM_USER_MAX            = 200
+
 #                                     
 # move command reference type         
-MOVE_REFERENCE_BASE                   = 0
-MOVE_REFERENCE_TOOL                   = 1
+MOVE_REFERENCE_BASE                   = COORDINATE_SYSTEM_BASE
+MOVE_REFERENCE_TOOL                   = COORDINATE_SYSTEM_TOOL
+MOVE_REFERENCE_WORLD                  = COORDINATE_SYSTEM_WORLD
+MOVE_REFERENCE_USER_MIN               = COORDINATE_SYSTEM_USER_MIN
+MOVE_REFERENCE_USER_MAX               = COORDINATE_SYSTEM_USER_MAX
                                       
 #                                     
 # move command mode type              
@@ -283,11 +287,26 @@ PROGRAM_STOP_CAUSE_ERROR              = 2
 #                                   
 MOVEB_BLENDING_TYPE_LINE              = 0
 MOVEB_BLENDING_TYPE_CIRLCE            = 1
-                                    
+
+#
+# force command axis type
+#
+FORCE_AXIS_X                          = 0
+FORCE_AXIS_Y                          = 1  
+FORCE_AXIS_Z                          = 2 
+FORCE_AXIS_A                          = 10
+FORCE_AXIS_B                          = 11  
+FORCE_AXIS_C                          = 12
+
+#
+# force control mode type
+#
+FORCE_MODE_ABSOLUTE                   = 0
+FORCE_MODE_RELATIVE                   = 1  
+
 #                                   
 # log level                         
-#                                   
-                                    
+#                              
 LOG_LEVEL_SYSINFO                     = 1
 LOG_LEVEL_SYSWARN                     = 2
 LOG_LEVEL_SYSERROR                    = 3
@@ -295,7 +314,6 @@ LOG_LEVEL_SYSERROR                    = 3
 #
 # log group
 #
-
 LOG_GROUP_SYSTEMFMK                   = 1
 LOG_GROUP_MOTIONLIB                   = 2
 LOG_GROUP_SMARTTP                     = 3

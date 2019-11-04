@@ -51,6 +51,7 @@ _ros_set_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/
 _ros_get_robot_mode             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
 _ros_set_robot_system           = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_system", SetRobotSystem)
 _ros_get_robot_system           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_system", GetRobotSystem)
+_ros_get_robot_state            = rospy.ServiceProxy(_srv_name_prefix + "/system/get_robot_state", GetRobotState)
 _ros_set_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedMode)
 _ros_get_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedMode)
 _ros_set_safe_stop_reset_type   = rospy.ServiceProxy(_srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
@@ -273,6 +274,9 @@ _g_analog_output_mode_ch2 = -1
 
 ########################################################################################################################################
 
+def wait(second):
+    time.sleep(second)
+
 def print_ext_result(str):
     if DR_CONFIG_PRT_EXT_RESULT:
         # print("[{0}] / {1}".format(strftime("%Y-%m-%d %H:%M:%S", gmtime()), str))
@@ -467,6 +471,13 @@ def get_robot_system():
     if __ROS__:
         ret = _ros_get_robot_system()
     return ret
+
+def get_robot_state():
+    # ROS service call
+    if __ROS__:
+        ret = _ros_get_robot_state()
+    return ret
+
 
 def set_robot_speed_mode(speed_mode):
     if type(speed_mode) != int:
@@ -1589,25 +1600,23 @@ def _move_wait(time):
     return ret
 
 def jog(jog_axis, ref=0, speed=0):
-    ret = _jog(jog_axis, ref, speed)
-    return ret
-
-def _jog(jog_axis, ref, speed):
-    if type(jog_axis) != int:
+    if type(jog_axis) != int and type(jog_axis) != float:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis")
-
+    
     if type(ref) != int:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
 
+    if type(speed) != int and type(speed) != float:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed")
     # ROS service call
     if __ROS__:
-        ret = _ros_jog(jog_axis, ref, speed) 
+        ret = _ros_jog(jog_axis, ref, speed)
     return ret
 
 
 ##############################################################################################################################
 
-def add_modbus_signal(ip, port, name, reg_type, index, value=0):
+def add_modbus_signal(ip, port, name, reg_type, index, value=0, slaveid=255):
     # ip
     if type(ip) != str:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : ip")
@@ -1655,13 +1664,21 @@ def add_modbus_signal(ip, port, name, reg_type, index, value=0):
     else:
         _value = 0
 
+    # slaveid
+    if type(slaveid) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : slaveid")
+    if slaveid < 0 or slaveid > 255:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : slaveid (Ranges: 0 or 1~247 or 255)")
+    elif slaveid > 247 and slaveid < 255:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : slaveid (Ranges: 0 or 1~247 or 255)")
+
     # ROS service call
     if __ROS__:
-        ret = _ros_add_modbus_signal(name, ip, port, reg_type, index, _value)
+        ret = _ros_add_modbus_signal(name, ip, port, reg_type, index, _value, slaveid)
     else:
-        ret = PythonMgr.py_add_modbus_signal(ip, port, name, reg_type, index, _value)
-        print_ext_result("{0} = PythonMgr.py_add_modbus_signal(ip:{1}, port:{2}, name:{3}, type:{4}, index:{5}, value:{6})" \
-                         .format(ret, ip, port, name, reg_type, index, _value))    
+        ret = PythonMgr.py_add_modbus_signal(ip, port, name, reg_type, index, _value, slaveid)
+        print_ext_result("{0} = PythonMgr.py_add_modbus_signal(ip:{1}, port:{2}, name:{3}, type:{4}, index:{5}, value:{6}, slaveid:{7})" \
+                         .format(ret, ip, port, name, reg_type, index, _value, slaveid))    
     return ret
 
 def del_modbus_signal(name):
@@ -2050,6 +2067,7 @@ class CDsrRobot:
         self._ros_get_robot_mode            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_mode", GetRobotMode)
         self._ros_set_robot_system          = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_system", SetRobotSystem)
         self._ros_get_robot_system          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_system", GetRobotSystem)
+        self._ros_get_robot_state           = rospy.ServiceProxy(self._srv_name_prefix + "/system/get_robot_state", GetRobotState)
         self._ros_set_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_speed_mode", SetRobotSpeedMode)
         self._ros_get_robot_speed_mode      = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_robot_speed_mode", GetRobotSpeedMode)
         self._ros_set_safe_stop_reset_type  = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
@@ -2154,6 +2172,12 @@ class CDsrRobot:
         # ROS service call
         if __ROS__:
             ret = self._ros_get_robot_system()
+        return ret
+
+    def get_robot_state(self):
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_get_robot_state()
         return ret
 
     def set_robot_speed_mode(self, speed_mode):
@@ -3278,17 +3302,24 @@ class CDsrRobot:
         return ret
 
     def jog(self, jog_axis, ref=0, speed=0):
-        ret = self._jog(jog_axis, ref, speed)
-        return ret
+        if type(jog_axis) != int and type(jog_axis) != float:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis")
+        
+        if type(ref) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
 
-    def _jog(self, jog_axis, ref, speed):
+        if type(speed) != int and type(speed) != float:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed")
+
         # ROS service call
         if __ROS__:
             ret = self._ros_jog(jog_axis, ref, speed)
         return ret
+
+    
     ##############################################################################################################################
 
-    def add_modbus_signal(self, ip, port, name, reg_type, index, value=0):
+    def add_modbus_signal(self, ip, port, name, reg_type, index, value=0, slaveid=255):
         # ip
         if type(ip) != str:
             raise DR_Error(DR_ERROR_TYPE, "Invalid type : ip")
@@ -3336,13 +3367,21 @@ class CDsrRobot:
         else:
             _value = 0
 
+        # slaveid
+        if type(slaveid) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : slaveid")
+        if slaveid < 0 or slaveid > 255:
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : slaveid (Ranges: 0 or 1~247 or 255)")
+        elif slaveid > 247 and slaveid < 255:
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : slaveid (Ranges: 0 or 1~247 or 255)")
+
         # ROS service call
         if __ROS__:
-            ret = self._ros_add_modbus_signal(name, ip, port, reg_type, index, _value)
+            ret = self._ros_add_modbus_signal(name, ip, port, reg_type, index, _value, slaveid)
         else:
-            ret = PythonMgr.py_add_modbus_signal(ip, port, name, reg_type, index, _value)
-            print_ext_result("{0} = PythonMgr.py_add_modbus_signal(ip:{1}, port:{2}, name:{3}, type:{4}, index:{5}, value:{6})" \
-                             .format(ret, ip, port, name, reg_type, index, _value))    
+            ret = PythonMgr.py_add_modbus_signal(ip, port, name, reg_type, index, _value, slaveid)
+            print_ext_result("{0} = PythonMgr.py_add_modbus_signal(ip:{1}, port:{2}, name:{3}, type:{4}, index:{5}, value:{6}, slaveid:{7})" \
+                             .format(ret, ip, port, name, reg_type, index, _value, slaveid))    
         return ret
 
     def del_modbus_signal(self, name):
@@ -3428,7 +3467,7 @@ class CDsrRobot:
 
             if val != ON and val != OFF:
                 raise DR_Error(DR_ERROR_VALUE, "Invalid value : val")
-        else: # # val ���ڰ� ������ simple style
+        else: # val 인자가 생략된 simple style
             if (index < (-DR_DIO_MAX_INDEX)) or (index > DR_DIO_MAX_INDEX) or (index==0): # -16~+16
                 raise DR_Error(DR_ERROR_VALUE, "Invalid value : index")
             else:

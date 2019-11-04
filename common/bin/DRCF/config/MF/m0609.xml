@@ -90,6 +90,12 @@
             <joint name="6">-0.00762939</joint>
             <joint name="7">0</joint>
         </ctf>
+        <cpa>
+            <!--count per acceleartion sensor -->
+            <axis name="x">1</axis>
+            <axis name="y">1</axis>
+            <axis name="z">1</axis>
+        </cpa>
         <stiffness>
             <joint name="1">180000</joint>
             <joint name="2">180000</joint>

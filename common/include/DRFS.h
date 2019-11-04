@@ -1,8 +1,17 @@
+/*    ========================================================================
+    =                   Doosan Robot Framework Structure                      =
+    =                   Copyright (c) Doosan Robotics.                        =   
+    =_______________________________________________________________________  =
+    = Title             : Doosan Robot Framwork Structure                     =
+    = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
+    = Description       : -                                                   =
+    = Version           : 1.0 (GL010105) first release                        =
+    =                     1.1 (GF020300) add force control                    =
+    =                                    add coordinate sytem control function      =
+    =                                    fix GetCurrentTool, GetCurrentTCP function = 
+    ======================================================================== */
+
 /*********************************************************************
- *
- * Doosan Robot Framework Structure
- * Author: Lee Jeong-Woo(jeongwoo1.lee@doosan.com)
- *
  * Software License Agreement (BSD License)
  *
  *  Copyright (c) 2019, Doosan Robotics

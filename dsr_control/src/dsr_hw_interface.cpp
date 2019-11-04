@@ -840,7 +840,7 @@ namespace dsr_control{
 		        */
 		        degrees[j] = rad2deg( msg->goal.trajectory.points[i].positions[j] );
 
-		        fNewTargetPos[k][j] = degrees[j];
+		        fNewTargetPos[nAdjustTargetCnt][j] = degrees[j];
 	             }                
 		nAdjustTargetCnt++;
                  
@@ -1110,6 +1110,9 @@ namespace dsr_control{
 
     bool DRHWInterface::jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res)
     {
+        ROS_INFO("DRHWInterface::jog_cb() called and calling Drfl.Jog");
+        ROS_INFO("req.jog_axis = %d, req.move_reference=%d req.speed=%f",req.jog_axis, req.move_reference, req.speed);    
+
         res.success = Drfl.Jog((JOG_AXIS)req.jog_axis, (MOVE_REFERENCE)req.move_reference, req.speed);
     }
 

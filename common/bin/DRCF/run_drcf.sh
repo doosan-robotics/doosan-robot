@@ -15,11 +15,8 @@ cd "$(dirname "$0")"
 if [ `getconf LONG_BIT` = "64" ]
 then
     echo "ARCH: 64-bit"
-    echo "$0"
-    echo "$1"
-    echo "$2"
-    ./DRCF64 $0 $1 
+    ./DRCF64 $1 $2 
 else
     echo "ARCH: 32-bit"
-    ./DRCF32 $0 $1
+    ./DRCF32 $1 $2
 fi

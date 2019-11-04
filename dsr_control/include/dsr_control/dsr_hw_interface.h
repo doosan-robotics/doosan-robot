@@ -62,6 +62,7 @@
 #include <dsr_msgs/GetRobotMode.h>
 #include <dsr_msgs/SetRobotSystem.h>
 #include <dsr_msgs/GetRobotSystem.h>
+#include <dsr_msgs/GetRobotState.h>
 #include <dsr_msgs/SetRobotSpeedMode.h>
 #include <dsr_msgs/GetRobotSpeedMode.h>
 #include <dsr_msgs/GetCurrentPose.h>
@@ -234,6 +235,7 @@ namespace dsr_control{
         std::string GetRobotModel();
 
     private:
+        int m_nVersionDRCF;
         ros::NodeHandle private_nh_;
 
         std::string m_strRobotName;
@@ -297,6 +299,7 @@ namespace dsr_control{
         bool get_robot_mode_cb(dsr_msgs::GetRobotMode::Request& req, dsr_msgs::GetRobotMode::Response& res);
         bool set_robot_system_cb(dsr_msgs::SetRobotSystem::Request& req, dsr_msgs::SetRobotSystem::Response& res);
         bool get_robot_system_cb(dsr_msgs::GetRobotSystem::Request& req, dsr_msgs::GetRobotSystem::Response& res);
+        bool get_robot_state_cb(dsr_msgs::GetRobotState::Request& req, dsr_msgs::GetRobotState::Response& res);
         bool set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res);
         bool get_robot_speed_mode_cb(dsr_msgs::GetRobotSpeedMode::Request& req, dsr_msgs::GetRobotSpeedMode::Response& res);
         bool get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res);

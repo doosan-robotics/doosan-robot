@@ -20,9 +20,95 @@
   </COMMAND>
   <COMMAND name="RESERVED_DEV_SKILL_FUNC10" id="59" version="1.0" type="response" alias="스킬.스킬평션#10">  
   </COMMAND>
+  <COMMAND name="QUERY_MONITORING_STATE" id="60" version="1.0" type="control" alias="시스템정보.제어상태 조회">
+    <!--no parameter-->
+  </COMMAND>
+  <COMMAND name="RESPONSE_EXCUTION_COMPLETE" id="61" version="1.0" type="response">
+    <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="위치제어,토크제어"/>
+    <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="관절각도,작업좌표"/>
+    <VARIABLE key="Joint.ActualPos" type="float[6]" alias="조인트각도(Actual)" hint="단위:degree"/>
+    <VARIABLE key="Joint.ActualVel" type="float[6]" alias="조인트속도(Actual)" hint="단위:degree/sec"/>
+    <VARIABLE key="Joint.ActualErr" type="float[6]" alias="조인트오차(Actual)"/>
+    <VARIABLE key="Joint.TargetPos" type="float[6]" alias="목표조인트각도" hint="단위:degree"/>
+    <VARIABLE key="Joint.TargetVel" type="float[6]" alias="목표조인트속도" hint="단위:degree/sec"/>
+    <VARIABLE key="Task.ToolActualPos" type="float[6]" alias="TCP좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.FlangeActualPos" type="float[6]" alias="툴플렌지좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.ActualVel" type="float[6]" alias="TCP속도" hint="단위:mm/sec"/>
+    <VARIABLE key="Task.ActualErr" type="float[6]" alias="오차정보"/>
+    <VARIABLE key="Task.TargetPos" type="float[6]" alias="목표TCP좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위:mm/sec"/>
+    <VARIABLE key="Task.SolutionSpace" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
+    <VARIABLE key="Task.RotationMatrix" type="float[9]" alias="회전행렬"/>
+    <VARIABLE key="Torque.DynamicTor" type="float[6]" alias="다이나믹토크"/>
+    <VARIABLE key="Torque.ActualJTS" type="float[6]" alias="조인트토크(JTS센서)"/>
+    <VARIABLE key="Torque.ActualEJT" type="float[6]" alias="조인트외력정보"/>
+    <VARIABLE key="Torque.ActualETT" type="float[6]" alias="태스크외력정보"/>
+    <VARIABLE key="Misc.tSyncTime.Sec" type="unsigned int" alias="클럭카운트(초)"/>
+    <VARIABLE key="Misc.tSyncTime.USec" type="unsigned int" alias="클럭카운트(밀리초)"/>
+    <VARIABLE key="Misc.FlangeDI" type="unsigned char[6]" alias="플렌지 디지털입력"/>
+    <VARIABLE key="Misc.FlangeDO" type="unsigned char[6]" alias="플렌지 디지털출력"/>
+    <VARIABLE key="Misc.ActualBrake" type="unsigned char[6]" alias="브레이크 상태"/>
+    <VARIABLE key="Misc.ActualButton" type="unsigned int[6]" alias="암버튼 상태"/>
+    <VARIABLE key="Misc.ActualMC" type="float[6]" alias="모터전류"/>
+    <VARIABLE key="Command" type="unsigned int" alias="지령ID"/>
+    <VARIABLE key="OperatingMode" type="unsigned char" alias="감속모드"/>
+    <VARIABLE key="OperatingState" type="unsigned char" alias="제어상태"/>
+  </COMMAND>
+  <COMMAND name="SET_DETAIL_MONITORING" id="62" version="1.0" type="control" alias="시스템정보.상세모니터링정보 조회">
+    <VARIABLE key="Mode" type="unsigned char" alias="모드" option="Off,On"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_DETAIL_MONITORING" id="63" version="1.0" type="response">
+    <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="위치제어,토크제어"/>
+    <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="관절각도,작업좌표"/>
+    <VARIABLE key="Joint.ActualPos" type="float[6]" alias="조인트각도(Actual)" hint="단위:degree"/>
+    <VARIABLE key="Joint.ActualVel" type="float[6]" alias="조인트속도(Actual)" hint="단위:degree/sec"/>
+    <VARIABLE key="Joint.ActualErr" type="float[6]" alias="조인트오차(Actual)"/>
+    <VARIABLE key="Joint.TargetPos" type="float[6]" alias="목표조인트각도" hint="단위:degree"/>
+    <VARIABLE key="Joint.TargetVel" type="float[6]" alias="목표조인트속도" hint="단위:degree/sec"/>
+    <VARIABLE key="Task.ToolActualPos" type="float[6]" alias="TCP좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.FlangeActualPos" type="float[6]" alias="툴플렌지좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.ActualVel" type="float[6]" alias="TCP속도" hint="단위:mm/sec"/>
+    <VARIABLE key="Task.ActualErr" type="float[6]" alias="오차정보"/>
+    <VARIABLE key="Task.TargetPos" type="float[6]" alias="목표TCP좌표" hint="단위:mm"/>
+    <VARIABLE key="Task.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위:mm/sec"/>
+    <VARIABLE key="Task.SolutionSpace" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
+    <VARIABLE key="Task.RotationMatrix" type="float[9]" alias="회전행렬"/>
+    <VARIABLE key="Torque.DynamicTor" type="float[6]" alias="다이나믹토크"/>
+    <VARIABLE key="Torque.ActualJTS" type="float[6]" alias="조인트토크(JTS센서)"/>
+    <VARIABLE key="Torque.ActualEJT" type="float[6]" alias="조인트외력정보"/>
+    <VARIABLE key="Torque.ActualETT" type="float[6]" alias="태스크외력정보"/>
+    <VARIABLE key="Misc.tSyncTime.Sec" type="unsigned int" alias="클럭카운트(초)"/>
+    <VARIABLE key="Misc.tSyncTime.USec" type="unsigned int" alias="클럭카운트(밀리초)"/>
+    <VARIABLE key="Misc.FlangeDI" type="unsigned char[6]" alias="플렌지 디지털입력"/>
+    <VARIABLE key="Misc.FlangeDO" type="unsigned char[6]" alias="플렌지 디지털출력"/>
+    <VARIABLE key="Misc.ActualBrake" type="unsigned char[6]" alias="브레이크 상태"/>
+    <VARIABLE key="Misc.ActualButton" type="unsigned int[6]" alias="암버튼 상태"/>
+    <VARIABLE key="Misc.ActualMC" type="float[6]" alias="모터전류"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_INVERTER_INFO" id="66" version="1.0" type="response" alias="인버터 버전">
+    <VARIABLE key="InverterBoardVer" type="string[6][32]" alias="인버터 보드버전" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="InverterSwVer" type="string[6][32]" alias="인버터 SW버전"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="nverterSwVerNum" type="unsigned short[6]" alias="인버터 SW버전 번호"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="MotorIndexOffset" type="float[6]" alias="모터 인덱스 오프셋"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="HallSensorSector" type="float[6][6]" alias="Hall Sensor Sector"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="HarmonicDriveNum" type="unsigned short[6]" alias="하모닉 드라이브 형번"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="JTSBoardSwVer" type="string[6][32]" alias="JTS Interface SW 버전"  index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="FlangeSwVer" type="string[32]" alias="Flange SW 버전"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_SDO_COMMAND" id="67" version="1.0" type="response">
+    <VARIABLE key="AxisNum" type="unsigned short" alias="축번호"/>
+    <VARIABLE key="SdoCommand" type="unsigned int" alias="SDO 커맨드"/>
+    <VARIABLE key="ResultData" type="int[6]" alias="결과값"/>
+  </COMMAND>
+  <COMMAND name="SETUP_GETINVERTER_INFO" id="68" version="1.0" type="control" alias="시스템정보.인버터정보 조회">
+    <!--no parameter-->
+  </COMMAND>
   <COMMAND name="RESERVED_MONITORING_DRCL_STATE" id="73" version="1.0" type="response" alias="모니터링.DRCL 상태">
     <VARIABLE key="State" type="unsigned char" alias="State" option="HOMING,JOG,HOLD_IDLE,HOLD_DTEACHING,HOLD_TCOMP,HOLD_TFORCE,JMTN_IDLE,TMTN_IDLE,TMTN_TCOMP,TMTN_TFORCE,PROGRAM_ON,RECOVERY_HOLD,RECOVERY_JOG,RECOVERY_JMTN,RECOVERY_HOMING"/>
-  </COMMAND>  
+  </COMMAND>
+  <COMMAND name="RESERVED_QUERY_ROBOT_LINK_INFO" id="74" version="1.0" type="control" alias="시스템정보.로봇링크정보">
+    <!-- no parameter -->
+  </COMMAND>
   <COMMAND name="RESERVED_RESPONSE_ROBOT_LINK_INFO" id="75" version="1.0" type="response">
     <VARIABLE key="Length_d" type="float[6]" alias="Length_d"/>
     <VARIABLE key="Length_a" type="float[6]" alias="Length_a"/>
@@ -34,7 +120,13 @@
   </COMMAND>
   <COMMAND name="RESERVED_SIMULATOR_KEYIN" id="76" version="1.0" type="control" alias="컨트롤.시뮬레이터 키입력">
     <VARIABLE key="KeyIn" type="unsigned char" alias="키인"/>
-  </COMMAND>  
+  </COMMAND>
+  <COMMAND name="RESERVED_MONITORING_CONTROL_TARGET" id="77" version="1.0" type="response">
+    <VARIABLE key="TargetSystem" type="unsigned char" alias="타겟시스템"/>
+  </COMMAND>
+  <COMMAND name="RESERVED_QUERY_SAFETY_CONFIGURATION" id="78" version="1.0" type="control" alias="시스템정보.안전설정정보">
+    <!-- no parameter -->
+  </COMMAND>
   <COMMAND name="RESERVED_RESPONSE_SAFETY_CONFIGURATION" id="79" version="1.0" type="response">
     <VARIABLE key="Safety_JointRange" type="struct" version="2.0" alias="조인트 안전범위">
       <VARIABLE key="Normal.MaxVelocity" type="float[6]" alias="[정상모드] 최대 속도" hint="단위:degree/sec, 축별 입력" default_value="30,30,30,30,30,30" index_alias="J1,J2,J3,J4,J5,J6"/>
@@ -410,10 +502,35 @@
         </VARIABLE>
       </VARIABLE>
     </VARIABLE-->
+  </COMMAND>  
+  <COMMAND name="RESERVED_QUERY_BACKLOG_LIST" id="80" version="2.0" type="internal" alias="시스템관리.백업로그리스트 조회">
+    <VARIABLE key="BeginDate" type="struct" alias="시작날짜">
+      <VARIABLE key="Year" type="unsigned int" alias="년"/>
+      <VARIABLE key="Month" type="unsigned int" alias="월"/>
+      <VARIABLE key="Day" type="unsigned int" alias="일"/>
+    </VARIABLE>
+    <VARIABLE key="EndDate" type="struct" alias="끝날짜">
+      <VARIABLE key="Year" type="unsigned int" alias="년"/>
+      <VARIABLE key="Month" type="unsigned int" alias="월"/>
+      <VARIABLE key="Day" type="unsigned int" alias="일"/>
+    </VARIABLE>
+  </COMMAND>
+  <COMMAND name="RESERVED_RESPONSE_BACKLOG_LIST" id="81" version="2.0" type="response" alias="시스템관리.백업로그리스트">
+    <VARIABLE key="Count" type="unsigned int" alias="백로그 수"/>
+    <VARIABLE key="LogList" type="struct[100]" alias="백로그 파일">
+      <VARIABLE key="Prefix" type="string[32]" alias="백로그 파일 접두어"/>
+      <VARIABLE key="EventLog1Size" type="unsigned int" alias="이벤트로그1 크기"/>
+      <VARIABLE key="EventLog2Size" type="unsigned int" alias="이벤트로그2 크기"/>
+      <VARIABLE key="DataLog1Size" type="unsigned int" alias="데이터로그1 크기"/>
+      <VARIABLE key="DataLog2Size" type="unsigned int" alias="데이터로그2 크기"/>
+    </VARIABLE>
   </COMMAND>
   <COMMAND name="RESERVED_BACKUP_RUNTIME_STATUS" id="82" version="1.0" type="internal" alias="컨트롤.시뮬레이터 키입력">
     <!-- no parameter -->
-  </COMMAND>  
+  </COMMAND>
+  <COMMAND name="RESERVED_QUERY_ROBOT_PARAM" id="83" version="2.0" type="control" alias="시스템정보.로봇 패러미터">
+    <!-- no parameter -->
+  </COMMAND>
   <COMMAND name="RESERVED_RESPONSE_ROBOT_PARAM" id="84" version="1.0" type="response" alias="모니터링.로봇 패러미터">
     <VARIABLE key="RobotModelName" type="int" alias="Robot Model Name"/>
     <VARIABLE key="Length_d" type="double[7]" alias="length_d"/>
@@ -488,9 +605,7 @@
     <VARIABLE key="IncludeTestCount" type="int[100]" alias="포함검사 카운트"/>
     <VARIABLE key="IncludeTestTime" type="float[100]" alias="포함검사 시간"/>
   </COMMAND>
-  <COMMAND name="RESERVED_MONITORING_CONTROL_TARGET" id="77" version="1.0" type="response">
-    <VARIABLE key="TargetSystem" type="unsigned char" alias="타겟시스템"/>
-  </COMMAND>
+  
   <COMMAND name="MONITORING_DATA" id="101" version="1.0" type="response" alias="모니터링.제어 상태">
     <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="Servo Off,Servo On,Hold,Position,Torque"/>
     <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="Joint,Task,Task_NonIKSol"/>
@@ -537,7 +652,8 @@
     <VARIABLE key="ActualSW" type="unsigned char[3]" alias="스위치" index_alias="CH1,CH2,CH3"/>
     <VARIABLE key="ActualSI" type="unsigned char[2]" alias="안전 입력" index_alias="CH1,CH2"/>
     <VARIABLE key="ActualEI" type="unsigned char[2]" alias="엔코더 입력" index_alias="CH1,CH2"/>
-    <VARIABLE key="AcutualED" type="unsigned char[2]" alias="엔코더 Raw 데이터" index_alias="CH1,CH2"/>
+    <VARIABLE key="AcutualED" type="unsigned int[2]" alias="엔코더 Raw 데이터" index_alias="CH1,CH2"/>
+    <!--<VARIABLE key="ActualER" type="unsigned char[2]" alias="엔코더 리셋 플래그" index_alias="CH1,CH2"/>-->
     <VARIABLE key="TargetDO" type="unsigned char[8]" alias="디지털 출력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6,CH7,CH8"/>
     <VARIABLE key="TargetAO" type="float[2]" alias="아날로그 출력" index_alias="CH1,CH2"/>    
   </COMMAND>  
@@ -565,6 +681,59 @@
   </COMMAND>
   <COMMAND name="MONITORING_COLLISION_SENSITIVITY" id="110" version="1.0" type="response" alias="모니터링.현재 충돌민감도">
     <VARIABLE key="CurSensitivity" type="float" alias="충돌민감도"/>
+  </COMMAND>
+  <COMMAND name="MONITORING_DATA_EX" id="112" version="1.0" type="response" alias="모니터링.제어 상태">
+    <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="Servo Off,Servo On,Hold,Position,Torque"/>
+    <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="Joint,Task,Task_NonIKSol"/>
+    <VARIABLE key="Joint.ActualPos" type="float[6]" alias="현재조인트각도" hint="단위: 도(degree)" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Joint.ActualAbs" type="float[6]" alias="현재앱솔루트엔코더값" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Joint.ActualVel" type="float[6]" alias="현재조인트속도" hint="단위: deg/sec" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Joint.ActualErr" type="float[6]" alias="조인각도오차" hint="단위: 도(degree)" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Joint.TargetPos" type="float[6]" alias="목표조인트각도" hint="단위: 도(degree)" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Joint.TargetVel" type="float[6]" alias="목표조인트속도" hint="단위: deg/sec" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Task.ToolActualPos" type="float[6]" alias="현재TCP좌표" hint="단위: mm" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.FlangeActualPos" type="float[6]" alias="현재플렌지좌표" hint="단위: mm" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.ActualVel" type="float[6]" alias="현재TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.ActualErr" type="float[6]" alias="TCP위치오차" hint="단위: mm" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.TargetPos" type="float[6]" alias="목표TCP좌표" hint="단위: mm" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Task.SolutionSpace" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
+    <VARIABLE key="Task.ToolAxisX" type="float[3]" alias="툴X축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="Task.ToolAxisY" type="float[3]" alias="툴Y축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="Task.ToolAxisZ" type="float[3]" alias="툴Z축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="World.ActualW2B" type="float[6]" alias="world to base relation" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.ActualPos" type="float[6]" alias="현재 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.ActualFlangePos" type="float[6]" alias="현재 플렌지 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.ActualVel" type="float[6]" alias="현재TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World._fActualETT" type="float[6]" alias="외력" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.TargetPos" type="float[6]" alias="목표 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="World.ToolAxisX" type="float[3]" alias="툴X축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="World.ToolAxisY" type="float[3]" alias="툴Y축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="World.ToolAxisZ" type="float[3]" alias="툴Z축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="User.ActiveCoord" type="unsigned char" alias="활성 좌표계"/>
+    <VARIABLE key="User.Parent" type="unsigned char" alias="Parent"/>
+    <VARIABLE key="User.ActualPos" type="float[6]" alias="현재 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User.ActualFlangePos" type="float[6]" alias="현재 플렌지 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User.ActualVel" type="float[6]" alias="현재TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User._fActualETT" type="float[6]" alias="외력" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User.TargetPos" type="float[6]" alias="목표 좌표" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위: mm/sec" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="User.ToolAxisX" type="float[3]" alias="툴X축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="User.ToolAxisY" type="float[3]" alias="툴Y축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="User.ToolAxisZ" type="float[3]" alias="툴Z축방향" index_alias="X,Y,Z"/>
+    <VARIABLE key="Torque.DynamicTor" type="float[6]" alias="토크(모델)" hint="단위: Nm" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Torque.ActualJTS" type="float[6]" alias="토크(센서)" hint="단위: Nm" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Torque.ActualEJT" type="float[6]" alias="외력(조인트)" hint="단위: N" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Torque.ActualETT" type="float[6]" alias="외력(태스크)" hint="단위: N" index_alias="X,Y,Z,A,B,C"/>
+    <VARIABLE key="Misc.SyncTime" type="double" alias="클럭카운트" hint="단위: 초"/>
+    <VARIABLE key="Misc.FlangeDI" type="unsigned char[6]" alias="플렌지 디지털입력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6"/>
+    <VARIABLE key="Misc.FlangeDO" type="unsigned char[6]" alias="플렌지 디지털출력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6"/>
+    <VARIABLE key="Misc.ActualBrake" type="unsigned char[6]" alias="브레이크 상태" hint="현재는 유효하지 않은 값이 입력됩니다." index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Misc.ActualButton" type="unsigned int[5]" alias="암버튼 상태" index_alias="상(1),중(2),하(3),좌(4),우(5)"/>
+    <VARIABLE key="Misc.ActualMC" type="float[6]" alias="모터전류" hint="단위: A" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Misc.ActualMT" type="float[6]" alias="인버터온도" hint="단위: 도(섭씨)" index_alias="J1,J2,J3,J4,J5,J6"/>
+    <VARIABLE key="Reserved" type="unsigned char[240]" alias="Reserved"/>
   </COMMAND>
   <COMMAND name="RESPONSE_COMMAND" id="201" version="1.0" type="response">
     <VARIABLE key="Result" type="unsigned short" alias="Param"/>
@@ -752,6 +921,27 @@
   <COMMAND name="RESPONSE_CHECK_MOTION2" id="247" version="1.0" type="response">
     <VARIABLE key="Result" type="unsigned char" alias="motion state"/>
   </COMMAND>
+  <COMMAND name="RESPONSE_MEASURE_CONVEYOR_COORD" id="248" version="1.0" type="response">
+    <VARIABLE key="Distance2Count" type="float" alias="Distance2Count"/>
+    <VARIABLE key="PosCoord" type="float[6]" alias="PosCoord"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_MEASURE_CONVEYOR_DISTANCE" id="249" version="1.0" type="response">
+    <VARIABLE key="Speed" type="float" alias="Speed"/>
+    <VARIABLE key="MinDistance" type="float" alias="Min Distance"/>
+    <VARIABLE key="WatchWinDist" type="float" alias="Watch Window Distance"/>
+    <VARIABLE key="MaxDistance" type="float" alias="Max Distance"/>
+    <VARIABLE key="SyncOutDist" type="float" alias="Sync Out Distance"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_SET_CONVEYOR" id="250" version="1.0" type="response">
+    <VARIABLE key="Result" type="unsigned char" alias="Result"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_GET_CONVEYOR_OBJECT" id="251" version="1.0" type="response">
+    <VARIABLE key="ObjCount" type="unsigned int" alias="ObjCount"/>
+    <VARIABLE key="CoordId" type="unsigned int" alias="CoordId"/>
+  </COMMAND>
+  <COMMAND name="RESPONSE_COORD_TRANSFORM_POSX" id="252" version="1.0" type="response">
+    <VARIABLE key="PosX" type="float[6]" alias="PosX"/>
+  </COMMAND>
   <COMMAND name="MESSAGE_SYSTEM_BIT" id="301" version="1.0" type="response">
     <VARIABLE key="BuiltInTest" type="unsigned int" alias="BuiltInTest"/>
   </COMMAND>
@@ -776,7 +966,8 @@
   </COMMAND>  
   <COMMAND name="MESSAGE_DRL_POPUP" id="305" version="1.0" type="response">
     <VARIABLE key="Message" type="string[256]" alias="message string"/>
-    <VARIABLE key="Level" type="unsigned char" alias="type" hint="Message: 0, Warning: 1, Alarm: 2" option="Message,Warning,Alarm"/>
+    <VARIABLE key="Level" type="unsigned char" alias="msgType" hint="Message: 0, Warning: 1, Alarm: 2" option="Message,Warning,Alarm"/>
+    <VARIABLE key="BtnType" type="unsigned char" alias="btnType" hint="resume/stop: 0, ok: 1" option="Resume/Stop,OK"/>
   </COMMAND>
   <COMMAND name="MESSAGE_DRL_LOG" id="306" version="1.0" type="response">
     <VARIABLE key="Message" type="string[256]" alias="message string"/>
@@ -810,13 +1001,16 @@
   <COMMAND name="MESSAGE_PROTECTIVE_STOP_RESUME" id="315" version="1.0" type="response" alias="보호정지 자동재시작 알림">    
   </COMMAND>
   <COMMAND name="AUTHENTICATION" id="1001" version="1.0" type="etc">
+    <VARIABLE key="WhoId" type="unsigned char" alias="장비 번호" option="TP,DRFT,DRFA,OMNISMART,API,WINDRSC"/>
+    <VARIABLE key="Version" type="string[32]" alias="버전 정보" option=""/>
+    <VARIABLE key="Text" type="string[128]" alias="인증 정보" option=""/>
   </COMMAND>
-  <COMMAND name="CONTROL_TEACH_MODE" id="1101" version="1.0" type="control" alias="컨트롤.교시모드 설정">
+  <COMMAND name="CONTROL_TEACH_MODE" id="1101" version="1.0" type="control" alias="컨트롤.교시모드 설정">          
     <VARIABLE key="Mode" type="char" alias="모드설정" option="Disable,Enable" default_value="0"/>
   </COMMAND>
   <COMMAND name="CONTROL_JOG" id="1102" version="1.0" type="control" alias="컨트롤.조그 제어">
     <VARIABLE key="Axs" type="unsigned char" alias="조깅축" option="J1,J2,J3,J4,J5,J6,Tx,Ty,Tz,Rx(Tool),Ry(Tool),Rz(Tool)" default_value="0"/>
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool" hint="조깅축이 Tx,Ty,Tz 일때만 유효"/>
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool,World" hint="조깅축이 Tx,Ty,Tz 일때만 유효"/>    
     <VARIABLE key="Vel" type="float" alias="속도" hint="단위:정격속도%"/>
   </COMMAND>
   <!--COMMAND name="CONTROL_REFERENCE_COORDINATE" id="1105" version="1.0" type="control" alias="컨트롤.기준좌표 설정">
@@ -844,40 +1038,58 @@
   <COMMAND name="CONTROL_ENABLE_SAFE_ZONE" id="1113" version="1.0" type="control" alias="컨트롤.세이프존 활성화 설정">
     <VARIABLE key="Mode" type="unsigned char[3]" alias="모드 설정" option="Disable,Enable" hint="3개 영역을 개별적으로 설정"/>
   </COMMAND>
+  <COMMAND name="CONTROL_TOOL_AUTO_MEASURE" id="1114" version="1.0" type="control" alias="컨트롤.TOOL정보자동측정">
+    <VARIABLE key="Mode" type="unsigned char" alias="측정 모드" option="0,1" hint="0:2~6축만 동작 / 1:4~6축만 동작"/>
+    <VARIABLE key="ToolWeight" type="float" alias="Tool무게" hint="무게정보(단위 : kg)"/>
+    <VARIABLE key="CenterOfGravityCoord" type="float[3]" alias="무게중심" hint="3개의 XYZ축정보(단위:mm)"/>          
+  </COMMAND>
+             
   <!--COMMAND name="CONTROL_MEASURE_TOOL" id="1114" version="1.0" type="control" alias="컨트롤.툴정보 측정">       
   </COMMAND-->
   <!--COMMAND name="CONTROL_MEASURE_PAYLOAD" id="1115" version="1.0" type="control" alias="컨트롤.소재무게 측정">
   </COMMAND-->
   <!--COMMAND name="CONTROL_RESET_PAYLOAD" id="1116" version="1.0" type="control" alias="컨트롤.소재무게 리셋(무부하 설정)">    
   </COMMAND-->
-  <!--COMMAND name="CONTROL_MEASURE_TCP" id="1117" version="1.0" type="control" alias="컨트롤.TCP 좌표정보 측정">
+  <COMMAND name="CONTROL_MEASURE_TCP" id="1117" version="1.0" type="control" alias="컨트롤.TCP 좌표정보 측정">
     <VARIABLE key="_iTargetRef" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
     <VARIABLE key="_fTargetPos" type="float[4][6]" alias="참조좌표" hint="Task space pose" index_alias="X,Y,Z,A,B,C"/>
-  </COMMAND-->
+  </COMMAND>  
   <COMMAND name="CONTROL_MEASURE_FRICTION" id="1118" version="1.0" type="control" alias="컨트롤.마찰계수 측정">  
+    <VARIABLE key="Mode" type="unsigned char" alias="측정모드" option="체크모션,측정모션"/>
+    <VARIABLE key="Axis Select" type="unsigned char" alias="축 선택" option="미수행,수행"/>
+    <VARIABLE key="Start Pos" type="float[6]" alias="시작 위치" hint="6개의 로봇시작위치정보"/>
+    <VARIABLE key="Motion Area" type="float[6]" alias="모션 범위" hint="6개의 측정범위정보"/>
   </COMMAND>
   <COMMAND name="CONTROL_ENABLE_FRICTION_COMPENSATION" id="1119" version="1.0" type="control" alias="컨트롤.마찰계수 보상 설정">
-    <VARIABLE key="Mode" type="unsigned char" alias="보상설정" option="미적용,적용"/>
+    <VARIABLE key="PlusSpeedFactor#1" type="float[6]" alias="양의속도계슈#1" hint="6개의 측정범위정보"/>
+    <VARIABLE key="PlusSpeedFactor#2" type="float[6]" alias="양의속도계슈#2" hint="6개의 측정범위정보"/>
+    <VARIABLE key="PlusSpeedFactor#3" type="float[6]" alias="양의속도계슈#3" hint="6개의 측정범위정보"/>
+    <VARIABLE key="PlusSpeedFactor#4" type="float[6]" alias="양의속도계슈#4" hint="6개의 측정범위정보"/>
+    <VARIABLE key="MinusSpeedFactor#1" type="float[6]" alias="음의속도계슈#1" hint="6개의 측정범위정보"/>
+    <VARIABLE key="MinusSpeedFactor#2" type="float[6]" alias="음의속도계슈#2" hint="6개의 측정범위정보"/>
+    <VARIABLE key="MinusSpeedFactor#3" type="float[6]" alias="음의속도계슈#3" hint="6개의 측정범위정보"/>
+    <VARIABLE key="MinusSpeedFactor#4" type="float[6]" alias="음의속도계슈#4" hint="6개의 측정범위정보"/>
+    
   </COMMAND>
   <!--COMMAND name="CONTROL_ENABLE_VIRTUAL_WALL" id="1120" version="1.0" type="control" alias="컨트롤.가상펜스 활성화 설정">
     <VARIABLE key="_fEnable" type="unsigned char" alias="모드설정" option="비활성화,활성화"/>
   </COMMAND-->
   <COMMAND name="CONTROL_USER_CARTESIAN_COORDINATE" id="1121" version="1.0" type="control" alias="컨트롤.사용자 직교좌표계 구성">
     <!--VARIABLE key="_bEnable" type="unsigned char" alias="설정옵션" option="Disable,Enable"/-->
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool,NT"/>
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
     <VARIABLE key="Origin" type="float[3]" alias="원점 정보" hint="직교 좌표의 원점을 다른 임의의 지점으로 재지정할 경우 사용하는 교시점 정보임"/>
     <VARIABLE key="Axis1" type="float[6]" type_option="posx" alias="위치정보#1" hint="3차원 직교 좌표계의 원점 정보(위치와 회전)를 계산하기 위한 교시점 정보임"/>
     <VARIABLE key="Axis2" type="float[6]" type_option="posx" alias="위치정보#2" hint="3차원 직교 좌표계의 원점 정보(위치와 회전)를 계산하기 위한 교시점 정보임"/>
     <VARIABLE key="Axis3" type="float[6]" type_option="posx" alias="위치정보#3" hint="3차원 직교 좌표계의 원점 정보(위치와 회전)를 계산하기 위한 교시점 정보임"/>
   </COMMAND>
   <COMMAND name="CONTROL_USER_NT_COORDINATE" id="1122" version="1.0" type="control" alias="컨트롤.사용자 NT좌표계 구성">
-    <!--VARIABLE key="_bEnable" type="unsigned char" alias="enable flag" hint="0:disable, 1:enable" option="Disable,Enable"/-->
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool,NT"/>    
+    <!--VARIABLE key="_bEnable" type="unsigned char" alias="enable flag" hint="0:disable, 1:enable" option="Disable,Enable"/-->    
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
     <VARIABLE key="Pos" type="float[3][6]" type_option="posx" alias="task position for normal vector"/>
   </COMMAND>
   <COMMAND name="CONTROL_USER_NT_COORDINATE_EX" id="1123" version="1.0" type="control" alias="컨트롤.사용자 NT좌표계 구성(벡터버전)">
     <!--VARIABLE key="_bEnable" type="unsigned char" alias="enable flag" hint="0:disable, 1:enable" option="Disable,Enable"/-->
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool,NT"/>
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
     <VARIABLE key="Pos" type="float[3]" alias="벡터정보"/>
   </COMMAND>
   <COMMAND name="CONTROL_CALCULATE_SOLUTIONSPACE" id="1124" version="1.0" type="control" alias="계산.로봇자세 컨피규레이션 계산">
@@ -889,14 +1101,16 @@
   </COMMAND>
   <COMMAND name="CONTROL_CALCULATE_TRANS" id="1126" version="1.0" type="control" alias="계산.TRANS">
     <VARIABLE key="Pos" type="float[6]" type_option="posex" alias="위치정보" hint="태스크 공간 좌표&#xA;X,Y,Z 단위: mm&#xA;A,B,C 단위: degree" index_alias="X,Y,Z,A,B,C"/>
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
-    <VARIABLE key="Val" type="float[6]" alias="오프셋"/>
+    <VARIABLE key="Ref(Input)" type="unsigned char" alias="참조기준(입력)" hint="0:Base / 1:Tool / 2:World / 3:101~200"/>
+    <VARIABLE key="Offset" type="float[6]" alias="오프셋"/>
+    <VARIABLE key="Ref(Output)" type="unsigned char" alias="참조기준(출력)" hint="0:Base / 1:Tool / 2:World / 3:101~200"/>    
   </COMMAND>
   <COMMAND name="CONTROL_CALCULATE_IKIN" id="1127" version="1.0" type="control" alias="계산.역기구학(IKIN)">
     <VARIABLE key="Pos" type="float[6]" type_option="posex" alias="위치정보" hint="태스크 공간 좌표&#xA;X,Y,Z 단위: mm&#xA;A,B,C 단위: degree" index_alias="X,Y,Z,A,B,C"/>
     <VARIABLE key="Sol" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
   </COMMAND>
   <COMMAND name="CONTROL_CALCULATE_FKIN" id="1128" version="1.0" type="control" alias="계산.정기구학(FKIN)">
+    <VARIABLE key="Ref" type="unsigned char" alias="참조기준" hint="0:Base / 1:Tool / 2:World / 3:101~200"/>
     <VARIABLE key="Pos1" type="float[6]" type_option="posej" alias="위치정보" hint="Joint space pose(degree)" index_alias="J1,J2,J3,J4,J5,J6"/>
   </COMMAND>
   <COMMAND name="CONTROL_CALCULATE_NORMAL_VECTOR" id="1129" version="1.0" type="control" alias="계산.법선벡터">
@@ -933,25 +1147,25 @@
     <VARIABLE key="_iTargetMode" type="unsigned char" alias="팩킹동작" option="Stop,Run"/>    
   </COMMAND-->
   <COMMAND name="CONTROL_CHECK_CURRENT_TASK_POSITION" id="1138" version="1.0" type="control" alias="컨트롤.관절공간 현재위치 확인">
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
+    <VARIABLE key="Ref" type="unsigned int" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>    
   </COMMAND>
   <COMMAND name="CONTROL_CHECK_DESIRED_TASK_POSITION" id="1139" version="1.0" type="control" alias="컨트롤.관절공간 목적위치 확인)">
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
+    <VARIABLE key="Ref" type="unsigned int" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
   </COMMAND>
   <COMMAND name="CONTROL_USER_CARTESIAN_COORDINATE_EX" id="1140" version="1.0" type="control" alias="컨트롤.직교좌표계 구성(벡터버전#1)">
-    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
     <VARIABLE key="Origin" type="float[3]" alias="원점"/>
     <VARIABLE key="Axis1" type="float[3]" alias="축1"/>
     <VARIABLE key="Axis2" type="float[3]" alias="축2"/>
   </COMMAND>
   <COMMAND name="CONTROL_USER_CARTESIAN_COORDINATE_EX2" id="1141" version="1.0" type="control" alias="컨트롤.직교좌표계 구성(벡터버전#2)">
-    <VARIABLE key="Reㄹ" type="unsigned char" alias="좌표기준" option="Base,Tool"/>
+    <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
     <VARIABLE key="Origin" type="float[3]" alias="원점"/>
     <VARIABLE key="Axis1" type="float[3]" alias="축1"/>
     <VARIABLE key="Axis2" type="float[3]" alias="축2"/>
   </COMMAND>
   <COMMAND name="CONTROL_USER_COORDINATE_MATRIX" id="1142" version="1.0" type="control" alias="컨트롤.사용자 좌표계 확인">
-    <!-- no parameter -->
+    <VARIABLE key="Ref" type="unsigned int" alias="좌표기준" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
   </COMMAND>
   <COMMAND name="CONTROL_COLLABORATIVE_SPEED_RATE" id="1143" version="1.0" type="control" alias="컨트롤.협동작업공간 감속률 설정">
     <VARIABLE key="Rate" type="float" alias="감속률" hint="단위:백분율(1~100)"/>
@@ -959,8 +1173,7 @@
   <COMMAND name="CONTROL_USER_HOME" id="1144" version="1.0" type="control" alias="컨트롤.사용자 호밍">
     <VARIABLE key="Mode" type="unsigned char" alias="모드" option="정지,실행" default_value="0"/>
   </COMMAND>
-  <COMMAND name="CONTROL_DRL_TEACH" id="1145" version="1.0" type="control" alias="컨트롤.DRL직접교시설정">
-    <VARIABLE key="Mode" type="unsigned char" alias="모드" option="해제,설정"/>
+  <COMMAND name="CONTROL_DRL_TEACH" id="1145" version="1.0" type="control" alias="컨트롤.DRL직접교시설정">    
   </COMMAND>
   <COMMAND name="CONTROL_INVERTER_WARMUP" id="1146" version="1.0" type="control" alias="컨트롤.예열상태제어">
     <VARIABLE key="Mode" type="unsigned char" alias="상태제어" option="정상확인,예열취소"/>
@@ -970,15 +1183,156 @@
   <COMMAND name="CONTROL_SINGULARITY_AVOIDANCE" id="1148" version="1.0" type="control" alias="컨트롤.특이점동작설정">
     <VARIABLE key="Mode" type="unsigned char" alias="모드" option="회피,정지"/>
   </COMMAND>
-  <COMMAND name="CONTROL_WORLD2BASE_COORDINATE" id="1148" version="1.0" type="control" alias="컨트롤.월드좌표계 설정(World to Base)">
-    <VARIABLE key="Relation" type="float[6]" alias="좌표계 관계 정보" hint="좌표계 관계 정보"/>
+  <COMMAND name="CONTROL_CALCULATE_CONVEYOR_PARAM" id="1149" version="1.0" type="control" alias="컨트롤.CALCULATE_CONVEYOR_PARAM">
+    <VARIABLE key="ConveyorType" type="unsigned char" alias="Conveyor Type" option="Linear,Circular"/>
+    <VARIABLE key="TriggerSignalNum" type="unsigned char" alias="TriggerSignalNum"/>    
+    <VARIABLE key="Trigger_Info" type="struct" version="2.0" alias="TriggerChannelInfo">
+      <VARIABLE key="TriggerChannel" type="unsigned char" alias="Trigger Channel" option="0,1"/>
+      <VARIABLE key="TriggerEdgeType" type="unsigned char" alias="Trigger Edge Type" option="Falling Edge,Rising Edge"/>
+      <VARIABLE key="TriggerMuteTime" type="float" alias="Trigger Mute Time" />
+    </VARIABLE>
+    <VARIABLE key="DigtalOutput" type="struct[2]" version="2.0" alias="Digtal Output">
+      <VARIABLE key="Channel" type="char" alias="Encoder Channel" option="-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" hint ="-1:NotUsed / 0~15:Used"/>
+      <VARIABLE key="Value" type="unsigned char" alias="Value" option="0,1"/>
+    </VARIABLE>
   </COMMAND>
-  <COMMAND name="CONTROL_BASE2REFSTONE_COORDINATE" id="1149" version="1.0" type="control" alias="컨트롤.월드좌표계 설정(Base to RefStone)">
-    <VARIABLE key="Relation" type="float[6]" alias="좌표계 관계 정보" hint="좌표계 관계 정보"/>
+  <COMMAND name="CONTROL_MEASURE_CONVEYOR_COORD" id="1150" version="1.0" type="control" alias="컨트롤.MEASURE_CONVEYOR_COORD">
+    <VARIABLE key="PosTeachPointQ" type="float[6]" alias="Teach Point Q"/>
+    <VARIABLE key="TeachCount" type="unsigned char" alias="Teach Count"/>
+    <VARIABLE key="PosTeachPointP1" type="float[6]" alias="Teach Point P1"/>
+    <VARIABLE key="PosTeachPointP2" type="float[6]" alias="Teach Point P2"/>
+    <VARIABLE key="PosTeachPointP3" type="float[6]" alias="Teach Point P3"/>
+    <VARIABLE key="PosTeachPointP4" type="float[6]" alias="Teach Point P4"/>
+    <VARIABLE key="PosTeachPointP5" type="float[6]" alias="Teach Point P5"/>
+    <VARIABLE key="EncoderCount" type="unsigned int[5]" alias="Encoder Count Values"/>
   </COMMAND>
-  <COMMAND name="CONTROL_WORLD2REFSTONE_COORDINATE" id="1150" version="1.0" type="control" alias="컨트롤.월드좌표계 설정(World to RefStone)">
-    <VARIABLE key="CoordRelation" type="float[6]" alias="좌표계 관계 정보" hint="좌표계 관계 정보"/>
+  <COMMAND name="CONTROL_MEASURE_CONVEYOR_COORD_EX" id="1151" version="1.0" type="control" alias="컨트롤.MEASURE_CONVEYOR_COORD_EX">
+    <VARIABLE key="DistancePerCount" type="int" alias="Distance Per Count" hint ="Linear: count/m, Circular: count/deg"/>
   </COMMAND>
+  <COMMAND name="CONTROL_CALCULATE_CONVEYOR_PARAM2" id="1152" version="1.0" type="control" alias="컨트롤.CALCULATE_CONVEYOR_PARAM2">
+    <VARIABLE key="DistancePerCount" type="int" alias="Distance Per Count"/>
+    <VARIABLE key="PosConCoord" type="float[6]" alias="PosConCoord"/>
+    <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option = "0,2" hint ="0:Base / 2:World"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_MEASURE_CONVEYOR_DISTANCE" id="1153" version="1.0" type="control" alias="컨트롤.MEASURE_CONVEYOR_DISTANCE">
+    <VARIABLE key="ConveyorFilerSize" type="unsigned int" alias="컨베이어속도 이동평균필터"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_MEASURE_CONVEYOR_DISTANCE_EX" id="1154" version="1.0" type="control" alias="컨트롤.MEASURE_CONVEYOR_DISTANCE_EX">
+    <VARIABLE key="Speed" type="float" alias="Speed" hint="컨베이어 진행 속도 (Linear: mm/s, Circular: degree/s)"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_CONVEYOR_INFO_EX" id="1155" version="1.0" type="control" alias="컨트롤.컨베이어정보확장">
+    <VARIABLE key="Name" type="string[32]" alias="Name"/>
+    <VARIABLE key="ConveyorLinkageInfo" type="struct" version="2.0" alias="연동환경정보">
+      <VARIABLE key="ConveyorType" type="unsigned char" alias="Conveyor Type" option="Linear,Circular"/>
+      <VARIABLE key="TriggerSignalNum" type="unsigned char" alias="TriggerSignalNum"/>
+      <VARIABLE key="Trigger_Info" type="struct" version="2.0" alias="TriggerChannelInfo">
+        <VARIABLE key="TriggerChannel" type="unsigned char" alias="Trigger Channel" option="0,1"/>
+        <VARIABLE key="TriggerEdgeType" type="unsigned char" alias="Trigger Edge Type" option="Falling Edge,Rising Edge"/>
+        <VARIABLE key="TriggerMuteTime" type="float" alias="Trigger Mute Time" />
+      </VARIABLE>
+      <VARIABLE key="DigtalOutput" type="struct[2]" version="2.0" alias="Digtal Output">
+        <VARIABLE key="Channel" type="char" alias="Encoder Channel" option="-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"/>
+        <VARIABLE key="Value" type="unsigned char" alias="Value" option="0,1"/>
+      </VARIABLE>  
+    </VARIABLE>    
+    <VARIABLE key="CoordinateInfo" type="struct" version="2.0" alias="좌표계 정보">
+      <VARIABLE key="DistancePerCount" type="int" alias="Distance Per Count"/>
+      <VARIABLE key="PosConCoord" type="float[6]" alias="PosConCoord"/>
+      <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option ="0,2" hint ="0:Base좌표 / 2:World좌표"/>      
+    </VARIABLE>
+    <VARIABLE key="DistanceInfo" type="struct" version="2.0" alias="거리 정보">
+      <VARIABLE key="Speed" type="float" alias="Speed"/>
+      <VARIABLE key="MinDistance" type="float" alias="Min Distance"/>
+      <VARIABLE key="SpeedFilterSize" type="unsigned int" alias="Speed Moving Average Filter Size"/>
+      <VARIABLE key="WatchWinDist" type="float" alias="Watch Window Distance"/>
+      <VARIABLE key="MaxDistance" type="float" alias="Max Distance"/>
+      <VARIABLE key="SyncOutDist" type="float" alias="Sync Out Distance"/>                  
+    </VARIABLE>                  
+  </COMMAND>
+  <COMMAND name="CONTROL_CONVEYOR_DELETE" id="1156" version="1.0" type="control" alias="컨트롤.컨베이어정보삭제">
+    <VARIABLE key="Name" type="string[32]" alias="Name"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_CONVEYOR_MORTORING" id="1157" version="1.0" type="control" alias="컨트롤.컨베이어모니터링설정">
+    <VARIABLE key="Name" type="string[32]" alias="Name"/>
+    <VARIABLE key="Start" type="unsigned char" alias="Start" option="Stop,Start"/>    
+  </COMMAND>
+  <COMMAND name="CONTROL_CONVEYOR_DELETE" id="1158" version="1.0" type="control" alias="컨트롤.컨베이어정보설정">
+    <VARIABLE key="Name" type="string[32]" alias="Name"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_CONVEYOR_INFO_SETUP_EX" id="1159" version="1.0" type="control" alias="컨트롤.컨베이어정보설정확장">
+    <VARIABLE key="Name" type="string[32]" alias="Name"/>
+    <VARIABLE key="ConveyorLinkageInfo" type="struct" version="2.0" alias="연동환경정보">
+      <VARIABLE key="ConveyorType" type="unsigned char" alias="Conveyor Type" option="Linear,Circular"/>
+      <VARIABLE key="TriggerSignalNum" type="unsigned char" alias="TriggerSignalNum"/>
+      <VARIABLE key="Trigger_Info" type="struct" version="2.0" alias="TriggerChannelInfo">
+        <VARIABLE key="TriggerChannel" type="unsigned char" alias="Trigger Channel" option="0,1"/>
+        <VARIABLE key="TriggerEdgeType" type="unsigned char" alias="Trigger Edge Type" option="Falling Edge,Rising Edge"/>
+        <VARIABLE key="TriggerMuteTime" type="float" alias="Trigger Mute Time" />
+      </VARIABLE>
+      <VARIABLE key="DigtalOutput" type="struct[2]" version="2.0" alias="Digtal Output">
+        <VARIABLE key="Channel" type="char" alias="Encoder Channel" option="-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"/>
+        <VARIABLE key="Value" type="unsigned char" alias="Value" option="0,1"/>
+      </VARIABLE>
+    </VARIABLE>
+    <VARIABLE key="CoordinateInfo" type="struct" version="2.0" alias="좌표계 정보">
+      <VARIABLE key="DistancePerCount" type="int" alias="Distance Per Count"/>
+      <VARIABLE key="PosConCoord" type="float[6]" alias="PosConCoord"/>
+      <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option ="0,2" hint ="0:Base좌표 / 2:World좌표"/>
+    </VARIABLE>
+    <VARIABLE key="DistanceInfo" type="struct" version="2.0" alias="거리 정보">
+      <VARIABLE key="Speed" type="float" alias="Speed"/>
+      <VARIABLE key="MinDistance" type="float" alias="Min Distance"/>
+      <VARIABLE key="SpeedFilterSize" type="unsigned int" alias="Speed Moving Average Filter Size"/>
+      <VARIABLE key="WatchWinDist" type="float" alias="Watch Window Distance"/>
+      <VARIABLE key="MaxDistance" type="float" alias="Max Distance"/>
+      <VARIABLE key="SyncOutDist" type="float" alias="Sync Out Distance"/>
+    </VARIABLE>
+  </COMMAND>
+  <COMMAND name="CONTGET_CONVEYOR_OBJECT" id="1160" version="1.0" type="control" alias="컨트롤.컨베이어작업물확인요청">
+    <VARIABLE key="ConveyorId" type="unsigned char" alias="ConveyorId"/>
+    <VARIABLE key="Timeout" type="float" alias="Timeout"/>
+    <VARIABLE key="ContainerType" type="unsigned char" option ="FIFO, LIFO" alias="Container Type"/>
+    <VARIABLE key="PosObjCoord" type="float[6]" alias="PosObjCoord"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_TRACK_CONVEYOR" id="1161" version="1.0" type="control" alias="컨트롤.컨베이어트래킹제어">
+    <VARIABLE key="ConveyorId" type="unsigned char" alias="ConveyorId"/>
+    <VARIABLE key="DoTrack" type="unsigned char" alias="Track or Untrack" option="0,1"/>
+    <VARIABLE key="DoMate" type="unsigned char" alias="Mate or No Mate" option="No mate,mate"/>
+    <VARIABLE key="Reserved" type="float[5]" alias="Reserved"/>    
+  </COMMAND>
+  <COMMAND name="CONTROL_COORD_TRANSFORM_POS_REQUEST" id="1162" version="1.0" type="control" alias="컨트롤.좌표계변환연산요청">    
+    <VARIABLE key="SourceCoord" type="float[6]" alias="Source Pos" />
+    <VARIABLE key="SourceRef" type="unsigned char" alias="기준좌표계정보" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
+    <VARIABLE key="TargetRef" type="unsigned char" alias="타켓좌표계정보" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_SERVO_OFF" id="1163" version="1.0" type="control" alias="컨트롤.서보오프명령">    
+    <VARIABLE key="StopCommand" type="unsigned char" option ="STO,SS1" />
+  </COMMAND>  
+  <COMMAND name="CONTROL_WORLD_COORDINATE" id="1164" version="1.0" type="control" alias="컨트롤.월드좌표계확인요청">
+    <VARIABLE key="Reference" type="unsigned char" alias="기준정보" option ="world2base, base2Refstone,world2refstone"/>    
+  </COMMAND>
+  <COMMAND name="CONTROL_TRAJ_MODIFY" id="1165" version="1.0" type="control" alias="컨트롤.모션경로수정모드설정">
+    <VARIABLE key="IsActive" type="unsigned char" alias="활성화여부" option ="NonActive,Active"/>
+    <VARIABLE key="TrajectoryPeriodMultiple" type="unsigned char" alias="경로수정 주기배수"/>
+    <VARIABLE key="Mode" type="unsigned char" alias="경로수정모드" option="IncrementModify,IncrementSpeed"/>
+    <VARIABLE key="Reference" type="unsigned char" alias="기준정보" option ="Base,Tool,World"/>
+    <VARIABLE key="MaxLimitIcrement" type="float[2]" alias="누적증분량상한" index_alias="Position,Orientation"/>
+    <VARIABLE key="MaxLimitPeriod" type="float[2]" alias="1주기 증분량상한" index_alias="Position,Orientation"/>
+  </COMMAND>
+  <COMMAND name="CONTROL_TRAJ_MODIFY_PARAM" id="1166" version="1.0" type="control" alias="컨트롤.모션경로수정량">    
+    <VARIABLE key="TrajModiftParam" type="float[6]" alias="경로수정량" index_alias="X,Y,Z,A,B,C"/>    
+  </COMMAND>
+  <COMMAND name="CONTROL_SAFETY_REDUCED_MODE" id="1167" version="1.0" type="control" alias="컨트롤.안전입력감속모드">
+    <VARIABLE key="ReducedRatio" type="float" alias="감속률" />
+  </COMMAND>
+  <COMMAND name="CONTROL_MULTI_JOG" id="1168" version="1.0" type="control" alias="컨트롤.멀티조그">
+    <VARIABLE key="JogTarget" type="float[6]" alias="조그타켓" />
+    <VARIABLE key="JogReference" type="unsigned char" alias="조그타켓" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
+    <VARIABLE key="JogSpeed" type="float" alias="조그속도" hint="정격속도의 % / 단위(+/-)"/>        
+  </COMMAND>
+  <COMMAND name="CONTROL_FTS_CARIBRATION_INFO" id="1169" version="1.0" type="control" alias="컨트롤.FTS교정정보 자동측정">    
+  </COMMAND>
+  
   <COMMAND name="MOVE_STOP" id="1201" version="1.0" type="control" alias="모션.STOP">
     <VARIABLE key="Mode" type="unsigned char" alias="정지모드" option="전원해제,빠른정지,느린정지,긴급정지" default_value="0"/>
   </COMMAND>
@@ -1205,9 +1559,10 @@
     <VARIABLE key="Ref" type="unsigned char" alias="기준좌표" option="Base,Tool"/>
     <!--VARIABLE key="_fStiffness" type="float[6]" alias="강성정보" hint="Task Stiffness"/-->
     <!--VARIABLE key="ControlMode" type="unsigned char" alias="제어모드" option="힘제어,순응제어" hint="※	Force Control 일 경우 지정한 축에 대하여 일정한 힘을 가하면서 지정된 궤적으로 이동하는 것을 뜻하며, Compliance Control일 경우 왜란에 대하여 지정된 궤적을 변경해 가면서 이동한다."/-->
-    <VARIABLE key="ControlMode" type="unsigned char[6]" alias="제어모드" hint="0:힘제어,1:순응제어"/>
-    <VARIABLE key="Torque" type="float[6]" alias="힘/토크정보" hint="Task Force/Torque"/>
+    <VARIABLE key="ControlMode" type="unsigned char" alias="제어모드" option ="0,1" hint="0:힘제어,1:순응제어"/>
+    <VARIABLE key="Torque" type="float[6]" alias="힘/토크정보" hint="단위:N/Nm"/>
     <VARIABLE key="Time" type="float" alias="시간정보" default_value="-1" hint="※	시간 정보는 힘을 증가시키는데 소요되는 시간을 의미하며, -1을 사용하면 모션 기본 설정값을 사용한다. 단위:초"/>
+    <VARIABLE key="ForceInfoSetup" type="unsigned char" alias="힘정보재설정" option ="0,1" hint="0:미사용,1:사용"/>
   </COMMAND>
   <COMMAND name="FORCE_RELEASE_FORCE" id="1404" version="1.0" type="control" alias="힘제어.목표힘 해제">
     <VARIABLE key="Time" type="float" alias="시간정보" default_value="-1" hint="힘을 감소시키는데 필요한 시간을 의미하며, -1을 사용하면 모션 기본 설정값을 사용한다. 단위:초"/>
@@ -1249,6 +1604,7 @@
   <COMMAND name="PROGRAM_START" id="1502" version="1.0" type="control" alias="프로그램.실행 시작">
     <VARIABLE key="Target" type="unsigned char" alias="실행모드" option="로봇,시뮬레이션"/>
     <VARIABLE key="SaveAsFile" type="unsigned char" alias="저장옵션" option="Run only,Save and run" default_value="0"/>    
+    <VARIABLE key="Length" type="unsigned int" alias="문자열 길이" hint="프로그램 길이"/>
     <VARIABLE key="File" type="file" alias="프로그램" hint="프로그램 코드"/>
   </COMMAND>
   <COMMAND name="PROGRAM_STOP" id="1503" version="1.0" type="control" alias="프로그램.실행 중지">
@@ -1263,11 +1619,13 @@
   <COMMAND name="PROGRAM_PLAY_CONTROL" id="1506" version="1.0" type="control" alias="프로그램.로봇운행속도 변경">
     <VARIABLE key="Rate" type="float" alias="운행 속도" hint="단위:%"/>
   </COMMAND>
-  <COMMAND name="PROGRAM_SAVE" id="1501" version="1.0" type="control" alias="프로그램.시스템에 프로그램 저장">
+  <COMMAND name="PROGRAM_SAVE_MASTER_FILE" id="1501" version="1.0" type="control" alias="프로그램.시스템에 프로그램 저장">
     <VARIABLE key="SaveMode" type="unsigned char" alias="저장모드" option="삭제,저장"/>
+    <VARIABLE key="Length" type="unsigned int" alias="문자열 길이" hint="프로그램 길이"/>
     <VARIABLE key="File" type="file" alias="프로그램" hint="프로그램 코드"/>
   </COMMAND>
   <COMMAND name="PROGRAM_START_FILE" id="1507" version="1.0" type="control" alias="프로그램.저장프로그램 시작">
+    <VARIABLE key="Target" type="unsigned char" alias="실행모드" option="로봇,시뮬레이션"/>
   </COMMAND>
   <COMMAND name="PROGRAM_BREAK" id="1508" version="1.0" type="control" alias="프로그램.중단점 설정">
     <VARIABLE key="LineNo" type="int" alias="라인번호" hint="1~"/>
@@ -1275,7 +1633,27 @@
   <COMMAND name="PROGRAM_DEBUG_STEPRUN" id="1509" version="1.0" type="control" alias="프로그램.스텝실행">    
   </COMMAND>
   <COMMAND name="PROGRAM_CHECK_SYNTAX" id="1510" version="1.0" type="control" alias="프로그램.문법검사">
+    <VARIABLE key="Length" type="unsigned int" alias="문자열 길이" hint="프로그램 길이"/>
     <VARIABLE key="File" type="file" alias="프로그램" hint="프로그램 코드"/>
+  </COMMAND>
+  <COMMAND name="PROGRAM_SAVE_SUB_FILE" id="1511" version="1.0" type="control" alias="프로그램.서브프로그램저장">
+    <VARIABLE key="SaveMode" type="unsigned char" alias="저장모드" option="삭제,저장"/>
+    <VARIABLE key="Name" type="string[256]" alias="프로그램 명"/>
+    <VARIABLE key="Length" type="unsigned int" alias="문자열 길이" hint="프로그램 길이"/>
+    <VARIABLE key="File" type="file" alias="프로그램" hint="프로그램 코드"/>
+  </COMMAND>  
+  <COMMAND name="PROGRAM_DEBUG_STEPRUN_EX" id="1512" version="1.0" type="control" alias="프로그램.스텝실행">    
+    <VARIABLE key="LineCount" type="int" alias="라인수" hint="1~"/>
+  </COMMAND>
+  <COMMAND name="PROGRAM_BREAK_EX" id="1513" version="1.0" type="control" alias="프로그램.중단점 설정">    
+    <VARIABLE key="LineNo" type="int" alias="라인번호" hint="1~"/>
+    <VARIABLE key="File Name" type="string[256]" alias="프로그램 이름(최대256자)"/>
+  </COMMAND>
+  <COMMAND name="PROGRAM_WATCH_VARIABLES" id="1514" version="1.0" type="control" alias="프로그램.모니터링 변수 설정">    
+    <VARIABLE key="Division" type="unsigned char" alias="변수구분" option="설치변수,일반변수"/>
+    <VARIABLE key="Type" type="unsigned char" alias="변수타입" option="bool,int,float,string,posj,posx,unknown"/>
+    <VARIABLE key="Name" type="string[128]" alias="변수명"/>
+    <VARIABLE key="Data" type="string[128]" alias="데이터"/>
   </COMMAND>
   <COMMAND name="GPIO_SETOUTPUTVALUE" id="1603" version="1.0" type="control" alias="IO.GPIO.출력 설정">
     <VARIABLE key="Location" type="unsigned char" alias="I/O 위치" option="컨트롤박스,로봇팔"/>
@@ -1296,6 +1674,7 @@
     <VARIABLE key="Symbol" type="string[32]" alias="I/O 식별이름" hint="영문자 최대 32자"/>
     <VARIABLE key="IpAddr" type="string[16]" alias="장비주소" hint="대상 장비의 IP 주소"/>
     <VARIABLE key="TCPPort" type="unsigned short" alias="포트번호" hint="대상 장비의 포트 번호"/>
+    <VARIABLE key="SlaveID" type="unsigned int"   alias="슬레이브ID" />
     <VARIABLE key="RegType" type="unsigned char" alias="I/O 속성" option="Discrete Input,Coil,Input Register,Holding Register"/>
     <VARIABLE key="RegIndex" type="unsigned short" alias="I/O 번호" hint="0~65535"/>
     <VARIABLE key="RegValue" type="unsigned short" alias="I/O 초기출력값" hint="I/O 속성이 Coil, Holding Register 일때만 유효"/>
@@ -1330,6 +1709,18 @@
       <VARIABLE key="Name" type="string[32]" alias="I/O 식별이름"/>
       <VARIABLE key="Value" type="unsigned short" alias="I/O 출력"/>
     </VARIABLE>    
+  </COMMAND>
+  <COMMAND name="MODBUS_ADDVARIABLE_RTU" id="1613" version="1.0" type="control" alias="IO.MODBUS.RTU 추가">
+    <VARIABLE key="Name" type="string[32]" alias="I/O 식별이름"/>
+    <VARIABLE key="PortName" type="string[16]" alias="시리얼포트이름" option=""/>
+    <VARIABLE key="SlaveId" type="unsigned int" alias="장비 식별 번호" option=""/>
+    <VARIABLE key="BaudRate" type="unsigned int" alias="통신 속도" option=""/>
+    <VARIABLE key="ByteSize" type="unsigned int" alias="송신 단위" option=""/>
+    <VARIABLE key="ParityBit" type="unsigned char" alias="패리티비트" option=""/>
+    <VARIABLE key="StopBit" type="unsigned int" alias="정지비트" option=""/>
+    <VARIABLE key="RegType" type="unsigned char" alias="I/O 속성" option="0,1,2,3"  hint="0:Discrete Input / 1:Coil 2:Input Register /3:Holding Register"/>
+    <VARIABLE key="RegIndex" type="unsigned short" alias="I/O 번호" hint="0~65535"/>
+    <VARIABLE key="RegValue" type="unsigned short" alias="I/O 초기출력값" hint="I/O 속성이 Coil, Holding Register 일때만 유효"/>
   </COMMAND>
   <COMMAND name="CONFIG_TOOL" id="1701" version="1.0" type="config" alias="로봇환경설정.툴정보">
     <VARIABLE key="Symbol" type="string[32]" alias="툴 이름"/>
@@ -1420,7 +1811,9 @@
     </VARIABLE>
   </COMMAND>
   <COMMAND name="CONFIG_VIRTUAL_FENCE" id="1706" version="2.0" type="config" alias="로봇환경설정.동작공간(가상펜스)">
-    <VARIABLE key="FenceData" type="union" alias="도형타입" type_option="111" default_value="0">      
+    <VARIABLE key="Ref" type="unsigned char" alias="참조기준" option ="0,2" hint ="0:Base / 2:World"/>
+    <VARIABLE key="FigureType" type="unsigned char" alias="도형종류" option ="Cube,Polygon,Clynder"/>
+    <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="111" default_value="0">
       <VARIABLE key="Cube" type="float[6]" alias="직육면체(Cube)" hint="단위: mm&#xA;입력조건:&#xA; X축최소값 > X축최소값&#xA; Y축최대값 > Y축최소값&#xA; Z축최대값 > Z축최소값" index_alias="X축 최소값,X축 최대값,Y축 최소값,Y축 최대값,Z축 최소값,Z축 최대값" default_value="-10000,10000,-10000,10000,-10000,10000"/>
       <VARIABLE key="Polyhedron" type="struct" alias="다각기둥(Polygon)">
         <VARIABLE key="LineCount" type="unsigned char" alias="라인갯수" option="0,1,2,3,4,5,6" hint="최대 6개"/>
@@ -1457,9 +1850,10 @@
         <VARIABLE key="MinZ" type="float" alias="Z축최소범위" type_option="task_z" hint="단위: mm" default_value="-10000"/>
         <VARIABLE key="MaxZ" type="float" alias="Z축최대범위" type_option="task_z" hint="단위: mm" default_value="10000"/>
       </VARIABLE>
-    </VARIABLE>    
+    </VARIABLE>
   </COMMAND>
   <COMMAND name="CONFIG_SAFE_ZONE" id="1707" version="1.0" type="config" alias="로봇환경설정.협동작업공간(Safe Zone)">
+    <VARIABLE key="Ref" type="unsigned char" alias="참조기준" option ="0,2" hint ="0:Base / 2:World"/>
     <VARIABLE key="Line1" type="struct" version="2.0" alias="협동공간분할직선#1">
       <VARIABLE key="Start" type="float[2]" type_option="task_xy" default_value="10000,10000" alias="시작점" hint="단위: mm" index_alias="X,Y"/>
       <VARIABLE key="End" type="float[2]" type_option="task_xy" default_value="10000,10000" alias="끝점" hint="단위: mm" index_alias ="X,Y"/>
@@ -1505,8 +1899,8 @@
     <!--VARIABLE key="_iFuncCode18" type="unsigned char" alias="ENABLE_SWITCH_RELEASE"/-->
   </COMMAND>
   <COMMAND name="CONFIG_SAFETY_IO" id="1712" version="1.0" type="config" alias="로봇환경설정.안전 I/O">    
-    <VARIABLE key="Input" type="unsigned char[8]" alias="안전I/O 입력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6,CH7,CH8" option="사용하지않음,STO 정지,긴급정지(ESTOP),보호정지(PRS),감속속도모드,3-Pos Enable Switch,직접교시 스위치,Manual guiding Stop,보호정지 자동시작,존 동적 활성화"/>
-    <VARIABLE key="Output" type="unsigned char[8]" alias="안전I/O 출력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6,CH7,CH8" option="사용하지않음,정지모드(STO),정지모드(SOS),감속모드(SS1 또는 SS2),정상속도모드,감속속도모드,자동모드,수동모드,단독작업공간,협동작업공간,충돌임시무효영역,툴방향 제한영역"/>
+    <VARIABLE key="Input" type="unsigned char[8]" alias="안전I/O 입력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6,CH7,CH8"  option="사용하지않음,STO 정지,긴급정지(ESTOP),보호정지(PRS),감속속도모드,3-Pos Enable Switch,직접교시 스위치,Manual guiding Stop,보호정지 자동시작,존 동적 활성화,RemoteControl활성화,RemoteControlEStop"/>
+    <VARIABLE key="Output" type="unsigned char[8]" alias="안전I/O 출력" index_alias="CH1,CH2,CH3,CH4,CH5,CH6,CH7,CH8" option="사용하지않음,정지모드(STO),정지모드(SOS),감속모드(SS1 또는 SS2),정상속도모드,감속속도모드,자동모드,수동모드,단독작업공간,협동작업공간,충돌임시무효영역,툴방향 제한영역, 긴급정지상태, RemoteControlEStop"/>      
   </COMMAND>
   <COMMAND name="CONFIG_SERVO" id="1713" version="1.0" type="config" alias="로봇환경설정.안전 서보온">
     <VARIABLE key="ServoMode" type="unsigned char" alias="서보온" option="해제,설정"/>
@@ -1518,7 +1912,8 @@
   <COMMAND name="CONFIG_PROTECTED_ZONE" id="1715" version="2.0" type="config" alias="로봇환경설정.침범금지구역정보">
     <VARIABLE key="Validity" type="unsigned char[10]" alias="유효성" option="해제,설정"/>
     <VARIABLE key="Zone" type="struct[10]" alias="도형">
-      <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">
+      <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option = "0,2" hint ="0:Base / 2:World"/>     
+      <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">                        
         <VARIABLE key="Sphere" type="struct" version="2.0" alias="구(Sphere)">
           <VARIABLE key="Radius" type="float" alias="반지름" type_option="task_radius" hint="단위: mm"/>
           <VARIABLE key="Center" type="float[3]" alias="중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
@@ -1528,7 +1923,7 @@
           <VARIABLE key="Center1" type="float[3]" alias="아랫면중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
           <VARIABLE key="Center2" type="float[3]" alias="윗면중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
         </VARIABLE>
-        <VARIABLE key="AABB" type="struct" version="2.0" alias="직사각형(Cube)">          
+        <VARIABLE key="Cube" type="struct" version="2.0" alias="직사각형(Cube)">      
           <VARIABLE key="Pos1" type="float[3]" alias="꼭지점1" index_alias="X,Y,Z" type_option="task_xyz" hint="단위: mm"/>
           <VARIABLE key="Pos2" type="float[3]" alias="꼭지점2" index_alias="X,Y,Z" type_option="task_xyz" hint="단위: mm"/>
         </VARIABLE>
@@ -1562,7 +1957,8 @@
       <VARIABLE key="ID" type="string[32]" alias="ID"/>
       <VARIABLE key="OnOff" type="unsigned char" alias="ON/OFF" option="OFF,ON"/>
       <VARIABLE key="SafetyInput" type="unsigned char" alias="안전입력채널" option="사용안함,채널1,채널2,채널3,채널4,채널5,채널6,채널7,채널8"/>
-      <VARIABLE key="Sensitivity" type="float" alias="충돌민감도" hint="단위:백분률(0~100, 100으로 갈수록 민감)"/>        
+      <VARIABLE key="Sensitivity" type="float" alias="충돌민감도" hint="단위:백분률(0~100, 100으로 갈수록 민감)"/>      
+		  <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option = "0,2" hint ="0:Base / 2:World"/>
       <VARIABLE key="Zone" type="struct" alias="도형">
         <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">
           <VARIABLE key="Sphere" type="struct" version="2.0" alias="구(Sphere)">
@@ -1606,6 +2002,7 @@
   <COMMAND name="CONFIG_TOOL_ORIENTATION_LIMIT_ZONE" id="1717" version="2.0" type="config" alias="로봇환경설정.TCP 방향 제한 영역">
     <VARIABLE key="Validity" type="unsigned char[10]" alias="유효성" option="해제,설정"/>
     <VARIABLE key="Zone" type="struct[10]" alias="도형">
+      <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option = "0,2" hint ="0:Base / 2:World"/>      
       <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">
         <VARIABLE key="Sphere" type="struct" version="2.0" alias="구(Sphere)">
           <VARIABLE key="Radius" type="float" alias="반지름" type_option="task_radius" hint="단위: mm"/>
@@ -1649,9 +2046,11 @@
     </VARIABLE>
   </COMMAND>
   <COMMAND name="CONFIG_TOOL_SHAPE" id="1718" version="2.0" type="config" alias="로봇환경설정.툴형상정보">
+    <VARIABLE key="ID" type="string[32]" alias="ID"/>
     <VARIABLE key="Validity" type="unsigned char[5]" alias="유효성" option="해제,설정"/>
     <VARIABLE key="Zone" type="struct[5]" alias="도형">
-      <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">
+      <VARIABLE key="Reference" type="unsigned char" alias="ReferenceValue" option = "0,2" hint ="0:Base / 2:World"/>        
+      <VARIABLE key="ObjectData" type="union" alias="도형타입" type_option="101" default_value="0">        
         <VARIABLE key="Sphere" type="struct" version="2.0" alias="구(Sphere)">
           <VARIABLE key="Radius" type="float" alias="반지름" type_option="task_radius" hint="단위: mm"/>
           <VARIABLE key="Center" type="float[3]" alias="중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
@@ -1661,7 +2060,7 @@
           <VARIABLE key="Center1" type="float[3]" alias="아랫면중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
           <VARIABLE key="Center2" type="float[3]" alias="윗면중심" type_option="task_xyz" index_alias="X,Y,Z" hint="단위: mm"/>
         </VARIABLE>
-        <VARIABLE key="AABB" type="struct" version="2.0" alias="직사각형(Cube)">
+        <VARIABLE key="Cube" type="struct" version="2.0" alias="직사각형(Cube)">
           <VARIABLE key="Pos1" type="float[3]" alias="꼭지점1" index_alias="X,Y,Z" type_option="task_xyz" hint="단위: mm"/>
           <VARIABLE key="Pos2" type="float[3]" alias="꼭지점2" index_alias="X,Y,Z" type_option="task_xyz" hint="단위: mm"/>
         </VARIABLE>
@@ -1706,6 +2105,38 @@
   <COMMAND name="CONFIG_TCP_DELETE" id="1725" version="1.0" type="config" alias="로봇환경설정.TCP정보삭제">
     <VARIABLE key="Symbol" type="string[32]" alias="TCP명칭"/>
   </COMMAND>    
+  <COMMAND name="CONFIG_NUDGE" id="1729" version="1.0" type="config" alias="로봇환경설정.넛지모드설정">
+    <VARIABLE key="Used" type="unsigned char" alias="사용여부" option="미사용, 사용"/>
+    <VARIABLE key="Power" type="float" alias="힘의크기" option=""/>
+    <VARIABLE key="Time" type="float" alias="지연시간" option=""/>
+  </COMMAND>
+  <COMMAND name="CONFIG_REMOTE_CONTROL" id="1730" version="1.0" type="config" alias="로봇환경설정.리모트제어모드설정">
+    <VARIABLE key="Used" type="unsigned char" alias="사용여부" option="미사용, 사용"/>    
+    <VARIABLE key="Input" type="struct[8]" alias="입력 설정">      
+      <VARIABLE key="Port" type="char" alias="포트" option="-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" hint="Not Used : -1 / Used : 0 ~ 15"/> 
+      <VARIABLE key="Level" type="char" alias="레벨" option="Low,High"/>
+    </VARIABLE>
+    <VARIABLE key="Output" type="struct[8]" alias="출력 설정">
+      <VARIABLE key="Port" type="char" alias="포트" option="-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" hint="Not Used : -1 / Used : 0 ~ 15"/> 
+      <VARIABLE key="Level" type="char" alias="레벨" option="Low,High"/>
+    </VARIABLE>
+  </COMMAND>
+  <COMMAND name="CONFIG_WORLD_COORD_SETUP" id="1731" version="1.0" type="config" alias="로봇환경설정.월드좌표계설정">
+    <VARIABLE key="Reference" type="unsigned char" alias="기준정보" option ="world2base, base2Refstone,world2refstone"/>
+    <VARIABLE key="Coordinate" type="float[6]" alias="Coordinate"/>
+  </COMMAND>
+  <COMMAND name="CONFIG_SAFETY_PARAM_DELETE" id="1732" version="1.0" type="config" alias="로봇환경설정.Safety파라미터삭제">
+    <VARIABLE key="ComnReserved" type="unsigned char" alias="예약공간"/>          
+  </COMMAND>
+  <COMMAND name="CONFIG_TOOL_SHAPE_DELETE" id="1733" version="1.0" type="config" alias="로봇환경설정.ToolShapes삭제">
+    <VARIABLE key="Name" type="char[32]" alias="식별이름"/>
+  </COMMAND>
+  <COMMAND name="CONFIG_TOOL_SHAPE_SELECT" id="1734" version="1.0" type="config" alias="로봇환경설정.ToolShapes선택">
+    <VARIABLE key="Name" type="char[32]" alias="식별이름"/>
+  </COMMAND>
+  <COMMAND name="CONFIG_PROCESS_BUTTON" id="1735" version="1.0" type="config" alias="로봇환경설정.Process버튼 제어">
+    <VARIABLE key="Used" type="unsigned char" alias="사용여부" option="해제, 설정"/>    
+  </COMMAND>  
   <COMMAND name="SAFE_CONTROL_JOG" id="1750" version="1.0" type="config" alias="안전.조그">
     <VARIABLE key="Axis" type="unsigned char" alias="조깅축" option="J1,J2,J3,J4,J5,J6,Tx,Ty,Tz,Rx(Tool),Ry(Tool),Rz(Tool)" default_value="0"/>
     <VARIABLE key="Ref" type="unsigned char" alias="좌표기준" option="Base,Tool" hint="조깅축이 Tx,Ty,Tz 일때만 유효"/>
@@ -1740,10 +2171,11 @@
     <!-- no parameter -->
   </COMMAND>
   <COMMAND name="SAFE_RESET_SEQUENCE" id="1758" version="1.0" type="config" alias="안전.시퀀스초기화">    
-    <VARIABLE key="Mode" type="unsigned char" alias="클라이언트 타입" option="TP,DRFT"/>
-  </COMMAND>
-  <COMMAND name="SAFE_MEASURE_TOOL" id="1759" version="1.0" type="config" alias="안전.툴정보 측정">
-    <VARIABLE key="Mode" type="unsigned char" alias="측정모드" option="2~6축 동작,4~6축 동작"/>
+    <VARIABLE key="Mode" type="unsigned char" alias="클라이언트 타입" option="TP,DRFT,DRFA,OMNISMART,API,WINDRSC" />      
+  </COMMAND>  
+  <COMMAND name="SAFE_TOOL_AUTO_MEASURE" id="1759" version="1.0" type="config" alias="안전.툴정보 측정">    
+    <VARIABLE key="Mode" type="unsigned char" alias="측정모드" option ="0,1" hine ="0:2~6축만 동작 / 1:4~6축만 동작"/>
+    <VARIABLE key="Center" type="float[3]" alias="무게중심" index_alias="X,Y,Z" hint="단위: mm"/>
   </COMMAND>
   <COMMAND name="SAFE_MEASURE_PAYLOAD" id="1760" version="1.0" type="config" alias="안전.소재무게 측정">
     <!-- no parameter -->
@@ -1756,6 +2188,10 @@
     <VARIABLE key="Pos4" type="float[6]" alias="참조좌표4" hint="Task space pose" index_alias="X,Y,Z,A,B,C"/>
   </COMMAND>
   <COMMAND name="SAFE_MEASURE_FRICTION" id="1762" version="1.0" type="config" alias="안전.마찰계수 측정">
+    <VARIABLE key="Mode" type="unsigned char" alias="측정모드" option="체크모션,측정모션"/>
+    <VARIABLE key="Axis Select" type="unsigned char" alias="축 선택" option="미수행,수행"/>
+    <VARIABLE key="Start Pos" type="float[6]" alias="시작 위치" hint="6개의 로봇시작위치정보"/>
+    <VARIABLE key="Motion Area" type="float[6]" alias="모션 범위" hint="6개의 측정범위정보"/>    
   </COMMAND>
   <COMMAND name="SAFE_MEASURE_JTS" id="1763" version="1.0" type="config" alias="안전.JTS 센서 교정">
     <!-- no parameter -->
@@ -1803,6 +2239,14 @@
     <VARIABLE key="Sync" type="unsigned char" alias="동작모드" option="동기모드,비동기모드" default_value="0" hint="동작 모드가 비동기 모드로 설정되면, 블렌딩 관련 설정(곡률 정보, 구간처리)은 무시된다."/>
     <VARIABLE key="SolSpace" type="unsigned char" alias="자세 옵션" option="0,1,2,3,4,5,6,7" default_value="0"/>
   </COMMAND>
+  <COMMAND name="SAFE_MULTI_JOG" id="1770" version="1.0" type="config" alias="안전.멀티조그">
+    <VARIABLE key="JogTarget" type="float[6]" alias="조그타켓" />
+    <VARIABLE key="JogReference" type="unsigned char" alias="조그타켓" hint="0:Base / 1:Tool / 2:World / 101~200:UserCoord"/>
+    <VARIABLE key="JogSpeed" type="float" alias="조그속도" hint="정격속도의 % / 단위(+/-)"/>
+  </COMMAND>
+   <COMMAND name="SAFE_FTS_CARIBRATION" id="1771" version="1.0" type="config" alias="안전.FTS교정정보자동측정">    
+  </COMMAND>     
+  
   <COMMAND name="SETUP_SETSYSCONFIG" id="1801" version="1.0" type="control" alias="시스템관리.컨피규레이션 설정">
     <VARIABLE key="File" type="file" alias="컨피규레이션 파일" hint="파일 선택"/>
   </COMMAND>
@@ -1846,143 +2290,16 @@
     <VARIABLE key="Inverter6" type="unsigned char" alias="인버터 설정 6축" option="No Update,Update"/>
     <VARIABLE key="ResetType" type="unsigned char" alias="리셋옵션" option="펌웨어 재시작,컴퓨터 재시작"/>
   </COMMAND>
+  <COMMAND name="SETUP_GETSYSVERSION" id="1810" version="1.0" type="control" alias="시스템정보.펌웨어 버전 조회">
+  </COMMAND>
+  <COMMAND name="SETUP_MONITORINGINFO_SEND" id="1811" version="1.0" type="control" alias="시스템정보.모니터링정보전송제어">
+    <VARIABLE key="SendEnable" type="unsigned char" alias="전송제어" option="Start,Stop"/>
+  </COMMAND>
   <COMMAND name="SETUP_CONTROL_AUTHORITY" id="1812" version="1.0" type="control" alias="시스템관리.로봇제어권 요청">
     <VARIABLE key="Mode" type="unsigned char" alias="제어권" option="강제회수,요청,승락,거절" default_value="1"/>
   </COMMAND>
   <COMMAND name="SETUP_LICENCE_UPDATE" id="1813" version="1.0" type="control" alias="시스템관리.라이센스정보변경">
-    <VARIABLE key="License" type="string[32]" alias="라이센스정보"/>
-  </COMMAND>
-  <COMMAND name="SETUP_GETSYSVERSION" id="1810" version="1.0" type="control" alias="시스템정보.펌웨어 버전 조회">
-  </COMMAND>
-  <COMMAND name="QUERY_MONITORING_STATE" id="60" version="1.0" type="control" alias="시스템정보.제어상태 조회">
-    <!--no parameter-->
-  </COMMAND>
-  <COMMAND name="RESPONSE_EXCUTION_COMPLETE" id="61" version="1.0" type="response">
-    <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="위치제어,토크제어"/>
-    <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="관절각도,작업좌표"/>
-    <VARIABLE key="Joint.ActualPos" type="float[6]" alias="조인트각도(Actual)" hint="단위:degree"/>
-    <VARIABLE key="Joint.ActualVel" type="float[6]" alias="조인트속도(Actual)" hint="단위:degree/sec"/>
-    <VARIABLE key="Joint.ActualErr" type="float[6]" alias="조인트오차(Actual)"/>
-    <VARIABLE key="Joint.TargetPos" type="float[6]" alias="목표조인트각도" hint="단위:degree"/>
-    <VARIABLE key="Joint.TargetVel" type="float[6]" alias="목표조인트속도" hint="단위:degree/sec"/>
-    <VARIABLE key="Task.ToolActualPos" type="float[6]" alias="TCP좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.FlangeActualPos" type="float[6]" alias="툴플렌지좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.ActualVel" type="float[6]" alias="TCP속도" hint="단위:mm/sec"/>
-    <VARIABLE key="Task.ActualErr" type="float[6]" alias="오차정보"/>
-    <VARIABLE key="Task.TargetPos" type="float[6]" alias="목표TCP좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위:mm/sec"/>
-    <VARIABLE key="Task.SolutionSpace" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
-    <VARIABLE key="Task.RotationMatrix" type="float[9]" alias="회전행렬"/>
-    <VARIABLE key="Torque.DynamicTor" type="float[6]" alias="다이나믹토크"/>
-    <VARIABLE key="Torque.ActualJTS" type="float[6]" alias="조인트토크(JTS센서)"/>
-    <VARIABLE key="Torque.ActualEJT" type="float[6]" alias="조인트외력정보"/>
-    <VARIABLE key="Torque.ActualETT" type="float[6]" alias="태스크외력정보"/>
-    <VARIABLE key="Misc.tSyncTime.Sec" type="unsigned int" alias="클럭카운트(초)"/>
-    <VARIABLE key="Misc.tSyncTime.USec" type="unsigned int" alias="클럭카운트(밀리초)"/>
-    <VARIABLE key="Misc.FlangeDI" type="unsigned char[6]" alias="플렌지 디지털입력"/>
-    <VARIABLE key="Misc.FlangeDO" type="unsigned char[6]" alias="플렌지 디지털출력"/>
-    <VARIABLE key="Misc.ActualBrake" type="unsigned char[6]" alias="브레이크 상태"/>
-    <VARIABLE key="Misc.ActualButton" type="unsigned int[6]" alias="암버튼 상태"/>
-    <VARIABLE key="Misc.ActualMC" type="float[6]" alias="모터전류"/>
-    <VARIABLE key="Command" type="unsigned int" alias="지령ID"/>
-    <VARIABLE key="OperatingMode" type="unsigned char" alias="감속모드"/>
-    <VARIABLE key="OperatingState" type="unsigned char" alias="제어상태"/>
-  </COMMAND>
-  <COMMAND name="SET_DETAIL_MONITORING" id="62" version="1.0" type="control" alias="시스템정보.상세모니터링정보 조회">
-    <VARIABLE key="Mode" type="unsigned char" alias="모드" option="Off,On"/>
-  </COMMAND>
-  <COMMAND name="RESPONSE_DETAIL_MONITORING" id="63" version="1.0" type="response">
-    <VARIABLE key="Control.ActualMode" type="unsigned char" alias="제어모드" option="위치제어,토크제어"/>
-    <VARIABLE key="Control.ActualSpace" type="unsigned char" alias="제어공간" option="관절각도,작업좌표"/>
-    <VARIABLE key="Joint.ActualPos" type="float[6]" alias="조인트각도(Actual)" hint="단위:degree"/>
-    <VARIABLE key="Joint.ActualVel" type="float[6]" alias="조인트속도(Actual)" hint="단위:degree/sec"/>
-    <VARIABLE key="Joint.ActualErr" type="float[6]" alias="조인트오차(Actual)"/>
-    <VARIABLE key="Joint.TargetPos" type="float[6]" alias="목표조인트각도" hint="단위:degree"/>
-    <VARIABLE key="Joint.TargetVel" type="float[6]" alias="목표조인트속도" hint="단위:degree/sec"/>
-    <VARIABLE key="Task.ToolActualPos" type="float[6]" alias="TCP좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.FlangeActualPos" type="float[6]" alias="툴플렌지좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.ActualVel" type="float[6]" alias="TCP속도" hint="단위:mm/sec"/>
-    <VARIABLE key="Task.ActualErr" type="float[6]" alias="오차정보"/>
-    <VARIABLE key="Task.TargetPos" type="float[6]" alias="목표TCP좌표" hint="단위:mm"/>
-    <VARIABLE key="Task.TargetVel" type="float[6]" alias="목표TCP속도" hint="단위:mm/sec"/>
-    <VARIABLE key="Task.SolutionSpace" type="unsigned char" alias="로봇자세" option="0,1,2,3,4,5,6,7"/>
-    <VARIABLE key="Task.RotationMatrix" type="float[9]" alias="회전행렬"/>
-    <VARIABLE key="Torque.DynamicTor" type="float[6]" alias="다이나믹토크"/>
-    <VARIABLE key="Torque.ActualJTS" type="float[6]" alias="조인트토크(JTS센서)"/>
-    <VARIABLE key="Torque.ActualEJT" type="float[6]" alias="조인트외력정보"/>
-    <VARIABLE key="Torque.ActualETT" type="float[6]" alias="태스크외력정보"/>
-    <VARIABLE key="Misc.tSyncTime.Sec" type="unsigned int" alias="클럭카운트(초)"/>
-    <VARIABLE key="Misc.tSyncTime.USec" type="unsigned int" alias="클럭카운트(밀리초)"/>
-    <VARIABLE key="Misc.FlangeDI" type="unsigned char[6]" alias="플렌지 디지털입력"/>
-    <VARIABLE key="Misc.FlangeDO" type="unsigned char[6]" alias="플렌지 디지털출력"/>
-    <VARIABLE key="Misc.ActualBrake" type="unsigned char[6]" alias="브레이크 상태"/>
-    <VARIABLE key="Misc.ActualButton" type="unsigned int[6]" alias="암버튼 상태"/>
-    <VARIABLE key="Misc.ActualMC" type="float[6]" alias="모터전류"/>
-  </COMMAND>
-  <COMMAND name="RESPONSE_INVERTER_INFO" id="66" version="1.0" type="response" alias="인버터 버전">
-    <VARIABLE key="InverterBoardVer" type="string[6][32]" alias="인버터 보드버전" index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="InverterSwVer" type="string[6][32]" alias="인버터 SW버전"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="nverterSwVerNum" type="unsigned short[6]" alias="인버터 SW버전 번호"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="MotorIndexOffset" type="float[6]" alias="모터 인덱스 오프셋"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="HallSensorSector" type="float[6][6]" alias="Hall Sensor Sector"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="HarmonicDriveNum" type="unsigned short[6]" alias="하모닉 드라이브 형번"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="JTSBoardSwVer" type="string[6][32]" alias="JTS Interface SW 버전"  index_alias="J1,J2,J3,J4,J5,J6"/>
-    <VARIABLE key="FlangeSwVer" type="string[32]" alias="Flange SW 버전"/>
-  </COMMAND>
-  <COMMAND name="RESPONSE_SDO_COMMAND" id="67" version="1.0" type="response">
-    <VARIABLE key="AxisNum" type="unsigned short" alias="축번호"/>
-    <VARIABLE key="SdoCommand" type="unsigned int" alias="SDO 커맨드"/>
-    <VARIABLE key="ResultData" type="int[6]" alias="결과값"/>
-  </COMMAND>
-  <COMMAND name="SETUP_GETINVERTER_INFO" id="68" version="1.0" type="control" alias="시스템정보.인버터정보 조회">
-    <!--no parameter-->
-  </COMMAND>
-  <COMMAND name="RESERVED_QUERY_ROBOT_LINK_INFO" id="74" version="1.0" type="control" alias="시스템정보.로봇링크정보">
-    <!-- no parameter -->
-  </COMMAND>
-  <COMMAND name="RESERVED_QUERY_SAFETY_CONFIGURATION" id="78" version="1.0" type="control" alias="시스템정보.안전설정정보">
-    <!-- no parameter -->
-  </COMMAND>
-  <COMMAND name="RESERVED_QUERY_ROBOT_PARAM" id="83" version="2.0" type="control" alias="시스템정보.로봇 패러미터">
-    <!-- no parameter -->
-  </COMMAND>  
-  <COMMAND name="CONFIG_ECAT_SDO" id="69" version="1.0" type="control" alias="시스템관리.인버터설정">
-    <VARIABLE key="AxisNum" type="unsigned char" alias="축번호" option="1,2,3,4,5,6"/>
-    <VARIABLE key="Command" type="unsigned short" alias="Command" option="Set Homing Offset,Homing Reset,Home Reset with Current Pose,Brake Ctrl Mode(On),Brake Ctrl Mode(Off),JTS Fault Enable(On),JTS Fault Enable(Off)"/>
-    <VARIABLE key="Data" type="union" type_option="25" alias="SDO데이터" default_value="0">
-      <VARIABLE key="Value" type="int" alias="SDO data"/>
-      <VARIABLE key="Text" type="string[16]" alias="SN"/>
-      <VARIABLE key="JTS" type="struct" alias="JTS">
-        <VARIABLE key="Offset" type="float" alias="JTS Offset"/>
-        <VARIABLE key="Scale" type="float" alias="JTS Scale"/>            
-      </VARIABLE>
-      <VARIABLE key="_iResultData" type="int[6]" alias="Query Result"/>
-    </VARIABLE>
-  </COMMAND>
-  <COMMAND name="TRIGGER_VISION_INSPECTION" id="10001" version="1.0" type="hidden" alias="내부용.비전검사 트리거">
-    <VARIABLE key="_waittime" type="float" alias="대기시간" hint="단위:초"/>
-  </COMMAND>
-  <COMMAND name="RESERVED_QUERY_BACKLOG_LIST" id="80" version="2.0" type="internal" alias="시스템관리.백업로그리스트 조회">
-    <VARIABLE key="BeginDate" type="struct" alias="시작날짜">
-      <VARIABLE key="Year" type="unsigned int" alias="년"/>
-      <VARIABLE key="Month" type="unsigned int" alias="월"/>
-      <VARIABLE key="Day" type="unsigned int" alias="일"/>
-    </VARIABLE>
-    <VARIABLE key="EndDate" type="struct" alias="끝날짜">
-      <VARIABLE key="Year" type="unsigned int" alias="년"/>
-      <VARIABLE key="Month" type="unsigned int" alias="월"/>
-      <VARIABLE key="Day" type="unsigned int" alias="일"/>
-    </VARIABLE>
-  </COMMAND>
-  <COMMAND name="RESERVED_RESPONSE_BACKLOG_LIST" id="81" version="2.0" type="response" alias="시스템관리.백업로그리스트">
-    <VARIABLE key="Count" type="unsigned int" alias="백로그 수"/>
-    <VARIABLE key="LogList" type="struct[100]" alias="백로그 파일">
-      <VARIABLE key="Prefix" type="string[32]" alias="백로그 파일 접두어"/>
-      <VARIABLE key="EventLog1Size" type="unsigned int" alias="이벤트로그1 크기"/>
-      <VARIABLE key="EventLog2Size" type="unsigned int" alias="이벤트로그2 크기"/>
-      <VARIABLE key="DataLog1Size" type="unsigned int" alias="데이터로그1 크기"/>
-      <VARIABLE key="DataLog2Size" type="unsigned int" alias="데이터로그2 크기"/>
-    </VARIABLE>
+    <VARIABLE key="License" type="string[48]" alias="라이센스정보"/>
   </COMMAND>
   <COMMAND name="SETUP_GETLICENCE" id="1814" version="1.0" type="control" alias="시스템정보.라이센스정보">
   </COMMAND>
@@ -1990,17 +2307,31 @@
     <VARIABLE key="Mode" type="unsigned char" alias="사용여부" option="미사용,사용"/>
   </COMMAND-->
   <COMMAND name="SETUP_AUTO_SAFE_OFF" id="1816" version="1.0" type="control" alias="시스템관리.자동 서보-오프 설정">
-      <VARIABLE key="Mode" type="unsigned char" alias="사용여부" option="미사용,사용"/>
-      <VARIABLE key="Interval" type="float" alias="시간간격" hint="단위:분"/>
+    <VARIABLE key="Mode" type="unsigned char" alias="사용여부" option="미사용,사용"/>
+    <VARIABLE key="Interval" type="float" alias="시간간격" hint="단위:분"/>
   </COMMAND>
   <COMMAND name="SETUP_TIME_SYNCHRONIAZATION" id="1817" version="1.0" type="control" alias="시스템관리.시간동기화 설정">
     <VARIABLE key="Mode" type="unsigned char" alias="사용여부" option="미사용,사용"/>
   </COMMAND>
-  <COMMAND name="SETUP_NOTIFY_UPDATE_END" id="1818" version="1.0" type="control" alias="시스템관리.시스템업데이트 ">
-    <VARIABLE key="IpAddress" type="string[16]" alias="TFTP서버 주소"/>
-    <VARIABLE key="FileName" type="string[32]" alias="파일이름"/>
-    <VARIABLE key="FileType" type="unsigned char" alias="파일타입" option="하위제어기,인버터제어기"/>
-    <VARIABLE key="Inverter" type="unsigned char[6]" alias="인버터 업데이트"/>
-    <VARIABLE key="ResetType" type="unsigned char" alias="리셋 타입" option="프로그램 재시작,시스템 재시작"/>
-  </COMMAND>  
+  <COMMAND name="SETUP_GETSERIALPORT" id="1818" version="1.0" type="control" alias="시스템관리.시리얼포트 정보 요청 ">
+  </COMMAND>
+  <COMMAND name="SETUP_GETKERNELLOG" id="1819" version="1.0" type="control" alias="시스템관리.로그 요청">
+  </COMMAND>
+  <COMMAND name="SETUP_MORTORING_VERSION" id="1820" version="1.0" type="control" alias="시스템관리.모니터링버젼정보">
+    <VARIABLE key="Version" type="unsigned char" alias="모니터링버젼" option="v1.0,v2.0"/>
+  </COMMAND>
+  <COMMAND name="JTS_DATA_SAVE"   id="1821" version="1.0" type="control" alias="시스템관리.JTS데이터저장">
+    <VARIABLE key="Offset" type="float[6]" alias="오프셋정보"/>
+    <VARIABLE key="Scale" type="float[6]" alias="스케일정보"/>
+  </COMMAND>
+  <COMMAND name="SUB_SYSTEM_INFO_REQUIRE"   id="1822" version="1.0" type="control" alias="시스템관리.서브시스템정보요청">
+  </COMMAND>
+  <COMMAND name="FTS_CARIBRATION_SAVE"   id="1823" version="1.0" type="control" alias="시스템관리.FTS교정정보 저장명령">
+    <VARIABLE key="Offset" type="float[6]" alias="오프셋정보"/>
+  </COMMAND>
+  
+  <COMMAND name="TRIGGER_VISION_INSPECTION" id="10001" version="1.0" type="hidden" alias="내부용.비전검사 트리거">
+    <VARIABLE key="_waittime" type="float" alias="대기시간" hint="단위:초"/>
+  </COMMAND>
+  
 </COMMANDS>

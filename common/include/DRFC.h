@@ -1,8 +1,17 @@
+/*    ========================================================================
+    =                   Doosan Robot Framework Constant                       =
+    =                   Copyright (c) Doosan Robotics.                        =   
+    =_______________________________________________________________________  =
+    = Title             : Doosan Robot Framwork Constant                      =
+    = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
+    = Description       : -                                                   =
+    = Version           : 1.0 (GL010105) first release                        =
+    =                     1.1 (GF020300) add force control                    =
+    =                                    add coordinate sytem control function      =
+    =                                    fix GetCurrentTool, GetCurrentTCP function = 
+    ======================================================================== */
+
 /*********************************************************************
- *
- * Doosan Robot Framework Constant
- * Author: Lee Jeong-Woo(jeongwoo1.lee@doosan.com)
- *
  * Software License Agreement (BSD License)
  *
  *  Copyright (c) 2019, Doosan Robotics
@@ -35,6 +44,7 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
+
 #pragma once
 
 #ifndef TRUE
@@ -173,7 +183,7 @@ typedef enum {
 } JOG_AXIS;
 
 //
-// motiom command axis type enumerated value
+// motion command axis type enumerated value
 //
 typedef enum {
     JOINT_AXIS_1 = 0,
@@ -186,7 +196,7 @@ typedef enum {
 } JOINT_AXIS;
 
 //
-// motiom command axis type enumerated value
+// motion command axis type enumerated value
 //
 typedef enum {
     TASK_AXIS_X = 0,
@@ -195,14 +205,26 @@ typedef enum {
 
 } TASK_AXIS;
 
+//
+// reference coordinate enumerated value
+//
+typedef enum {
+    COORDINATE_SYSTEM_BASE = 0,
+    COORDINATE_SYSTEM_TOOL,
+    COORDINATE_SYSTEM_WORLD,
+    COORDINATE_SYSTEM_USER_MIN = 101,
+    COORDINATE_SYSTEM_USER_MAX = 200,
+} COORDINATE_SYSTEM;
 
 //
 // move command reference type enumerated value
 //
 typedef enum {
-    MOVE_REFERENCE_BASE = 0,
-    MOVE_REFERENCE_TOOL
-
+    MOVE_REFERENCE_BASE = COORDINATE_SYSTEM_BASE,
+    MOVE_REFERENCE_TOOL = COORDINATE_SYSTEM_TOOL,
+    MOVE_REFERENCE_WORLD = COORDINATE_SYSTEM_WORLD,
+    MOVE_REFERENCE_USER_MIN = COORDINATE_SYSTEM_USER_MIN,
+    MOVE_REFERENCE_USER_MAX = COORDINATE_SYSTEM_USER_MAX,
 } MOVE_REFERENCE;
 
 //
@@ -359,6 +381,27 @@ typedef enum {
     MOVEB_BLENDING_TYPE_LINE,
     MOVEB_BLENDING_TYPE_CIRLCE,
 } MOVEB_BLENDING_TYPE;
+
+//
+// force command axis type enumerated value
+//
+typedef enum {
+    FORCE_AXIS_X = 0,
+    FORCE_AXIS_Y,
+    FORCE_AXIS_Z, 
+    FORCE_AXIS_A = 10,
+    FORCE_AXIS_B,
+    FORCE_AXIS_C,
+} FORCE_AXIS;
+
+//
+// force control mode type enumerated value
+//
+typedef enum {
+    FORCE_MODE_ABSOLUTE = 0,
+    FORCE_MODE_RELATIVE,
+
+} FORCE_MODE;
 
 //
 // log level enumerated value
