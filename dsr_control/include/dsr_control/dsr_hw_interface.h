@@ -55,6 +55,7 @@
 #include <dsr_msgs/RobotError.h>
 #include <dsr_msgs/RobotState.h>
 #include <dsr_msgs/RobotStop.h>
+#include <dsr_msgs/JogMultiAxis.h>
 
 // service
 //system
@@ -82,6 +83,7 @@
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
 #include <dsr_msgs/Jog.h>
+#include <dsr_msgs/JogMulti.h>
 #include <dsr_msgs/MovePause.h>
 #include <dsr_msgs/MoveStop.h>
 #include <dsr_msgs/MoveResume.h>
@@ -258,11 +260,13 @@ namespace dsr_control{
         ros::Publisher m_PubRobotError;
         ros::Publisher m_PubtoGazebo;
         ros::Publisher m_PubSerialWrite;
+        ros::Publisher m_PubJogMultiAxis;
 
         //----- Subscriber ------------------------------------------------------------
         ros::Subscriber m_sub_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
         ros::Subscriber m_SubSerialRead;
+        ros::Subscriber m_sub_jog_multi_axis;
 
         // ROS Interface
         hardware_interface::JointStateInterface jnt_state_interface;
@@ -281,8 +285,11 @@ namespace dsr_control{
 
         //----- SIG Handler --------------------------------------------------------------
         void sigint_handler( int signo);
+
         void trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg);
         void positionCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
+
+        void jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg);
 
         //----- Threads ------------------------------------------------------------------
         boost::thread m_th_subscribe;   //subscribe thread
@@ -319,6 +326,7 @@ namespace dsr_control{
         bool moveperiodic_cb(dsr_msgs::MovePeriodic::Request& req, dsr_msgs::MovePeriodic::Response& res);
         bool movewait_cb(dsr_msgs::MoveWait::Request& req, dsr_msgs::MoveWait::Response& res);
         bool jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res);
+        bool jog_multi_cb(dsr_msgs::JogMulti::Request& req, dsr_msgs::JogMulti::Response& res);
         bool move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res);
         bool move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res);
         bool move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res);

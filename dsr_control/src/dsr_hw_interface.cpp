@@ -542,6 +542,8 @@ namespace dsr_control{
         // Publisher msg 
         m_PubRobotState = private_nh_.advertise<dsr_msgs::RobotState>("state",100);
         m_PubRobotError = private_nh_.advertise<dsr_msgs::RobotError>("error",100);
+        ///m_PubJogMultiAxis = private_nh_.advertise<dsr_msgs::JogMultiAxis>("jog_multi",100);
+
         // gazebo에 joint position 전달
         m_PubtoGazebo = private_nh_.advertise<std_msgs::Float64MultiArray>("/dsr_joint_position_controller/command",10);
         // moveit의 trajectory/goal를 받아 제어기로 전달
@@ -552,7 +554,10 @@ namespace dsr_control{
         ros::NodeHandle nh_temp;
         m_SubSerialRead = nh_temp.subscribe("serial_read", 100, &Serial_comm::read_callback, &ser_comm);
         m_PubSerialWrite = nh_temp.advertise<std_msgs::String>("serial_write", 100);
-        
+
+        // subscribe : Multi-JOG topic msg
+        m_sub_jog_multi_axis = private_nh_.subscribe("jog_multi", 10, &DRHWInterface::jogCallback, this);  
+
         // system Operations
         m_nh_system[0] = private_nh_.advertiseService("system/set_robot_mode", &DRHWInterface::set_robot_mode_cb, this);
         m_nh_system[1] = private_nh_.advertiseService("system/get_robot_mode", &DRHWInterface::get_robot_mode_cb, this);
@@ -577,9 +582,10 @@ namespace dsr_control{
         m_nh_move_service[8] = private_nh_.advertiseService("motion/move_periodic", &DRHWInterface::moveperiodic_cb, this);
         m_nh_move_service[9] = private_nh_.advertiseService("motion/move_wait", &DRHWInterface::movewait_cb, this);
         m_nh_move_service[10]= private_nh_.advertiseService("motion/jog", &DRHWInterface::jog_cb, this);
-        m_nh_move_service[11]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
-        m_nh_move_service[12]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
-        m_nh_move_service[13]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
+        m_nh_move_service[11]= private_nh_.advertiseService("motion/jog_multi", &DRHWInterface::jog_multi_cb, this);
+        m_nh_move_service[12]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
+        m_nh_move_service[13]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
+        m_nh_move_service[14]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
         //  GPIO Operations
         m_nh_io_service[0] = private_nh_.advertiseService("io/set_digital_output", &DRHWInterface::set_digital_output_cb, this);
         m_nh_io_service[1] = private_nh_.advertiseService("io/get_digital_input", &DRHWInterface::get_digital_input_cb, this);
@@ -650,7 +656,7 @@ namespace dsr_control{
     {
         ROS_INFO("[dsr_hw_interface] init() ==> setup callback fucntion");
         int nServerPort = 12345;
-        ROS_INFO("INIT@@@@@@@@@@@@@@@@@@@@@@@@@2");
+        ROS_INFO("INIT@@@@@@@@@@@@@@@@@@@@@@@@@");
         //--- doosan API's call-back fuctions : Only work within 50msec in call-back functions
         Drfl.SetOnTpInitializingCompleted(OnTpInitializingCompletedCB);
         Drfl.SetOnHommingCompleted(OnHommingCompletedCB);
@@ -697,8 +703,9 @@ namespace dsr_control{
                 usleep(delay);
             }
 
-            //--- Set Robot mode : MANUAL
-            assert(Drfl.SetRobotMode(ROBOT_MODE_MANUAL));
+            //--- Set Robot mode : MANUAL or AUTO
+            //assert(Drfl.SetRobotMode(ROBOT_MODE_MANUAL));
+            assert(Drfl.SetRobotMode(ROBOT_MODE_AUTONOMOUS));
 
             //--- Set Robot mode : virual or real 
             ROBOT_SYSTEM eTargetSystem = ROBOT_SYSTEM_VIRTUAL;
@@ -775,8 +782,6 @@ namespace dsr_control{
         pubRobotStop.publish(msg);
 
         ROS_INFO("[sigint_hangler] CloseConnection");
-        ROS_INFO("[sigint_hangler] CloseConnection");
-        ROS_INFO("[sigint_hangler] CloseConnection");
     }
     void DRHWInterface::positionCallback(const std_msgs::Float64MultiArray::ConstPtr& msg){
         ROS_INFO("callback: Position received");
@@ -785,14 +790,24 @@ namespace dsr_control{
         Drfl.MoveJAsync(target_pos.data(), 50, 50);
     }
 
+    void DRHWInterface::jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg){
+        //ROS_INFO("callback: jogCallback received");
+
+        std::array<float, NUM_JOINT> target_pos;
+        std::copy(msg->jog_axis.cbegin(), msg->jog_axis.cend(), target_pos.begin());       
+        msg->move_reference;
+        msg->speed;
+
+        //ROS_INFO("jog_axis = %f,%f,%f,%f,%f,%f", target_pos[0],target_pos[1],target_pos[2],target_pos[3],target_pos[4],target_pos[5]);
+        //ROS_INFO("move_reference = %d", msg->move_reference);
+        //ROS_INFO("speed = %f", msg->speed);
+
+        Drfl.MultiJog(target_pos.data(), (MOVE_REFERENCE)msg->move_reference, msg->speed);
+
+    }
+
     void DRHWInterface::trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg)
     {
-        int nCurrentState = (int)Drfl.GetRobotMode();
-        int nChangedState = 0;
-        if(nCurrentState != (int)ROBOT_MODE_AUTONOMOUS){
-            Drfl.SetRobotMode(ROBOT_MODE_AUTONOMOUS);
-            nChangedState = 1;
-        }
         ROS_INFO("callback: Trajectory received");
         ROS_INFO("  msg->goal.trajectory.points.size() =%d",(int)msg->goal.trajectory.points.size());   //=10 가변젹 
         ROS_INFO("  msg->goal.trajectory.joint_names.size() =%d",(int)msg->goal.trajectory.joint_names.size()); //=6
@@ -801,9 +816,7 @@ namespace dsr_control{
         float targetTime = 0.0;
 
         float fTargetPos[MAX_SPLINE_POINT][NUM_JOINT] = {0.0, };
-        float fNewTargetPos[MAX_SPLINE_POINT][NUM_JOINT] = {0.0, };
         int nCntTargetPos =0; 
-        int nAdjustTargetCnt=0;
 
         nCntTargetPos = msg->goal.trajectory.points.size();
         if(nCntTargetPos > MAX_SPLINE_POINT)
@@ -828,33 +841,23 @@ namespace dsr_control{
             ROS_INFO("[trajectory] [%02d : %.3f] %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",i ,targetTime
                 ,rad2deg(msg->goal.trajectory.points[i].positions[0]) ,rad2deg(msg->goal.trajectory.points[i].positions[1]), rad2deg(msg->goal.trajectory.points[i].positions[2])
                 ,rad2deg(msg->goal.trajectory.points[i].positions[3]) ,rad2deg(msg->goal.trajectory.points[i].positions[4]), rad2deg(msg->goal.trajectory.points[i].positions[5]) );
-	    //Optimal Target Adjustment for Doosan Robot 
-            if(i%4 == 0 || i == msg->goal.trajectory.points.size()-1){
-		    for(int j = 0; j < msg->goal.trajectory.joint_names.size(); j++)    //=6    
-		    {
-		        //ROS_INFO("[trajectory] %d-pos: %7.3f", j, msg->goal.trajectory.points[i].positions[j]);
-		        /* todo
-		        get a position & time_from_start
-		        convert radian to degree the position
-		        run MoveJ(position, time_From_start)
-		        */
-		        degrees[j] = rad2deg( msg->goal.trajectory.points[i].positions[j] );
 
-		        fNewTargetPos[nAdjustTargetCnt][j] = degrees[j];
-	             }                
-		nAdjustTargetCnt++;
-                 
+            for(int j = 0; j < msg->goal.trajectory.joint_names.size(); j++)    //=6    
+            {
+                //ROS_INFO("[trajectory] %d-pos: %7.3f", j, msg->goal.trajectory.points[i].positions[j]);
+                /* todo
+                get a position & time_from_start
+                convert radian to degree the position
+                run MoveJ(position, time_From_start)
+                */
+                degrees[j] = rad2deg( msg->goal.trajectory.points[i].positions[j] );
+
+                fTargetPos[i][j] = degrees[j];
+
             }
         }
-        ROS_INFO("Adjusted Trajectory");
-        for(int i = 0; i<nAdjustTargetCnt; i++){
-           
-	    ROS_INFO("[adj trajectory] [%02d] %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",i 
-				,fNewTargetPos[i][0] ,fNewTargetPos[i][1], fNewTargetPos[i][2]
-				,fNewTargetPos[i][3] ,fNewTargetPos[i][4], fNewTargetPos[i][5] );
-        } 
-        Drfl.MoveSJ(fNewTargetPos, nAdjustTargetCnt, 0.0, 0.0, targetTime, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
-  	//Drfl.MoveSJ(fTargetPos, nAdjustTargetCnt, 120.0, 240.0, 0, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
+        Drfl.MoveSJ(fTargetPos, nCntTargetPos, 0.0, 0.0, targetTime, (MOVE_MODE)MOVE_MODE_ABSOLUTE);
+
         //Drfl.MoveJAsync(degrees.data(), 30, 30, 0, MOVE_MODE_ABSOLUTE, BLENDING_SPEED_TYPE_OVERRIDE);
         /*
         for(int i = 0; i < NUM_JOINT; i++){
@@ -862,9 +865,6 @@ namespace dsr_control{
             cmd_[i] = joints[i].cmd;
         }
         */
-        if(nChangedState == 1){
-            Drfl.SetRobotMode((ROBOT_MODE)nCurrentState);
-        }
     }
 
     //----- Service Call-back functions ------------------------------------------------------------
@@ -1114,6 +1114,17 @@ namespace dsr_control{
         ROS_INFO("req.jog_axis = %d, req.move_reference=%d req.speed=%f",req.jog_axis, req.move_reference, req.speed);    
 
         res.success = Drfl.Jog((JOG_AXIS)req.jog_axis, (MOVE_REFERENCE)req.move_reference, req.speed);
+    }
+
+    bool DRHWInterface::jog_multi_cb(dsr_msgs::JogMulti::Request& req, dsr_msgs::JogMulti::Response& res)
+    {
+        ROS_INFO("DRHWInterface::jog_multi_cb() called and calling Drfl.MultiJog");
+        ROS_INFO("req.jog_axis = %f,%f,%f,%f,%f,%f",req.jog_axis[0],req.jog_axis[1],req.jog_axis[2],req.jog_axis[3],req.jog_axis[4],req.jog_axis[5]);    
+
+        std::array<float, NUM_JOINT> target_jog;
+        std::copy(req.jog_axis.cbegin(), req.jog_axis.cend(), target_jog.begin());
+
+        res.success = Drfl.MultiJog(target_jog.data(), (MOVE_REFERENCE)req.move_reference, req.speed);
     }
 
     bool DRHWInterface::move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res)

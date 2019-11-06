@@ -71,6 +71,7 @@ _ros_move_spiral                = rospy.ServiceProxy(_srv_name_prefix +"/motion/
 _ros_move_periodic              = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_periodic", MovePeriodic)
 _ros_move_wait                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_wait", MoveWait)
 _ros_jog                        = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog", Jog)
+_ros_jog_multi                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog_multi", JogMulti)
 
 #  GPIO Operations
 _ros_set_digital_output         = rospy.ServiceProxy(_srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -1613,6 +1614,19 @@ def jog(jog_axis, ref=0, speed=0):
         ret = _ros_jog(jog_axis, ref, speed)
     return ret
 
+def jog_multi(jog_axis_list, ref=0, speed=0):
+    if type(jog_axis_list) != list:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis_list")
+   
+    if type(ref) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
+
+    if type(speed) != int and type(speed) != float:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed")
+    # ROS service call
+    if __ROS__:
+        ret = _ros_jog_multi(jog_axis_list, ref, speed)
+    return ret
 
 ##############################################################################################################################
 
@@ -2087,6 +2101,7 @@ class CDsrRobot:
         self._ros_move_periodic              = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_periodic", MovePeriodic)
         self._ros_move_wait                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_wait", MoveWait)
         self._ros_jog                        = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog", Jog)
+        self._ros_jog_multi                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog_multi", JogMulti)
 
         #  GPIO Operations
         self._ros_set_digital_output         = rospy.ServiceProxy(self._srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -3316,7 +3331,21 @@ class CDsrRobot:
             ret = self._ros_jog(jog_axis, ref, speed)
         return ret
 
-    
+    def jog_multi(self, jog_axis_list, ref=0, speed=0):
+        if type(jog_axis_list) != list:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : jog_axis_list")
+        
+        if type(ref) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
+
+        if type(speed) != int and type(speed) != float:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : speed")
+
+        # ROS service call
+        if __ROS__:
+            ret = self._ros_jog_multi(jog_axis_list, ref, speed)
+        return ret
+
     ##############################################################################################################################
 
     def add_modbus_signal(self, ip, port, name, reg_type, index, value=0, slaveid=255):

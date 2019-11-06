@@ -13,6 +13,7 @@ add_message_files(
     RobotError.msg
     RobotState.msg
     RobotStop.msg
+    JogMultiAxis.msg
 )
 
 add_service_files(
@@ -41,6 +42,7 @@ add_service_files(
     ./motion/MovePeriodic.srv
     ./motion/MoveWait.srv
     ./motion/Jog.srv
+    ./motion/JogMulti.srv
     ./motion/MoveStop.srv
     ./motion/MovePause.srv
     ./motion/MoveResume.srv

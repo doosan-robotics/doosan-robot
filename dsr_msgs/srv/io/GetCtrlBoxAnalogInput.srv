@@ -1,4 +1,4 @@
 # get_analog_input 
-int8        channel    # 
+int8        channel    # 1 = ch1, 2= ch2
 ---
 float64     value

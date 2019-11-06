@@ -76,6 +76,7 @@
 #include <dsr_msgs/MovePeriodic.h>
 #include <dsr_msgs/MoveWait.h>
 #include <dsr_msgs/Jog.h>
+#include <dsr_msgs/JogMulti.h>
 
 #include <dsr_msgs/ConfigCreateTcp.h>
 #include <dsr_msgs/ConfigDeleteTcp.h>
@@ -166,6 +167,9 @@ namespace DSR_Robot{
                               int nRepeat = 1, int nMoveReference = MOVE_REFERENCE_TOOL);
  
             int jog(int jog_axis, int move_reference = MOVE_REFERENCE_BASE, int speed = 10);
+
+            int jog_multi(float jog_axis[NUM_TASK], int move_reference = MOVE_REFERENCE_BASE, int speed = 10);
+
             //----- async motion
             int amovej(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, float fBlendingRadius = 0.f,
                       int nMoveMode = MOVE_MODE_ABSOLUTE, int nBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);             

@@ -711,6 +711,32 @@ int CDsrRobot::jog(int jog_axis, int move_reference = MOVE_REFERENCE_BASE, int s
     return 0; 
 }
 
+int CDsrRobot::jog_multi(float jog_axis[NUM_TASK], int move_reference = MOVE_REFERENCE_BASE, int speed = 10)
+{
+    ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
+    ros::ServiceClient srvJogMulti = node->serviceClient<dsr_msgs::JogMulti>(m_strSrvNamePrefix + "/motion/jog_multi");
+
+    dsr_msgs::JogMulti srv;
+
+    for(int i=0; i<NUM_TASK; i++)
+        srv.request.jog_axis[i] = jog_axis[i];
+    srv.request.move_reference = move_reference;
+    srv.request.speed = speed;
+
+    if(srvJogMulti.call(srv))
+    {         
+        return (srv.response.success);
+    }
+    else
+    {    
+        ROS_ERROR("Failed to call service dr_control_service : jog_multi\n");
+        ros::shutdown();  
+        return -1;
+    }
+
+    return 0; 
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

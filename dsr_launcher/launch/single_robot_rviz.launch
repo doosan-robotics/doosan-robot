@@ -16,7 +16,6 @@
   <arg name="y"   default="0"/>
   <arg name="yaw" default="0"/>
 
-
   <group if="$(eval arg('mobile') != 'none')">
     <!-- Start Gazebo with an empty world. but gui=false -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">

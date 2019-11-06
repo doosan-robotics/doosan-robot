@@ -1,6 +1,6 @@
 # get_tool_digital_input  
 # This service reads the I/O signals from digital contact points of the controller and reads the digital input contact value.
-int8        index    # Digital Input in Flange(0 ~ 5 ; 0 : ON, 1 : OFF) 
+int8        index    # Digital Input in Flange(1 ~ 6 ; 0 : ON, 1 : OFF) 
                      # <GPIO_TOOL_DIGITAL_INDEX> 
 ---
 bool        value    # 0=OFF, 1=ON

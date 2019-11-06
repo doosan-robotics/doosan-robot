@@ -1,0 +1,6 @@
+#jog_multi
+float64[6] jog_axis    # Task space [Tx, Ty, Tz, Rx, Ry, Rz] 
+int8 move_reference    # 0 : MOVE_REFERENCE_BASE, 1 : MOVE_REFERENCE_TOOL, 2 : MOVE_REFERENCE_WORLD
+float64 speed          # jog speed [%] : + forward , 0=stop, - backward  
+---
+bool success

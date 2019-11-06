@@ -1,6 +1,6 @@
 # set_tool_digital_output  
 # This service sends the signal of the robot tool from the digital contact point.
-int8       index   # <GPIO_TOOL_DIGITAL_INDEX> # flange digital output port(0 ~ 5)
+int8       index   # flange digital output port(1 ~ 6)
 int8       value   # 0 : ON, 1 : OFF
 ---
 bool success

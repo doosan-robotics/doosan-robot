@@ -19,8 +19,8 @@ import DR_init
 m_joyAnalogFlag = False
 m_xyCompareFlag = False
 m_joyButtonFlag = False
-m_joyJogFlag = False
-m_joyJogVel = False
+m_joyJogFlag = 0
+m_joyJogVel = 0.0
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
