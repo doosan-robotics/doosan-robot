@@ -2,6 +2,13 @@
 Changelog for package moveit_config_m0617
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* 1.0.0
+* update version 0.99
+* update moveit namespace
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 

@@ -2,6 +2,14 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* 1.0.0
+* update package 2019_11_06
+* update version 0.99
+* update moveit namespace
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 

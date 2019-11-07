@@ -2,6 +2,18 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update package 2019_11_06
+* update version 0.99
+* update example_py
+* update joy_ds4.py
+* xbox360 joystick example
+* update dsr_example_py
+* modified dsr_example/py/scripts
+* delete basic dir
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 * change dsr_example_py dir
