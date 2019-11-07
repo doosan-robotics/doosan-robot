@@ -2,8 +2,8 @@
 Changelog for package moveit_config_m1013
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2019-11-07)
+------------------
 * 1.0.0
 * update version 0.99
 * update moveit namespace
