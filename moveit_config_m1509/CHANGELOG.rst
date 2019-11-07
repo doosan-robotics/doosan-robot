@@ -2,8 +2,8 @@
 Changelog for package moveit_config_m1509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2019-11-07)
+------------------
 * 0.9.9
 * Contributors: doosan-robotics
 
