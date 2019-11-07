@@ -2,7 +2,7 @@
 
 # *overview*
 
-[Doosan ROS Test Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
+[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
 
 # *build* 
     ### We recoomand the /home/<user_home>/catkin_ws/src
