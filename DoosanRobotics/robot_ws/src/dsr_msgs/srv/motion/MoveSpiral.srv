@@ -1,0 +1,12 @@
+# move_sprial  
+float64    revolution       # Total number of revolutions 
+float64    maxRadius        # Final spiral radius [mm]
+float64    maxLength        # Distance moved in the axis direction [mm]
+float64[2] vel              # set velocity: [mm/sec], [deg/sec]
+float64[2] acc              # set acceleration: [mm/sec2], [deg/sec2]
+float64    time #= 0.0      # Total execution time <sec> 
+int8       taskAxis         # TASK_AXIS_X = 0, TASK_AXIS_Y = 1, TASK_AXIS_Z = 2   
+int8       ref  #= 1        # MOVE_REFERENCE_BASE=0, MOVE_REFERENCE_TOOL=1
+int8       syncType #=0     # SYNC = 0, ASYNC = 1 
+---
+bool success

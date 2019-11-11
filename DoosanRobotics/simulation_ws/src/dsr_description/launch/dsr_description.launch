@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<launch>
+	<arg name="ns"      default="dsr"/>
+	<arg name="model"   default="m1013"/>
+	<arg name="color"   default="white"/>    
+    <arg name="mobile"  default="none"/>
+	<arg name="gripper" default="none"/>
+
+	<!-- ARM 모델  -->
+    <group if="$(eval arg('mobile') == 'none')">
+       <param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro'
+	                           '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)"/>
+	</group>
+
+	<!-- ARM + Mobile 모델 -->
+    <group if="$(eval arg('mobile') == 'husky')">
+    	<param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model)mobile.urdf.xacro'
+	    	                   '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)" />
+	</group>
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="$(arg ns)">
+		<param name="tf_prefix" value="$(arg ns)" />
+		<param name="robot_description" value="/$(arg ns)/robot_description" />
+		<!-- joint state는 실제 로봇 제어기에서 받는다.  -->
+		<remap from="/$(arg ns)/joint_states" to="/$(arg ns)$(arg model)/joint_states" />
+	</node>
+</launch>

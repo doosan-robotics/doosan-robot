@@ -1,0 +1,77 @@
+{
+  "runConfigurations": [
+    {
+      "id": "Doosan_siumulation_001",
+      "name": "doosan-robot",
+      "type": "simulation",
+      "cfg": {
+        "simulation": {
+          "maxJobDurationInSeconds": 1800,
+          "failureBehavior": "Fail",
+          "iamRole": "<iam_role>",
+          "outputLocation": "<bucket_name>",
+          "tags": {}
+        },
+        "simulationApp": {
+          "name": "<simulation_app_name>",
+          "sourceBundleFile": "./DoosanRobotics/simulation_ws/bundle/output.tar",
+          "architecture": "X86_64",
+          "s3Bucket": "<bucket_name>",
+          "launchConfig": {
+            "packageName": "dsr_launcher",
+            "launchFile": "aws_bringup_simulation.launch",
+            "environmentVariables": {}
+          },
+          "simulationSoftwareSuite": {
+            "name": "Gazebo",
+            "version": "7"
+          },
+          "renderingEngine": {
+            "name": "OGRE",
+            "version": "1.x"
+          },
+          "robotSoftwareSuite": {
+            "name": "ROS",
+            "version": "Kinetic"
+          }
+        }
+      }
+    },
+    {
+      "id": "doosan-robot_sim_build_001",
+      "name": "doosan robot simulation",
+      "type": "colcon build",
+      "cfg": {
+        "workingDir": "./DoosanRobotics/simulation_ws",
+        "cmdArgs": ""
+      }
+    },
+    {
+      "id": "doosan-robot_sim_bundle_001",
+      "name": "doosan robot simulation",
+      "type": "colcon bundle",
+      "cfg": {
+        "workingDir": "./DoosanRobotics/simulation_ws",
+        "cmdArgs": ""
+      }
+    },
+    {
+      "id": "doosan-robot_robot_build_001",
+      "name": "doosan robot robot-app",
+      "type": "colcon build",
+      "cfg": {
+        "workingDir": "./DoosanRobotics/robot_ws",
+        "cmdArgs": ""
+      }
+    },
+    {
+      "id": "doosan-robot_robot_bundle_001",
+      "name": "doosan robot robot-app",
+      "type": "colcon bundle",
+      "cfg": {
+        "workingDir": "./DoosanRobotics/robot_ws",
+        "cmdArgs": ""
+      }
+    }
+    ]
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!--node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"/-->
+
+  <!-- Start Gazebo with an empty world. -->
+  <include file="$(find dsr_launcher)/launch/single_robot_gazebo.launch">
+    <arg name="mode"    value="virtual"/>
+    <arg name="model"   value="m1013"/>
+    <arg name="color"   value="white"/>
+    <arg name="gripper" value="none"/>
+    <arg name="mobile"  value="none"/>
+  </include>
+
+</launch>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="dsr"/>
+  <arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
+  <arg name="mode" default="virtual"/>
+  <arg name="model" default="m1013"/>
+  <arg name="color" default="white"/>
+  <arg name="gripper" default="none"/>
+  <arg name="mobile" default="none"/>
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+  <arg name="roll" default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="0"/>
+
+  <!-- doosan robot & mobile-robot PID configurations from YAML file to parameter server -->
+  <group ns="$(arg ns)">
+    <rosparam file="$(find dsr_gazebo)/config/gazebo_ros_control_params.yaml" command="load"/>
+  </group>
+
+  <group if="$(eval arg('gripper') == 'none')">
+    <!-- gazebo를 위한 controller -->
+    <include file="$(find dsr_control)/launch/dsr_fake_control.launch">
+      <arg name="ns" value="$(arg ns)"/>
+      <arg name="gripper"       value="$(arg gripper)"/>
+      <arg name="mobile"        value="$(arg mobile)"/>
+
+      <arg name="yaml"          value="dsr_control"/>
+    </include>
+    <!-- 제어기를 위한 controller -->
+    <include file="$(find dsr_control)/launch/dsr_control.launch">
+      <arg name="ns"            value="$(arg ns)"/>
+      <arg name="host"          value="$(arg host)"/>
+      <arg name="port"          value="$(arg port)"/>
+      <arg name="mode"          value="$(arg mode)"/>
+      <arg name="model"         value="$(arg model)"/>
+      <arg name="color"         value="$(arg color)"/>
+      <arg name="gripper"       value="$(arg gripper)"/>
+      <arg name="mobile"        value="$(arg mobile)"/>
+      <arg name="yaml"          value="dsr_control"/>
+    </include>
+  </group>
+
+  <group if="$(eval arg('gripper') == 'robotiq_2f')">
+    <!-- gazebo를 위한 controller -->
+    <include file="$(find dsr_control)/launch/dsr_fake_control.launch">
+      <arg name="ns" value="$(arg ns)"/>
+      <arg name="gripper"       value="$(arg gripper)"/>
+      <arg name="mobile"        value="$(arg mobile)"/>
+
+      <arg name="yaml"          value="dsr_control_robotiq_2f"/>
+    </include>
+    <!-- 제어기를 위한 controller -->
+    <include file="$(find dsr_control)/launch/dsr_control.launch">
+      <arg name="ns"            value="$(arg ns)"/>
+      <arg name="host"          value="$(arg host)"/>
+      <arg name="port"          value="$(arg port)"/>
+      <arg name="mode"          value="$(arg mode)"/>
+      <arg name="model"         value="$(arg model)"/>
+      <arg name="color"         value="$(arg color)"/>
+      <arg name="gripper"       value="$(arg gripper)"/>
+      <arg name="mobile"        value="$(arg mobile)"/>
+      <arg name="yaml"          value="dsr_control_robotiq_2f"/>
+    </include>
+  </group>
+
+  <!-- Generate the model for gazebo and publish the robots joint states. -->
+  <include file="$(find dsr_description)/launch/dsr_description.launch">
+    <arg name="ns"      value="$(arg ns)"/>
+    <arg name="model"   value="$(arg model)"/>
+    <arg name="color"   value="$(arg color)"/>
+    <arg name="gripper" value="$(arg gripper)"/>
+    <arg name="mobile"  value="$(arg mobile)"/>
+  </include>
+
+  <!-- ARM은 /world에 fixed되어 있으므로 map에 열결
+  Usage: static_transform_publisher x y z yaw pitch roll frame_id child_frame_id  period (milliseconds) -->
+  <group if="$(eval arg('mobile') == 'none')">
+    <node pkg="tf" type="static_transform_publisher" name="world_tf" ns="$(arg ns)"
+          args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/world 100"/>
+  </group>
+
+
+  <!-- Mobile은 /base_link에 fixed되어 있으므로 map에 연결 -->
+  <!-- removed -->
+
+  <!-- odom tf를 사용하여 로봇 움직임을 rviz에서 표현 -->
+  <group if="$(eval arg('mobile') == 'husky')">
+    <node pkg="tf" type="static_transform_publisher" name="base_link_tf" ns="$(arg ns)"
+          args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 map $(arg ns)/odom 100"/>
+  </group>
+
+
+  <!-- Spawn the model into gazebo. -->
+    <node name="spawn_create_model" pkg="gazebo_ros" type="spawn_model" ns="$(arg ns)"
+    args="-x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)
+    -urdf -param /$(arg ns)/robot_description -model $(arg ns)"/>
+
+</launch>

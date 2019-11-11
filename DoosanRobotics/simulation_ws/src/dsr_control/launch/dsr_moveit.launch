@@ -1,0 +1,65 @@
+<launch>
+    <env name="ROSCONSOLE_CONFIG_FILE"  value="$(find dsr_control)/config/console.conf"/>
+    <arg name="ns" default="dsr01"/>
+    <arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
+    <arg name="mode" default="virtual"/>
+    <arg name="model" default="m1013"/>
+    <arg name="color" default="white"/>
+    <arg name="gripper" default="none"/>
+    <arg name="mobile" default="none"/>
+    <arg name="yaml" default="dsr_control"/>
+
+	<!-- Run Doosan Robot emulator in virtual mode -->
+        <group if="$(eval arg('mode') == 'virtual')">         	
+            <node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"  ns="$(arg ns)"
+                                    args="$(arg port) $(arg model)" />
+	</group>
+
+    <!-- dsr controller 로드  -->
+    <rosparam file="$(find dsr_control)/config/dsr_control.yaml" command="load" ns="$(arg ns)$(arg model)"/>
+    <!-- trajectory controller, joint_state 실행  -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="$(arg ns)$(arg model)" args="dsr_joint_trajectory_controller dsr_joint_publisher"/>
+
+    <!-- moveit은 멀티 arm이 안되므로 model은 참조용으로 사용 -->
+    <node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)$(arg model)" respawn="false" output="screen" >
+        <param name="name" value="$(arg ns)"/>
+        <param name="rate" value="10"/>
+        <param name="standby" value="5000"/>
+        <param name="command" value="true"/>
+        <param name="host" value="$(arg host)"/>
+        <param name="port" value="$(arg port)"/>
+        <param name="mode" value="$(arg mode)" />
+        <param name="model" value="$(arg model)" />
+	    <param name="gripper" value="$(arg gripper)"/>
+	    <param name="mobile" value="$(arg mobile)" />
+
+    </node>
+    <!-- model에 따른 moveit 실행 -->
+    <group if="$(eval arg('model') == 'm0609')">
+        <include file="$(find moveit_config_m0609)/launch/m0609.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+    <group if="$(eval arg('model') == 'm0617')">
+        <include file="$(find moveit_config_m0617)/launch/m0617.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+    <group if="$(eval arg('model') == 'm1013')">
+        <include file="$(find moveit_config_m1013)/launch/m1013.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+    <group if="$(eval arg('model') == 'm1509')">
+        <include file="$(find moveit_config_m1509)/launch/m1509.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+
+</launch>

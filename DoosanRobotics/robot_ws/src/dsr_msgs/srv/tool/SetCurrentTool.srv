@@ -1,0 +1,5 @@
+# set_current_tool
+# It is a service to set information about currently installed tool.  
+string          name        # tool name
+---
+bool            success

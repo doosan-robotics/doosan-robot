@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!--node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"/-->
+
+  <include file="$(find dsr_control)/launch/dsr_control.launch">
+    <arg name="ns"            value="dsr01"/>
+    <arg name="host"          value="192.168.137.100"/>
+    <arg name="port"          value="12345"/>
+    <arg name="mode"          value="real"/>
+    <arg name="model"         value="m1013"/>
+    <arg name="color"         value="white"/>
+    <arg name="gripper"       value="none"/>
+    <arg name="mobile"        value="none"/>
+    <arg name="yaml"          value="dsr_control"/>
+  </include>
+
+  <node name="doosan_robot_app" pkg="dsr_example_py" type="single_robot_simple.py" output="screen" respawn_delay="30" respawn="true" />
+
+</launch>

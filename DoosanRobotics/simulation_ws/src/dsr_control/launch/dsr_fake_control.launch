@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<launch>
+	<arg name="ns" default="dsr" />
+        <arg name="gripper" default="none"/>
+		<arg name="mobile"  default="none" />
+        <arg name="yaml"    default="dsr_control"/>
+
+
+	<!--mobile 구동-->
+	<group if="$(eval arg('mobile') == 'husky')">
+		<!-- joint_position_cotroller는 gazebo를 위한 가상 controller임, mobile velocity_controller 실행 , joint_state 실행 -->
+		<rosparam command="load" file="$(find dsr_control)/config/$(arg yaml).yaml" ns="$(arg ns)" />
+
+	    <!-- base_frame_id와 localization.yaml의 base_link_frame과의 관계를 일치 시킨다. -->
+		<param name="$(arg ns)/dsr_velocity_controller/base_frame_id" value="$(arg ns)/base_link"/>
+		<node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+					args="dsr_joint_position_controller dsr_velocity_controller dsr_joint_publisher" ns="$(arg ns)">
+
+		</node>
+		<!-- gazebo의 joint_state와 연결   -->
+		<node name="mobile_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="$(arg ns)">
+			<param name="tf_prefix" value="$(arg ns)" />
+			<param name="robot_description" value="/$(arg ns)/robot_description" />
+		</node>
+		<!-- base_link에 twist marker를 표시 -->
+		<node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen" ns="$(arg ns)">
+			<param name="link_name" value="/$(arg ns)/base_link" />
+		</node>
+		<!-- mux에서 정의된 입력을 출력 cmd_vel로 출력 -->
+		<node pkg="twist_mux" type="twist_mux" name="twist_mux" ns="$(arg ns)">
+			<rosparam command="load" file="$(find dsr_control)/config/twist_mux.yaml"/>
+			<remap from="cmd_vel_out" to="/$(arg ns)/dsr_velocity_controller/cmd_vel" />
+		</node>
+		<!-- odometry filtered -->
+		<node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" ns="$(arg ns)">
+			<rosparam command="load" file="$(find dsr_control)/config/localization.yaml"/>
+			<remap from="odometry/filtered" to="odom" />
+			<!-- dsr_velocity_contrller의 base_frame_id와 관계가 있음. -->
+			<!-- map->$(arg ns)/odom->$(arg ns)/base_link -->
+			<param name="base_link_frame" value="$(arg ns)/base_link"/>
+			<param name="odom_frame" value="$(arg ns)/odom"/>
+			<param name="world_frame" value="$(arg ns)/odom"/>
+		</node>
+	</group>
+	<!-- gazebo를 위한 joint_position_controller -->
+	<group if="$(eval arg('mobile') == 'none')">
+		<rosparam command="load" file="$(find dsr_control)/config/$(arg yaml).yaml" ns="$(arg ns)" />
+		<node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="dsr_joint_position_controller" ns="$(arg ns)">
+		</node>
+	</group>
+</launch>

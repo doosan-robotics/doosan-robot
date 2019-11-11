@@ -1,0 +1,6 @@
+# drl_script_run  
+# This is a service to execute a program configured in the DRL language in the robot controller.
+int8 robotSystem    # Robot System Mode 0 : Real, 1 : virtual
+string  code        # drl code       
+---
+bool success

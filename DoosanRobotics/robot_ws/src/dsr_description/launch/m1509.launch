@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+
+<launch>
+    <arg name="model"   default="m1509"/>
+    <arg name="ns"      default="dsr"/>
+    <arg name="gui"     default="True" />
+    <arg name="remap"   default="False"/>
+    <arg name="color"   default="white"/>
+    <arg name="gripper" default="none"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro' '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)"/>
+.
+
+    <group if="$(eval arg('remap') == False)">
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+        </node>
+
+        <!-- Send joint values -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="true"/>
+        </node>
+    </group>
+
+    <group if="$(eval arg('remap') == True)">
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+            <remap from="/joint_states" to="/dsr/joint_states"/>
+        </node>
+    </group>
+
+    <!-- Show in Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/m1509.rviz"/>
+</launch>

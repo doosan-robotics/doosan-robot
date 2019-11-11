@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<param>
+    <unit>
+        <Joint>
+            <offset>
+                <link num="1">0</link>
+                <link num="2">0</link>
+                <link num="3">0</link>
+                <link num="4">0</link>
+                <link num="5">0</link>
+                <link num="6">0</link>
+                <link num="7">0</link>
+            </offset>
+        </Joint>
+        <DHPara>
+            <!-- 단위: m -->
+            <offset>
+                <link num="1">0</link>
+                <link num="2">0</link>
+                <link num="3">0</link>
+                <link num="4">0</link>
+                <link num="5">0</link>
+                <link num="6">0</link>
+                <link num="7">0</link>
+            </offset>
+        </DHPara>
+        <Jts>
+            <scale>
+                <link num="1">1</link>
+                <link num="2">0.97799999999999998</link>
+                <link num="3">1.1101000000000001</link>
+                <link num="4">1.0105999999999999</link>
+                <link num="5">1.0299</link>
+                <link num="6">1.0127999999999999</link>
+                <link num="7">0.94310000000000005</link>
+            </scale>
+            <offset>
+                <link num="1">0.94310000000000005</link>
+                <link num="2">1.1040000000000001</link>
+                <link num="3">0.29609999999999997</link>
+                <link num="4">0.088499999999999995</link>
+                <link num="5">-0.1241</link>
+                <link num="6">-0.073200000000000001</link>
+                <link num="7">2.9329181226355507e-269</link>
+            </offset>
+        </Jts>
+    </unit>
+</param>

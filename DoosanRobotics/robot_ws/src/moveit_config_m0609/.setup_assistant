@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: dsr_description
+    relative_path: xacro/m0609.urdf.xacro
+    xacro_args: --inorder namespace:=dsr color:=$(arg color) gripper:=$(arg gripper)
+  SRDF:
+    relative_path: config/m0609.srdf
+  CONFIG:
+    author_name: jinhyuk.gong
+    author_email: jinhyuk.gong@doosan.com
+    generated_timestamp: 1552303104
