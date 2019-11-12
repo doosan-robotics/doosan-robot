@@ -42,8 +42,7 @@
       "name": "doosan robot simulation",
       "type": "colcon build",
       "cfg": {
-        "workingDir": "./
-        /simulation_ws",
+        "workingDir": "./doosan-robot/simulation_ws",
         "cmdArgs": ""
       }
     },
