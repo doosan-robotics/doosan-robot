@@ -223,7 +223,7 @@ class Setup:
         tm = gmtime()
         role_name = "Cloud9-robomaker-ws-role-%s" % (strftime("%y%m%d-%H%M%S", tm)) 
         log("role name : %s" % role_name)
-        description='Role for RoboMaker workshop'
+        description='Role for RoboMaker'
 
         trust_policy={
           "Version": "2012-10-17",
@@ -276,7 +276,7 @@ class Setup:
         tm = gmtime()
         role_name = "Cloud9-robomaker-ws-deployment-role-%s" % (strftime("%y%m%d-%H%M%S", tm)) 
         log("deployment role name : %s" % role_name)
-        description='Role for RoboMaker workshop - deployment'
+        description='Role for RoboMaker - deployment'
 
         trust_policy={
           "Version": "2012-10-17",
