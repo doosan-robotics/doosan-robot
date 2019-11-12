@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "###############################################################################"
-echo "Workshop environment setup starting.."
+echo "Doosan Robotics environment setup starting.."
 echo "###############################################################################"
 
 PROJEC=DoosanRobotics
