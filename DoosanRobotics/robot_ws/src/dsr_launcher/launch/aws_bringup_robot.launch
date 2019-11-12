@@ -16,6 +16,6 @@
     <arg name="yaml"          value="dsr_control"/>
   </include>
 
-  <node name="doosan_robot_app" pkg="dsr_example_py" type="single_robot_simple.py" output="screen" respawn_delay="30" respawn="true" />
+  <node name="doosan_robot_app" pkg="dsr_example_py" type="dance_m1013.py" output="screen" respawn_delay="30" respawn="true" />
 
 </launch>
