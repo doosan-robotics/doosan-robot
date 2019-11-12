@@ -14,7 +14,7 @@
         },
         "simulationApp": {
           "name": "<simulation_app_name>",
-          "sourceBundleFile": "./DoosanRobotics/simulation_ws/bundle/output.tar",
+          "sourceBundleFile": "./doosan-robot/simulation_ws/bundle/output.tar",
           "architecture": "X86_64",
           "s3Bucket": "<bucket_name>",
           "launchConfig": {
@@ -42,7 +42,8 @@
       "name": "doosan robot simulation",
       "type": "colcon build",
       "cfg": {
-        "workingDir": "./DoosanRobotics/simulation_ws",
+        "workingDir": "./
+        /simulation_ws",
         "cmdArgs": ""
       }
     },
@@ -51,7 +52,7 @@
       "name": "doosan robot simulation",
       "type": "colcon bundle",
       "cfg": {
-        "workingDir": "./DoosanRobotics/simulation_ws",
+        "workingDir": "./doosan-robot/simulation_ws",
         "cmdArgs": ""
       }
     },
@@ -60,7 +61,7 @@
       "name": "doosan robot robot-app",
       "type": "colcon build",
       "cfg": {
-        "workingDir": "./DoosanRobotics/robot_ws",
+        "workingDir": "./doosan-robot/robot_ws",
         "cmdArgs": ""
       }
     },
@@ -69,7 +70,7 @@
       "name": "doosan robot robot-app",
       "type": "colcon bundle",
       "cfg": {
-        "workingDir": "./DoosanRobotics/robot_ws",
+        "workingDir": "./doosan-robot/robot_ws",
         "cmdArgs": ""
       }
     }
