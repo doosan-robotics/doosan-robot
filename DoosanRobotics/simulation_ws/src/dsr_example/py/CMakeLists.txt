@@ -90,7 +90,6 @@ include_directories(
 
 catkin_install_python(PROGRAMS
 
-  scripts/demo/aws_demo.py
   scripts/demo/car.py
   scripts/demo/dance_m1013.py
   scripts/demo/joy_ds4.py
