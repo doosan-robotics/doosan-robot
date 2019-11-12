@@ -3,7 +3,7 @@ echo "##########################################################################
 echo "Doosan Robotics environment setup starting.."
 echo "###############################################################################"
 
-PROJEC=DoosanRobotics
+PROJEC=doosan-robot
 
 cd ~/
 if [ -e environment/roboMakerSettings.json ]; then
