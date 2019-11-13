@@ -4,7 +4,7 @@
 
 > _This document only covers the basics of robot simulation, robot app creation, and deployment of Doosan Robotics ROS packages in an AWS RoboMaker environment. For usage or applications outside this topic, please refer to the AWS Robomaker manual or detailed documentation._ 
 
-[Doosan ROS Video](https://youtu.be/c-i0hgDc52Q)
+[Doosan ROS AWS Video](https://youtu.be/c-i0hgDc52Q)
 
 # manuals
 
