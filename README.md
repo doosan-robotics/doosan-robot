@@ -2,7 +2,7 @@
 
 # *overview*
 
-[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
+[Doosan ROS Video](https://youtu.be/c-i0hgDc52Q)
 
 # manuals
 
