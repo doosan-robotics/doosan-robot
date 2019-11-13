@@ -2,7 +2,7 @@
 
 # *overview*
 
-> _Provides a way to create Doosan Robotics ROS packages for robot simulations and robot apps in the AWS RoboMaker environment._ 
+> _Provides a way to simulate Doosan Robotics ROS packages, create robot apps, and deploy robots in an AWS RoboMaker environment._ 
 
 [Doosan ROS AWS Overview Video](https://youtu.be/c-i0hgDc52Q)
 
