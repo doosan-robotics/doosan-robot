@@ -8,8 +8,8 @@
 
 # manuals
 
-[Manual(Kor)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver0.95_191106A%28Kor.%29.pdf)
+[Manual(Kor)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_x_AWS_RoboMaker_Manual_ver1_00_%28Ko%29.pdf)
 
 
-[Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver0.95_191106A%28EN.%29.pdf)
+[Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_x_AWS_RoboMaker_Manual_ver1_00_%28En%29.pdf)
 
