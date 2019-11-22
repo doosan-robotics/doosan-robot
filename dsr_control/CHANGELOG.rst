@@ -2,24 +2,6 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.0 (2019-11-07)
-------------------
-* 0.9.9
-* Contributors: doosan-robotics
-
-1.0.1 (2019-11-07)
-------------------
-* update package 2019_11_06
-* update package
-* Update dsr_hw_interface.cpp
-* update version 0.99
-* update srv
-* update library
-* update moveit namespace
-* update log info
-* update service
-* Contributors: doosan robotics ros master, doosan-robotics
-
 0.9.8 (2019-06-18)
 ------------------
 

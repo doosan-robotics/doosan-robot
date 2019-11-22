@@ -2,17 +2,6 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.0 (2019-11-07)
-------------------
-* 0.9.9
-* Contributors: doosan-robotics
-
-1.0.1 (2019-11-07)
-------------------
-* 1.0.0
-* update version 0.99
-* Contributors: doosan-robotics
-
 0.9.8 (2019-06-18)
 ------------------
 
