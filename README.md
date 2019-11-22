@@ -256,8 +256,6 @@ radius: 0.0"
 
 # demo
 
-Please contact __ros.robotics@doosan.com__ for demo usage instructions below.
-
 ### Doosan-Robots In Gazebo
 
 <img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
