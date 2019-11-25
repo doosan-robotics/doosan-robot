@@ -70,6 +70,9 @@
 #include <dsr_msgs/GetCurrentSolutionSpace.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetLastAlarm.h>
+#include <dsr_msgs/GetExternalTorque.h>
+#include <dsr_msgs/GetJointTorque.h>
+#include <dsr_msgs/GetToolForce.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -245,7 +248,7 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
-        ros::ServiceServer m_nh_system[12];
+        ros::ServiceServer m_nh_system[14];
         ros::ServiceServer m_nh_move_service[20];
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
@@ -313,6 +316,10 @@ namespace dsr_control{
         bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);
         bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
         bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
+
+        bool get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res);
+        bool get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res);
+        bool get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res);
 
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);

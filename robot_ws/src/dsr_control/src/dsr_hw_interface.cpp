@@ -570,6 +570,11 @@ namespace dsr_control{
         m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
         m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
         m_nh_system[10]= private_nh_.advertiseService("system/get_robot_state", &DRHWInterface::get_robot_state_cb, this);
+
+        m_nh_system[11]= private_nh_.advertiseService("system/get_external_torque", &DRHWInterface::get_external_torque_cb, this);
+        m_nh_system[12]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
+        m_nh_system[13]= private_nh_.advertiseService("system/get_tool_force", &DRHWInterface::get_tool_force_cb, this);
+
         //  motion Operations
         m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -911,6 +916,21 @@ namespace dsr_control{
         for(int i = 0; i < 3; i++){
             std::string str_temp(Drfl.GetLastAlarm()->_szParam[i]);
             res.log_alarm.param[i] = str_temp;
+        }
+    }
+    bool DRHWInterface::get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res){
+        for(int i = 0; i < NUM_TASK; i++){
+            res.ext_torque[i] = g_stDrState.fActualEJT[i];
+        }
+    }
+    bool DRHWInterface::get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res){
+        for(int i = 0; i < NUM_TASK; i++){
+            res.joint_torque[i] = g_stDrState.fActualJTS[i];
+        }
+    }
+    bool DRHWInterface::get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res){
+        for(int i = 0; i < NUM_TASK; i++){
+            res.tool_force[i] = g_stDrState.fActualETT[i];
         }
     }
 

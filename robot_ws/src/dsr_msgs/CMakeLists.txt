@@ -30,6 +30,9 @@ add_service_files(
     ./system/SetSafeStopResetType.srv
     ./system/GetLastAlarm.srv
     ./system/GetRobotState.srv
+    ./system/GetExternalTorque.srv
+    ./system/GetJointTorque.srv
+    ./system/GetToolForce.srv            
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv

@@ -1,6 +1,6 @@
 <package>
   <name>dsr_launcher</name>
-  <version>0.9.9</version>
+  <version>1.0.0</version>
   <description>dsr_launcher examples</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
