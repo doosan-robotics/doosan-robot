@@ -1842,7 +1842,7 @@ def set_digital_output(index, val=None):
     # ROS service call
     if __ROS__:
         srv = _ros_set_digital_output(index, val) 
-        ret = srv.value
+        ret = srv.success
     else:
         ret = PythonMgr.py_set_digital_output(index, val)
         print_ext_result("{0} = PythonMgr.py_set_digital_output(index:{1}, val:{2})".format(ret, index, val))
@@ -3639,7 +3639,7 @@ class CDsrRobot:
         # ROS service call
         if __ROS__:
             srv = self._ros_set_digital_output(index, val) 
-            ret = srv.value
+            ret = srv.success
         else:
             ret = PythonMgr.py_set_digital_output(index, val)
             print_ext_result("{0} = PythonMgr.py_set_digital_output(index:{1}, val:{2})".format(ret, index, val))
