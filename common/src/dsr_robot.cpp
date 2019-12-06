@@ -686,7 +686,7 @@ int CDsrRobot::move_wait()
     return 0; 
 }
 
-int CDsrRobot::jog(int jog_axis, int move_reference = MOVE_REFERENCE_BASE, int speed = 10)
+int CDsrRobot::jog(int jog_axis, int move_reference, int speed = 10)
 {
     ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
     ros::ServiceClient srvJog = node->serviceClient<dsr_msgs::Jog>(m_strSrvNamePrefix + "/motion/jog");
@@ -711,7 +711,7 @@ int CDsrRobot::jog(int jog_axis, int move_reference = MOVE_REFERENCE_BASE, int s
     return 0; 
 }
 
-int CDsrRobot::jog_multi(float jog_axis[NUM_TASK], int move_reference = MOVE_REFERENCE_BASE, int speed = 10)
+int CDsrRobot::jog_multi(float jog_axis[NUM_TASK], int move_reference, int speed = 10)
 {
     ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
     ros::ServiceClient srvJogMulti = node->serviceClient<dsr_msgs::JogMulti>(m_strSrvNamePrefix + "/motion/jog_multi");
