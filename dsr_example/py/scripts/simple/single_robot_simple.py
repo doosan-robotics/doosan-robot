@@ -3,7 +3,7 @@
 # ##
 # @brief    [py example simple] motion basic test for doosan robot
 # @author   Kab Kyoum Kim (kabkyoum.kim@doosan.com)   
-
+# TEST 2019-12-09
 import rospy
 import os
 import threading, time
