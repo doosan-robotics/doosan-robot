@@ -2,6 +2,13 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update install path
+* TEST
+* update 1.0.0
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 * change dsr_example_py dir

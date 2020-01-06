@@ -2,6 +2,12 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update install path
+* update 1.0.0
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 
