@@ -2,8 +2,8 @@
 Changelog for package dsr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2020-01-06)
+------------------
 * update 1.0.0
 * Contributors: doosan-robotics
 

@@ -2,8 +2,8 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2020-01-06)
+------------------
 * Update dsr_robot.cpp
 * modify jog
 * modify set_digital_output
