@@ -151,7 +151,7 @@ install(PROGRAMS scripts/simple/dsr_service_motion_simple.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(PROGRAMS scripts/simple/dsr_servie_tool_simple.py
+install(PROGRAMS scripts/simple/dsr_service_tool_simple.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
