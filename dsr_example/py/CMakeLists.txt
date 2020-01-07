@@ -115,7 +115,7 @@ install(PROGRAMS scripts/demo/multi_robot.py
 install(PROGRAMS scripts/gripper/object_pick_and_place_simple.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-install(PROGRAMS scripts/demo/pick_and_place_simple.py
+install(PROGRAMS scripts/gripper/pick_and_place_simple.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(PROGRAMS scripts/gripper/real_pick_and_place_simple.py
