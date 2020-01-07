@@ -170,7 +170,3 @@ install(PROGRAMS scripts/simple/multi_robot_simple.py
 install(PROGRAMS scripts/simple/single_robot_simple.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
-install(FILES prog prog_reset
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
