@@ -785,7 +785,7 @@ def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_M
 
     # ROS service call
     if __ROS__: 
-        srv = _ros_movejx(_pos, sol, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, _async)   
+        srv = _ros_movejx(_pos, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, sol, _async)   
         ret = srv.success
     else:    
         ret = PythonMgr.py_movejx(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, sol, _async)
@@ -2577,7 +2577,7 @@ class CDsrRobot:
 
         # ROS service call
         if __ROS__: 
-            srv = self._ros_movejx(_pos, sol, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, _async)   
+            srv = self._ros_movejx(_pos, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, sol, _async)   
             ret = srv.success
         else:    
             ret = PythonMgr.py_movejx(_pos, _vel, _acc, _time, _radius, _ref, mod, ra, sol, _async)

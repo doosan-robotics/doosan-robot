@@ -96,6 +96,24 @@
             <axis name="y">1</axis>
             <axis name="z">1</axis>
         </cpa>     
+        <cs> <!--current sensor-->
+            <scale>
+                <joint num="1">0.0243896</joint>
+                <joint num="2">0.0243896</joint>
+                <joint num="3">0.0243896</joint>
+                <joint num="4">0.0121826</joint>
+                <joint num="5">0.0121826</joint>
+                <joint num="6">0.0121826</joint>
+            </scale>
+            <offset>
+                <joint num="1">2000</joint>
+                <joint num="2">2000</joint>
+                <joint num="3">2000</joint>
+                <joint num="4">2000</joint>
+                <joint num="5">2000</joint>
+                <joint num="6">2000</joint>
+            </offset>
+        </cs>
         <stiffness>
             <joint name="1">180000</joint>
             <joint name="2">180000</joint>

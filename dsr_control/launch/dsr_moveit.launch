@@ -62,4 +62,11 @@
         </include>
     </group>
 
+    <group if="$(eval arg('model') == 'a0509')">
+        <include file="$(find moveit_config_a0509)/launch/a0509.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+
 </launch>

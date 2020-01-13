@@ -13,11 +13,53 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m1013"
+ROBOT_MODEL  = "a0509"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
+
+velx=[50, 50]
+accx=[100, 100]
+
+p1= posj(0,0,0,0,0,0)                    #joint
+p2= posj(0.0, 0.0, 90.0, 0.0, 90.0, 0.0) #joint
+
+x1= posx(400, 500, 800.0, 0.0, 180.0, 0.0) #task
+x2= posx(400, 500, 500.0, 0.0, 180.0, 0.0) #task
+
+c1 = posx(559,434.5,651.5,0,180,0)
+c2 = posx(559,434.5,251.5,0,180,0)
+
+
+q0 = posj(0,0,90,0,90,0)
+q1 = posj(10,0,90,10,90,0)
+q2 = posj(0,10,90,10,90,0)
+q3 = posj(0,10,80,0,90,0)
+q4 = posj(0,0,100,0,90,0)
+q5 = posj(20,0,90,20,90,0)
+qlist = [q0, q1, q2, q3, q4, q5]
+
+X1 =  posx(370, 670, 650, 0, 180, 0)
+X1a = posx(370, 670, 400, 0, 180, 0)
+X1a2= posx(370, 545, 400, 0, 180, 0)
+X1b = posx(370, 595, 400, 0, 180, 0)
+X1b2= posx(370, 670, 400, 0, 180, 0)
+X1c = posx(370, 420, 150, 0, 180, 0)
+X1c2= posx(370, 545, 150, 0, 180, 0)
+X1d = posx(370, 670, 275, 0, 180, 0)
+X1d2= posx(370, 795, 150, 0, 180, 0)
+
+
+seg11 = posb(DR_LINE, X1, radius=20)
+seg12 = posb(DR_CIRCLE, X1a, X1a2, radius=21)
+seg14 = posb(DR_LINE, X1b2, radius=20)
+seg15 = posb(DR_CIRCLE, X1c, X1c2, radius=22)
+seg16 = posb(DR_CIRCLE, X1d, X1d2, radius=23)
+b_list1 = [seg11, seg12, seg14, seg15, seg16] 
+
+drl_script = "set_velj(60)\nset_accj(30)\nmovej([0,0,90,0,90,0])\nmovej([0,0,0,0,0,0])\n"
+dev_ip = "192.168.137.50"
 
 def shutdown():
     print "shutdown time!"
@@ -101,77 +143,194 @@ def thread_subscriber():
     rospy.Subscriber('/'+ROBOT_ID +ROBOT_MODEL+'/state', RobotState, msgRobotState_cb)
     rospy.spin()
     #rospy.spinner(2)    
-  
-if __name__ == "__main__":
-    rospy.init_node('dsr_simple_test_py')
-    rospy.on_shutdown(shutdown)
 
-    t1 = threading.Thread(target=thread_subscriber)
-    t1.daemon = True 
-    t1.start()
+def motion_test():
+    movej(p2, vel=60, acc=30)
+    print("movej")
+
+    temp, sol1 = get_current_posx()
+    x1 = list(temp)
+    x1[2] = x1[2] + 100
+    movejx(x1, vel=60, acc=60, sol=2)
+    print("movejx")
+
+    temp, sol1 = get_current_posx()
+    x2 = list(temp)
+    x2[1] = x2[1] + 10
+    movel(x2, velx, accx)
+    print("movel")
+
+    temp, xol1 = get_current_posx()
+    c1 = list(temp)
+    c1[1] = c1[1] + 30
+    c2 = list(temp)
+    c2[2] = c2[2] - 50
+    movec(c1, c2, velx, accx)
+    print("movec")
+
+    movesj(qlist, vel=100, acc=100)
+    print("movesj")
+
+    temp, sol1 = get_current_posx()
+    temp = list(temp)
+    xlist = []
+    temp[2] = temp[2] + 50
+    temp = posx(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
+    xlist.append(temp)
+    temp[1] = temp[1] + 20
+    temp = posx(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
+    xlist.append(temp)
+    temp[0] = temp[0] + 30
+    temp = posx(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
+    xlist.append(temp)
+    temp[0] = temp[0] - 50
+    temp = posx(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
+    xlist.append(temp)
+    temp[2] = temp[2] - 100
+    temp = posx(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
+    xlist.append(temp)
+    movesx(xlist, vel=100, acc=100)
+    print("movesx")
+
+    movej(p2, vel=60, acc=30)
+    ret = move_spiral(rev=1.00, rmax=20.00, lmax=20.00, time=5.00, axis=DR_AXIS_Z, ref=DR_TOOL)
+    print("movespiral")
+
+    move_periodic(amp=[10.00, 0.00, 20.00, 0.00, 0.50, 0.00], period=[1.00, 0.00, 1.50, 0.00, 0.00, 0.00], atime=0.50, repeat=3, ref=DR_BASE)
+    print("moveperiodic")
+
+    #moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+
+def io_test():
+    set_digital_output(1, ON)
+    wait(1)
+    if get_digital_input(1) == ON:
+        rospy.loginfo("ctrl port 1 is ON")
+        set_digital_output(1, OFF)
+    else:
+        rospy.loginfo("ctrl port 1 is OFF")
+    
+    set_tool_digital_output(1, ON)
+    wait(1)
+    if get_tool_digital_input(1) == ON:
+        rospy.loginfo("tool port 1 is ON")
+        set_tool_digital_output(1, OFF)
+    else:
+        rospy.loginfo("tool port 1 is OFF")
+
+def drl_test(robotsystem):
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
+    if get_robot_mode() == ROBOT_MODE_AUTONOMOUS:
+        drl_script_run(robotsystem, drl_script)
+    if get_drl_state() == DRL_PROGRAM_STATE_STOP:
+        set_robot_mode(ROBOT_MODE_MANUAL)
+    #set_robot_mode(ROBOT_MODE_MANUAL)
+    
+
+def modbus_test():
+    add_modbus_signal(dev_ip, 502, "ACT", DR_MODBUS_REG_OUTPUT, 0, 0)
+    add_modbus_signal(dev_ip, 502, "WID", DR_MODBUS_REG_OUTPUT, 1, 0)
+    add_modbus_signal(dev_ip, 502, "FOR", DR_MODBUS_REG_OUTPUT, 2, 0)
+    add_modbus_signal(dev_ip, 502, "ACT_FEED", DR_MODBUS_REG_INPUT, 0, 0)
+    add_modbus_signal(dev_ip, 502, "WID_FEED", DR_MODBUS_REG_INPUT, 1, 0)
+
+    wait(0.5)
+
+    set_modbus_output("ACT" , 2304)
+    rospy.loginfo("ACT : " + str(get_modbus_input("ACT")))
+    set_modbus_output("WID", 255)
+    rospy.loginfo("WID : " + str(get_modbus_input("WID")))
+    set_modbus_output("FOR", 65535)
+    rospy.loginfo("FOR : " + str(get_modbus_input("FOR")))
+
+    wait(0.5)
+
+    del_modbus_signal("ACT")
+    del_modbus_signal("WID")
+    del_modbus_signal("FOR")
+
+def tcp_test():
+    add_tcp  = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/tcp/config_create_tcp', ConfigCreateTcp)
+    del_tcp  = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/tcp/config_delete_tcp', ConfigDeleteTcp)
+
+    add_tcp("tcp1", [0, 0, 0, 0, 0, 0])
+    set_tcp("tcp1")
+    rospy.loginfo("current tcp : " + str(get_tcp()))
+    wait(0.5)
+    del_tcp("tcp1")
+
+def tool_test():
+    fCog = [10.0, 10.0, 10.0]
+    finertia = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    add_tool  = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/tool/config_create_tool', ConfigCreateTool)
+    del_tool  = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/tool/config_delete_tool', ConfigDeleteTool)
+
+    add_tool("tool1", 5.3, fCog, finertia)
+    set_tool("tool1")
+    rospy.loginfo("current tool : " + str(get_tool()))
+    wait(0.5)
+    del_tool("tool1")
+
+def system_test():
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
+    rospy.loginfo("robot_mode : " + str(get_robot_mode()))
+    set_robot_mode(ROBOT_MODE_MANUAL)
+    rospy.loginfo("robot_mode : " + str(get_robot_mode()))
+
+    temp = get_robot_system()
+    set_robot_system(ROBOT_SYSTEM_REAL)
+    rospy.loginfo("robot_system : " + str(get_robot_system()))
+    set_robot_system(ROBOT_SYSTEM_VIRTUAL)
+    rospy.loginfo("robot_system : " + str(get_robot_system()))
+    set_robot_system(temp)
+
+    rospy.loginfo("robot_state : " + str(get_robot_state()))
+
+    temp = get_robot_speed_mode()
+    set_robot_speed_mode(SPEED_NORMAL_MODE)
+    rospy.loginfo("robot_speed_mode : " + str(get_robot_speed_mode()))
+    set_robot_speed_mode(SPEED_REDUCED_MODE)
+    rospy.loginfo("robot_speed_mode : " + str(get_robot_speed_mode()))
+    set_robot_speed_mode(temp)
+
+    set_safe_stop_reset_type(SAFE_STOP_RESET_TYPE_DEFAULT)
+
+    rospy.loginfo("current joint pos : " + str(get_current_pose(ROBOT_SPACE_JOINT)))
+    rospy.loginfo("current task pos : " + str(get_current_pose(ROBOT_SPACE_TASK)))
+    rospy.loginfo("current solution space : " + str(get_current_solution_space()))
+
+    rospy.loginfo("get_current_posj : " + str(get_current_posj()))
+    rospy.loginfo("get_current_posx : " + str(get_current_posx()))
+    rospy.loginfo("get_external_torque : " + str(get_external_torque()))
+    rospy.loginfo("get_joint_torque : " + str(get_joint_torque()))
+    rospy.loginfo("get_tool_force : " + str(get_tool_force()))
+    rospy.loginfo("get_last_alarm : " + str(get_last_alarm()))
+
+
+
+if __name__ == "__main__":
+    rospy.init_node('single_robot_simple_py')
+    rospy.on_shutdown(shutdown)
+    set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
+    #t1 = threading.Thread(target=thread_subscriber)
+    #t1.daemon = True 
+    #t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
+
+    set_robot_mode(ROBOT_MODE_AUTONOMOUS)
 
     set_velx(30,20)  # set global task speed: 30(mm/sec), 20(deg/sec)
     set_accx(60,40)  # set global task accel: 60(mm/sec2), 40(deg/sec2)
 
-    velx=[50, 50]
-    accx=[100, 100]
-
-    p1= posj(0,0,0,0,0,0)                    #joint
-    p2= posj(0.0, 0.0, 90.0, 0.0, 90.0, 0.0) #joint
-
-    x1= posx(400, 500, 800.0, 0.0, 180.0, 0.0) #task
-    x2= posx(400, 500, 500.0, 0.0, 180.0, 0.0) #task
-
-    c1 = posx(559,434.5,651.5,0,180,0)
-    c2 = posx(559,434.5,251.5,0,180,0)
-
-
-    q0 = posj(0,0,0,0,0,0)
-    q1 = posj(10, -10, 20, -30, 10, 20)
-    q2 = posj(25, 0, 10, -50, 20, 40) 
-    q3 = posj(50, 50, 50, 50, 50, 50) 
-    q4 = posj(30, 10, 30, -20, 10, 60)
-    q5 = posj(20, 20, 40, 20, 0, 90)
-    qlist = [q0, q1, q2, q3, q4, q5]
-
-    x1 = posx(600, 600, 600, 0, 175, 0)
-    x2 = posx(600, 750, 600, 0, 175, 0)
-    x3 = posx(150, 600, 450, 0, 175, 0)
-    x4 = posx(-300, 300, 300, 0, 175, 0)
-    x5 = posx(-200, 700, 500, 0, 175, 0)
-    x6 = posx(600, 600, 400, 0, 175, 0)
-    xlist = [x1, x2, x3, x4, x5, x6]
-
-
-    X1 =  posx(370, 670, 650, 0, 180, 0)
-    X1a = posx(370, 670, 400, 0, 180, 0)
-    X1a2= posx(370, 545, 400, 0, 180, 0)
-    X1b = posx(370, 595, 400, 0, 180, 0)
-    X1b2= posx(370, 670, 400, 0, 180, 0)
-    X1c = posx(370, 420, 150, 0, 180, 0)
-    X1c2= posx(370, 545, 150, 0, 180, 0)
-    X1d = posx(370, 670, 275, 0, 180, 0)
-    X1d2= posx(370, 795, 150, 0, 180, 0)
-
-
-    seg11 = posb(DR_LINE, X1, radius=20)
-    seg12 = posb(DR_CIRCLE, X1a, X1a2, radius=21)
-    seg14 = posb(DR_LINE, X1b2, radius=20)
-    seg15 = posb(DR_CIRCLE, X1c, X1c2, radius=22)
-    seg16 = posb(DR_CIRCLE, X1d, X1d2, radius=23)
-    b_list1 = [seg11, seg12, seg14, seg15, seg16] 
-
     while not rospy.is_shutdown():
-        movej(p2, vel=100, acc=100)
-        movejx(x1, vel=30, acc=60, sol=0)
-        movel(x2, velx, accx)
-        movec(c1, c2, velx, accx)
-        movesj(qlist, vel=100, acc=100)
-        movesx(xlist, vel=100, acc=100)
-        move_spiral(rev=9.5,rmax=20.0,lmax=50.0,time=20.0,axis=DR_AXIS_Z,ref=DR_TOOL)
-        move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
-        moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
-
+        motion_test()
+        #io_test()
+        #drl_test(0)
+        #modbus_test()
+        #tcp_test()
+        #tool_test()
+        #system_test()
+        break
     print 'good bye!'
