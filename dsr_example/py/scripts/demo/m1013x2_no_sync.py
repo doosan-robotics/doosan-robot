@@ -89,8 +89,8 @@ if __name__ == "__main__":
     robot_id1 = "dsr01"; robot_model1 = "m1013"
     robot_id2 = "dsr02"; robot_model2 = "m1013"
 
-    r1 = CDsrRobot("dsr01","m1013")
-    r2 = CDsrRobot("dsr02","m1013")
+    r1 = CDsrRobot(robot_id1,robot_model1)
+    r2 = CDsrRobot(robot_model2,robot_model2)
 
     pub_stop_r1 = rospy.Publisher('/'+ robot_id1 + robot_model1 +'/stop', RobotStop, queue_size=10)           
     pub_stop_r2 = rospy.Publisher('/'+ robot_id2 + robot_model2 +'/stop', RobotStop, queue_size=10)           

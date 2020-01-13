@@ -13,7 +13,7 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m1013"
+ROBOT_MODEL  = "a0509"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
@@ -123,28 +123,27 @@ if __name__ == "__main__":
     p1= posj(0,0,0,0,0,0)                    #joint
     p2= posj(0.0, 0.0, 90.0, 0.0, 90.0, 0.0) #joint
 
-    x1= posx(400, 500, 800.0, 0.0, 180.0, 0.0) #task
-    x2= posx(400, 500, 500.0, 0.0, 180.0, 0.0) #task
+    x1= posx(367, 37.6, 540.5, 45, 180, 45) #task
+    x2= posx(367, 10, 540.5, 62.0, 180, 62.0) #task
 
-    c1 = posx(559,434.5,651.5,0,180,0)
-    c2 = posx(559,434.5,251.5,0,180,0)
+    c1 = posx(367, 40, 540.5, 12, 180, 12)
+    c2 = posx(367, 10, 490, 12, 180, 12)
 
 
-    q0 = posj(0,0,0,0,0,0)
-    q1 = posj(10, -10, 20, -30, 10, 20)
-    q2 = posj(25, 0, 10, -50, 20, 40) 
-    q3 = posj(50, 50, 50, 50, 50, 50) 
-    q4 = posj(30, 10, 30, -20, 10, 60)
-    q5 = posj(20, 20, 40, 20, 0, 90)
+    q0 = posj(0,0,90,0,90,0)
+    q1 = posj(10,0,90,10,90,0)
+    q2 = posj(0,10,90,10,90,0)
+    q3 = posj(0,10,80,0,90,0)
+    q4 = posj(0,0,100,0,90,0)
+    q5 = posj(20,0,90,20,90,0)
     qlist = [q0, q1, q2, q3, q4, q5]
 
-    x1 = posx(600, 600, 600, 0, 175, 0)
-    x2 = posx(600, 750, 600, 0, 175, 0)
-    x3 = posx(150, 600, 450, 0, 175, 0)
-    x4 = posx(-300, 300, 300, 0, 175, 0)
-    x5 = posx(-200, 700, 500, 0, 175, 0)
-    x6 = posx(600, 600, 400, 0, 175, 0)
-    xlist = [x1, x2, x3, x4, x5, x6]
+    x1 = posx(330, 185, 497, 110, 160, 90)
+    x2 = posx(360, 185, 497, 110, 160, 90)
+    x3 = posx(310, 185, 497, 110, 160, 90)
+    x4 = posx(310, 185, 397, 110, 160, 90)
+    x5 = posx(310, 185, 397, 110, 160, 90)
+    xlist = [x1, x2, x3, x4, x5, x5]
 
 
     X1 =  posx(370, 670, 650, 0, 180, 0)
@@ -166,15 +165,14 @@ if __name__ == "__main__":
     b_list1 = [seg11, seg12, seg14, seg15, seg16] 
 
     while not rospy.is_shutdown():
-        movej(p2, vel=100, acc=100)
-       # movejx(x1, vel=30, acc=60, sol=0)
-        #movel(x2, velx, accx)
-        movej(p1, vel=100, acc=100)
-       # movec(c1, c2, velx, accx)
-       # movesj(qlist, vel=100, acc=100)
-       # movesx(xlist, vel=100, acc=100)
-       # move_spiral(rev=9.5,rmax=20.0,lmax=50.0,time=20.0,axis=DR_AXIS_Z,ref=DR_TOOL)
-       # move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
-       # moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+        movej(p2, vel=60, acc=30)
+        movejx(x1, vel=60, acc=60, sol=2)
+        movel(x2, velx, accx)
+        movec(c1, c2, velx, accx)
+        movesj(qlist, vel=100, acc=100)
+        movesx(xlist, vel=100, acc=100)
+        movej(p2, vel=60, acc=30)
+        move_spiral(rev=1.00, rmax=20.00, lmax=20.00, time=5.00, axis=DR_AXIS_Z, ref=DR_TOOL)
+        move_periodic(amp=[10.00, 0.00, 20.00, 0.00, 0.50, 0.00], period=[1.00, 0.00, 1.50, 0.00, 0.00, 0.00], atime=0.50, repeat=3, ref=DR_BASE)
 
     print 'good bye!'
