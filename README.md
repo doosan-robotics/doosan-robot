@@ -109,7 +109,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
    >host:= ROBOT_IP defalut = 192.168.127.100  ##Emulator IP = 127.0.0.1   
     port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-    model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
+    model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
     color:= ROBOT_COLOR <white  /  blue> defalut = white  
     gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
     mobile:= USE_MOBILE <none  /  husky> defalut = none  
