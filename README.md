@@ -44,6 +44,7 @@ roslaunch dsr_description m0609.launch
 roslaunch dsr_description m1013.launch color:=blue # Change Color
 roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
 roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper
+roslaunch dsr_description a0509.launch 
 ```
 
 > $ _roslaunch dsr_description m1013.launch_ 
@@ -65,6 +66,7 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
     roslaunch moveit_config_m0617 m0617.launch
     roslaunch moveit_config_m1013 m1013.launch color:=blue
     roslaunch moveit_config_m1509 m1509.launch
+    roslaunch moveit_config_a0509 a0509.launch
     
     
 <img src="https://user-images.githubusercontent.com/47092672/55613994-fd84f100-57c6-11e9-97eb-49d1d7c9e32c.png" width="70%">
@@ -87,7 +89,7 @@ roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change 
 >host := ROBOT_IP defalut = 192.168.127.100   
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> defalut = virtual  
-model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509> defalut = m1013  
+model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
 color := ROBOT_COLOR <white  /  blue> defalut = white  
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
@@ -98,6 +100,7 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
     roslaunch dsr_control dsr_moveit.launch model:=m0617 mode:=virtual
     roslaunch dsr_control dsr_moveit.launch model:=m1013 mode:=virtual
     roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
+    roslaunch dsr_control dsr_moveit.launch model:=a0509 mode:=virtual
       
 #### dsr_launcher
 
