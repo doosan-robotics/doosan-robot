@@ -23,21 +23,24 @@ __packages for mobile robot__
 
 
 # *usage* <a id="chapter-3"></a>
-#### DRCF Emulator
-If you don`t have real doosan controller, you must excute our emulator. 
-Emulator has local IP(127.0.0.1) default port=12345. 
+#### Operation Mode
+##### Virtual Mode
+If you are driveing without a real robot, use __virtual mode__   
+When ROS launches in virtual mode, the emulator(DRCF) runs automatically.
+> (DRCF) location: doosan-robot/common/bin/ DRCF
+
 ```bash
-cd ~/catkin_ws/src/doosan-robot/common/bin/DRCF
-./DRCF64 <port>   ## 64bits OS
-or 
-./DRCF32 <port>   ## 32bits OS
-``` 
+roslaunch dsr_launcher single_robot_gazebo.launch mode:=virtual host:=127.0.0.1 port:=12345
+```
+_One emulator is required for each robot_
 
-> _$ ./DRCF64 12345_
-
-> <img src="https://user-images.githubusercontent.com/47092672/63494967-dc186d80-c4f9-11e9-967d-519656457499.jpg" width="80%">
-
-
+##### Real Mode
+Use __real mode__ to drive a real robot   
+The default IP of the robot controller is _192.168.127.100_ and the port is _12345_.
+```bash
+roslaunch dsr_launcher single_robot_gazebo.launch mode:=real host:=192.168.127.100 port:=12345
+```
+___
 #### dsr_description
 ```bash
 roslaunch dsr_description m0609.launch    
@@ -57,7 +60,7 @@ roslaunch dsr_description a0509.launch
 
 <img src="https://user-images.githubusercontent.com/47092672/55624467-f7037300-57e0-11e9-930a-ec929de3a0fa.png" width="70%">
 
-
+___
 #### dsr_moveit_config
 > ###### __arguments__
    > color:= ROBOT_COLOR <white / blue> defalut = white  
@@ -83,7 +86,7 @@ roslaunch dsr_description a0509.launch
     > goal1 = [0 0 1.57 0 1.57 0]  # save the target position to varialbe "goal1" / radian
     > go goal1                     # plan & excute (the robot is going to move target position)
     > go goal0                     # paln & excute (the robot is going to move home position)
-
+___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
 >host := ROBOT_IP defalut = 192.168.127.100   
@@ -101,7 +104,8 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
     roslaunch dsr_control dsr_moveit.launch model:=m1013 mode:=virtual
     roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
     roslaunch dsr_control dsr_moveit.launch model:=a0509 mode:=virtual
-      
+
+___
 #### dsr_launcher
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
@@ -120,7 +124,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
     roslaunch dsr_launcher multi_robot_rviz.launch
     roslaunch dsr_launcher multi_robot_gazebo.launch model:=m0609
     roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-    
+___
 #### dsr_example
 ###### single robot
     <launch>
@@ -250,6 +254,7 @@ jointVelocity: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 radius: 0.0"
 ```
+___
 # manuals
 
 [Manual(Kor)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver0.96_191121A%28Kor.pdf)
