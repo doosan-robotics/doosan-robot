@@ -30,7 +30,7 @@ When ROS launches in virtual mode, the emulator(DRCF) runs automatically.
 > (DRCF) location: doosan-robot/common/bin/ DRCF
 
 ```bash
-roslaunch dsr_launcher single_robot_gazebo.launch mode:=virtual host:=127.0.0.1 port:=12345
+roslaunch dsr_launcher single_robot_gazebo.launch mode:=virtual
 ```
 _One emulator is required for each robot_
 
