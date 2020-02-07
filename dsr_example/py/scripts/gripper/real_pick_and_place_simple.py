@@ -20,9 +20,6 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 
-def gripper_send_data(send_data):
-    srv_gripper_send_data(send_data)
-
 
 def SET_ROBOT(id, model):
     ROBOT_ID = id; ROBOT_MODEL= model   
@@ -73,6 +70,7 @@ if __name__ == "__main__":
     accx = [100, 100]
 
     init_data = bytes(b'\0x09\0x10\0x03\0xE8\0x00\0x03\0x06\0x00\0x00\0x00\0x00\0x00\0x00\0x00\0x73\0x30')
+    #init_data = bytes(b'abcde')
     activation_data = bytes(b'0x09\0x10\0x03\0xE8\0x00\0x03\0x06\0x01\0x00\0x00\0x00\0x00\0x00\0x72\0xE1')
     open_data = bytes(b'0x09\0x10\0x03\0xE8\0x00\0x03\0x06\0x09\0x00\0x00\0x00\0xFF\0xFF\0x72\0x19')
     close_data = bytes(b'0x09\0x10\0x03\0xE8\0x00\0x03\0x06\0x09\0x00\0x00\0xFF\0xFF\0xFF\0x42\0x29')
@@ -82,15 +80,19 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
 
         if time_cnt == 0:
-            gripper_send_data(init_data)
+            srv_robotiq_2f_open(init_data)
+            #gripper_send_data(init_data)
             rospy.sleep(4)
-            gripper_send_data(activation_data)
+            srv_robotiq_2f_open(activation_data)
+            #gripper_send_data(activation_data)
             rospy.sleep(4)
 
-    gripper_send_data(open_data)
-    rospy.sleep(4)
-    gripper_send_data(close_data)
-    rospy.sleep(4)    
+        srv_robotiq_2f_open(open_data)
+        #gripper_send_data(open_data)
+        rospy.sleep(4)
+        srv_robotiq_2f_open(close_data)
+        #gripper_send_data(close_data)
+        rospy.sleep(4)    
 
         
 

@@ -21,10 +21,12 @@ from DSR_ROBOT import *
 
 
 def robotiq_2f_open():
-    srv_robotiq_2f_open()
+    pass
+    #srv_robotiq_2f_open()
 
 def robotiq_2f_close():
-    srv_robotiq_2f_close()
+    pass
+    #srv_robotiq_2f_close()
 
 def SET_ROBOT(id, model):
     ROBOT_ID = id; ROBOT_MODEL= model   
@@ -63,8 +65,7 @@ if __name__ == "__main__":
     #print 'wait services'
     #rospy.wait_for_service('/'+ROBOT_ID +ROBOT_MODEL+'/drl/drl_start')
 
-    srv_robotiq_2f_open = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/gripper/robotiq_2f_open', Robotiq2FOpen)
-    srv_robotiq_2f_close = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/gripper/robotiq_2f_close', Robotiq2FClose)
+    srv_robotiq_2f_move = rospy.ServiceProxy('/' + ROBOT_ID + ROBOT_MODEL + '/gripper/robotiq_2f_move', Robotiq2FMove)
     
     p0 = posj(0, 0, 0, 0, 0, 0)
     p1 = posj(0, 0, 90, 0, 90, 0)
@@ -81,14 +82,16 @@ if __name__ == "__main__":
         movej(p1, vel=60, acc=30)
 
         movel(x1, velx, accx, time=2, mod=DR_MV_MOD_REL)
-        robotiq_2f_close()
+        srv_robotiq_2f_move(0.8) #close
+        #robotiq_2f_close()
         rospy.sleep(1)
         movel(x2, velx, accx, time=2, mod=DR_MV_MOD_REL)
 
         movej(p2, vel=60, acc=30)
 
         movel(x1, velx, accx, time=2, mod=DR_MV_MOD_REL)
-        robotiq_2f_open()
+        #robotiq_2f_open()
+        srv_robotiq_2f_move(0) #open
         rospy.sleep(1)
         movel(x2, velx, accx, time=2, mod=DR_MV_MOD_REL)
 
