@@ -266,4 +266,13 @@ typedef struct _ROBOT_POSE
 
 } ROBOT_POSE, *LPROBOT_POSE;
 
+typedef struct _ROBOT_TASK_POSE
+{
+    /* target pose */
+    float                       _fTargetPos[NUM_TASK];
+    /*  solution space: 0 ~ 7 */
+    unsigned char               _iTargetSol;
+
+} ROBOT_TASK_POSE, *LPROBOT_TASK_POSE;
+
 #pragma pack()

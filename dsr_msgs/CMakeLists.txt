@@ -49,6 +49,7 @@ add_service_files(
     ./motion/MoveStop.srv
     ./motion/MovePause.srv
     ./motion/MoveResume.srv
+    ./motion/Trans.srv
 
     ./tool/ConfigCreateTool.srv
     ./tool/ConfigDeleteTool.srv

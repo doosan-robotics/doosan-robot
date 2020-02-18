@@ -591,6 +591,8 @@ namespace dsr_control{
         m_nh_move_service[12]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
         m_nh_move_service[13]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
         m_nh_move_service[14]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
+        m_nh_move_service[15]= private_nh_.advertiseService("motion/trans", &DRHWInterface::trans_cb, this);
+
         //  GPIO Operations
         m_nh_io_service[0] = private_nh_.advertiseService("io/set_digital_output", &DRHWInterface::set_digital_output_cb, this);
         m_nh_io_service[1] = private_nh_.advertiseService("io/get_digital_input", &DRHWInterface::get_digital_input_cb, this);
@@ -898,8 +900,9 @@ namespace dsr_control{
         res.speed_mode = Drfl.GetRobotSpeedMode();
     }
     bool DRHWInterface::get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res){
+        LPROBOT_POSE robot_pos = Drfl.GetCurrentPose((ROBOT_SPACE)req.space_type);
         for(int i = 0; i < NUM_TASK; i++){
-            res.pos[i] = Drfl.GetCurrentPose((ROBOT_SPACE)req.space_type)->_fPosition[i];
+            res.pos[i] = robot_pos->_fPosition[i];
         }
     }
     bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res){
@@ -1161,7 +1164,22 @@ namespace dsr_control{
     {
         res.success = Drfl.MovePause();
     }
+    bool DRHWInterface::trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res)
+    {
+        std::array<float, NUM_TASK> target_pos;
+        std::array<float, NUM_TASK> delta_pos;
+ 
+        std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
+        std::copy(req.delta.cbegin(), req.delta.cend(), delta_pos.begin());
+  
+        LPROBOT_POSE robot_pos = Drfl.CalTrans(target_pos.data(), delta_pos.data(), (COORDINATE_SYSTEM)req.ref, (COORDINATE_SYSTEM)req.ref_out);
+        for(int i=0; i<NUM_TASK; i++){
+            res.trans_pos[i] = robot_pos->_fPosition[i];
+        }
+        //리턴값 연결 필요! 
+    }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool DRHWInterface::set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_digital_output_cb() called and calling Drfl.SetCtrlBoxDigitalOutput");
@@ -1223,10 +1241,7 @@ namespace dsr_control{
     bool DRHWInterface::config_create_modbus_cb(dsr_msgs::ConfigCreateModbus::Request& req, dsr_msgs::ConfigCreateModbus::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_create_modbus_cb() called and calling Drfl.ConfigCreateModbus");
-        if(m_nVersionDRCF >= 20400)
-            res.success = Drfl.ConfigCreateModbusEx(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value, (int)req.slave_id);
-        else 
-            res.success = Drfl.ConfigCreateModbus(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value);
+        res.success = Drfl.ConfigCreateModbus(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value, (int)req.slave_id);
     }
     bool DRHWInterface::config_delete_modbus_cb(dsr_msgs::ConfigDeleteModbus::Request& req, dsr_msgs::ConfigDeleteModbus::Response& res)
     {

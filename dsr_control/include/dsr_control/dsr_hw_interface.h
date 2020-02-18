@@ -90,6 +90,7 @@
 #include <dsr_msgs/MovePause.h>
 #include <dsr_msgs/MoveStop.h>
 #include <dsr_msgs/MoveResume.h>
+#include <dsr_msgs/Trans.h>
 
 //io
 #include <dsr_msgs/SetCtrlBoxDigitalOutput.h>
@@ -337,6 +338,7 @@ namespace dsr_control{
         bool move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res);
         bool move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res);
         bool move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res);
+        bool trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res);
 
         //----- TCP
         bool set_current_tcp_cb(dsr_msgs::SetCurrentTcp::Request& req, dsr_msgs::SetCurrentTcp::Response& res);

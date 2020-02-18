@@ -77,6 +77,7 @@
 #include <dsr_msgs/MoveWait.h>
 #include <dsr_msgs/Jog.h>
 #include <dsr_msgs/JogMulti.h>
+#include <dsr_msgs/Trans.h>
 
 #include <dsr_msgs/ConfigCreateTcp.h>
 #include <dsr_msgs/ConfigDeleteTcp.h>

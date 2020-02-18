@@ -75,6 +75,7 @@ _ros_move_periodic              = rospy.ServiceProxy(_srv_name_prefix +"/motion/
 _ros_move_wait                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_wait", MoveWait)
 _ros_jog                        = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog", Jog)
 _ros_jog_multi                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog_multi", JogMulti)
+_ros_trans                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/trans", Trans)
 
 #  GPIO Operations
 _ros_set_digital_output         = rospy.ServiceProxy(_srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -559,6 +560,42 @@ def get_last_alarm():
     return srv.log_alarm
 
 ##### MOTION ##############################################################################################################################
+def trans(pos, delta, ref=None, ref_out=DR_BASE):
+    # pos, delta
+    _pos = get_posx(pos)
+    _delta = get_posx(delta)
+    # ref
+    if ref == None:
+        _ref = _g_coord
+    else:
+        _ref = ref
+    # check ref
+    if type(_ref) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
+    if _ref != DR_BASE and _ref != DR_TOOL and _ref != DR_WORLD and (_ref < DR_TC_USER_MIN or _ref > DR_TC_USER_MAX):
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
+    # check ref_out
+    if type(ref_out) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref_out")
+    if ref_out != DR_BASE and ref_out != DR_WORLD and (ref_out < DR_TC_USER_MIN or ref_out > DR_TC_USER_MAX):
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref_out({0})".format(ref_out))
+    # ROS service call
+    if __ROS__: 
+        srv = _ros_trans(_pos, _delta, _ref, ref_out)
+        pos = srv.trans_pos
+    else:   
+        # C function call
+        ret = PythonMgr.py_trans(_pos, _delta, _ref, ref_out)
+        # check return
+        _check_ext_result(ret)
+        # wait for job to be finished
+        proc_id = ret
+        _wait_result(proc_id)
+        # get result
+        pos = PythonMgr.py_get_result(proc_id)
+    trans_posx = posx(pos)
+    return trans_posx
+
 def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
     ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
     return ret
@@ -2173,6 +2210,7 @@ class CDsrRobot:
         self._ros_move_wait                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_wait", MoveWait)
         self._ros_jog                        = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog", Jog)
         self._ros_jog_multi                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog_multi", JogMulti)
+        self._ros_trans                      = rospy.ServiceProxy(self._srv_name_prefix +"/motion/trans", Trans)
 
         #  GPIO Operations
         self._ros_set_digital_output         = rospy.ServiceProxy(self._srv_name_prefix +"/io/set_digital_output", SetCtrlBoxDigitalOutput)
@@ -2351,6 +2389,52 @@ class CDsrRobot:
         return srv.log_alarm
 
     ##### MOTION ##############################################################################################################################
+    def trans(self, pos, delta, ref=None, ref_out=DR_BASE):
+        # pos, delta
+        _pos = get_posx(pos)
+        _delta = get_posx(delta)
+
+        # ref
+        if ref == None:
+            _ref = self._g_coord
+        else:
+            _ref = ref
+
+        # check ref
+        if type(_ref) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref")
+
+        if _ref != DR_BASE and _ref != DR_TOOL and _ref != DR_WORLD and (_ref < DR_TC_USER_MIN or _ref > DR_TC_USER_MAX):
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
+
+        # check ref_out
+        if type(ref_out) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : ref_out")
+
+        if ref_out != DR_BASE and ref_out != DR_WORLD and (ref_out < DR_TC_USER_MIN or ref_out > DR_TC_USER_MAX):
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref_out({0})".format(ref_out))
+
+        # ROS service call
+        if __ROS__: 
+            srv = self._ros_trans(_pos, _delta, _ref, ref_out)
+            pos = srv.trans_pos
+        else:   
+            # C function call
+            ret = PythonMgr.py_trans(_pos, _delta, _ref, ref_out)
+
+            # check return
+            _check_ext_result(ret)
+
+            # wait for job to be finished
+            proc_id = ret
+            _wait_result(proc_id)
+
+            # get result
+            pos = PythonMgr.py_get_result(proc_id)
+
+        trans_posx = posx(pos)
+        return trans_posx
+
     def movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
         ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
         return ret

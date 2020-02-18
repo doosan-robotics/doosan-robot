@@ -2,6 +2,11 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update A-series
+* Contributors: doosan-robotics
+
 1.0.2 (2020-01-07)
 ------------------
 

@@ -2,6 +2,11 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update A-series
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 

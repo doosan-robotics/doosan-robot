@@ -2,6 +2,15 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update joint angle in URDF
+* update A-series model
+* update a0509 model
+* update A-series
+* update A-series
+* Contributors: doosan-robotics
+
 0.9.8 (2019-06-18)
 ------------------
 

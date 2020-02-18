@@ -2,6 +2,13 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update serial_node
+* update A-series
+* Update DSR_ROBOT.py
+* Contributors: doosan robotics ros master, doosan-robotics
+
 1.0.2 (2020-01-07)
 ------------------
 
