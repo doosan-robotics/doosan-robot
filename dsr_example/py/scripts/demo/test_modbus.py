@@ -124,6 +124,7 @@ if __name__ == "__main__":
     set_modbus_output("ACT", 2304) # action request = 0x09 & gripper options = 0x00 / Gripper 활성화 신호와 Gripper 이동 요청 명령을 1로 set
     set_modbus_output("WID", 0) # Gripper Position 을 최소 위치로 변경 (Open) / Gripper options2 = 0x00 & gripper position = 0x00
     set_modbus_output("FOR", 65535) # Speed = 0xFF / Force = 0xFF
+    
     while not rospy.is_shutdown():
         set_modbus_output("ro2", 80)
         set_modbus_output("do1", 1)
