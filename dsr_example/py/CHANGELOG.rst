@@ -2,8 +2,8 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2020-02-18)
+------------------
 * update serial raw code
 * update serial_node
 * update test_modbus.py

@@ -2,8 +2,8 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2020-02-18)
+------------------
 * update joint angle in URDF
 * update A-series model
 * update a0509 model

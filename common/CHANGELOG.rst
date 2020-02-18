@@ -2,8 +2,8 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2020-02-18)
+------------------
 * update serial_node
 * update A-series
 * Update DSR_ROBOT.py
