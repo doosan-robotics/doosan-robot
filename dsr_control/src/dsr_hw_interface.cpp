@@ -97,7 +97,7 @@ namespace dsr_control{
         cout << "[callback OnProgramStoppedCB] Program Stop: " << (int)iStopCause << endl;
         g_stDrState.bDrlStopped = TRUE;
     }
-
+    // M2.4 or lower
     void DRHWInterface::OnMonitoringCtrlIOCB (const LPMONITORING_CTRLIO pCtrlIO)
     {
         for (int i = 0; i < NUM_DIGITAL; i++){
@@ -107,6 +107,189 @@ namespace dsr_control{
             }
         }
     }
+    // M2.5 or higher
+    void DRHWInterface::OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX pCtrlIO) 
+    {
+        //ROS_INFO("DRHWInterface::OnMonitoringCtrlIOExCB");
+
+        for (int i = 0; i < NUM_DIGITAL; i++){
+            if(pCtrlIO){  
+                g_stDrState.bCtrlBoxDigitalOutput[i] = pCtrlIO->_tOutput._iTargetDO[i];  
+                g_stDrState.bCtrlBoxDigitalInput[i]  = pCtrlIO->_tInput._iActualDI[i];  
+            }
+        }
+
+        //----- In M2.5 version or higher The following variables were added -----
+        for (int i = 0; i < 3; i++)
+            g_stDrState.bActualSW[i] = pCtrlIO->_tInput._iActualSW[i];
+
+        for (int i = 0; i < 2; i++){
+            g_stDrState.bActualSI[i] = pCtrlIO->_tInput._iActualSI[i];
+            g_stDrState.fActualAI[i] = pCtrlIO->_tInput._fActualAI[i];
+            g_stDrState.iActualAT[i] = pCtrlIO->_tInput._iActualAT[i];
+            g_stDrState.fTargetAO[i] = pCtrlIO->_tOutput._fTargetAO[i];
+            g_stDrState.iTargetAT[i] = pCtrlIO->_tOutput._iTargetAT[i];
+            g_stDrState.bActualES[i] = pCtrlIO->_tEncoder._iActualES[i];
+            g_stDrState.iActualED[i] = pCtrlIO->_tEncoder._iActualED[i];
+            g_stDrState.bActualER[i] = pCtrlIO->_tEncoder._iActualER[i];
+        }  
+        //-------------------------------------------------------------------------
+    }
+
+    // M2.4 or lower
+    void DRHWInterface::OnMonitoringDataCB(const LPMONITORING_DATA pData)
+    {
+        // This function is called every 100 msec
+        // Only work within 50msec
+        //ROS_INFO("DRHWInterface::OnMonitoringDataCB");
+
+        g_stDrState.nActualMode  = pData->_tCtrl._tState._iActualMode;                  // position control: 0, torque control: 1 ?????
+        g_stDrState.nActualSpace = pData->_tCtrl._tState._iActualSpace;                 // joint space: 0, task space: 1    
+
+        for (int i = 0; i < NUM_JOINT; i++){
+            if(pData){  
+                // joint         
+                g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];     // Position Actual Value in INC     
+                g_stDrState.fCurrentVelj[i] = pData->_tCtrl._tJoint._fActualVel[i];     // Velocity Actual Value
+                g_stDrState.fJointAbs[i]    = pData->_tCtrl._tJoint._fActualAbs[i];     // Position Actual Value in ABS
+                g_stDrState.fJointErr[i]    = pData->_tCtrl._tJoint._fActualErr[i];     // Joint Error
+                g_stDrState.fTargetPosj[i]  = pData->_tCtrl._tJoint._fTargetPos[i];     // Target Position
+                g_stDrState.fTargetVelj[i]  = pData->_tCtrl._tJoint._fTargetVel[i];     // Target Velocity
+                // task
+                g_stDrState.fCurrentPosx[i]     = pData->_tCtrl._tTask._fActualPos[0][i];   //????? <---------이것 2개다 확인할 것  
+                g_stDrState.fCurrentToolPosx[i] = pData->_tCtrl._tTask._fActualPos[1][i];   //????? <---------이것 2개다 확인할 것  
+                g_stDrState.fCurrentVelx[i] = pData->_tCtrl._tTask._fActualVel[i];      // Velocity Actual Value
+                g_stDrState.fTaskErr[i]     = pData->_tCtrl._tTask._fActualErr[i];      // Task Error
+                g_stDrState.fTargetPosx[i]  = pData->_tCtrl._tTask._fTargetPos[i];      // Target Position
+                g_stDrState.fTargetVelx[i]  = pData->_tCtrl._tTask._fTargetVel[i];      // Target Velocity
+                // Torque
+                g_stDrState.fDynamicTor[i]  = pData->_tCtrl._tTorque._fDynamicTor[i];   // Dynamics Torque
+                g_stDrState.fActualJTS[i]   = pData->_tCtrl._tTorque._fActualJTS[i];    // Joint Torque Sensor Value
+                g_stDrState.fActualEJT[i]   = pData->_tCtrl._tTorque._fActualEJT[i];    // External Joint Torque
+                g_stDrState.fActualETT[i]   = pData->_tCtrl._tTorque._fActualETT[i];    // External Task Force/Torque
+
+                g_stDrState.nActualBK[i]    = pData->_tMisc._iActualBK[i];              // brake state     
+                g_stDrState.fActualMC[i]    = pData->_tMisc._fActualMC[i];              // motor input current
+                g_stDrState.fActualMT[i]    = pData->_tMisc._fActualMT[i];              // motor current temperature
+            }
+        }
+        g_stDrState.nSolutionSpace  = pData->_tCtrl._tTask._iSolutionSpace;             // Solution Space
+        g_stDrState.dSyncTime       = pData->_tMisc._dSyncTime;                         // inner clock counter  
+
+        for (int i = 5; i < NUM_BUTTON; i++){
+            if(pData){
+                g_stDrState.nActualBT[i]    = pData->_tMisc._iActualBT[i];              // robot button state
+            }
+        }
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(pData){
+                    g_stDrState.fRotationMatrix[j][i] = pData->_tCtrl._tTask._fRotationMatrix[j][i];    // Rotation Matrix
+                }
+            }
+        }
+
+        for (int i = 0; i < NUM_FLANGE_IO; i++){
+            if(pData){
+                g_stDrState.bFlangeDigitalInput[i]  = pData->_tMisc._iActualDI[i];      // Digital Input data             
+                g_stDrState.bFlangeDigitalOutput[i] = pData->_tMisc._iActualDO[i];      // Digital output data
+            }
+        }
+    }
+
+    // M2.5 or higher    
+    void DRHWInterface::OnMonitoringDataExCB(const LPMONITORING_DATA_EX pData)
+    {
+        // This function is called every 100 msec
+        // Only work within 50msec
+        //ROS_INFO("DRHWInterface::OnMonitoringDataExCB");
+
+        g_stDrState.nActualMode  = pData->_tCtrl._tState._iActualMode;                  // position control: 0, torque control: 1 ?????
+        g_stDrState.nActualSpace = pData->_tCtrl._tState._iActualSpace;                 // joint space: 0, task space: 1    
+
+        for (int i = 0; i < NUM_JOINT; i++){
+            if(pData){  
+                // joint         
+                g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];     // Position Actual Value in INC     
+                g_stDrState.fCurrentVelj[i] = pData->_tCtrl._tJoint._fActualVel[i];     // Velocity Actual Value
+                g_stDrState.fJointAbs[i]    = pData->_tCtrl._tJoint._fActualAbs[i];     // Position Actual Value in ABS
+                g_stDrState.fJointErr[i]    = pData->_tCtrl._tJoint._fActualErr[i];     // Joint Error
+                g_stDrState.fTargetPosj[i]  = pData->_tCtrl._tJoint._fTargetPos[i];     // Target Position
+                g_stDrState.fTargetVelj[i]  = pData->_tCtrl._tJoint._fTargetVel[i];     // Target Velocity
+                // task
+                g_stDrState.fCurrentPosx[i]     = pData->_tCtrl._tTask._fActualPos[0][i];   //????? <---------이것 2개다 확인할 것  
+                g_stDrState.fCurrentToolPosx[i] = pData->_tCtrl._tTask._fActualPos[1][i];   //????? <---------이것 2개다 확인할 것  
+                g_stDrState.fCurrentVelx[i] = pData->_tCtrl._tTask._fActualVel[i];      // Velocity Actual Value
+                g_stDrState.fTaskErr[i]     = pData->_tCtrl._tTask._fActualErr[i];      // Task Error
+                g_stDrState.fTargetPosx[i]  = pData->_tCtrl._tTask._fTargetPos[i];      // Target Position
+                g_stDrState.fTargetVelx[i]  = pData->_tCtrl._tTask._fTargetVel[i];      // Target Velocity
+                // Torque
+                g_stDrState.fDynamicTor[i]  = pData->_tCtrl._tTorque._fDynamicTor[i];   // Dynamics Torque
+                g_stDrState.fActualJTS[i]   = pData->_tCtrl._tTorque._fActualJTS[i];    // Joint Torque Sensor Value
+                g_stDrState.fActualEJT[i]   = pData->_tCtrl._tTorque._fActualEJT[i];    // External Joint Torque
+                g_stDrState.fActualETT[i]   = pData->_tCtrl._tTorque._fActualETT[i];    // External Task Force/Torque
+
+                g_stDrState.nActualBK[i]    = pData->_tMisc._iActualBK[i];              // brake state     
+                g_stDrState.fActualMC[i]    = pData->_tMisc._fActualMC[i];              // motor input current
+                g_stDrState.fActualMT[i]    = pData->_tMisc._fActualMT[i];              // motor current temperature
+            }
+        }
+        g_stDrState.nSolutionSpace  = pData->_tCtrl._tTask._iSolutionSpace;             // Solution Space
+        g_stDrState.dSyncTime       = pData->_tMisc._dSyncTime;                         // inner clock counter  
+
+        for (int i = 5; i < NUM_BUTTON; i++){
+            if(pData){
+                g_stDrState.nActualBT[i]    = pData->_tMisc._iActualBT[i];              // robot button state
+            }
+        }
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(pData){
+                    g_stDrState.fRotationMatrix[j][i] = pData->_tCtrl._tTask._fRotationMatrix[j][i];    // Rotation Matrix
+                }
+            }
+        }
+
+        for (int i = 0; i < NUM_FLANGE_IO; i++){
+            if(pData){
+                g_stDrState.bFlangeDigitalInput[i]  = pData->_tMisc._iActualDI[i];      // Digital Input data             
+                g_stDrState.bFlangeDigitalOutput[i] = pData->_tMisc._iActualDO[i];      // Digital output data
+            }
+        }
+
+        //----- In M2.5 version or higher The following variables were added -----
+        for (int i = 0; i < NUM_JOINT; i++){
+            g_stDrState.fActualW2B[i] = pData->_tCtrl._tWorld._fActualW2B[i];
+            g_stDrState.fCurrentVelW[i] = pData->_tCtrl._tWorld._fActualVel[i];
+            g_stDrState.fWorldETT[i] = pData->_tCtrl._tWorld._fActualETT[i];
+            g_stDrState.fTargetPosW[i] = pData->_tCtrl._tWorld._fTargetPos[i];
+            g_stDrState.fTargetVelW[i] = pData->_tCtrl._tWorld._fTargetVel[i];
+            g_stDrState.fCurrentVelU[i] = pData->_tCtrl._tWorld._fActualVel[i];
+            g_stDrState.fUserETT[i] = pData->_tCtrl._tUser._fActualETT[i];
+            g_stDrState.fTargetPosU[i] = pData->_tCtrl._tUser._fTargetPos[i];
+            g_stDrState.fTargetVelU[i] = pData->_tCtrl._tUser._fTargetVel[i];
+        }    
+
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 6; j++){
+                g_stDrState.fCurrentPosW[i][j] = pData->_tCtrl._tWorld._fActualPos[i][j];
+                g_stDrState.fCurrentPosU[i][j] = pData->_tCtrl._tUser._fActualPos[i][j];
+            }
+        }
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                g_stDrState.fRotationMatrixWorld[j][i] = pData->_tCtrl._tWorld._fRotationMatrix[j][i];
+                g_stDrState.fRotationMatrixUser[j][i] = pData->_tCtrl._tUser._fRotationMatrix[j][i];
+            }
+        }
+
+        g_stDrState.iActualUCN = pData->_tCtrl._tUser._iActualUCN;
+        g_stDrState.iParent    = pData->_tCtrl._tUser._iParent;
+        //-------------------------------------------------------------------------
+    }
 
     void DRHWInterface::OnMonitoringModbusCB (const LPMONITORING_MODBUS pModbus)
     {
@@ -115,98 +298,6 @@ namespace dsr_control{
             cout << "[callback OnMonitoringModbusCB] " << pModbus->_tRegister[i]._szSymbol <<": " << pModbus->_tRegister[i]._iValue<< endl;
             g_stDrState.strModbusSymbol[i] = pModbus->_tRegister[i]._szSymbol;
             g_stDrState.nModbusValue[i]    = pModbus->_tRegister[i]._iValue;
-        }
-    }
-
-    void DRHWInterface::OnMonitoringDataCB(const LPMONITORING_DATA pData)
-    {
-        // This function is called every 100 msec
-        // Only work within 50msec
-        //ROS_INFO("DRHWInterface::OnMonitoringDataCB");
-
-
-        /* 추후 연결 필요
-        pData->_tCtrl._tState._iActualMode;             // position control: 0, torque control: 1
-        pData->_tCtrl._tState._iActualSpace;            //joint space: 0, task space: 1
-
-        pData->_tCtrl._tJoint._fActualPos[NUM_JOINT];   // Position Actual Value in INC 
-        pData->_tCtrl._tJoint._fActualAbs[NUM_JOINT];   // Position Actual Value in ABS
-        pData->_tCtrl._tJoint._fActualVel[NUM_JOINT];   // Velocity Actual Value
-        pData->_tCtrl._tJoint._fActualErr[NUM_JOINT];   // Joint Error
-        pData->_tCtrl._tJoint._fTargetPos[NUM_JOINT];   // Target Position
-        pData->_tCtrl._tJoint._fTargetVel[NUM_JOINT];   // Target Velocity
-
-        pData->_tCtrl._tTool._fActualPos[2][NUM_TASK];  // Position Actual Value(0: tool, 1: flange)
-        pData->_tCtrl._tTool._fActualVel[NUM_TASK];     // Velocity Actual Value
-        pData->_tCtrl._tTool._fActualErr[NUM_TASK];     // Task Error
-        pData->_tCtrl._tTool._fTargetPos[NUM_TASK];     // Target Position
-        pData->_tCtrl._tTool._fTargetVel[NUM_TASK];     // Target Velocity
-        pData->_tCtrl._tTool._iSolutionSpace;           // Solution Space
-        pData->_tCtrl._tTool._fRotationMatrix[3][3];    // Rotation Matrix
-
-        pData->_tCtrl._tTorque._fDynamicTor[NUM_JOINT]; // Dynamics Torque
-        pData->_tCtrl._tTorque._fActualJTS[NUM_JOINT];  // Joint Torque Sensor Value
-        pData->_tCtrl._tTorque._fActualEJT[NUM_JOINT];  // External Joint Torque
-        pData->_tCtrl._tTorque._fActualETT[NUM_JOINT];  // External Task Force/Torque
-
-        pData->_tMisc._dSyncTime;                       // inner clock counter
-        pData->_tMisc._iActualDI[NUM_FLANGE_IO];        // Digtal Input data    
-        pData->_tMisc._iActualDO[NUM_FLANGE_IO];        // Digtal output data
-        pData->_tMisc._iActualBK[NUM_JOINT];            // brake state
-        pData->_tMisc._iActualBT[NUM_BUTTON];           // robot button state
-        pData->_tMisc._fActualMC[NUM_JOINT];            // motor input current
-        pData->_tMisc._fActualMT[NUM_JOINT];            // motro current temperature
-        */
-        g_stDrState.nActualMode = pData->_tCtrl._tState._iActualMode;
-        g_stDrState.nActualSpace = pData->_tCtrl._tState._iActualSpace;
-
-        for (int i = 0; i < NUM_JOINT; i++){
-            if(pData){  
-                g_stDrState.fCurrentPosj[i] = pData->_tCtrl._tJoint._fActualPos[i];    
-                g_stDrState.fCurrentPosx[i] = pData->_tCtrl._tTool._fActualPos[0][i];    
-                g_stDrState.fCurrentVelj[i] = pData->_tCtrl._tJoint._fActualVel[i];
-                g_stDrState.fCurrentVelx[i] = pData->_tCtrl._tTool._fActualVel[i];
-                g_stDrState.fJointAbs[i]    = pData->_tCtrl._tJoint._fActualAbs[i];
-                g_stDrState.fJointErr[i]    = pData->_tCtrl._tJoint._fActualErr[i];
-                g_stDrState.fTargetPosj[i]  = pData->_tCtrl._tJoint._fTargetPos[i];
-                g_stDrState.fTargetVelj[i]  = pData->_tCtrl._tJoint._fTargetVel[i];
-
-                g_stDrState.fTaskErr[i]     = pData->_tCtrl._tTool._fActualErr[i];
-                g_stDrState.fTargetPosx[i]  = pData->_tCtrl._tTool._fTargetPos[i];
-                g_stDrState.fTargetVelx[i]  = pData->_tCtrl._tTool._fTargetVel[i];
-
-                g_stDrState.fDynamicTor[i]  = pData->_tCtrl._tTorque._fDynamicTor[i];
-                g_stDrState.fActualJTS[i]   = pData->_tCtrl._tTorque._fActualJTS[i];
-                g_stDrState.fActualEJT[i]   = pData->_tCtrl._tTorque._fActualEJT[i];
-                g_stDrState.fActualETT[i]   = pData->_tCtrl._tTorque._fActualETT[i];
-
-                g_stDrState.nActualBK[i]    = pData->_tMisc._iActualBK[i]; 
-                g_stDrState.fActualMC[i]    = pData->_tMisc._fActualMC[i];
-                g_stDrState.fActualMT[i]    = pData->_tMisc._fActualMT[i];
-            }
-        }
-        for (int i = 5; i < NUM_BUTTON; i++){
-            if(pData){
-                g_stDrState.nActualBT[i]    = pData->_tMisc._iActualBT[i];  
-            }
-        }
-
-        g_stDrState.nSolutionSpace  = pData->_tCtrl._tTool._iSolutionSpace;    
-        g_stDrState.dSyncTime       = pData->_tMisc._dSyncTime;  
-
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                if(pData){
-                    g_stDrState.fRotationMatrix[j][i] = pData->_tCtrl._tTool._fRotationMatrix[j][i];
-                }
-            }
-        }
-
-        for (int i = 0; i < NUM_FLANGE_IO; i++){
-            if(pData){
-                g_stDrState.bFlangeDigitalInput[i]  = pData->_tMisc._iActualDI[i];
-                g_stDrState.bFlangeDigitalOutput[i] = pData->_tMisc._iActualDO[i];
-            }
         }
     }
 
@@ -243,6 +334,7 @@ namespace dsr_control{
         case STATE_SAFE_OFF:
             if (g_bHasControlAuthority){
                 Drfl.SetRobotControl(CONTROL_SERVO_ON);
+				Drfl.SetRobotMode(ROBOT_MODE_MANUAL);   //Idle Servo Off 후 servo on 하는 상황 발생 시 set_robot_mode 명령을 전송해 manual 로 전환. add 2020/04/28
             } 
             break;
         case STATE_SAFE_STOP2:
@@ -374,7 +466,6 @@ namespace dsr_control{
          
         msg.robot_state         = m_stDrState.nRobotState;
         msg.robot_state_str     = m_stDrState.strRobotState;
-        ///printf("[%s,%s] msg.robot_state_str =%s m_stDrState.strRobotState=%s\n",m_strRobotName.c_str(),m_strRobotModel.c_str(),msg.robot_state_str.c_str(),m_stDrState.strRobotState);
         msg.actual_mode         = m_stDrState.nActualMode;
         msg.actual_space        = m_stDrState.nActualSpace;
 
@@ -387,7 +478,8 @@ namespace dsr_control{
             msg.target_posj[i]     = m_stDrState.fTargetPosj[i];
             msg.target_velj[i]     = m_stDrState.fTargetVelj[i];
 
-            msg.current_posx[i]    = m_stDrState.fCurrentPosx[i];
+            msg.current_posx[i]      = m_stDrState.fCurrentPosx[i];
+            msg.current_tool_posx[i] = m_stDrState.fCurrentToolPosx[i];
             msg.current_velx[i]    = m_stDrState.fCurrentVelx[i];
             msg.task_err[i]        = m_stDrState.fTaskErr[i];
             msg.target_velx[i]     = m_stDrState.fTargetVelx[i];
@@ -439,6 +531,68 @@ namespace dsr_control{
         msg.mastering_need      = m_stDrState.bMasteringNeed;
         msg.drl_stopped         = m_stDrState.bDrlStopped;
         msg.disconnected        = m_stDrState.bDisconnected;
+
+        //--- The following messages have been updated since version M2.50 or higher ---
+        if(m_nVersionDRCF >= 120500)    //M2.5 or later        
+        {
+            for (int i = 0; i < NUM_JOINT; i++){
+                msg.fActualW2B[i]   = m_stDrState.fActualW2B[i];
+                msg.fCurrentVelW[i] = m_stDrState.fCurrentVelW[i];
+                msg.fWorldETT[i]    = m_stDrState.fWorldETT[i];
+                msg.fTargetPosW[i]  = m_stDrState.fTargetPosW[i];
+                msg.fTargetVelW[i]  = m_stDrState.fTargetVelW[i];
+                msg.fCurrentVelU[i] = m_stDrState.fCurrentVelU[i];
+                msg.fUserETT[i]     = m_stDrState.fUserETT[i];
+                msg.fTargetPosU[i]  = m_stDrState.fTargetPosU[i];
+                msg.fTargetVelU[i]  = m_stDrState.fTargetVelU[i];
+            }      
+            for(int i = 0; i < 2; i++){
+                arr.data.clear();
+                for(int j = 0; j < 6; j++){
+                    arr.data.push_back(m_stDrState.fCurrentPosW[i][j]);
+                }
+                msg.fCurrentPosW.push_back(arr);
+            }
+            for(int i = 0; i < 2; i++){
+                arr.data.clear();
+                for(int j = 0; j < 6; j++){
+                    arr.data.push_back(m_stDrState.fCurrentPosU[i][j]);
+                }
+                msg.fCurrentPosU.push_back(arr);
+            }
+            for(int i = 0; i < 3; i++){
+                arr.data.clear();
+                for(int j = 0; j < 3; j++){
+                    arr.data.push_back(m_stDrState.fRotationMatrixWorld[i][j]);
+                }
+                msg.fRotationMatrixWorld.push_back(arr);
+            }
+            for(int i = 0; i < 3; i++){
+                arr.data.clear();
+                for(int j = 0; j < 3; j++){
+                    arr.data.push_back(m_stDrState.fRotationMatrixUser[i][j]);
+                }
+                msg.fRotationMatrixUser.push_back(arr);
+            }
+
+            msg.iActualUCN = m_stDrState.iActualUCN;
+            msg.iParent    = m_stDrState.iParent;
+
+            for (int i = 0; i < 3; i++)
+                msg.bActualSW[i] = m_stDrState.bActualSW[i];
+
+            for (int i = 0; i < 2; i++){
+                msg.bActualSI[i] = m_stDrState.bActualSI[i];
+                msg.fActualAI[i] = m_stDrState.fActualAI[i];
+                msg.iActualAT[i] = m_stDrState.iActualAT[i];
+                msg.fTargetAO[i] = m_stDrState.fTargetAO[i];
+                msg.iTargetAT[i] = m_stDrState.iTargetAT[i];
+                msg.bActualES[i] = m_stDrState.bActualES[i];
+                msg.iActualED[i] = m_stDrState.iActualED[i];
+                msg.bActualER[i] = m_stDrState.bActualER[i];
+            }
+        }        
+        //------------------------------------------------------------------------------
 
         m_PubRobotState.publish(msg);
         return 0; 
@@ -570,28 +724,85 @@ namespace dsr_control{
         m_nh_system[8] = private_nh_.advertiseService("system/set_safe_stop_reset_type", &DRHWInterface::set_safe_stop_reset_type_cb, this);
         m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
         m_nh_system[10]= private_nh_.advertiseService("system/get_robot_state", &DRHWInterface::get_robot_state_cb, this);
-
-        m_nh_system[11]= private_nh_.advertiseService("system/get_external_torque", &DRHWInterface::get_external_torque_cb, this);
-        m_nh_system[12]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
-        m_nh_system[13]= private_nh_.advertiseService("system/get_tool_force", &DRHWInterface::get_tool_force_cb, this);
+        m_nh_system[11]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
 
         //  motion Operations
-        m_nh_move_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
-        m_nh_move_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
-        m_nh_move_service[2] = private_nh_.advertiseService("motion/move_jointx", &DRHWInterface::movejx_cb, this);
-        m_nh_move_service[3] = private_nh_.advertiseService("motion/move_circle", &DRHWInterface::movec_cb, this);
-        m_nh_move_service[4] = private_nh_.advertiseService("motion/move_spline_joint", &DRHWInterface::movesj_cb, this);
-        m_nh_move_service[5] = private_nh_.advertiseService("motion/move_spline_task", &DRHWInterface::movesx_cb, this);
-        m_nh_move_service[6] = private_nh_.advertiseService("motion/move_blending", &DRHWInterface::moveb_cb, this);
-        m_nh_move_service[7] = private_nh_.advertiseService("motion/move_spiral", &DRHWInterface::movespiral_cb, this);
-        m_nh_move_service[8] = private_nh_.advertiseService("motion/move_periodic", &DRHWInterface::moveperiodic_cb, this);
-        m_nh_move_service[9] = private_nh_.advertiseService("motion/move_wait", &DRHWInterface::movewait_cb, this);
-        m_nh_move_service[10]= private_nh_.advertiseService("motion/jog", &DRHWInterface::jog_cb, this);
-        m_nh_move_service[11]= private_nh_.advertiseService("motion/jog_multi", &DRHWInterface::jog_multi_cb, this);
-        m_nh_move_service[12]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
-        m_nh_move_service[13]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
-        m_nh_move_service[14]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
-        m_nh_move_service[15]= private_nh_.advertiseService("motion/trans", &DRHWInterface::trans_cb, this);
+        m_nh_motion_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
+        m_nh_motion_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
+        m_nh_motion_service[2] = private_nh_.advertiseService("motion/move_jointx", &DRHWInterface::movejx_cb, this);
+        m_nh_motion_service[3] = private_nh_.advertiseService("motion/move_circle", &DRHWInterface::movec_cb, this);
+        m_nh_motion_service[4] = private_nh_.advertiseService("motion/move_spline_joint", &DRHWInterface::movesj_cb, this);
+        m_nh_motion_service[5] = private_nh_.advertiseService("motion/move_spline_task", &DRHWInterface::movesx_cb, this);
+        m_nh_motion_service[6] = private_nh_.advertiseService("motion/move_blending", &DRHWInterface::moveb_cb, this);
+        m_nh_motion_service[7] = private_nh_.advertiseService("motion/move_spiral", &DRHWInterface::movespiral_cb, this);
+        m_nh_motion_service[8] = private_nh_.advertiseService("motion/move_periodic", &DRHWInterface::moveperiodic_cb, this);
+        m_nh_motion_service[9] = private_nh_.advertiseService("motion/move_wait", &DRHWInterface::movewait_cb, this);
+        m_nh_motion_service[10]= private_nh_.advertiseService("motion/jog", &DRHWInterface::jog_cb, this);
+        m_nh_motion_service[11]= private_nh_.advertiseService("motion/jog_multi", &DRHWInterface::jog_multi_cb, this);
+        m_nh_motion_service[12]= private_nh_.advertiseService("motion/move_stop", &DRHWInterface::move_stop_cb, this);
+        m_nh_motion_service[13]= private_nh_.advertiseService("motion/move_pause", &DRHWInterface::move_pause_cb, this);
+        m_nh_motion_service[14]= private_nh_.advertiseService("motion/move_resume", &DRHWInterface::move_resume_cb, this);
+        m_nh_motion_service[15]= private_nh_.advertiseService("motion/trans", &DRHWInterface::trans_cb, this);     
+        m_nh_motion_service[16]= private_nh_.advertiseService("motion/fkin", &DRHWInterface::fkin_cb, this);
+        m_nh_motion_service[17]= private_nh_.advertiseService("motion/ikin", &DRHWInterface::ikin_cb, this);
+        m_nh_motion_service[18]= private_nh_.advertiseService("motion/set_ref_coord", &DRHWInterface::set_ref_coord_cb, this);
+        m_nh_motion_service[19]= private_nh_.advertiseService("motion/move_home", &DRHWInterface::move_home_cb, this);
+        m_nh_motion_service[20]= private_nh_.advertiseService("motion/check_motion", &DRHWInterface::check_motion_cb, this);
+        m_nh_motion_service[21]= private_nh_.advertiseService("motion/change_operation_speed", &DRHWInterface::change_operation_speed_cb, this);
+        m_nh_motion_service[22]= private_nh_.advertiseService("motion/enable_alter_motion", &DRHWInterface::enable_alter_motion_cb, this);
+        m_nh_motion_service[23]= private_nh_.advertiseService("motion/alter_motion", &DRHWInterface::alter_motion_cb, this);
+        m_nh_motion_service[24]= private_nh_.advertiseService("motion/disable_alter_motion", &DRHWInterface::disable_alter_motion_cb, this);
+        m_nh_motion_service[25]= private_nh_.advertiseService("motion/set_singularity_handling", &DRHWInterface::set_singularity_handling_cb, this);
+
+
+        // Auxiliary Control Operations
+        m_nh_aux_control_service[0]  = private_nh_.advertiseService("aux_control/get_control_mode", &DRHWInterface::get_control_mode_cb, this);                   
+        m_nh_aux_control_service[1]  = private_nh_.advertiseService("aux_control/get_control_space", &DRHWInterface::get_control_space_cb, this);                         
+
+        m_nh_aux_control_service[2]  = private_nh_.advertiseService("aux_control/get_current_posj", &DRHWInterface::get_current_posj_cb, this);                              
+        m_nh_aux_control_service[3]  = private_nh_.advertiseService("aux_control/get_current_velj", &DRHWInterface::get_current_velj_cb, this);                               
+        m_nh_aux_control_service[4]  = private_nh_.advertiseService("aux_control/get_desired_posj", &DRHWInterface::get_desired_posj_cb, this);                                         
+        m_nh_aux_control_service[5]  = private_nh_.advertiseService("aux_control/get_desired_velj", &DRHWInterface::get_desired_velj_cb, this);                                   
+
+        m_nh_aux_control_service[6]  = private_nh_.advertiseService("aux_control/get_current_posx", &DRHWInterface::get_current_posx_cb, this);                              
+        m_nh_aux_control_service[7]  = private_nh_.advertiseService("aux_control/get_current_velx", &DRHWInterface::get_current_velx_cb, this);                                                         
+        m_nh_aux_control_service[8]  = private_nh_.advertiseService("aux_control/get_desired_posx", &DRHWInterface::get_desired_posx_cb, this);                                           
+        m_nh_aux_control_service[9]  = private_nh_.advertiseService("aux_control/get_desired_velx", &DRHWInterface::get_desired_velx_cb, this);                                                    
+
+        m_nh_aux_control_service[10]  = private_nh_.advertiseService("aux_control/get_current_tool_flange_posx", &DRHWInterface::get_current_tool_flange_posx_cb, this);                                            
+        m_nh_aux_control_service[11] = private_nh_.advertiseService("aux_control/get_current_solution_space", &DRHWInterface::get_current_solution_space_cb, this);                                                 
+        m_nh_aux_control_service[12] = private_nh_.advertiseService("aux_control/get_current_rotm", &DRHWInterface::get_current_rotm_cb, this);                                                              
+        m_nh_aux_control_service[13] = private_nh_.advertiseService("aux_control/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);                                                              
+        m_nh_aux_control_service[14] = private_nh_.advertiseService("aux_control/get_external_torque", &DRHWInterface::get_external_torque_cb, this);                                                          
+        m_nh_aux_control_service[15] = private_nh_.advertiseService("aux_control/get_tool_force", &DRHWInterface::get_tool_force_cb, this);                                                          
+        m_nh_aux_control_service[16] = private_nh_.advertiseService("aux_control/get_solution_space", &DRHWInterface::get_solution_space_cb, this);                                                      
+        m_nh_aux_control_service[17] = private_nh_.advertiseService("aux_control/get_orientation_error", &DRHWInterface::get_orientation_error_cb, this);                                                     
+
+
+        //force & stiffness
+        m_nh_force_service[0] = private_nh_.advertiseService("force/parallel_axis1", &DRHWInterface::parallel_axis1_cb, this);
+        m_nh_force_service[1] = private_nh_.advertiseService("force/parallel_axis2", &DRHWInterface::parallel_axis2_cb, this);
+        m_nh_force_service[2] = private_nh_.advertiseService("force/align_axis1", &DRHWInterface::align_axis1_cb, this);
+        m_nh_force_service[3] = private_nh_.advertiseService("force/align_axis2", &DRHWInterface::align_axis2_cb, this);
+        m_nh_force_service[4] = private_nh_.advertiseService("force/is_done_bolt_tightening", &DRHWInterface::is_done_bolt_tightening_cb, this);
+        m_nh_force_service[5] = private_nh_.advertiseService("force/release_compliance_ctrl", &DRHWInterface::release_compliance_ctrl_cb, this);
+        m_nh_force_service[6] = private_nh_.advertiseService("force/task_compliance_ctrl", &DRHWInterface::task_compliance_ctrl_cb, this);
+        m_nh_force_service[7] = private_nh_.advertiseService("force/set_stiffnessx", &DRHWInterface::set_stiffnessx_cb, this);
+        m_nh_force_service[8] = private_nh_.advertiseService("force/calc_coord", &DRHWInterface::calc_coord_cb, this);
+        m_nh_force_service[9] = private_nh_.advertiseService("force/set_user_cart_coord1", &DRHWInterface::set_user_cart_coord1_cb, this);
+        m_nh_force_service[10]= private_nh_.advertiseService("force/set_user_cart_coord2", &DRHWInterface::set_user_cart_coord2_cb, this);
+        m_nh_force_service[11]= private_nh_.advertiseService("force/set_user_cart_coord3", &DRHWInterface::set_user_cart_coord3_cb, this);
+        m_nh_force_service[12]= private_nh_.advertiseService("force/overwrite_user_cart_coord", &DRHWInterface::overwrite_user_cart_coord_cb, this);
+        m_nh_force_service[13]= private_nh_.advertiseService("force/get_user_cart_coord", &DRHWInterface::get_user_cart_coord_cb, this);
+        m_nh_force_service[14]= private_nh_.advertiseService("force/set_desired_force", &DRHWInterface::set_desired_force_cb, this);
+        m_nh_force_service[15]= private_nh_.advertiseService("force/release_force", &DRHWInterface::release_force_cb, this);
+        m_nh_force_service[16]= private_nh_.advertiseService("force/check_position_condition", &DRHWInterface::check_position_condition_cb, this);
+        m_nh_force_service[17]= private_nh_.advertiseService("force/check_force_condition", &DRHWInterface::check_force_condition_cb, this);
+        m_nh_force_service[18]= private_nh_.advertiseService("force/check_orientation_condition1", &DRHWInterface::check_orientation_condition1_cb, this);
+        m_nh_force_service[19]= private_nh_.advertiseService("force/check_orientation_condition2", &DRHWInterface::check_orientation_condition2_cb, this);
+        m_nh_force_service[20]= private_nh_.advertiseService("force/coord_transform", &DRHWInterface::coord_transform_cb, this);
+        m_nh_force_service[21]= private_nh_.advertiseService("force/get_workpiece_weight", &DRHWInterface::get_workpiece_weight_cb, this);
+        m_nh_force_service[22]= private_nh_.advertiseService("force/reset_workpiece_weight", &DRHWInterface::reset_workpiece_weight_cb, this);
 
         //  GPIO Operations
         m_nh_io_service[0] = private_nh_.advertiseService("io/set_digital_output", &DRHWInterface::set_digital_output_cb, this);
@@ -620,6 +831,7 @@ namespace dsr_control{
         m_nh_tool_service[1] = private_nh_.advertiseService("tool/get_current_tool", &DRHWInterface::get_current_tool_cb, this);
         m_nh_tool_service[2] = private_nh_.advertiseService("tool/config_create_tool", &DRHWInterface::config_create_tool_cb, this);
         m_nh_tool_service[3] = private_nh_.advertiseService("tool/config_delete_tool", &DRHWInterface::config_delete_tool_cb, this);
+        m_nh_tool_service[4] = private_nh_.advertiseService("tool/set_tool_shape", &DRHWInterface::set_tool_shape_cb, this);
 
         // DRL Operations
         m_nh_drl_service[0] = private_nh_.advertiseService("drl/drl_pause", &DRHWInterface::drl_pause_cb, this);
@@ -668,9 +880,9 @@ namespace dsr_control{
         Drfl.SetOnTpInitializingCompleted(OnTpInitializingCompletedCB);
         Drfl.SetOnHommingCompleted(OnHommingCompletedCB);
         Drfl.SetOnProgramStopped(OnProgramStoppedCB);
-        Drfl.SetOnMonitoringCtrlIO(OnMonitoringCtrlIOCB);
         Drfl.SetOnMonitoringModbus(OnMonitoringModbusCB);
-        Drfl.SetOnMonitoringData(OnMonitoringDataCB);
+        Drfl.SetOnMonitoringData(OnMonitoringDataCB);           // Callback function in M2.4 and earlier
+        Drfl.SetOnMonitoringCtrlIO(OnMonitoringCtrlIOCB);       // Callback function in M2.4 and earlier
         Drfl.SetOnMonitoringState(OnMonitoringStateCB);
         Drfl.SetOnMonitoringAccessControl(OnMonitoringAccessControlCB);
         Drfl.SetOnLogAlarm(OnLogAlarm);
@@ -701,7 +913,18 @@ namespace dsr_control{
             for(int i=strlen(tSysVerion._szController); i>0; i--)
                 if(tSysVerion._szController[i]>='0' && tSysVerion._szController[i]<='9')
                     m_nVersionDRCF += (tSysVerion._szController[i]-'0')*pow(10.0,k++);
-            ROS_INFO("m_nVersionDRCF = %d\n", m_nVersionDRCF);   
+            if(m_nVersionDRCF < 100000) m_nVersionDRCF += 100000; 
+
+            ROS_INFO("_____________________________________");   
+            ROS_INFO("m_nVersionDRCF = %d", m_nVersionDRCF);  //ex> M2.40 = 120400, M2.50 = 120500  
+            ROS_INFO("_____________________________________");   
+
+            if(m_nVersionDRCF >= 120500)    //M2.5 or later        
+            {
+                Drfl.SetOnMonitoringDataEx(OnMonitoringDataExCB);      //Callback function in version 2.5 and higher
+                Drfl.SetOnMonitoringCtrlIOEx(OnMonitoringCtrlIOExCB);  //Callback function in version 2.5 and higher
+                Drfl.SetupMonitoringVersion(1);                        //Enabling extended monitoring functions 
+            }
 
             //--- Check Robot State : STATE_STANDBY ---               
             int delay;
@@ -874,7 +1097,7 @@ namespace dsr_control{
         */
     }
 
-    //----- Service Call-back functions ------------------------------------------------------------
+    //----- SYSTEM Service Call-back functions ------------------------------------------------------------
 
     bool DRHWInterface::set_robot_mode_cb(dsr_msgs::SetRobotMode::Request& req, dsr_msgs::SetRobotMode::Response& res){
         res.success = Drfl.SetRobotMode((ROBOT_MODE)req.robot_mode);
@@ -905,11 +1128,8 @@ namespace dsr_control{
             res.pos[i] = robot_pos->_fPosition[i];
         }
     }
-    bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res){
-        res.solution_space = Drfl.GetCurrentSolutionSpace();
-    }
     bool DRHWInterface::set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res){
-        Drfl.SetSafeStopResetType((SAFE_STOP_RESET_TYPE)req.reset_type); //no return ???
+        Drfl.SetSafeStopResetType((SAFE_STOP_RESET_TYPE)req.reset_type);
         res.success = true;
     }
     bool DRHWInterface::get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res){
@@ -921,21 +1141,8 @@ namespace dsr_control{
             res.log_alarm.param[i] = str_temp;
         }
     }
-    bool DRHWInterface::get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res){
-        for(int i = 0; i < NUM_TASK; i++){
-            res.ext_torque[i] = g_stDrState.fActualEJT[i];
-        }
-    }
-    bool DRHWInterface::get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res){
-        for(int i = 0; i < NUM_TASK; i++){
-            res.joint_torque[i] = g_stDrState.fActualJTS[i];
-        }
-    }
-    bool DRHWInterface::get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res){
-        for(int i = 0; i < NUM_TASK; i++){
-            res.tool_force[i] = g_stDrState.fActualETT[i];
-        }
-    }
+
+    //----- MOTION Service Call-back functions ------------------------------------------------------------
 
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
@@ -1176,7 +1383,698 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.trans_pos[i] = robot_pos->_fPosition[i];
         }
-        //리턴값 연결 필요! 
+    }
+
+    bool DRHWInterface::fkin_cb(dsr_msgs::Fkin::Request& req, dsr_msgs::Fkin::Response& res)
+    {
+        std::array<float, NUM_TASK> joint_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), joint_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< fkin_cb >");
+        ROS_INFO("    joint_pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",joint_pos[0],joint_pos[1],joint_pos[2],joint_pos[3],joint_pos[4],joint_pos[5]);
+        ROS_INFO("    ref       = %d",req.ref);      
+    #endif
+        LPROBOT_POSE task_pos = Drfl.CalFKin(joint_pos.data(), (COORDINATE_SYSTEM)req.ref);
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posx[i] = task_pos->_fPosition[i];
+        }
+    }
+    bool DRHWInterface::ikin_cb(dsr_msgs::Ikin::Request& req, dsr_msgs::Ikin::Response& res)
+    {       
+        std::array<float, NUM_TASK> task_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< ikin_cb >");
+        ROS_INFO("    task_pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+        ROS_INFO("    ref       = %d",req.ref);      
+    #endif
+
+        LPROBOT_POSE joint_pos = Drfl.CalIKin(task_pos.data(), req.sol_space, (COORDINATE_SYSTEM)req.ref);
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posj[i] = joint_pos->_fPosition[i];
+        }
+    }
+    bool DRHWInterface::set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_ref_coord_cb >");
+        ROS_INFO("    coord = %d",req.coord);      
+    #endif
+
+        res.success = Drfl.SetReferenceCoordinate((COORDINATE_SYSTEM)req.coord);
+    }
+    bool DRHWInterface::move_home_cb(dsr_msgs::MoveHome::Request& req, dsr_msgs::MoveHome::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< move_home_cb >");
+        ROS_INFO("    target = %d",req.target);      
+    #endif
+
+        if(0 == req.target) 
+            res.res = Drfl.Home(1);
+        else 
+            res.res = Drfl.UserHome(1);
+    }
+    bool DRHWInterface::check_motion_cb(dsr_msgs::CheckMotion::Request& req, dsr_msgs::CheckMotion::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< check_motion_cb >");
+    #endif
+
+        res.status = Drfl.CheckMotion();
+    }
+    bool DRHWInterface::change_operation_speed_cb(dsr_msgs::ChangeOperationSpeed::Request& req, dsr_msgs::ChangeOperationSpeed::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< change_operation_speed_cb >");
+        ROS_INFO("    speed = %f",(float)req.speed);
+    #endif
+
+        res.success = Drfl.PlayDrlSpeed((float)req.speed);
+    }
+    bool DRHWInterface::enable_alter_motion_cb(dsr_msgs::EnableAlterMotion::Request& req, dsr_msgs::EnableAlterMotion::Response& res)
+    {
+        std::array<float, 2> limit;
+        std::array<float, 2> limit_per;
+        std::copy(req.limit_dPOS.cbegin(), req.limit_dPOS.cend(), limit.begin());
+        std::copy(req.limit_dPOS_per.cbegin(), req.limit_dPOS_per.cend(), limit_per.begin());
+ 
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< enable_alter_motion_cb >");
+        ROS_INFO("    n         = %d",req.n);
+        ROS_INFO("    mode      = %d",req.mode);
+        ROS_INFO("    ref       = %d",req.ref);
+        ROS_INFO("    limit     = %7.3f,%7.3f",limit[0],limit[1]);
+        ROS_INFO("    limit_per = %7.3f,%7.3f",limit_per[0],limit_per[1]);
+    #endif
+
+        res.success = Drfl.EnableAlterMotion((int)req.n, (PATH_MODE)req.mode, (COORDINATE_SYSTEM)req.ref, limit.data(), limit_per.data());
+    }
+    bool DRHWInterface::alter_motion_cb(dsr_msgs::AlterMotion::Request& req, dsr_msgs::AlterMotion::Response& res)
+    {
+        std::array<float, NUM_TASK> pos_alter;
+        std::copy(req.pos.cbegin(), req.pos.cend(), pos_alter.begin());
+ 
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< alter_motion_cb >");
+        ROS_INFO("    pos_alter = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",pos_alter[0],pos_alter[1],pos_alter[2],pos_alter[3],pos_alter[4],pos_alter[5]);
+    #endif
+
+        res.success = Drfl.AlterMotion(pos_alter.data());
+    }
+    bool DRHWInterface::disable_alter_motion_cb(dsr_msgs::DisableAlterMotion::Request& req, dsr_msgs::DisableAlterMotion::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< disable_alter_motion_cb >");
+    #endif
+
+        res.success = Drfl.DisableAlterMotion();
+    }
+    bool DRHWInterface::set_singularity_handling_cb(dsr_msgs::SetSingularityHandling::Request& req, dsr_msgs::SetSingularityHandling::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_singularity_handling_cb >");
+        ROS_INFO("    mode = %d",req.mode);
+    #endif
+
+        res.success = Drfl.SetSingularityHandling((SINGULARITY_AVOIDANCE)req.mode);
+    }
+
+
+    //----- AUX Control Service Call-back functions ------------------------------------------------------------
+
+    bool DRHWInterface::get_control_mode_cb(dsr_msgs::GetControlMode::Request& req, dsr_msgs::GetControlMode::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_control_mode_cb >");
+    #endif
+        //NO API , get mon_data      
+        res.control_mode = g_stDrState.nActualMode;
+    }
+    bool DRHWInterface::get_control_space_cb(dsr_msgs::GetControlSpace::Request& req, dsr_msgs::GetControlSpace::Response& res)              
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_control_space_cb >");
+    #endif
+        //NO API , get mon_data
+        res.space = g_stDrState.nActualSpace;
+    }
+    bool DRHWInterface::get_current_posj_cb(dsr_msgs::GetCurrentPosj::Request& req, dsr_msgs::GetCurrentPosj::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_posj_cb >");
+    #endif
+        LPROBOT_POSE robot_pos = Drfl.GetCurrentPose((ROBOT_SPACE)ROBOT_SPACE_JOINT);
+        for(int i = 0; i < NUM_TASK; i++){
+            res.pos[i] = robot_pos->_fPosition[i];
+        }
+    }
+    bool DRHWInterface::get_current_velj_cb(dsr_msgs::GetCurrentVelj::Request& req, dsr_msgs::GetCurrentVelj::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_velj_cb >");
+    #endif
+
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.joint_speed[i] = g_stDrState.fCurrentVelj[i];
+        }
+    }
+    bool DRHWInterface::get_desired_posj_cb(dsr_msgs::GetDesiredPosj::Request& req, dsr_msgs::GetDesiredPosj::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_desired_posj_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.pos[i] = g_stDrState.fTargetPosj[i];
+        }
+    }
+    bool DRHWInterface::get_desired_velj_cb(dsr_msgs::GetDesiredVelj::Request& req, dsr_msgs::GetDesiredVelj::Response& res)              
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_desired_velj_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.joint_vel[i] = g_stDrState.fTargetVelj[i];
+        }
+    }
+
+    bool DRHWInterface::get_current_posx_cb(dsr_msgs::GetCurrentPosx::Request& req, dsr_msgs::GetCurrentPosx::Response& res)               
+    {
+        std_msgs::Float64MultiArray arr;
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_posx_cb >");
+    #endif
+
+        LPROBOT_TASK_POSE cur_posx = Drfl.CalCurrentTaskPose((COORDINATE_SYSTEM)req.ref);
+        arr.data.clear();
+        for (int i = 0; i < NUM_TASK; i++){
+            arr.data.push_back(cur_posx->_fTargetPos[i]);
+        }
+        arr.data.push_back(cur_posx->_iTargetSol);
+        res.task_pos_info.push_back(arr);
+    }
+    bool DRHWInterface::get_current_velx_cb(dsr_msgs::GetCurrentVelx::Request& req, dsr_msgs::GetCurrentVelx::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_velx_cb >");
+    #endif
+   
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.vel[i] = g_stDrState.fCurrentVelx[i];
+        }    
+    }
+    bool DRHWInterface::get_desired_posx_cb(dsr_msgs::GetDesiredPosx::Request& req, dsr_msgs::GetDesiredPosx::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_desired_posx_cb >");
+    #endif
+        LPROBOT_POSE task_pos = Drfl.CalDesiredTaskPose((COORDINATE_SYSTEM)req.ref);
+        for(int i=0; i<NUM_TASK; i++){
+            res.pos[i] = task_pos->_fPosition[i];
+        }
+    }
+    bool DRHWInterface::get_desired_velx_cb(dsr_msgs::GetDesiredVelx::Request& req, dsr_msgs::GetDesiredVelx::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_desired_velx_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.vel[i] = g_stDrState.fTargetVelx[i];
+        }            
+    }
+    bool DRHWInterface::get_current_tool_flange_posx_cb(dsr_msgs::GetCurrentToolFlangePosx::Request& req, dsr_msgs::GetCurrentToolFlangePosx::Response& res)                                                          
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_tool_flange_posx_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i=0; i<NUM_TASK; i++){
+            res.pos[i] = g_stDrState.fCurrentToolPosx[i];
+        }
+    }
+    bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res)     
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_solution_space_cb >");
+    #endif
+        res.sol_space = Drfl.GetCurrentSolutionSpace();
+    }    
+    bool DRHWInterface::get_current_rotm_cb(dsr_msgs::GetCurrentRotm::Request& req, dsr_msgs::GetCurrentRotm::Response& res)               
+    {
+        std_msgs::Float64MultiArray arr;
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_current_rotm_cb >");
+    #endif
+        //NO API , get mon_data
+        for (int i = 0; i < 3; i++){
+            arr.data.clear();
+            for (int j = 0; j < 3; j++){
+                arr.data.push_back(g_stDrState.fRotationMatrix[i][j]);
+            }
+            res.rot_matrix.push_back(arr);
+        }
+    }
+    bool DRHWInterface::get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res)               
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_joint_torque_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i = 0; i < NUM_TASK; i++){
+            res.jts[i] = g_stDrState.fActualJTS[i];
+        }
+    }
+    bool DRHWInterface::get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res)           
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_external_torque_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i = 0; i < NUM_TASK; i++){
+            res.ext_torque[i] = g_stDrState.fActualEJT[i];
+        }
+    }
+    bool DRHWInterface::get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res)                 
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_tool_force_cb >");
+    #endif
+        //NO API , get mon_data
+        for(int i = 0; i < NUM_TASK; i++){
+            res.tool_force[i] = g_stDrState.fActualETT[i];
+        }
+    }
+    bool DRHWInterface::get_solution_space_cb(dsr_msgs::GetSolutionSpace::Request& req, dsr_msgs::GetSolutionSpace::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_solution_space_cb >");
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+    #endif
+        res.sol_space = Drfl.GetSolutionSpace(task_pos.data());
+    }
+    bool DRHWInterface::get_orientation_error_cb(dsr_msgs::GetOrientationError::Request& req, dsr_msgs::GetOrientationError::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos1;
+        std::array<float, NUM_TASK> task_pos2;
+
+        std::copy(req.xd.cbegin(), req.xd.cend(), task_pos1.begin());
+        std::copy(req.xc.cbegin(), req.xc.cend(), task_pos2.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_orientation_error_cb >");
+        ROS_INFO("    xd = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos1[0],task_pos1[1],task_pos1[2],task_pos1[3],task_pos1[4],task_pos1[5]);
+        ROS_INFO("    xc = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);      
+        ROS_INFO("    axis = %d",req.axis);
+    #endif
+        res.ori_error = Drfl.CalOrientationError(task_pos1.data(), task_pos2.data(), (TASK_AXIS)req.axis);
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    bool DRHWInterface::get_workpiece_weight_cb(dsr_msgs::GetWorkpieceWeight::Request& req, dsr_msgs::GetWorkpieceWeight::Response& res)
+    {
+        printf("            get_workpiece_weight_cb 111\n");
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_workpiece_weight_cb >");
+    #endif
+        res.weight = Drfl.MeasurePayload();
+    } 
+    bool DRHWInterface::reset_workpiece_weight_cb(dsr_msgs::ResetWorkpieceWeight::Request& req, dsr_msgs::ResetWorkpieceWeight::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< reset_workpiece_weight_cb >");
+    #endif
+        res.res = Drfl.ResetPayload();
+    } 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //----- FORCE Control Service Call-back functions ------------------------------------------------------------
+
+    bool DRHWInterface::parallel_axis1_cb(dsr_msgs::ParallelAxis1::Request& req, dsr_msgs::ParallelAxis1::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos1;
+        std::array<float, NUM_TASK> task_pos2;
+        std::array<float, NUM_TASK> task_pos3;
+ 
+        std::copy(req.x1.cbegin(), req.x1.cend(), task_pos1.begin());
+        std::copy(req.x2.cbegin(), req.x2.cend(), task_pos2.begin());
+        std::copy(req.x3.cbegin(), req.x3.cend(), task_pos3.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< parallel_axis1_cb >");
+        ROS_INFO("    x1 = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos1[0],task_pos1[1],task_pos1[2],task_pos1[3],task_pos1[4],task_pos1[5]);
+        ROS_INFO("    x2 = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);
+        ROS_INFO("    x3 = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos3[0],task_pos3[1],task_pos3[2],task_pos3[3],task_pos3[4],task_pos3[5]);
+    #endif
+        res.res = Drfl.ParallelAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::parallel_axis2_cb(dsr_msgs::ParallelAxis2::Request& req, dsr_msgs::ParallelAxis2::Response& res)
+    {
+        std::array<float, 3> vector;
+ 
+        std::copy(req.vect.cbegin(), req.vect.cend(), vector.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< parallel_axis2_cb >");
+        ROS_INFO("    vect = %7.3f,%7.3f,%7.3f",vector[0],vector[1],vector[2]);
+        ROS_INFO("    axis = %d",req.axis);
+        ROS_INFO("    ref  = %d",req.ref);
+    #endif
+        res.res = Drfl.ParallelAxis2(vector.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::align_axis1_cb(dsr_msgs::AlignAxis1::Request& req, dsr_msgs::AlignAxis1::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos1;
+        std::array<float, NUM_TASK> task_pos2;
+        std::array<float, NUM_TASK> task_pos3;
+        //std::array<float, NUM_TASK> task_pos4;
+        float fSourceVec[3] = {0, };
+
+        std::copy(req.x1.cbegin(), req.x1.cend(), task_pos1.begin());
+        std::copy(req.x2.cbegin(), req.x2.cend(), task_pos2.begin());
+        std::copy(req.x3.cbegin(), req.x3.cend(), task_pos3.begin());
+        //std::copy(req.pos.cbegin(),req.pos.cend(),task_pos4.begin());
+          //req.pos[6] -> fTargetVec[3] : only use [x,y,z]    
+        for(int i=0; i<3; i++)        
+            fSourceVec[i] = req.pos[i];
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< align_axis1_cb >");
+        ROS_INFO("    x1  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos1[0],task_pos1[1],task_pos1[2],task_pos1[3],task_pos1[4],task_pos1[5]);
+        ROS_INFO("    x2  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);
+        ROS_INFO("    x3  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos3[0],task_pos3[1],task_pos3[2],task_pos3[3],task_pos3[4],task_pos3[5]);
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f",fSourceVec[0],fSourceVec[1],fSourceVec[2]);
+        ROS_INFO("    axis = %d",req.axis);
+        ROS_INFO("    ref  = %d",req.ref);
+    #endif
+        res.res = Drfl.AlignAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::align_axis2_cb(dsr_msgs::AlignAxis2::Request& req, dsr_msgs::AlignAxis2::Response& res)
+    {
+        float fTargetVec[3] = {0, };
+        float fSourceVec[3] = {0, };
+
+        for(int i=0; i<3; i++)
+        {        
+            fTargetVec[i] = req.vect[i];
+            fSourceVec[i] = req.pos[i];     ////req.pos[6] -> fSourceVec[3] : only use [x,y,z]
+        }
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< align_axis2_cb >");
+        ROS_INFO("    vect = %7.3f,%7.3f,%7.3f",fTargetVec[0],fTargetVec[1],fTargetVec[2]);
+        ROS_INFO("    pos  = %7.3f,%7.3f,%7.3f",fSourceVec[0],fSourceVec[1],fSourceVec[2]);
+        ROS_INFO("    axis = %d",req.axis);
+        ROS_INFO("    ref  = %d",req.ref);
+    #endif
+        res.res = Drfl.AlignAxis2(fTargetVec, fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::is_done_bolt_tightening_cb(dsr_msgs::IsDoneBoltTightening::Request& req, dsr_msgs::IsDoneBoltTightening::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< is_done_bolt_tightening_cb >");
+        ROS_INFO("    m       = %f",req.m);
+        ROS_INFO("    timeout = %f",req.timeout);
+        ROS_INFO("    axis    = %d",req.axis);
+    #endif
+        res.res = Drfl.WaitForBoltTightening((FORCE_AXIS)req.axis, req.m, req.timeout);
+    }
+    bool DRHWInterface::release_compliance_ctrl_cb(dsr_msgs::ReleaseComplianceCtrl::Request& req, dsr_msgs::ReleaseComplianceCtrl::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< release_compliance_ctrl_cb >");
+    #endif
+        res.res = Drfl.LeaveTaskCompliance();
+        ///res.res = Drfl.LeaveJointCompliance();
+    }
+    bool DRHWInterface::task_compliance_ctrl_cb(dsr_msgs::TaskComplianceCtrl::Request& req, dsr_msgs::TaskComplianceCtrl::Response& res)
+    {
+        std::array<float, NUM_TASK> stiffnesses;
+ 
+        std::copy(req.stx.cbegin(), req.stx.cend(), stiffnesses.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< task_compliance_ctrl_cb >");
+        ROS_INFO("    stx     = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",stiffnesses[0],stiffnesses[1],stiffnesses[2],stiffnesses[3],stiffnesses[4],stiffnesses[5]);
+        ROS_INFO("    ref     = %d",req.ref);
+        ROS_INFO("    timeout = %f",req.time);
+    #endif
+        res.res = Drfl.EnterTaskCompliance(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+    }
+    bool DRHWInterface::set_stiffnessx_cb(dsr_msgs::SetStiffnessx::Request& req, dsr_msgs::SetStiffnessx::Response& res)
+    {
+        std::array<float, NUM_TASK> stiffnesses;
+ 
+        std::copy(req.stx.cbegin(), req.stx.cend(), stiffnesses.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_stiffnessx_cb >");
+        ROS_INFO("    stx     = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",stiffnesses[0],stiffnesses[1],stiffnesses[2],stiffnesses[3],stiffnesses[4],stiffnesses[5]);
+        ROS_INFO("    ref     = %d",req.ref);
+        ROS_INFO("    timeout = %f",req.time);
+    #endif
+        res.res = Drfl.SetTaskStiffness(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+    }
+    bool DRHWInterface::calc_coord_cb(dsr_msgs::CalcCoord::Request& req, dsr_msgs::CalcCoord::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos1;
+        std::array<float, NUM_TASK> task_pos2;
+        std::array<float, NUM_TASK> task_pos3;
+        std::array<float, NUM_TASK> task_pos4;
+ 
+        std::copy(req.x1.cbegin(), req.x1.cend(), task_pos1.begin());
+        std::copy(req.x2.cbegin(), req.x2.cend(), task_pos2.begin());
+        std::copy(req.x3.cbegin(), req.x3.cend(), task_pos3.begin());
+        std::copy(req.x4.cbegin(), req.x4.cend(), task_pos4.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< calc_coord_cb >");
+        ROS_INFO("    input_pos_cnt = %d",req.input_pos_cnt); 
+        ROS_INFO("    x1  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos1[0],task_pos1[1],task_pos1[2],task_pos1[3],task_pos1[4],task_pos1[5]);
+        ROS_INFO("    x2  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);
+        ROS_INFO("    x3  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos3[0],task_pos3[1],task_pos3[2],task_pos3[3],task_pos3[4],task_pos3[5]);
+        ROS_INFO("    x4  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos4[0],task_pos4[1],task_pos4[2],task_pos4[3],task_pos4[4],task_pos4[5]);
+        ROS_INFO("    ref = %d",req.ref);
+        ROS_INFO("    mod = %d",req.mod);
+    #endif
+        LPROBOT_POSE task_pos = Drfl.CalUserCoordinate(req.input_pos_cnt, req.mod, (COORDINATE_SYSTEM)req.ref, task_pos1.data(), task_pos2.data(), task_pos3.data(), task_pos4.data());
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posx[i] = task_pos->_fPosition[i];
+        }
+    }
+    
+    bool DRHWInterface::set_user_cart_coord1_cb(dsr_msgs::SetUserCartCoord1::Request& req, dsr_msgs::SetUserCartCoord1::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+ 
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_user_cart_coord1_cb >");
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+        ROS_INFO("    ref = %d",req.ref);
+    #endif
+        res.id = Drfl.ConfigUserCoordinate(0, task_pos.data(), (COORDINATE_SYSTEM)req.ref);  
+    }
+    bool DRHWInterface::set_user_cart_coord2_cb(dsr_msgs::SetUserCartCoord2::Request& req, dsr_msgs::SetUserCartCoord2::Response& res)
+    {
+        //std::array<float, NUM_TASK> task_pos1;
+        //std::array<float, NUM_TASK> task_pos2;
+        //std::array<float, NUM_TASK> task_pos3;
+        //std::array<float, NUM_TASK> target_org;
+        float fTargetPos[3][NUM_TASK] = {0, };
+        float fTargetOrg[3] = {0, };
+        
+        //req.x1[6] + req.x2[6] + req.x3[6] -> fTargetPos[3][NUM_TASK] 
+        for(int i=0; i<NUM_TASK; i++)        
+        {
+            fTargetPos[0][i] = req.x1[i];
+            fTargetPos[1][i] = req.x2[i];
+            fTargetPos[2][i] = req.x3[i];
+        }
+        //req.pos[6] -> fTargetOrg[3] : only use [x,y,z]    
+        for(int i=0; i<3; i++)        
+            fTargetOrg[i] = req.pos[i];
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_user_cart_coord2_cb >");
+        ROS_INFO("    x1  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",fTargetPos[0][0],fTargetPos[0][1],fTargetPos[0][2],fTargetPos[0][3],fTargetPos[0][4],fTargetPos[0][5]);
+        ROS_INFO("    x2  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",fTargetPos[1][0],fTargetPos[1][1],fTargetPos[1][2],fTargetPos[1][3],fTargetPos[1][4],fTargetPos[1][5]);
+        ROS_INFO("    x3  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",fTargetPos[2][0],fTargetPos[2][1],fTargetPos[2][2],fTargetPos[2][3],fTargetPos[2][4],fTargetPos[2][5]);
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",fTargetOrg[0],fTargetOrg[1],fTargetOrg[2],fTargetOrg[3],fTargetOrg[4],fTargetOrg[5]);
+        ROS_INFO("    ref = %d",req.ref);
+    #endif
+        res.id = Drfl.ConfigUserCoordinateSystem(fTargetPos, fTargetOrg, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::set_user_cart_coord3_cb(dsr_msgs::SetUserCartCoord3::Request& req, dsr_msgs::SetUserCartCoord3::Response& res)
+    {
+        float fTargetVec[2][3] = {0, };
+        float fTargetOrg[3] = {0, };
+
+        //req.u1[3] + req.c1[3] -> fTargetVec[2][3]
+        for(int i=0; i<3; i++)        
+        {
+            fTargetVec[0][i] = req.u1[i];
+            fTargetVec[1][i] = req.v1[i];
+        }
+        //req.pos[6] -> fTargetOrg[3] : only use [x,y,z]    
+        for(int i=0; i<3; i++)        
+            fTargetOrg[i] = req.pos[i];
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_user_cart_coord3_cb >");
+        ROS_INFO("    u1  = %7.3f,%7.3f,%7.3f",fTargetVec[0][0],fTargetVec[0][1],fTargetVec[0][2]);
+        ROS_INFO("    v1  = %7.3f,%7.3f,%7.3f",fTargetVec[1][0],fTargetVec[1][1],fTargetVec[1][2]);
+        ROS_INFO("    org = %7.3f,%7.3f,%7.3f",fTargetOrg[0],fTargetOrg[1],fTargetOrg[2]);
+        ROS_INFO("    ref = %d",req.ref);
+    #endif
+        res.id = Drfl.ConfigUserCoordinateSystemEx(fTargetVec, fTargetOrg, (COORDINATE_SYSTEM)req.ref);
+    }
+    
+    bool DRHWInterface::overwrite_user_cart_coord_cb(dsr_msgs::OverwriteUserCartCoord::Request& req, dsr_msgs::OverwriteUserCartCoord::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+ 
+        std::copy(req.pos.cbegin(),req.pos.cend(),task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< overwrite_user_cart_coord_cb >");
+        ROS_INFO("    id  = %d",req.id);
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+        ROS_INFO("    ref = %d",req.ref);
+    #endif
+        res.id = Drfl.UpdateUserCoordinate(0, req.id, task_pos.data(), (COORDINATE_SYSTEM)req.ref);  //0=AUTO 
+    }
+    bool DRHWInterface::get_user_cart_coord_cb(dsr_msgs::GetUserCartCoord::Request& req, dsr_msgs::GetUserCartCoord::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< get_user_cart_coord_cb >");
+        ROS_INFO("    id  = %d",req.id);
+    #endif
+        LPUSER_COORDINATE result = Drfl.GetUserCoordinate(req.id);
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posx[i] = result->_fTargetPos[i];
+        }
+        res.ref = result->_iTargetRef;
+    }
+    bool DRHWInterface::set_desired_force_cb(dsr_msgs::SetDesiredForce::Request& req, dsr_msgs::SetDesiredForce::Response& res)
+    {
+        std::array<float, NUM_TASK> feedback;
+        std::array<unsigned char, NUM_TASK> direction;
+ 
+        std::copy(req.fd.cbegin(), req.fd.cend(), feedback.begin());
+        std::copy(req.dir.cbegin(),req.dir.cend(), direction.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< set_desired_force_cb >");
+        ROS_INFO("    feedback  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",feedback[0],feedback[1],feedback[2],feedback[3],feedback[4],feedback[5]);
+        ROS_INFO("    direction = %d,%d,%d,%d,%d,%d",direction[0],direction[1],direction[2],direction[3],direction[4],direction[5]);
+        ROS_INFO("    ref   = %d", req.ref);
+        ROS_INFO("    time  = %f", req.time); 
+        ROS_INFO("    mod   = %d", req.mod);
+    #endif
+        res.res = Drfl.SetDesiredForce(feedback.data(), direction.data(), (COORDINATE_SYSTEM)req.ref, req.time, (FORCE_MODE)req.mod);
+    }
+    bool DRHWInterface::release_force_cb(dsr_msgs::ReleaseForce::Request& req, dsr_msgs::ReleaseForce::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< release_force_cb >");
+    #endif
+        res.res = Drfl.ResetDesiredForce(req.time);
+    }
+    bool DRHWInterface::check_position_condition_cb(dsr_msgs::CheckPositionCondition::Request& req, dsr_msgs::CheckPositionCondition::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< check_position_condition_cb >");
+        ROS_INFO("    axis = %d", req.axis);
+        ROS_INFO("    min  = %f", req.min);
+        ROS_INFO("    max  = %f", req.max);
+        ROS_INFO("    ref  = %d", req.ref);
+        ROS_INFO("    mode = %d", req.mode);
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+    #endif
+        if(0==req.mode)  //DR_MV_MOD_ABS
+            res.success = Drfl.WaitForPositionCondition   ((FORCE_AXIS)req.axis, req.min, req.max, (COORDINATE_SYSTEM)req.ref);
+        else            //DR_MV_MOD_REL
+            res.success = Drfl.WaitForPositionConditionRel((FORCE_AXIS)req.axis, req.min, req.max, task_pos.data(), (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::check_force_condition_cb(dsr_msgs::CheckForceCondition::Request& req, dsr_msgs::CheckForceCondition::Response& res)
+    {
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< check_force_condition_cb >");
+        ROS_INFO("    axis = %d", req.axis);
+        ROS_INFO("    min  = %f", req.min);
+        ROS_INFO("    max  = %f", req.max);
+        ROS_INFO("    ref  = %d", req.ref);
+    #endif
+        res.success = Drfl.WaitForForceCondition((FORCE_AXIS)req.axis, req.min, req.max, (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::check_orientation_condition1_cb(dsr_msgs::CheckOrientationCondition1::Request& req, dsr_msgs::CheckOrientationCondition1::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos1;
+        std::array<float, NUM_TASK> task_pos2;
+        std::copy(req.min.cbegin(), req.min.cend(), task_pos1.begin());
+        std::copy(req.max.cbegin(), req.max.cend(), task_pos2.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< check_orientation_condition1_cb >");
+        ROS_INFO("    axis = %d", req.axis);
+        ROS_INFO("    min = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos1[0],task_pos1[1],task_pos1[2],task_pos1[3],task_pos1[4],task_pos1[5]);
+        ROS_INFO("    max = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);
+        ROS_INFO("    ref  = %d", req.ref);
+        ROS_INFO("    mode = %d", req.mode);
+    #endif
+        res.success = Drfl.WaitForOrientationCondition((FORCE_AXIS)req.axis , task_pos1.data(), task_pos2.data(), (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::check_orientation_condition2_cb(dsr_msgs::CheckOrientationCondition2::Request& req, dsr_msgs::CheckOrientationCondition2::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+ 
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< check_orientation_condition2_cb >");
+        ROS_INFO("    axis = %d", req.axis);
+        ROS_INFO("    min  = %f", req.min);
+        ROS_INFO("    max  = %f", req.max);
+        ROS_INFO("    ref  = %d", req.ref);
+        ROS_INFO("    mode = %d", req.mode);
+        ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+    #endif
+        res.success = Drfl.WaitForOrientationConditionRel((FORCE_AXIS)req.axis , req.min, req.max, task_pos.data(), (COORDINATE_SYSTEM)req.ref);
+    }
+    bool DRHWInterface::coord_transform_cb(dsr_msgs::CoordTransform::Request& req, dsr_msgs::CoordTransform::Response& res)
+    {
+        std::array<float, NUM_TASK> task_pos;
+ 
+        std::copy(req.pos_in.cbegin(), req.pos_in.cend(), task_pos.begin());
+
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< coord_transform_cb >");
+        ROS_INFO("    pos_in  = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+        ROS_INFO("    ref_in  = %d", req.ref_in);
+        ROS_INFO("    ref_out = %d", req.ref_out);
+    #endif
+        LPROBOT_POSE result_pos = Drfl.TransformCoordinateSystem(task_pos.data(), (COORDINATE_SYSTEM)req.ref_in, (COORDINATE_SYSTEM)req.ref_out);
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posx[i] = result_pos->_fPosition[i];
+        }
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1294,6 +2192,7 @@ namespace dsr_control{
         //ROS_INFO("DRHWInterface::config_delete_tcp_cb() called and calling Drfl.ConfigDeleteTCP");
         res.success = Drfl.ConfigDeleteTCP(req.name);
     }
+
     bool DRHWInterface::set_current_tool_cb(dsr_msgs::SetCurrentTool::Request& req, dsr_msgs::SetCurrentTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_current_tool_cb() called and calling Drfl.SetCurrentTool");
@@ -1318,7 +2217,11 @@ namespace dsr_control{
         //ROS_INFO("DRHWInterface::config_delete_tool_cb() called and calling Drfl.ConfigDeleteTool");
         res.success = Drfl.ConfigDeleteTool(req.name);
     }
-    
+    bool DRHWInterface::set_tool_shape_cb(dsr_msgs::SetToolShape::Request& req, dsr_msgs::SetToolShape::Response& res)
+    {
+        res.success = Drfl.SetCurrentToolShape(req.name);
+    }
+
     //Gripper Service
 
     bool DRHWInterface::robotiq_2f_move_cb(dsr_msgs::Robotiq2FMove::Request& req, dsr_msgs::Robotiq2FMove::Response& res)

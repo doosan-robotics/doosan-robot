@@ -26,13 +26,9 @@ add_service_files(
     ./system/SetRobotSpeedMode.srv
     ./system/GetRobotSpeedMode.srv
     ./system/GetCurrentPose.srv
-    ./system/GetCurrentSolutionSpace.srv
     ./system/SetSafeStopResetType.srv
     ./system/GetLastAlarm.srv
     ./system/GetRobotState.srv
-    ./system/GetExternalTorque.srv
-    ./system/GetJointTorque.srv
-    ./system/GetToolForce.srv            
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv
@@ -50,11 +46,65 @@ add_service_files(
     ./motion/MovePause.srv
     ./motion/MoveResume.srv
     ./motion/Trans.srv
+    ./motion/Fkin.srv
+    ./motion/Ikin.srv
+    ./motion/SetRefCoord.srv
+    ./motion/MoveHome.srv
+    ./motion/CheckMotion.srv
+    ./motion/ChangeOperationSpeed.srv
+    ./motion/EnableAlterMotion.srv
+    ./motion/AlterMotion.srv
+    ./motion/DisableAlterMotion.srv
+    ./motion/SetSingularityHandling.srv
 
+    ./aux_control/GetControlMode.srv              
+    ./aux_control/GetControlSpace.srv             
+    ./aux_control/GetCurrentPosj.srv              
+    ./aux_control/GetDesiredPosj.srv
+    ./aux_control/GetCurrentVelj.srv              
+    ./aux_control/GetDesiredVelj.srv              
+    ./aux_control/GetCurrentPosx.srv              
+    ./aux_control/GetCurrentToolFlangePosx.srv    
+    ./aux_control/GetCurrentVelx.srv              
+    ./aux_control/GetDesiredPosx.srv
+    ./aux_control/GetDesiredVelx.srv              
+    ./aux_control/GetCurrentSolutionSpace.srv     
+    ./aux_control/GetCurrentRotm.srv              
+    ./aux_control/GetJointTorque.srv              
+    ./aux_control/GetExternalTorque.srv          
+    ./aux_control/GetToolForce.srv                
+    ./aux_control/GetSolutionSpace.srv
+    ./aux_control/GetOrientationError.srv
+
+    ./force/ParallelAxis1.srv
+    ./force/ParallelAxis2.srv
+    ./force/AlignAxis1.srv
+    ./force/AlignAxis2.srv
+    ./force/IsDoneBoltTightening.srv
+    ./force/ReleaseComplianceCtrl.srv
+    ./force/TaskComplianceCtrl.srv
+    ./force/SetStiffnessx.srv
+    ./force/CalcCoord.srv
+    ./force/SetUserCartCoord1.srv
+    ./force/SetUserCartCoord2.srv
+    ./force/SetUserCartCoord3.srv
+    ./force/OverwriteUserCartCoord.srv
+    ./force/GetUserCartCoord.srv
+    ./force/SetDesiredForce.srv
+    ./force/ReleaseForce.srv
+    ./force/CheckPositionCondition.srv
+    ./force/CheckForceCondition.srv
+    ./force/CheckOrientationCondition1.srv
+    ./force/CheckOrientationCondition2.srv
+    ./force/CoordTransform.srv
+    ./force/GetWorkpieceWeight.srv
+    ./force/ResetWorkpieceWeight.srv
+    
     ./tool/ConfigCreateTool.srv
     ./tool/ConfigDeleteTool.srv
     ./tool/SetCurrentTool.srv
     ./tool/GetCurrentTool.srv
+    ./tool/SetToolShape.srv
 
     ./tcp/ConfigCreateTcp.srv
     ./tcp/ConfigDeleteTcp.srv

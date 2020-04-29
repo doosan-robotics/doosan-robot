@@ -95,24 +95,65 @@ typedef struct _ROBOT_MONITORING_JOINT
 
 } ROBOT_MONITORING_JOINT, *LPROBOT_MONITORING_JOINT;
 
-typedef struct _ROBOT_MONITORING_TOOL 
+typedef struct _ROBOT_MONITORING_TASK 
 {
     /* Position Actual Value(0: tool, 1: flange) */
-    float                       _fActualPos[2][NUM_TASK]; 
+    float                       _fActualPos[2][NUMBER_OF_JOINT]; 
     /* Velocity Actual Value */
-    float                       _fActualVel[NUM_TASK];
+    float                       _fActualVel[NUMBER_OF_JOINT];
     /* Task Error */
-    float                       _fActualErr[NUM_TASK];
+    float                       _fActualErr[NUMBER_OF_JOINT];
     /* Target Position */
-    float                       _fTargetPos[NUM_TASK];
+    float                       _fTargetPos[NUMBER_OF_JOINT];
     /* Target Velocity */
-    float                       _fTargetVel[NUM_TASK];
+    float                       _fTargetVel[NUMBER_OF_JOINT];
     /* Solution Space */
     unsigned char               _iSolutionSpace;
     /* Rotation Matrix */
     float                       _fRotationMatrix[3][3];
 
-} ROBOT_MONITORING_TOOL, *LPROBOT_MONITORING_TOOL;
+} ROBOT_MONITORING_TASK, *LPROBOT_MONITORING_TASK;
+
+typedef struct _ROBOT_MONITORING_WORLD
+{
+    /* world to base relation */
+    float                       _fActualW2B[NUMBER_OF_JOINT];
+    /* Position Actual Value  (0:tool, 1:flange) */
+    float                       _fActualPos[2][NUMBER_OF_JOINT]; 
+    /* Velocity Actual Value */
+    float                       _fActualVel[NUMBER_OF_JOINT];
+    /* External Task Force/Torque */
+    float                       _fActualETT[NUMBER_OF_JOINT];    
+    /* Target Position */
+    float                       _fTargetPos[NUMBER_OF_JOINT];
+    /* Target Velocity */
+    float                       _fTargetVel[NUMBER_OF_JOINT];   
+    /* Rotation Matrix */
+    float                       _fRotationMatrix[3][3];
+
+} ROBOT_MONITORING_WORLD, *LPROBOT_MONITORING_WORLD;
+
+typedef struct _ROBOT_MONITORING_USER
+{
+    /* actual user coord no */
+    unsigned char               _iActualUCN;
+    /* base: 0 world: 2 */
+    unsigned char               _iParent;
+    /* Position Actual Value  (0:tool, 1:flange) */
+    float                       _fActualPos[2][NUMBER_OF_JOINT]; 
+    /* Velocity Actual Value */
+    float                       _fActualVel[NUMBER_OF_JOINT];
+    /* External Task Force/Torque */
+    float                       _fActualETT[NUMBER_OF_JOINT];       
+    /* Target Position */
+    float                       _fTargetPos[NUMBER_OF_JOINT];
+    /* Target Velocity */
+    float                       _fTargetVel[NUMBER_OF_JOINT];
+    /* Rotation Matrix */
+    float                       _fRotationMatrix[3][3];
+
+} ROBOT_MONITORING_USER, *LPROBOT_MONITORING_USER;
+
 
 typedef struct _ROBOT_MONITORING_TORQUE 
 {
@@ -142,11 +183,29 @@ typedef struct _ROBOT_MONITORING_DATA
     /* joint */
     ROBOT_MONITORING_JOINT      _tJoint;
     /* task */
-    ROBOT_MONITORING_TOOL       _tTool;
+    ROBOT_MONITORING_TASK       _tTask;
     /* torque */
     ROBOT_MONITORING_TORQUE     _tTorque;  
 
 } MONITORING_CONTROL, *LPMONITORING_CONTROL;
+
+typedef struct _ROBOT_MONITORING_DATA_EX
+{
+    ROBOT_MONITORING_STATE      _tState;
+    /* joint */
+    ROBOT_MONITORING_JOINT      _tJoint;
+    /* task */
+    ROBOT_MONITORING_TASK       _tTask;
+    /* torque */
+    ROBOT_MONITORING_TORQUE     _tTorque;
+    /* world */
+    ROBOT_MONITORING_WORLD      _tWorld;
+    /*user */
+    ROBOT_MONITORING_USER       _tUser;
+} ROBOT_MONITORING_DATA_EX, *LPROBOT_MONITORING_DATA_EX;
+
+typedef ROBOT_MONITORING_DATA_EX
+    MONITORING_CONTROL_EX, *LPMONITORING_CONTROL_EX;
 
 typedef struct _MONITORING_MISC
 {
@@ -173,6 +232,14 @@ typedef struct _MONITORING_DATA
     MONITORING_MISC             _tMisc;
 
 } MONITORING_DATA, *LPMONITORING_DATA;
+
+typedef struct _MONITORING_DATA_EX
+{
+    MONITORING_CONTROL_EX       _tCtrl;
+    /* misc. */
+    MONITORING_MISC             _tMisc;
+
+} MONITORING_DATA_EX, *LPMONITORING_DATA_EX;
 
 typedef struct _READ_CTRLIO_INPUT
 {
@@ -208,6 +275,50 @@ typedef struct _READ_CTRLIO_OUTPUT
 
 } READ_CTRLIO_OUTPUT, *LPREAD_CTRLIO_OUTPUT;
 
+typedef struct _READ_CTRLIO_INPUT_EX
+{
+    /* Digtal Input data */
+    unsigned char               _iActualDI[NUM_DIGITAL];
+    /* Analog Input data */
+    float                       _fActualAI[NUM_ANALOG];
+    /* switch input data */
+    unsigned char               _iActualSW[NUM_SWITCH];
+    /* Safety Input data */
+    unsigned char               _iActualSI[NUM_SAFETY_IN];
+    /*  Analog Input type */
+    unsigned char               _iActualAT[NUM_ANALOG];
+    
+} READ_CTRLIO_INPUT_EX, *LPREAD_CTRLIO_INPUT_EX;
+
+typedef struct _READ_ENCODER_INPUT
+{
+    /* Encorder strove signal */
+    unsigned char               _iActualES[NUM_ENCORDER];
+    /* Encorder raw data */
+    unsigned int                _iActualED[NUM_ENCORDER];
+    /* Encorder Reset signal */
+    unsigned char               _iActualER[NUM_ENCORDER];
+
+} READ_ENCODER_INPUT, *LPREAD_ENCODER_INPUT;
+
+typedef struct _READ_CTRLIO_OUTPUT_EX
+{
+    /* Digital Output data */
+    unsigned char               _iTargetDO[NUM_DIGITAL];
+    /* Analog Output data */
+    float                       _fTargetAO[NUM_ANALOG];
+    /*  Analog Output type */
+    unsigned char               _iTargetAT[NUM_ANALOG];
+
+} READ_CTRLIO_OUTPUT_EX, *LPREAD_CTRLIO_OUTPUT_EX;
+
+typedef struct _READ_PROCESS_INPUT
+{
+    /* Digtal Input data */
+    unsigned char               _iActualDI[4];
+
+} READ_PROCESS_INPUT, *LPREAD_PROCESS_INPUT;
+
 typedef struct _MONITORING_CTRLIO
 {
     /* input data */
@@ -215,6 +326,19 @@ typedef struct _MONITORING_CTRLIO
     /* output data */
     READ_CTRLIO_OUTPUT          _tOutput;
 } MONITORING_CTRLIO, *LPMONITORING_CTRLIO;
+
+
+typedef struct _MONITORING_CTRLIO_EX
+{
+    /* input data */
+    READ_CTRLIO_INPUT_EX        _tInput;
+    /* output data */
+    READ_CTRLIO_OUTPUT_EX       _tOutput;
+    /* input encoder data*/
+    READ_ENCODER_INPUT          _tEncoder;
+    /* reserved data */
+    unsigned char               _szReserved[24];
+} MONITORING_CTRLIO_EX, *LPMONITORING_CTRLIO_EX;
 
 typedef struct _MODBUS_REGISTER
 {
@@ -248,6 +372,37 @@ typedef struct _LOG_ALARM
 
 typedef LOG_ALARM MONITORING_ALARM;
 
+typedef struct _MESSAGE_PROGRESS
+{
+    /* current step */
+    unsigned char               _iCurrentCount;
+    /*  total step  */
+    unsigned char               _iTotalCount;
+} MESSAGE_PROGRESS, *LPMESSAGE_PROGRESS;
+
+typedef struct _MESSAGE_POPUP
+{
+    /* message string */
+    char                        _szText[MAX_STRING_SIZE];
+    /*  Message: 0, Warning: 1, Alarm: 2 */
+    unsigned char               _iLevel;
+    /*  resuem and stop : 0, ok : 1 */
+    unsigned char               _iBtnType;
+
+} MESSAGE_POPUP, *LPMESSAGE_POPUP;
+
+typedef MESSAGE_POPUP MONITORING_POPUP;
+
+typedef struct _MESSAGE_INPUT
+{
+    /* message string */
+    char                        _szText[MAX_STRING_SIZE];
+    /*  int: 0, float: 1, string: 2 , bool: 3*/
+    unsigned char               _iType;
+} MESSAGE_INPUT, *LPMESSAGE_INPUT;
+
+typedef MESSAGE_INPUT MONITORING_INPUT;
+
 typedef struct _MOVE_POSB 
 {
     /*  q               */
@@ -274,5 +429,13 @@ typedef struct _ROBOT_TASK_POSE
     unsigned char               _iTargetSol;
 
 } ROBOT_TASK_POSE, *LPROBOT_TASK_POSE;
+
+typedef struct _USER_COORDINATE
+{
+    unsigned char _iReqId;
+    unsigned char _iTargetRef;
+    float _fTargetPos[NUM_TASK];
+} USER_COORDINATE, *LPUSER_COORDINATE;
+
 
 #pragma pack()

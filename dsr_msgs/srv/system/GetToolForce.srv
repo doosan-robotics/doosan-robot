@@ -1,3 +1,0 @@
-# returns the external force applied to the current tool
----
-float64[6] tool_force

@@ -1,4 +1,8 @@
+#____________________________________________________________________________________________
 # move_joint  
+# The robot moves to the target joint position (pos) from the current joint position.
+#____________________________________________________________________________________________
+
 float64[6] pos               # target joint angle list [degree] 
 float64    vel               # set velocity: [deg/sec]
 float64    acc               # set acceleration: [deg/sec2]

@@ -1,5 +1,8 @@
+#____________________________________________________________________________________________
 # move_spline_task  
 ###float64[100][6] pos            # target
+#____________________________________________________________________________________________
+
 std_msgs/Float64MultiArray[] pos  # target 
 int8            posCnt            # target cnt 
 float64[2]      vel               # set velocity: [mm/sec], [deg/sec]

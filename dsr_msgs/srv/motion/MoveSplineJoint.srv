@@ -1,5 +1,8 @@
+#____________________________________________________________________________________________
 # move_spline_joint  
 ###float64[100][6] pos         # target
+#____________________________________________________________________________________________
+
 std_msgs/Float64MultiArray[] pos         # target [100][6] pos
 int8       posCnt                        # target cnt 
 float64    vel                           # set velocity: [deg/sec]

@@ -35,6 +35,7 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
+#define _DEBUG_DSR_CTL      1
 
 #ifndef DR_HW_INTERFACE_H
 #define DR_HW_INTERFACE_H
@@ -67,12 +68,8 @@
 #include <dsr_msgs/SetRobotSpeedMode.h>
 #include <dsr_msgs/GetRobotSpeedMode.h>
 #include <dsr_msgs/GetCurrentPose.h>
-#include <dsr_msgs/GetCurrentSolutionSpace.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetLastAlarm.h>
-#include <dsr_msgs/GetExternalTorque.h>
-#include <dsr_msgs/GetJointTorque.h>
-#include <dsr_msgs/GetToolForce.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -91,6 +88,61 @@
 #include <dsr_msgs/MoveStop.h>
 #include <dsr_msgs/MoveResume.h>
 #include <dsr_msgs/Trans.h>
+#include <dsr_msgs/Fkin.h>
+#include <dsr_msgs/Ikin.h>
+#include <dsr_msgs/SetRefCoord.h>
+#include <dsr_msgs/MoveHome.h>
+#include <dsr_msgs/CheckMotion.h>
+#include <dsr_msgs/ChangeOperationSpeed.h>
+#include <dsr_msgs/EnableAlterMotion.h>
+#include <dsr_msgs/AlterMotion.h>
+#include <dsr_msgs/DisableAlterMotion.h>
+#include <dsr_msgs/SetSingularityHandling.h>
+
+//----- auxiliary_control
+#include <dsr_msgs/GetControlMode.h>          
+#include <dsr_msgs/GetControlSpace.h>         
+#include <dsr_msgs/GetCurrentPosj.h>          
+#include <dsr_msgs/GetCurrentVelj.h>          
+#include <dsr_msgs/GetDesiredPosj.h>
+#include <dsr_msgs/GetDesiredVelj.h>          
+#include <dsr_msgs/GetCurrentPosx.h>          
+#include <dsr_msgs/GetCurrentToolFlangePosx.h>
+#include <dsr_msgs/GetCurrentVelx.h>          
+#include <dsr_msgs/GetDesiredPosx.h>
+#include <dsr_msgs/GetDesiredVelx.h>          
+#include <dsr_msgs/GetCurrentSolutionSpace.h> 
+#include <dsr_msgs/GetCurrentRotm.h>          
+#include <dsr_msgs/GetJointTorque.h>          
+#include <dsr_msgs/GetExternalTorque.h>      
+#include <dsr_msgs/GetToolForce.h>            
+#include <dsr_msgs/GetSolutionSpace.h>
+#include <dsr_msgs/GetOrientationError.h>
+
+//----- force/stiffness
+#include <dsr_msgs/ParallelAxis1.h>
+#include <dsr_msgs/ParallelAxis2.h>
+#include <dsr_msgs/AlignAxis1.h>
+#include <dsr_msgs/AlignAxis2.h>
+#include <dsr_msgs/IsDoneBoltTightening.h>
+#include <dsr_msgs/ReleaseComplianceCtrl.h>
+#include <dsr_msgs/TaskComplianceCtrl.h>
+#include <dsr_msgs/SetStiffnessx.h>
+#include <dsr_msgs/CalcCoord.h>
+#include <dsr_msgs/SetUserCartCoord1.h>
+#include <dsr_msgs/SetUserCartCoord2.h>
+#include <dsr_msgs/SetUserCartCoord3.h>
+#include <dsr_msgs/OverwriteUserCartCoord.h>
+#include <dsr_msgs/GetUserCartCoord.h>
+#include <dsr_msgs/SetDesiredForce.h>
+#include <dsr_msgs/ReleaseForce.h>
+#include <dsr_msgs/CheckPositionCondition.h>
+#include <dsr_msgs/CheckForceCondition.h>
+#include <dsr_msgs/CheckOrientationCondition1.h>
+#include <dsr_msgs/CheckOrientationCondition2.h>
+#include <dsr_msgs/CoordTransform.h>
+#include <dsr_msgs/GetWorkpieceWeight.h>
+#include <dsr_msgs/ResetWorkpieceWeight.h>
 
 //io
 #include <dsr_msgs/SetCtrlBoxDigitalOutput.h>
@@ -127,6 +179,7 @@
 #include <dsr_msgs/ConfigDeleteTool.h>
 #include <dsr_msgs/GetCurrentTool.h>
 #include <dsr_msgs/SetCurrentTool.h>
+#include <dsr_msgs/SetToolShape.h>
 
 //gripper
 #include <dsr_msgs/Robotiq2FOpen.h>
@@ -167,6 +220,7 @@ typedef struct {
     char    strRobotState[MAX_SYMBOL_SIZE];
     float   fCurrentPosj[NUM_JOINT];
     float   fCurrentPosx[NUM_TASK];
+    float   fCurrentToolPosx[NUM_TASK];
 
     int     nActualMode;
     int     nActualSpace;
@@ -209,6 +263,43 @@ typedef struct {
     bool    bMasteringNeed;
     bool    bDrlStopped;
     bool    bDisconnected;
+
+    //--- The following variables have been updated since version M2.50 or higher. ---
+	//ROBOT_MONITORING_WORLD
+	float   fActualW2B[6];
+	float   fCurrentPosW[2][6];
+	float   fCurrentVelW[6];
+	float   fWorldETT[6];
+	float   fTargetPosW[6];
+	float   fTargetVelW[6];
+	float   fRotationMatrixWorld[3][3];
+
+	//ROBOT_MONITORING_USER
+	int     iActualUCN;
+	int     iParent;
+	float   fCurrentPosU[2][6];
+	float   fCurrentVelU[6];
+	float   fUserETT[6];
+	float   fTargetPosU[6];
+	float   fTargetVelU[6];
+	float   fRotationMatrixUser[3][3];
+
+    //READ_CTRLIO_INPUT_EX
+	float   fActualAI[6];
+	bool    bActualSW[3];
+	bool    bActualSI[2];
+	int     iActualAT[2];
+
+	//READ_CTRLIO_OUTPUT_EX
+	float   fTargetAO[2];
+	int     iTargetAT[2];
+
+	//READ_ENCODER_INPUT
+	bool    bActualES[2];
+	int     iActualED[2];
+	bool    bActualER[2];
+    //---------------------------------------------------------------------------------
+
 } DR_STATE, *LPDR_STATE;
 
 using namespace DRAFramework;
@@ -229,9 +320,11 @@ namespace dsr_control{
         static void OnHommingCompletedCB();
         static void OnProgramStoppedCB(const PROGRAM_STOP_CAUSE iStopCause);
         static void OnMonitoringDataCB(const LPMONITORING_DATA pData);
+        static void OnMonitoringDataExCB(const LPMONITORING_DATA_EX pData);
         static void OnTpInitializingCompletedCB();
 
         static void OnMonitoringCtrlIOCB (const LPMONITORING_CTRLIO pCtrlIO);
+        static void OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX pCtrlIO);
         static void OnMonitoringModbusCB (const LPMONITORING_MODBUS pModbus);
         static void OnMonitoringStateCB(const ROBOT_STATE eState);
         static void OnMonitoringAccessControlCB(const MONITORING_ACCESS_CONTROL eAccCtrl);
@@ -250,12 +343,15 @@ namespace dsr_control{
 
         //----- Service ---------------------------------------------------------------
         ros::ServiceServer m_nh_system[14];
-        ros::ServiceServer m_nh_move_service[20];
+        ros::ServiceServer m_nh_motion_service[32];
+        ros::ServiceServer m_nh_aux_control_service[32];
+        ros::ServiceServer m_nh_force_service[32];
+
         ros::ServiceServer m_nh_io_service[8];
         ros::ServiceServer m_nh_modbus_service[4];
         ros::ServiceServer m_nh_drl_service[10];
         ros::ServiceServer m_nh_tcp_service[4];
-        ros::ServiceServer m_nh_tool_service[4];
+        ros::ServiceServer m_nh_tool_service[5];
         ros::ServiceServer m_nh_gripper_service[10];
         ros::ServiceServer m_nh_serial_service[4];
 
@@ -314,14 +410,9 @@ namespace dsr_control{
         bool set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res);
         bool get_robot_speed_mode_cb(dsr_msgs::GetRobotSpeedMode::Request& req, dsr_msgs::GetRobotSpeedMode::Response& res);
         bool get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res);
-        bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);
         bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
         bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
-
-        bool get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res);
-        bool get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res);
-        bool get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res);
-
+    
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
@@ -339,6 +430,64 @@ namespace dsr_control{
         bool move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res);
         bool move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res);
         bool trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res);
+        bool fkin_cb(dsr_msgs::Fkin::Request& req, dsr_msgs::Fkin::Response& res);
+        bool ikin_cb(dsr_msgs::Ikin::Request& req, dsr_msgs::Ikin::Response& res);
+        bool set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res);
+        bool move_home_cb(dsr_msgs::MoveHome::Request& req, dsr_msgs::MoveHome::Response& res);
+        bool check_motion_cb(dsr_msgs::CheckMotion::Request& req, dsr_msgs::CheckMotion::Response& res);
+        bool change_operation_speed_cb(dsr_msgs::ChangeOperationSpeed::Request& req, dsr_msgs::ChangeOperationSpeed::Response& res);
+        bool enable_alter_motion_cb(dsr_msgs::EnableAlterMotion::Request& req, dsr_msgs::EnableAlterMotion::Response& res);
+        bool alter_motion_cb(dsr_msgs::AlterMotion::Request& req, dsr_msgs::AlterMotion::Response& res);
+        bool disable_alter_motion_cb(dsr_msgs::DisableAlterMotion::Request& req, dsr_msgs::DisableAlterMotion::Response& res);
+        bool set_singularity_handling_cb(dsr_msgs::SetSingularityHandling::Request& req, dsr_msgs::SetSingularityHandling::Response& res);
+
+        //----- auxiliary_control
+        bool get_control_mode_cb(dsr_msgs::GetControlMode::Request& req, dsr_msgs::GetControlMode::Response& res);               
+        bool get_control_space_cb(dsr_msgs::GetControlSpace::Request& req, dsr_msgs::GetControlSpace::Response& res);              
+
+        bool get_current_posj_cb(dsr_msgs::GetCurrentPosj::Request& req, dsr_msgs::GetCurrentPosj::Response& res);               
+        bool get_current_velj_cb(dsr_msgs::GetCurrentVelj::Request& req, dsr_msgs::GetCurrentVelj::Response& res);               
+        bool get_desired_posj_cb(dsr_msgs::GetDesiredPosj::Request& req, dsr_msgs::GetDesiredPosj::Response& res);
+        bool get_desired_velj_cb(dsr_msgs::GetDesiredVelj::Request& req, dsr_msgs::GetDesiredVelj::Response& res);              
+
+        bool get_current_posx_cb(dsr_msgs::GetCurrentPosx::Request& req, dsr_msgs::GetCurrentPosx::Response& res);               
+        bool get_current_velx_cb(dsr_msgs::GetCurrentVelx::Request& req, dsr_msgs::GetCurrentVelx::Response& res);               
+        bool get_desired_posx_cb(dsr_msgs::GetDesiredPosx::Request& req, dsr_msgs::GetDesiredPosx::Response& res);
+        bool get_desired_velx_cb(dsr_msgs::GetDesiredVelx::Request& req, dsr_msgs::GetDesiredVelx::Response& res);               
+
+        bool get_current_tool_flange_posx_cb(dsr_msgs::GetCurrentToolFlangePosx::Request& req, dsr_msgs::GetCurrentToolFlangePosx::Response& res);                                                          
+        bool get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res);     
+        bool get_current_rotm_cb(dsr_msgs::GetCurrentRotm::Request& req, dsr_msgs::GetCurrentRotm::Response& res);               
+        bool get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res);               
+        bool get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res);           
+        bool get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res);                 
+        bool get_solution_space_cb(dsr_msgs::GetSolutionSpace::Request& req, dsr_msgs::GetSolutionSpace::Response& res);
+        bool get_orientation_error_cb(dsr_msgs::GetOrientationError::Request& req, dsr_msgs::GetOrientationError::Response& res);
+
+        //----- force/stiffness
+        bool parallel_axis1_cb(dsr_msgs::ParallelAxis1::Request& req, dsr_msgs::ParallelAxis1::Response& res);
+        bool parallel_axis2_cb(dsr_msgs::ParallelAxis2::Request& req, dsr_msgs::ParallelAxis2::Response& res);
+        bool align_axis1_cb(dsr_msgs::AlignAxis1::Request& req, dsr_msgs::AlignAxis1::Response& res);
+        bool align_axis2_cb(dsr_msgs::AlignAxis2::Request& req, dsr_msgs::AlignAxis2::Response& res);
+        bool is_done_bolt_tightening_cb(dsr_msgs::IsDoneBoltTightening::Request& req, dsr_msgs::IsDoneBoltTightening::Response& res);
+        bool release_compliance_ctrl_cb(dsr_msgs::ReleaseComplianceCtrl::Request& req, dsr_msgs::ReleaseComplianceCtrl::Response& res);
+        bool task_compliance_ctrl_cb(dsr_msgs::TaskComplianceCtrl::Request& req, dsr_msgs::TaskComplianceCtrl::Response& res);
+        bool set_stiffnessx_cb(dsr_msgs::SetStiffnessx::Request& req, dsr_msgs::SetStiffnessx::Response& res);
+        bool calc_coord_cb(dsr_msgs::CalcCoord::Request& req, dsr_msgs::CalcCoord::Response& res);
+        bool set_user_cart_coord1_cb(dsr_msgs::SetUserCartCoord1::Request& req, dsr_msgs::SetUserCartCoord1::Response& res);
+        bool set_user_cart_coord2_cb(dsr_msgs::SetUserCartCoord2::Request& req, dsr_msgs::SetUserCartCoord2::Response& res);
+        bool set_user_cart_coord3_cb(dsr_msgs::SetUserCartCoord3::Request& req, dsr_msgs::SetUserCartCoord3::Response& res);
+        bool overwrite_user_cart_coord_cb(dsr_msgs::OverwriteUserCartCoord::Request& req, dsr_msgs::OverwriteUserCartCoord::Response& res);
+        bool get_user_cart_coord_cb(dsr_msgs::GetUserCartCoord::Request& req, dsr_msgs::GetUserCartCoord::Response& res);
+        bool set_desired_force_cb(dsr_msgs::SetDesiredForce::Request& req, dsr_msgs::SetDesiredForce::Response& res);
+        bool release_force_cb(dsr_msgs::ReleaseForce::Request& req, dsr_msgs::ReleaseForce::Response& res);
+        bool check_position_condition_cb(dsr_msgs::CheckPositionCondition::Request& req, dsr_msgs::CheckPositionCondition::Response& res);
+        bool check_force_condition_cb(dsr_msgs::CheckForceCondition::Request& req, dsr_msgs::CheckForceCondition::Response& res);
+        bool check_orientation_condition1_cb(dsr_msgs::CheckOrientationCondition1::Request& req, dsr_msgs::CheckOrientationCondition1::Response& res);
+        bool check_orientation_condition2_cb(dsr_msgs::CheckOrientationCondition2::Request& req, dsr_msgs::CheckOrientationCondition2::Response& res);
+        bool coord_transform_cb(dsr_msgs::CoordTransform::Request& req, dsr_msgs::CoordTransform::Response& res);
+        bool get_workpiece_weight_cb(dsr_msgs::GetWorkpieceWeight::Request& req, dsr_msgs::GetWorkpieceWeight::Response& res);
+        bool reset_workpiece_weight_cb(dsr_msgs::ResetWorkpieceWeight::Request& req, dsr_msgs::ResetWorkpieceWeight::Response& res);
 
         //----- TCP
         bool set_current_tcp_cb(dsr_msgs::SetCurrentTcp::Request& req, dsr_msgs::SetCurrentTcp::Response& res);
@@ -351,6 +500,7 @@ namespace dsr_control{
         bool get_current_tool_cb(dsr_msgs::GetCurrentTool::Request& req, dsr_msgs::GetCurrentTool::Response& res);
         bool config_create_tool_cb(dsr_msgs::ConfigCreateTool::Request& req, dsr_msgs::ConfigCreateTool::Response& res);
         bool config_delete_tool_cb(dsr_msgs::ConfigDeleteTool::Request& req, dsr_msgs::ConfigDeleteTool::Response& res);
+        bool set_tool_shape_cb(dsr_msgs::SetToolShape::Request& req, dsr_msgs::SetToolShape::Response& res);
 
         //----- IO
         bool set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res);

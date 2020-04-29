@@ -1,4 +1,7 @@
+#____________________________________________________________________________________________
 # move_periodic  
+#____________________________________________________________________________________________
+
 float64[6] amp              # Amplitude (motion between -amp and +amp) [mm] or [deg]   
 float64[6] periodic         # Period (time for 1 cycle) [sec]
 float64    acc              # Acc-, dec- time [sec] 

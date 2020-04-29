@@ -55,12 +55,16 @@
 #define FALSE 0
 #endif
 
+#ifndef DEBUG
+#define DEBUG 0
+#endif
 
 //
 // Robot configuration constants
 //
 
 #define NUM_JOINT                (6)
+#define NUMBER_OF_JOINT          (6)
 #define NUM_TASK                 (6)
 #define NUM_FLANGE_IO            (6)
 #define NUM_BUTTON               (5)
@@ -77,6 +81,7 @@
 //
 
 #define NUM_DIGITAL                 (16)
+#define MAX_DIGITAL_BURST_SIZE      (16)
 #define NUM_ANALOG                  (2)
 #define NUM_SWITCH                  (3)
 #define NUM_SAFETY_IN               (2)
@@ -233,9 +238,29 @@ typedef enum {
 typedef enum {
     MOVE_MODE_ABSOLUTE = 0,
     MOVE_MODE_RELATIVE,
-
 } MOVE_MODE;
 
+//
+// alter motion path mode enumerated value
+//
+typedef enum {
+    PATH_MODE_DPOS = 0,
+    PATH_MODE_DVEL
+} PATH_MODE;
+
+//
+//
+//
+typedef enum {
+    CONTROL_MODE_POSITION = 3,
+    CONTROL_MODE_TORQUE
+} CONTROL_MODE;
+
+typedef enum {
+    SINGULARITY_AVOIDANCE_AVOID = 0,
+    SINGULARITY_AVOIDANCE_STOP,
+    SINGULARITY_AVOIDANCE_VEL,
+}SINGULARITY_AVOIDANCE;
 
 //
 // blending speed type enumerated value
@@ -300,7 +325,25 @@ typedef enum {
 
 } SPLINE_VELOCITY_OPTION;
 
+typedef enum{
+    DATA_TYPE_BOOL = 0,
+    DATA_TYPE_INT,
+    DATA_TYPE_FLOAT,
+    DATA_TYPE_STRING,
+    DATA_TYPE_POSJ,
+    DATA_TYPE_POSX,
+    DATA_TYPE_UNKNOWN,
+}DATA_TYPE;
 
+typedef enum{
+    VARIABLE_TYPE_INSTALL = 0,
+    VARIABLE_TYPE_GLOBAL,    
+}VARIABLE_TYPE;
+
+typedef enum{
+    SUB_PROGRAM_DELETE = 0,
+    SUB_PROGRAM_SAVE,
+} SUB_PROGRAM;
 //
 // gpio index enumerated value
 //
@@ -428,6 +471,16 @@ typedef enum {
 
 } LOG_GROUP;
 
+typedef enum {
+    MESSAGE_LEVEL_INFO,
+    MESSAGE_LEVEL_WARN,
+    MESSAGE_LEVEL_ALARM
+} MESSAGE_LEVEL;
+
+typedef enum {
+    POPUP_RESPONSE_STOP,
+    POPUP_RESPONSE_RESUME
+}POPUP_RESPONSE;
 //
 // log code(eLOG_GROUP_SYSTEMFMK) enumerated value
 //
@@ -485,22 +538,22 @@ enum {
     COMMAND_PAUSE_PROGRAM,
     COMMAND_RESUME_PROGRAM,
 
-    OPERATION_PROGRAM_NORMAL_STOP,              //2007  LV1
-    OPERATION_PROGRAM_FORCED_STOP,              //2008  LV1
-    OPERATION_PROGRAM_FORCED_ERROR_STOP,        //2009  LV1
+    OPERATION_PROGRAM_NORMAL_STOP,              //LV1 2007
+    OPERATION_PROGRAM_FORCED_STOP,              //LV1 2008  
+    OPERATION_PROGRAM_FORCED_ERROR_STOP,        //LV1 2009  
 
-    OPERATION_PROGRAM_SW_ERROR,                 //2010  LV3
-    OPERATION_PROGRAM_INTERNAL_ERROR,           //2011  LV3
-    OPERATION_PROGRAM_INIT_ERROR,               //2012  LV3
-    OPERATION_PROGRAM_EMPTY_SCRIPT,             //2013  LV3
+    OPERATION_PROGRAM_SW_ERROR,                 //LV3 2010 + "invalid the DRL script(size=0)"
+    OPERATION_PROGRAM_INTERNAL_ERROR,           //LV3 2011 + "Check py files in the pys_linux folder"
+    OPERATION_PROGRAM_INIT_ERROR,               //LV3 2012 + "Check py files in the pys_linux folder"
+    OPERATION_PROGRAM_EMPTY_SCRIPT,             //LV3 2013 + "Internal error: DRL script(size=0)"
 
-    OPERATION_PROGRAM_SYNTAX_EXCEPTION,         //2014  LV2
-    OPERATION_PROGRAM_SYNTAX_ERROR,             //2015  LV2 +�ٹ�ȣ+�󼼿���
+    OPERATION_PROGRAM_SYNTAX_EXCEPTION,         //LV2 2014 + python_error_msg + "check the name of user function & rename"
+    OPERATION_PROGRAM_SYNTAX_ERROR,             //LV2 2015 + line_number + python_error_msg + file_name
 
-    OPERATION_PROGRAM_RUNTIME_TYPE_ERROR,       //2016  LV2 +�ٹ�ȣ+�󼼿���
-    OPERATION_PROGRAM_RUNTIME_VALUE_ERROR,      //2017  LV2 +�ٹ�ȣ+�󼼿���
-    OPERATION_PROGRAM_RUNTIME_RUNTIME_ERROR,    //2018  LV2 +�ٹ�ȣ+�󼼿���
-    OPERATION_PROGRAM_RUNTIME_EXCEPTION,        //2019  LV2 +�ٹ�ȣ+�󼼿���
+    OPERATION_PROGRAM_RUNTIME_TYPE_ERROR,       //LV2 2016 + line_number + python_error_msg + file_name
+    OPERATION_PROGRAM_RUNTIME_VALUE_ERROR,      //LV2 2017 + line_number + python_error_msg + file_name
+    OPERATION_PROGRAM_RUNTIME_RUNTIME_ERROR,    //LV2 2018 + line_number + python_error_msg + file_name
+    OPERATION_PROGRAM_RUNTIME_EXCEPTION,        //LV2 2019 + line_number + python_error_msg + file_name
 
     //eLOG_GROUP_SYSTEMFMK(ETHETNET)
 

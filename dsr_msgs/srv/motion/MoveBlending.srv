@@ -1,10 +1,11 @@
+#____________________________________________________________________________________________
 # move_blending  
 #float64[50][6] pos              # target
-
 #std_msgs/Float64MultiArray[] pos1   # target1 [50][6]
 #std_msgs/Float64MultiArray[] pos2   # target2 [50][6]
 #int8[50]       segment              # LINE=0 , CIRCLE=1
 #float64[50]    radius               # Radius of segment 
+#____________________________________________________________________________________________
 
 std_msgs/Float64MultiArray[] segment #50 x (pos1[6]:pos2[6]:type[1]:radius[1])        
 int8           posCnt               # target cnt 

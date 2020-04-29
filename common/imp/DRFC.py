@@ -45,6 +45,7 @@ sys.dont_write_bytecode = True
 # Robot configuration
 #
 NUM_JOINT                             = 6
+NUMBER_OF_JOINT                       = 6  
 NUM_TASK                              = 6
 NUM_FLANGE_IO                         = 6
 NUM_BUTTON                            = 5
@@ -59,6 +60,7 @@ MAX_SYMBOL_SIZE                       = 32
 # I/O configuration                   
 #                                     
 NUM_DIGITAL                           = 16
+MAX_DIGITAL_BURST_SIZE                = 16
 NUM_ANALOG                            = 2
 NUM_SWITCH                            = 3
 NUM_SAFETY_IN                         = 2
@@ -180,7 +182,12 @@ MOVE_REFERENCE_USER_MAX               = COORDINATE_SYSTEM_USER_MAX
 MOVE_MODE_ABSOLUTE                    = 0
 MOVE_MODE_RELATIVE                    = 1
                                       
-                                      
+#                                     
+# mode of path              
+#                                     
+PATH_MODE_DPOS                        = 0
+PATH_MODE_DVEL                        = 1 
+
 #                                     
 # blending speed type                 
 #                                     
@@ -319,6 +326,11 @@ LOG_GROUP_MOTIONLIB                   = 2
 LOG_GROUP_SMARTTP                     = 3
 LOG_GROUP_INVERTER                    = 4
 LOG_GROUP_SAFETYCONTROLLER            = 5
+
+
+MESSAGE_LEVEL_INFO                    = 0
+MESSAGE_LEVEL_WARN                    = 1 
+MESSAGE_LEVEL_ALARM                   = 2
 
 
 #

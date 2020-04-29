@@ -1,5 +1,8 @@
+#____________________________________________________________________________________________
 # config_create_modbus  
 # This service registers the Modbus signal. 
+#____________________________________________________________________________________________
+
 string      name       # modbus signal symbol 
 string      ip         # external device ip
 int32       port       # external device port     

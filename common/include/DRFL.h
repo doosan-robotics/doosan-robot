@@ -67,9 +67,15 @@ namespace DRAFramework
 
     typedef void (*TOnMonitoringStateCB)(const ROBOT_STATE);
     typedef void (*TOnMonitoringDataCB)(const LPMONITORING_DATA);
+    typedef void (*TOnMonitoringDataExCB)(const LPMONITORING_DATA_EX);
     typedef void (*TOnMonitoringCtrlIOCB)(const LPMONITORING_CTRLIO);
+    typedef void (*TOnMonitoringCtrlIOExCB)(const LPMONITORING_CTRLIO_EX);
     typedef void (*TOnMonitoringModbusCB)(const LPMONITORING_MODBUS);
     typedef void (*TOnLogAlarmCB)(LPLOG_ALARM);
+    typedef void (*TOnTpPopupCB)(LPMESSAGE_POPUP);
+    typedef void (*TOnTpLogCB)(const char*);
+    typedef void (*TOnTpGetUserInputCB)(LPMESSAGE_INPUT);
+    typedef void (*TOnTpProgressCB)(LPMESSAGE_PROGRESS);
     typedef void (*TOnMonitoringAccessControlCB)(const MONITORING_ACCESS_CONTROL);
     typedef void (*TOnHommingCompletedCB)();
     typedef void (*TOnTpInitializingCompletedCB)();
@@ -91,9 +97,9 @@ namespace DRAFramework
         DRFL_API void _DestroyRobotControl(LPROBOTCONTROL pCtrl);
 
         // connection
-        //ROS org DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100");
-		DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100", unsigned int usPort = 12345);
-  		DRFL_API void _CloseConnection(LPROBOTCONTROL pCtrl);
+        //for ROS org DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100");
+        DRFL_API bool _OpenConnection(LPROBOTCONTROL pCtrl, const char* lpszIpAddr = "192.168.137.100", unsigned int usPort = 12345);
+        DRFL_API void _CloseConnection(LPROBOTCONTROL pCtrl);
 
         ////////////////////////////////////////////////////////////////////////////
         // Attributes                                                             //
@@ -111,6 +117,7 @@ namespace DRAFramework
         DRFL_API ROBOT_STATE _GetRobotState(LPROBOTCONTROL pCtrl);
         // set robot control state
         DRFL_API bool _SetRobotControl(LPROBOTCONTROL pCtrl, ROBOT_CONTROL eControl);
+        DRFL_API CONTROL_MODE _GetControlMode(LPROBOTCONTROL pCtrl);
 
         // get robot system(real robot, virtrul robot)
         DRFL_API ROBOT_SYSTEM _GetRobotSystem(LPROBOTCONTROL pCtrl);
@@ -124,6 +131,7 @@ namespace DRAFramework
 
         // get roobt axis data
         DRFL_API LPROBOT_POSE _GetCurrentPose(LPROBOTCONTROL pCtrl, ROBOT_SPACE eSpaceType = ROBOT_SPACE_JOINT);
+        DRFL_API float(* _GetCurrentRotationMatrix(LPROBOTCONTROL pCtrl, COORDINATE_SYSTEM eTargetRef))[3];
         DRFL_API unsigned char _GetCurrentSolutionSpace(LPROBOTCONTROL pCtrl);
 
         // get program running state
@@ -146,12 +154,18 @@ namespace DRAFramework
         // Callback operation                                                    //
         ////////////////////////////////////////////////////////////////////////////
         DRFL_API void _SetOnMonitoringState(LPROBOTCONTROL pCtrl, TOnMonitoringStateCB pCallbackFunc);
-        DRFL_API void _SetOnMonitoringData(LPROBOTCONTROL pCtrl, TOnMonitoringDataCB pCallbackFunc);
+        DRFL_API void _SetOnMonitoringData(LPROBOTCONTROL pCtrl, TOnMonitoringDataCB pCallbackFunc);   
+        DRFL_API void _SetOnMonitoringDataEx(LPROBOTCONTROL pCtrl, TOnMonitoringDataExCB pCallbackFunc);
         DRFL_API void _SetOnMonitoringCtrlIO(LPROBOTCONTROL pCtrl, TOnMonitoringCtrlIOCB pCallbackFunc);
+        DRFL_API void _SetOnMonitoringCtrlIOEx(LPROBOTCONTROL pCtrl, TOnMonitoringCtrlIOExCB pCallbackFunc);
         DRFL_API void _SetOnMonitoringModbus(LPROBOTCONTROL pCtrl, TOnMonitoringModbusCB pCallbackFunc);
         DRFL_API void _SetOnMonitoringSpeedMode(LPROBOTCONTROL pCtrl, TOnMonitoringSpeedModeCB pCallbackFunc);
         DRFL_API void _SetOnMonitoringAccessControl(LPROBOTCONTROL pCtrl, TOnMonitoringAccessControlCB pCallbackFunc);
         DRFL_API void _SetOnLogAlarm(LPROBOTCONTROL pCtrl, TOnLogAlarmCB pCallbackFunc);
+        DRFL_API void _SetOnTpPopup(LPROBOTCONTROL pCtrl, TOnTpPopupCB pCallbackFunc);
+        DRFL_API void _SetOnTpLog(LPROBOTCONTROL pCtrl, TOnTpLogCB pCallbackFunc);
+        DRFL_API void _SetOnTpProgress(LPROBOTCONTROL pCtrl, TOnTpProgressCB pCallbackFunc);
+        DRFL_API void _SetOnTpGetUserInput(LPROBOTCONTROL pCtrl, TOnTpGetUserInputCB pCallbackFunc);
         DRFL_API void _SetOnProgramStopped(LPROBOTCONTROL pCtrl, TOnProgramStoppedCB pCallbackFunc);
         DRFL_API void _SetOnHommingCompleted(LPROBOTCONTROL pCtrl, TOnHommingCompletedCB pCallbackFunc);
         DRFL_API void _SetOnTpInitializingCompleted(LPROBOTCONTROL pCtrl, TOnTpInitializingCompletedCB pCallbackFunc);
@@ -159,15 +173,20 @@ namespace DRAFramework
         DRFL_API void _SetOnDisconnected(LPROBOTCONTROL pCtrl, TOnDisconnectedCB pCallbackFunc);
         
         DRFL_API LPROBOT_POSE _CalTrans(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_TASK], float fOffset[NUM_TASK], COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
-        DRFL_API LPROBOT_POSE _CalIKin(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_TASK], unsigned char iSolutionSpace);
-        DRFL_API LPROBOT_POSE _CalFKin(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_JOINT]);
+        DRFL_API LPROBOT_POSE _CalIKin(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_TASK], unsigned char iSolutionSpace, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API LPROBOT_POSE _CalFKin(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_JOINT], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
+        
+        DRFL_API unsigned char _GetSolutionSpace(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_TASK]);
+
         DRFL_API LPROBOT_TASK_POSE _CalCurrentTaskPose(LPROBOTCONTROL pCtrl, COORDINATE_SYSTEM eCoodType = COORDINATE_SYSTEM_BASE);
         DRFL_API LPROBOT_POSE _CalDesiredTaskPose(LPROBOTCONTROL pCtrl, COORDINATE_SYSTEM eCoodType = COORDINATE_SYSTEM_BASE);
-        DRFL_API float _CalOrientationError(LPROBOTCONTROL pCtrl, TASK_AXIS eTaskAxis,  float fPosition1[NUM_TASK], float fPosition2[NUM_TASK]);
+        DRFL_API float _CalOrientationError(LPROBOTCONTROL pCtrl, float fPosition1[NUM_TASK], float fPosition2[NUM_TASK], TASK_AXIS eTaskAxis);
         
         DRFL_API float _MeasurePayload(LPROBOTCONTROL pCtrl);
-
-
+        DRFL_API bool _ResetPayload(LPROBOTCONTROL pCtrl);
+        
+        DRFL_API bool _TpPopupResponse(LPROBOTCONTROL pCtrl, POPUP_RESPONSE eRes);
+        DRFL_API bool _TpGetUserInputResponse(LPROBOTCONTROL pCtrl, const char* lpszTextString);
         ////////////////////////////////////////////////////////////////////////////
         //  motion Operations                                                     //
         ////////////////////////////////////////////////////////////////////////////
@@ -175,6 +194,7 @@ namespace DRAFramework
         DRFL_API bool _Jog(LPROBOTCONTROL pCtrl, JOG_AXIS eJogAxis, MOVE_REFERENCE eMoveReference, float fVelocity);
         DRFL_API bool _MultiJog(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_TASK], MOVE_REFERENCE eMoveReference, float fVelocity);
         DRFL_API bool _Home(LPROBOTCONTROL pCtrl, unsigned char bRun);
+        DRFL_API bool _UserHome(LPROBOTCONTROL pCtrl, unsigned char bRun);
 
         // stop motion
         DRFL_API bool _MoveStop(LPROBOTCONTROL pCtrl, STOP_TYPE eStopType = STOP_TYPE_QUICK);
@@ -250,7 +270,7 @@ namespace DRAFramework
         DRFL_API bool _ConfigDeleteModbus(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
 
         ////////////////////////////////////////////////////////////////////////////
-        //  Configuration Operations                                              //
+        //  Configuration Operations                                               //
         ////////////////////////////////////////////////////////////////////////////
         // set tool(end-effector) information
         DRFL_API bool _SetCurrentTool(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
@@ -269,7 +289,14 @@ namespace DRAFramework
         DRFL_API bool _ConfigDeleteTCP(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
         // get robot tcp information
         DRFL_API const char* _GetCurrentTCP(LPROBOTCONTROL pCtrl);  
+
+        DRFL_API bool _SetCurrentToolShape(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
+        DRFL_API bool _ConfigCraeteToolShape(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
+        DRFL_API bool _ConfigDeleteToolShape(LPROBOTCONTROL pCtrl, const char* lpszSymbol);
+        DRFL_API const char* _GetCurrentToolShape(LPROBOTCONTROL pCtrl);  
+        
         DRFL_API int _ServoOff(LPROBOTCONTROL pCtrl, STOP_TYPE eStopType);      
+        DRFL_API int _CheckMotion(LPROBOTCONTROL pCtrl);
         
         ////////////////////////////////////////////////////////////////////////////
         //  drl program Operations                                                //
@@ -290,8 +317,10 @@ namespace DRAFramework
         ////////////////////////////////////////////////////////////////////////////
         
         DRFL_API bool _EnterTaskCompliance(LPROBOTCONTROL pCtrl, float fTargetStiffness[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f);
+        DRFL_API bool _EnterJointCompliance(LPROBOTCONTROL pCtrl, float fTargetStiffness[NUM_TASK], float fTargetTime = 0.f);
         DRFL_API bool _SetTaskStiffness(LPROBOTCONTROL pCtrl, float fTargetStiffness[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f);
         DRFL_API bool _LeaveTaskCompliance(LPROBOTCONTROL pCtrl);
+        DRFL_API bool _LeaveJointCompliance(LPROBOTCONTROL pCtrl);
         DRFL_API bool _SetDesiredForce(LPROBOTCONTROL pCtrl, float fTargetForce[NUM_TASK], unsigned char iTargetDirection[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f, FORCE_MODE eForceMode = FORCE_MODE_ABSOLUTE);
         DRFL_API bool _ResetDesiredForce(LPROBOTCONTROL pCtrl, float fTargetTime = 0.f);
 
@@ -300,18 +329,32 @@ namespace DRAFramework
         DRFL_API bool _WaitForPositionConditionRel(LPROBOTCONTROL pCtrl, FORCE_AXIS eForceAxis, float fTargetMin, float fTargetMax, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL);
         DRFL_API bool _WaitForOrientationCondition(LPROBOTCONTROL pCtrl, FORCE_AXIS eForceAxis, float fTargetMin[NUM_TASK], float fTargetMax[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL);
         DRFL_API bool _WaitForOrientationConditionRel(LPROBOTCONTROL pCtrl, FORCE_AXIS eForceAxis, float fTargetMin, float fTargetMax, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL);
-        DRFL_API bool _WaitForBoltTightening(LPROBOTCONTROL pCtrl, FORCE_AXIS eForceAxis, float fTargetTor, float fTimeout = 0.f);
-
+        DRFL_API bool _WaitForBoltTightening(LPROBOTCONTROL pCtrl, FORCE_AXIS eForceAxis, float fTargetTor = 0.f, float fTimeout = 0.f);
+        
+        DRFL_API bool _ParallelAxis1(LPROBOTCONTROL pCtrl, float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API bool _AlignAxis1(LPROBOTCONTROL pCtrl, float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], float fSourceVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API bool _ParallelAxis2(LPROBOTCONTROL pCtrl, float fTargetVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API bool _AlignAxis2(LPROBOTCONTROL pCtrl, float fTargetVec[3], float fSourceVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE);
         ////////////////////////////////////////////////////////////////////////////
         //  coordinate system control                                             //
         ////////////////////////////////////////////////////////////////////////////
-
-        DRFL_API int _ConfigUserCoordinateSystem(LPROBOTCONTROL pCtrl, float fTargetPos[3][NUM_TASK], float fTargetOrg[3]);
-        DRFL_API int _ConfigUserCoordinateSystemEx(LPROBOTCONTROL pCtrl, float fTargetVec[2][3], float fTargetOrg[3]);
+        
+        DRFL_API int _ConfigUserCoordinate(LPROBOTCONTROL pCtrl, int iReqId, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API int _ConfigUserCoordinateSystem(LPROBOTCONTROL pCtrl, float fTargetPos[3][NUM_TASK], float fTargetOrg[3], COORDINATE_SYSTEM fTargetRef);
+        DRFL_API int _ConfigUserCoordinateSystemEx(LPROBOTCONTROL pCtrl, float fTargetVec[2][3], float fTargetOrg[3], COORDINATE_SYSTEM fTargetRef);
         DRFL_API LPROBOT_POSE _TransformCoordinateSystem(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eInCoordSystem, COORDINATE_SYSTEM eOutCoordSystem);
-
-
-        DRFL_API bool SystemShutDown();
+        DRFL_API bool _SetReferenceCoordinate(LPROBOTCONTROL pCtrl, COORDINATE_SYSTEM eTargetCoordSystem);
+        DRFL_API LPROBOT_POSE _CalUserCoordinate(LPROBOTCONTROL pCtrl, unsigned short nCnt, unsigned short nInputMode, COORDINATE_SYSTEM eTargetRef, float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], float fTargetPos4[NUM_TASK]);
+        DRFL_API LPUSER_COORDINATE _GetUserCoordinate(LPROBOTCONTROL pCtrl, int iReqId);
+        DRFL_API int _UpdateUserCoordinate(LPROBOTCONTROL pCtrl, bool bTargetUpdate, int iReqId, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
+        DRFL_API bool _EnableAlterMotion(LPROBOTCONTROL pCtrl, int iCycleTime, PATH_MODE ePathMode, COORDINATE_SYSTEM eTargetRef, float fLimitDpos[2], float fLimitDposPer[2]);
+        DRFL_API bool _DisableAlterMotion(LPROBOTCONTROL pCtrl);
+        DRFL_API bool _AlterMotion(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_TASK]);
+        DRFL_API bool _SetSingularityHandling(LPROBOTCONTROL pCtrl, SINGULARITY_AVOIDANCE eMode);
+        DRFL_API bool _ConfigProgramWatchVariable(LPROBOTCONTROL pCtrl, VARIABLE_TYPE eDivision, DATA_TYPE eType, const char* szName, const char* szData);
+        DRFL_API bool _SaveSubProgram(LPROBOTCONTROL pCtrl, int iTargetType, const char* szFileName, const char* lpszTextString);
+        DRFL_API bool _SetupMonitoringVersion(LPROBOTCONTROL pCtrl, int iVersion);
+        DRFL_API bool _SystemShutDown(LPROBOTCONTROL pCtrl);
 
 #ifdef __cplusplus
     };
@@ -329,7 +372,7 @@ namespace DRAFramework
         virtual ~CDRFL() { _DestroyRobotControl(_rbtCtrl);   }
 
         // connection
-        //ROS org bool OpenConnection(string strIpAddr = "192.168.137.100") { return _OpenConnection(_rbtCtrl, strIpAddr.c_str()); };
+        //for ROS org bool OpenConnection(string strIpAddr = "192.168.137.100") { return _OpenConnection(_rbtCtrl, strIpAddr.c_str()); };
         bool OpenConnection(string strIpAddr = "192.168.137.100", unsigned int usPort= 12345) { return _OpenConnection(_rbtCtrl, strIpAddr.c_str(), usPort); };
         void CloseConnection() { _CloseConnection(_rbtCtrl); }
 
@@ -341,8 +384,12 @@ namespace DRAFramework
         void SetOnMonitoringState(TOnMonitoringStateCB pCallbackFunc) { _SetOnMonitoringState(_rbtCtrl, pCallbackFunc); };
         // robot operating data
         void SetOnMonitoringData(TOnMonitoringDataCB pCallbackFunc) { _SetOnMonitoringData(_rbtCtrl, pCallbackFunc); };
+        // robot operating data : version 1
+        void SetOnMonitoringDataEx(TOnMonitoringDataExCB pCallbackFunc) { _SetOnMonitoringDataEx(_rbtCtrl, pCallbackFunc); };
         // ctrl-box I/O data
         void SetOnMonitoringCtrlIO(TOnMonitoringCtrlIOCB pCallbackFunc) { _SetOnMonitoringCtrlIO(_rbtCtrl, pCallbackFunc); };
+        // ctrl-box I/O data : version 1
+        void SetOnMonitoringCtrlIOEx(TOnMonitoringCtrlIOExCB pCallbackFunc) { _SetOnMonitoringCtrlIOEx(_rbtCtrl, pCallbackFunc); };
         // modbus I/O data
         void SetOnMonitoringModbus(TOnMonitoringModbusCB pCallbackFunc) { _SetOnMonitoringModbus(_rbtCtrl, pCallbackFunc); };
         // robot speed mode event
@@ -351,6 +398,14 @@ namespace DRAFramework
         void SetOnMonitoringAccessControl(TOnMonitoringAccessControlCB pCallbackFunc) { _SetOnMonitoringAccessControl(_rbtCtrl, pCallbackFunc); };
         // roobt alaram data
         void SetOnLogAlarm(TOnLogAlarmCB pCallbackFunc)  { _SetOnLogAlarm(_rbtCtrl, pCallbackFunc); };
+        // tp popup message data
+        void SetOnTpPopup(TOnTpPopupCB pCallbackFunc) { _SetOnTpPopup(_rbtCtrl, pCallbackFunc); };
+        // tp log message data
+        void SetOnTpLog(TOnTpLogCB pCallbackFunc) { _SetOnTpLog(_rbtCtrl, pCallbackFunc); };
+        // tp progress message data
+        void SetOnTpProgress(TOnTpProgressCB pCallbackFunc) { _SetOnTpProgress(_rbtCtrl, pCallbackFunc); };
+        // tp user input message data
+        void SetOnTpGetUserInput(TOnTpGetUserInputCB pCallbackFunc){ _SetOnTpGetUserInput(_rbtCtrl, pCallbackFunc); };
         // robot homing completed event
         void SetOnHommingCompleted(TOnHommingCompletedCB pCallbackFunc) { _SetOnHommingCompleted(_rbtCtrl, pCallbackFunc); };
         // Tp Initailzing completed
@@ -363,8 +418,19 @@ namespace DRAFramework
         void SetOnDisconnected(TOnDisconnectedCB pCallbackFunc) { _SetOnDisconnected(_rbtCtrl, pCallbackFunc); };
 
         LPROBOT_POSE CalTrans(float fSourcePos[NUM_TASK], float fOffset[NUM_TASK], COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _CalTrans(_rbtCtrl, fSourcePos, fOffset, eSourceRef, eTargetRef);};
-        LPROBOT_POSE CalIKin(float fSourcePos[NUM_TASK], unsigned char iSolutionSpace);
-        LPROBOT_POSE CalFKin(float fSourcePos[NUM_JOINT]);
+        LPROBOT_POSE CalIKin(float fSourcePos[NUM_TASK], unsigned char iSolutionSpace, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _CalIKin(_rbtCtrl, fSourcePos, iSolutionSpace, eTargetRef); };
+        LPROBOT_POSE CalFKin(float fSourcePos[NUM_JOINT], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _CalFKin(_rbtCtrl, fSourcePos, eTargetRef); };
+        
+        unsigned char GetSolutionSpace(float fTargetPos[NUM_JOINT]){ return _GetSolutionSpace(_rbtCtrl, fTargetPos);};
+        LPROBOT_TASK_POSE CalCurrentTaskPose(COORDINATE_SYSTEM eCoodType = COORDINATE_SYSTEM_BASE){return _CalCurrentTaskPose(_rbtCtrl, eCoodType); };
+        LPROBOT_POSE CalDesiredTaskPose(COORDINATE_SYSTEM eCoodType = COORDINATE_SYSTEM_BASE){return _CalDesiredTaskPose(_rbtCtrl, eCoodType);};
+        float CalOrientationError(float fPosition1[NUM_TASK], float fPosition2[NUM_TASK], TASK_AXIS eTaskAxis){return _CalOrientationError(_rbtCtrl, fPosition1, fPosition2, eTaskAxis); };
+
+        float MeasurePayload(){return _MeasurePayload(_rbtCtrl);};
+        bool ResetPayload(){return _ResetPayload(_rbtCtrl);};
+
+        bool TpPopupResponse(POPUP_RESPONSE eRes){return _TpPopupResponse(_rbtCtrl, eRes);};
+        bool TpGetUserInputResponse(string strUserInput){return _TpGetUserInputResponse(_rbtCtrl, strUserInput.c_str());};
 
         ////////////////////////////////////////////////////////////////////////////
         // Attributes                                                             //
@@ -382,7 +448,7 @@ namespace DRAFramework
         ROBOT_STATE GetRobotState() { return _GetRobotState(_rbtCtrl); };
         // set robot state 
         bool SetRobotControl(ROBOT_CONTROL eControl) { return _SetRobotControl(_rbtCtrl, eControl); };
-
+        CONTROL_MODE GetControlMode(){ return _GetControlMode(_rbtCtrl);};
         // get robot system(real robot, virtrul robot)
         ROBOT_SYSTEM GetRobotSystem() { return _GetRobotSystem(_rbtCtrl); };
         // set robot system(real robot, virtrul robot)
@@ -395,6 +461,7 @@ namespace DRAFramework
 
         // get roobt axis data
         LPROBOT_POSE GetCurrentPose(ROBOT_SPACE eSpaceType = ROBOT_SPACE_JOINT) { return _GetCurrentPose(_rbtCtrl, eSpaceType); };
+        float(* GetCurrentRotationMatrix(COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE))[3]{ return _GetCurrentRotationMatrix(_rbtCtrl, eTargetRef); };
         unsigned char GetCurrentSolutionSpace() { return _GetCurrentSolutionSpace(_rbtCtrl); };
 
         // get program running state
@@ -405,8 +472,9 @@ namespace DRAFramework
 
         // get roobot system alarm
         LPLOG_ALARM GetLastAlarm() { return _GetLastAlarm(_rbtCtrl); };
-        int ServoOff(STOP_TYPE eStopType) { return _ServoOff(_rbtCtrl, eStopType); };
         
+        int ServoOff(STOP_TYPE eStopType) { return _ServoOff(_rbtCtrl, eStopType); };
+        int CheckMotion() {return _CheckMotion(_rbtCtrl);};
         ////////////////////////////////////////////////////////////////////////////
         //  access control                                                        //
         ////////////////////////////////////////////////////////////////////////////
@@ -421,7 +489,7 @@ namespace DRAFramework
         bool Jog(JOG_AXIS eJogAxis, MOVE_REFERENCE eMoveReference, float fVelocity) { return _Jog(_rbtCtrl, eJogAxis, eMoveReference, fVelocity); };
         bool MultiJog(float fTargetPos[NUM_TASK], MOVE_REFERENCE eMoveReference, float fVelocity) { return _MultiJog(_rbtCtrl, fTargetPos, eMoveReference, fVelocity); };
         bool Home(unsigned char bRun) { return _Home(_rbtCtrl, bRun); };
-
+        bool UserHome(unsigned char bRun) { return _UserHome(_rbtCtrl, bRun); };
         // motion control: move stop
         bool MoveStop(STOP_TYPE eStopType = STOP_TYPE_QUICK) { return _MoveStop(_rbtCtrl, eStopType); };
         // motion control: move pause
@@ -459,6 +527,7 @@ namespace DRAFramework
         // motion control: move periodic motion
         bool MovePeriodic(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned int nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL) { return _MovePeriodic(_rbtCtrl, fAmplitude, fPeriodic, fAccelTime, nRepeat, eMoveReference); };
         bool MovePeriodicAsync(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned int nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL) { return _MovePeriodicAsync(_rbtCtrl, fAmplitude, fPeriodic, fAccelTime, nRepeat, eMoveReference); };
+
 
         ////////////////////////////////////////////////////////////////////////////
         //  GPIO Operations                                                       //
@@ -507,7 +576,6 @@ namespace DRAFramework
         // del tool(end-effector) informaiton
         bool ConfigDeleteTool(string strSymbol) { return _ConfigDeleteTool(_rbtCtrl, strSymbol.c_str()); };
         
-
         // set robot tcp information
         bool SetCurrentTCP(string strSymbol) { return _SetCurrentTCP(_rbtCtrl, strSymbol.c_str()); };
         // get robot tcp information
@@ -516,7 +584,15 @@ namespace DRAFramework
         bool ConfigCreateTCP(string strSymbol, float fPostion[NUM_TASK]) { return _ConfigCreateTCP(_rbtCtrl, strSymbol.c_str(), fPostion); };
         // del robot tcp information
         bool ConfigDeleteTCP(string strSymbol) { return _ConfigDeleteTCP(_rbtCtrl, strSymbol.c_str()); };
-       
+        
+        // set robot tool shape information
+        bool SetCurrentToolShape(string strSymbol){return _SetCurrentToolShape(_rbtCtrl, strSymbol.c_str());};
+        // get robot tool shape information 
+        string GetCurrentToolShape(){ return _GetCurrentToolShape(_rbtCtrl);};
+        // add robot tool shape information
+        bool ConfigCreateToolShape(){return true;};
+        // del robot tool shape information
+        bool ConfigDeleteToolShape(string strSymbol){return _ConfigDeleteToolShape(_rbtCtrl, strSymbol.c_str());};
 
         ////////////////////////////////////////////////////////////////////////////
         //  drl program Operations                                                //
@@ -529,6 +605,7 @@ namespace DRAFramework
         bool PlayDrlPause()  { return _PlayDrlPause(_rbtCtrl); };
         //program resume
         bool PlayDrlResume() { return _PlayDrlResume(_rbtCtrl); };
+        bool PlayDrlSpeed(float fSpeed) { return _PlayDrlSpeed(_rbtCtrl, fSpeed);};
 
 
         ////////////////////////////////////////////////////////////////////////////
@@ -536,8 +613,10 @@ namespace DRAFramework
         ////////////////////////////////////////////////////////////////////////////
 
         bool EnterTaskCompliance(float fTargetStiffness[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f) { return _EnterTaskCompliance(_rbtCtrl, fTargetStiffness, eForceReference, fTargetTime); };
+        bool EnterJointCompliance(float fTargetStiffness[NUM_TASK], float fTargetTime = 0.f){ return _EnterJointCompliance(_rbtCtrl, fTargetStiffness, fTargetTime);};
         bool SetTaskStiffness(float fTargetStiffness[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f) { return _SetTaskStiffness(_rbtCtrl, fTargetStiffness, eForceReference, fTargetTime); };
         bool LeaveTaskCompliance() { return _LeaveTaskCompliance(_rbtCtrl); };
+        bool LeaveJointCompliance() { return _LeaveJointCompliance(_rbtCtrl);};
         bool SetDesiredForce(float fTargetForce[NUM_TASK], unsigned char iTargetDirection[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL, float fTargetTime = 0.f, FORCE_MODE eForceMode = FORCE_MODE_ABSOLUTE) { return _SetDesiredForce(_rbtCtrl, fTargetForce, iTargetDirection, eForceReference, fTargetTime, eForceMode); };
         bool ResetDesiredForce(float fTargetTime = 0.f) {return _ResetDesiredForce(_rbtCtrl, fTargetTime); };
 
@@ -546,17 +625,33 @@ namespace DRAFramework
         bool WaitForPositionConditionRel(FORCE_AXIS eForceAxis, float fTargetMin, float fTargetMax, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL) { return _WaitForPositionConditionRel(_rbtCtrl, eForceAxis, fTargetMin, fTargetMax, fTargetPos, eForceReference); };
         bool WaitForOrientationCondition(FORCE_AXIS eForceAxis, float fTargetMin[NUM_TASK], float fTargetMax[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL) { return _WaitForOrientationCondition(_rbtCtrl, eForceAxis, fTargetMin, fTargetMax, eForceReference); };
         bool WaitForOrientationConditionRel(FORCE_AXIS eForceAxis, float fTargetMin, float fTargetMax, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eForceReference = COORDINATE_SYSTEM_TOOL) { return _WaitForOrientationConditionRel(_rbtCtrl, eForceAxis, fTargetMin, fTargetMax, fTargetPos, eForceReference); };
-        bool WaitForBoltTightening(FORCE_AXIS eForceAxis, float fTargetTor, float fTimeout = 0.f) { return _WaitForBoltTightening(_rbtCtrl, eForceAxis, fTargetTor, fTimeout); };
-
+        bool WaitForBoltTightening(FORCE_AXIS eForceAxis, float fTargetTor = 0.f, float fTimeout = 0.f) { return _WaitForBoltTightening(_rbtCtrl, eForceAxis, fTargetTor, fTimeout); };
+        bool ParallelAxis1(float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE){return _ParallelAxis1(_rbtCtrl, fTargetPos1, fTargetPos2, fTargetPos3, eTaskAxis, eSourceRef);};
+        bool AlignAxis1(float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], float fSourceVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE){return _AlignAxis1(_rbtCtrl, fTargetPos1, fTargetPos2, fTargetPos3, fSourceVec, eTaskAxis, eSourceRef);};
+        bool ParallelAxis2(float fTargetVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef){return _ParallelAxis2(_rbtCtrl, fTargetVec, eTaskAxis, eSourceRef = COORDINATE_SYSTEM_BASE);};
+        bool AlignAxis2(float fTargetVec[3], float fSourceVec[3], TASK_AXIS eTaskAxis, COORDINATE_SYSTEM eSourceRef){return _AlignAxis2(_rbtCtrl, fTargetVec, fSourceVec, eTaskAxis, eSourceRef = COORDINATE_SYSTEM_BASE);};
+        
         ////////////////////////////////////////////////////////////////////////////
         //  coordinate system control                                             //
         ////////////////////////////////////////////////////////////////////////////
 
-        int ConfigUserCoordinateSystem(float fTargetPos[3][NUM_TASK], float fTargetOrg[3]) { return _ConfigUserCoordinateSystem(_rbtCtrl, fTargetPos, fTargetOrg); };
-        int ConfigUserCoordinateSystemEx(float fTargetVec[2][3], float fTargetOrg[3]) { return _ConfigUserCoordinateSystemEx(_rbtCtrl, fTargetVec, fTargetOrg); };
+        int ConfigUserCoordinate(int iReqId, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _ConfigUserCoordinate(_rbtCtrl, iReqId, fTargetPos, eTargetRef);};
+        int ConfigUserCoordinateSystem(float fTargetPos[3][NUM_TASK], float fTargetOrg[3], COORDINATE_SYSTEM fTargetRef = COORDINATE_SYSTEM_BASE) { return _ConfigUserCoordinateSystem(_rbtCtrl, fTargetPos, fTargetOrg, fTargetRef); };
+        int ConfigUserCoordinateSystemEx(float fTargetVec[2][3], float fTargetOrg[3], COORDINATE_SYSTEM fTargetRef = COORDINATE_SYSTEM_BASE) { return _ConfigUserCoordinateSystemEx(_rbtCtrl, fTargetVec, fTargetOrg, fTargetRef); };
         LPROBOT_POSE TransformCoordinateSystem(float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eInCoordSystem, COORDINATE_SYSTEM eOutCoordSystem) { return _TransformCoordinateSystem(_rbtCtrl, fTargetPos, eInCoordSystem, eOutCoordSystem); };
-
-    protected:
+        bool SetReferenceCoordinate(COORDINATE_SYSTEM eTargetCoordSystem){return _SetReferenceCoordinate(_rbtCtrl, eTargetCoordSystem);};
+        LPROBOT_POSE CalUserCoordinate(unsigned short nCnt, unsigned short nInputMode, COORDINATE_SYSTEM eTargetRef, float fTargetPos1[NUM_TASK], float fTargetPos2[NUM_TASK], float fTargetPos3[NUM_TASK], float fTargetPos4[NUM_TASK]){return _CalUserCoordinate(_rbtCtrl, nCnt, nInputMode, eTargetRef, fTargetPos1, fTargetPos2, fTargetPos3, fTargetPos4);};
+        LPUSER_COORDINATE GetUserCoordinate(int iReqId){return _GetUserCoordinate(_rbtCtrl, iReqId);};
+        int UpdateUserCoordinate(bool bTargetUpdate, int iReqId, float fTargetPos[NUM_TASK], COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _UpdateUserCoordinate(_rbtCtrl, bTargetUpdate, iReqId, fTargetPos, eTargetRef); };
+        bool EnableAlterMotion(int iCycleTime, PATH_MODE ePathMode, COORDINATE_SYSTEM eTargetRef, float fLimitDpos[2], float fLimitDposPer[2]){return _EnableAlterMotion(_rbtCtrl, iCycleTime, ePathMode, eTargetRef, fLimitDpos, fLimitDposPer);};
+        bool DisableAlterMotion(){return _DisableAlterMotion(_rbtCtrl);};
+        bool AlterMotion(float fTargetPos[NUM_TASK]){return _AlterMotion(_rbtCtrl, fTargetPos);};
+        bool SetSingularityHandling(SINGULARITY_AVOIDANCE eMode){return _SetSingularityHandling(_rbtCtrl, eMode);};
+        bool CofnigProgramWatchVariable(VARIABLE_TYPE eDivision, DATA_TYPE eType, string strName, string strData){return _ConfigProgramWatchVariable(_rbtCtrl, eDivision, eType, strName.c_str(), strData.c_str());};
+        bool SaveSubProgram(int iTargetType, string strFileName, string strDrlProgram){return _SaveSubProgram(_rbtCtrl, iTargetType, strFileName.c_str(), strDrlProgram.c_str());};
+        bool SetupMonitoringVersion(int iVersion){ return _SetupMonitoringVersion(_rbtCtrl, iVersion); };
+        bool SystemShutDown(){return _SystemShutDown(_rbtCtrl);};
+protected:
 
         LPROBOTCONTROL _rbtCtrl;
     };

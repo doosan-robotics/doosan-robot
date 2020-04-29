@@ -1,4 +1,7 @@
+#____________________________________________________________________________________________
 # move_sprial  
+#____________________________________________________________________________________________
+
 float64    revolution       # Total number of revolutions 
 float64    maxRadius        # Final spiral radius [mm]
 float64    maxLength        # Distance moved in the axis direction [mm]

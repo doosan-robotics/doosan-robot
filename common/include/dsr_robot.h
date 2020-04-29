@@ -62,7 +62,6 @@
 #include <dsr_msgs/GetRobotSpeedMode.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetCurrentPose.h>
-#include <dsr_msgs/GetCurrentSolutionSpace.h>
 //#include <dsr_msgs/GetLastAlarm.h>
 
 #include <dsr_msgs/MoveJoint.h>
@@ -78,6 +77,60 @@
 #include <dsr_msgs/Jog.h>
 #include <dsr_msgs/JogMulti.h>
 #include <dsr_msgs/Trans.h>
+#include <dsr_msgs/Fkin.h>
+#include <dsr_msgs/Ikin.h>
+#include <dsr_msgs/SetRefCoord.h>
+#include <dsr_msgs/MoveHome.h>
+#include <dsr_msgs/CheckMotion.h>
+#include <dsr_msgs/ChangeOperationSpeed.h>
+#include <dsr_msgs/EnableAlterMotion.h>
+#include <dsr_msgs/AlterMotion.h>
+#include <dsr_msgs/DisableAlterMotion.h>
+#include <dsr_msgs/SetSingularityHandling.h>
+
+#include <dsr_msgs/GetControlMode.h>          
+#include <dsr_msgs/GetControlSpace.h>         
+#include <dsr_msgs/GetCurrentPosj.h>          
+#include <dsr_msgs/GetCurrentVelj.h>          
+#include <dsr_msgs/GetDesiredPosj.h>
+#include <dsr_msgs/GetDesiredVelj.h>          
+#include <dsr_msgs/GetCurrentPosx.h>          
+#include <dsr_msgs/GetCurrentToolFlangePosx.h>
+#include <dsr_msgs/GetCurrentVelx.h>          
+#include <dsr_msgs/GetDesiredPosx.h>
+#include <dsr_msgs/GetDesiredVelx.h>          
+#include <dsr_msgs/GetCurrentSolutionSpace.h> 
+#include <dsr_msgs/GetCurrentRotm.h>          
+#include <dsr_msgs/GetJointTorque.h>          
+#include <dsr_msgs/GetExternalTorque.h>      
+#include <dsr_msgs/GetToolForce.h>            
+#include <dsr_msgs/GetSolutionSpace.h>
+#include <dsr_msgs/GetOrientationError.h>
+
+#include <dsr_msgs/ParallelAxis1.h>
+#include <dsr_msgs/ParallelAxis2.h>
+#include <dsr_msgs/AlignAxis1.h>
+#include <dsr_msgs/AlignAxis2.h>
+#include <dsr_msgs/IsDoneBoltTightening.h>
+#include <dsr_msgs/ReleaseComplianceCtrl.h>
+#include <dsr_msgs/TaskComplianceCtrl.h>
+#include <dsr_msgs/SetStiffnessx.h>
+#include <dsr_msgs/CalcCoord.h>
+#include <dsr_msgs/SetUserCartCoord1.h>
+#include <dsr_msgs/SetUserCartCoord2.h>
+#include <dsr_msgs/SetUserCartCoord3.h>
+#include <dsr_msgs/OverwriteUserCartCoord.h>
+#include <dsr_msgs/GetUserCartCoord.h>
+#include <dsr_msgs/SetDesiredForce.h>
+#include <dsr_msgs/ReleaseForce.h>
+#include <dsr_msgs/CheckPositionCondition.h>
+#include <dsr_msgs/CheckForceCondition.h>
+#include <dsr_msgs/CheckOrientationCondition1.h>
+#include <dsr_msgs/CheckOrientationCondition2.h>
+#include <dsr_msgs/CoordTransform.h>
+#include <dsr_msgs/GetWorkpieceWeight.h>
+#include <dsr_msgs/ResetWorkpieceWeight.h>
+
 
 #include <dsr_msgs/ConfigCreateTcp.h>
 #include <dsr_msgs/ConfigDeleteTcp.h>
@@ -88,6 +141,7 @@
 #include <dsr_msgs/GetCurrentTool.h>
 #include <dsr_msgs/ConfigCreateTool.h>
 #include <dsr_msgs/ConfigDeleteTool.h>
+#include <dsr_msgs/SetToolShape.h>
 
 #include <dsr_msgs/SetCtrlBoxDigitalOutput.h>
 #include <dsr_msgs/GetCtrlBoxDigitalInput.h>
