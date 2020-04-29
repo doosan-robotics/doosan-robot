@@ -2,6 +2,12 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* 1.0.4
+* Delete train_show1.py
+* Contributors: doosan robotics ros master
+
 1.0.4 (2020-02-18)
 ------------------
 * update serial raw code

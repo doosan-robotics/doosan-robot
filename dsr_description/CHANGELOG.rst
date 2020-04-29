@@ -2,6 +2,12 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* URDF Files
+  Add Urdf Files(legacy)
+* Contributors: doosan robotics ros master
+
 1.0.4 (2020-02-18)
 ------------------
 * update joint angle in URDF

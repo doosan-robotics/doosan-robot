@@ -2,6 +2,11 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* 1.1.0
+* Contributors: doosan-robotics
+
 1.0.4 (2020-02-18)
 ------------------
 * update serial_node
