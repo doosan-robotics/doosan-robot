@@ -76,18 +76,6 @@ ___
     
 <img src="https://user-images.githubusercontent.com/47092672/55613994-fd84f100-57c6-11e9-97eb-49d1d7c9e32c.png" width="70%">
 
-##### *How to use MoveIt Commander*
-###### _You can run Moveit with CLI commands through the moveit commander package._
-###### _You can install the "moveit_commander" package using below command._
-    sudo apt-get insatll ros-kinetic-moveit-commander
-##### *MoveitCommander usage example*
-	ROS_NAMESPACE=/dsr01m1013 rosrun moveit_commander moveit_commander_cmdline.py robot_description:=/dsr01m1013/robot_description   
-###### *moveit commander CLI is executed.*    
-    > use arm 
-    > goal0 = [0 0 0 0 0 0]        # save the home position to variable "goal0"
-    > goal1 = [0 0 1.57 0 1.57 0]  # save the target position to varialbe "goal1" / radian
-    > go goal1                     # plan & excute (the robot is going to move target position)
-    > go goal0                     # paln & excute (the robot is going to move home position)
 ___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
@@ -107,6 +95,18 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
     roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
     roslaunch dsr_control dsr_moveit.launch model:=a0509 mode:=virtual
 
+##### *How to use MoveIt Commander*
+###### _You can run Moveit with CLI commands through the moveit commander package._
+###### _You can install the "moveit_commander" package using below command._
+    sudo apt-get install ros-kinetic-moveit-commander
+##### *MoveitCommander usage example*
+	ROS_NAMESPACE=/dsr01m1013 rosrun moveit_commander moveit_commander_cmdline.py robot_description:=/dsr01m1013/robot_description   
+###### *moveit commander CLI is executed.*    
+    > use arm 
+    > goal0 = [0 0 0 0 0 0]        # save the home position to variable "goal0"
+    > goal1 = [0 0 1.57 0 1.57 0]  # save the target position to varialbe "goal1" / radian
+    > go goal1                     # plan & excute (the robot is going to move target position)
+    > go goal0                     # paln & excute (the robot is going to move home position)
 ___
 #### dsr_launcher
 
