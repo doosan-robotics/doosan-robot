@@ -2,8 +2,8 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-04-29)
+------------------
 * URDF Files
   Add Urdf Files(legacy)
 * Contributors: doosan robotics ros master

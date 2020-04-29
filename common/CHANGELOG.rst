@@ -2,8 +2,8 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-04-29)
+------------------
 * 1.1.0
 * Contributors: doosan-robotics
 

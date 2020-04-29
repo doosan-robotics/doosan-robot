@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>doosan_robotics</name>
-  <version>1.0.4</version>
+  <version>1.1.0</version>
   <description>The doosan_robotics metapackage</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
