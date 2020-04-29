@@ -100,6 +100,8 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
 ###### _You can install the "moveit_commander" package using below command._
     sudo apt-get install ros-kinetic-moveit-commander
 ##### *MoveitCommander usage example*
+	roslaunch dsr_control dsr_moveit.launch model:=m1013
+	In another terminal 
 	ROS_NAMESPACE=/dsr01m1013 rosrun moveit_commander moveit_commander_cmdline.py robot_description:=/dsr01m1013/robot_description   
 ###### *moveit commander CLI is executed.*    
     > use arm 
