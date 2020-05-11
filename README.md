@@ -17,7 +17,7 @@
     source ./devel/setup.bash
 
 #### package list
-    sudo apt-get install ros-melodic-rqt* ros-melodic-moveit* ros-melodic-industrial-core ros-melodic-gazebo-ros-control ros-melodic-joint-state-controller ros-melodic-effort-controllers ros-melodic-position-controllers ros-melodic-ros-controllers ros-melodic-ros-control ros-melodic-serial
+    sudo apt-get install ros-melodic-rqt* ros-melodic-moveit* ros-melodic-industrial-core ros-melodic-gazebo-ros-control ros-melodic-joint-state-controller ros-melodic-effort-controllers ros-melodic-position-controllers ros-melodic-ros-controllers ros-melodic-ros-control ros-melodic-serial ros-melodic-joint-state-publisher-gui
     
 __packages for mobile robot__
 
