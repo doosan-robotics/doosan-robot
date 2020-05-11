@@ -98,7 +98,7 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
 ##### *How to use MoveIt Commander*
 ###### _You can run Moveit with CLI commands through the moveit commander package._
 ###### _You can install the "moveit_commander" package using below command._
-    sudo apt-get install ros-kinetic-moveit-commander
+    sudo apt-get install ros-melodic-moveit-commander
 ##### *MoveitCommander usage example*
 	roslaunch dsr_control dsr_moveit.launch model:=m1013
 	In another terminal 
