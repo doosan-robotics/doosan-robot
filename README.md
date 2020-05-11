@@ -21,7 +21,7 @@
     
 __packages for mobile robot__
 
-    sudo apt-get ros-melodic-lms1xx ros-melodic-interactive-marker-twist-server ros-melodic-twist-mux ros-melodic-imu-tools ros-melodic-controller-manager ros-melodic-robot-localization
+    sudo apt-get install ros-melodic-lms1xx ros-melodic-interactive-marker-twist-server ros-melodic-twist-mux ros-melodic-imu-tools ros-melodic-controller-manager ros-melodic-robot-localization
 
 
 # *usage* <a id="chapter-3"></a>
