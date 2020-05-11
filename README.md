@@ -7,7 +7,7 @@
 [Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
 
 # *build* 
-##### *Doosan Robot ROS Package is implemented at ROS-Kinetic.*
+##### *Doosan Robot ROS Package is implemented at ROS-melodic.*
     ### We recoomand the /home/<user_home>/catkin_ws/src
     cd ~/catkin_ws/src
     git clone -b melodic-devel --single-branch https://github.com/doosan-robotics/doosan-robot
@@ -19,10 +19,6 @@
 #### package list
     sudo apt-get install ros-melodic-rqt* ros-melodic-moveit* ros-melodic-industrial-core ros-melodic-gazebo-ros-control ros-melodic-joint-state-controller ros-melodic-effort-controllers ros-melodic-position-controllers ros-melodic-ros-controllers ros-melodic-ros-control ros-melodic-serial ros-melodic-joint-state-publisher-gui
     
-__packages for mobile robot__
-
-    sudo apt-get install ros-melodic-lms1xx ros-melodic-interactive-marker-twist-server ros-melodic-twist-mux ros-melodic-imu-tools ros-melodic-controller-manager ros-melodic-robot-localization
-
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode
