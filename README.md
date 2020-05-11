@@ -183,30 +183,6 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 
 
 
-###### robot + mobile
-> insert argument mobile:=husky
-- single robot on mobile
-```bash
-roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
-  
-<run application node>
-  rosrun dsr_example_py single_robot_mobile.py
-```
-
-> _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
-> <img src="https://user-images.githubusercontent.com/47092672/55622399-10092580-57db-11e9-9ee0-f3c04a5569de.png" width="70%">
-
-- multi robot on mobile
-```bash
-roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
-
-<run application node>
-  rosrun dsr_example_py multi_robot_mobile.py  
-```
-
-> _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
-> <img src="https://user-images.githubusercontent.com/47092672/55622397-10092580-57db-11e9-8fe8-4d711725ac45.png" width="70%">
-
     
 #### gazebo+rviz+virtual
     roslaunch dsr_launcher single_robot_rviz_gazebo.launch
