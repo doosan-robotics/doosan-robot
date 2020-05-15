@@ -22,6 +22,10 @@ bool g_bHommingCompleted = FALSE;
 DR_STATE    g_stDrState;
 DR_ERROR    g_stDrError;
 
+int g_nAnalogOutputModeCh1;
+int g_nAnalogOutputModeCh2;
+
+
 #define STABLE_BAND_JNT     0.05
 #define DSR_CTL_PUB_RATE    100  //[hz] 10ms <----- 퍼블리싱 주기, but OnMonitoringDataCB() 은 100ms 마다 불려짐을 유의!   
 
@@ -813,6 +817,8 @@ namespace dsr_control{
         m_nh_io_service[5] = private_nh_.advertiseService("io/get_analog_input", &DRHWInterface::get_analog_input_cb, this);
         m_nh_io_service[6] = private_nh_.advertiseService("io/set_analog_output_type", &DRHWInterface::set_analog_output_type_cb, this);
         m_nh_io_service[7] = private_nh_.advertiseService("io/set_analog_input_type", &DRHWInterface::set_analog_input_type_cb, this);
+        m_nh_io_service[8] = private_nh_.advertiseService("io/get_digital_output", &DRHWInterface::get_digital_output_cb, this);
+        m_nh_io_service[9] = private_nh_.advertiseService("io/get_tool_digital_output", &DRHWInterface::get_tool_digital_output_cb, this);
 
         //  Modbus Operations
         m_nh_modbus_service[0] = private_nh_.advertiseService("modbus/set_modbus_output", &DRHWInterface::set_modbus_output_cb, this);
@@ -857,6 +863,9 @@ namespace dsr_control{
         m_th_subscribe = boost::thread( boost::bind(&thread_subscribe, private_nh_) );
         m_th_publisher = boost::thread( boost::bind(&thread_publisher, this, private_nh_, DSR_CTL_PUB_RATE/*hz*/) );    //100hz(10ms)
 
+        g_nAnalogOutputModeCh1 = -1;
+        g_nAnalogOutputModeCh2 = -1;
+
     }
     DRHWInterface::~DRHWInterface()
     {
@@ -899,15 +908,18 @@ namespace dsr_control{
 
         ROS_INFO("host %s, port=%d bCommand: %d, mode: %s\n", host.c_str(), nServerPort, bCommand_, mode.c_str());
 
+
         if(Drfl.OpenConnection(host, nServerPort))
         {
-            //--- Get version ---            
+            //--- connect Emulator ? ------------------------------    
+            if(host == "127.0.0.1") m_bIsEmulatorMode = true; 
+            else                    m_bIsEmulatorMode = false;
+
+            //--- Get version -------------------------------------            
             SYSTEM_VERSION tSysVerion = {'\0', };
             assert(Drfl.GetSystemVersion(&tSysVerion));
-            ROS_INFO("DRCF version = %s",tSysVerion._szController);
-            ROS_INFO("DRFL version = %s",Drfl.GetLibraryVersion());
 
-            //--- Get DRCF version & convert to integer  ---            
+            //--- Get DRCF version & convert to integer  ----------            
             m_nVersionDRCF = 0; 
             int k=0;
             for(int i=strlen(tSysVerion._szController); i>0; i--)
@@ -915,9 +927,13 @@ namespace dsr_control{
                     m_nVersionDRCF += (tSysVerion._szController[i]-'0')*pow(10.0,k++);
             if(m_nVersionDRCF < 100000) m_nVersionDRCF += 100000; 
 
-            ROS_INFO("_____________________________________");   
-            ROS_INFO("m_nVersionDRCF = %d", m_nVersionDRCF);  //ex> M2.40 = 120400, M2.50 = 120500  
-            ROS_INFO("_____________________________________");   
+            ROS_INFO("_______________________________________________");   
+            if(m_bIsEmulatorMode) ROS_INFO("    Emulator Mode");
+            else                  ROS_INFO("    Real Robot Mode");
+            ROS_INFO("    DRCF version = %s",tSysVerion._szController);
+            ROS_INFO("    DRFL version = %s",Drfl.GetLibraryVersion());
+            ROS_INFO("    m_nVersionDRCF = %d", m_nVersionDRCF);  //ex> M2.40 = 120400, M2.50 = 120500  
+            ROS_INFO("_______________________________________________");   
 
             if(m_nVersionDRCF >= 120500)    //M2.5 or later        
             {
@@ -1100,39 +1116,62 @@ namespace dsr_control{
     //----- SYSTEM Service Call-back functions ------------------------------------------------------------
 
     bool DRHWInterface::set_robot_mode_cb(dsr_msgs::SetRobotMode::Request& req, dsr_msgs::SetRobotMode::Response& res){
-        res.success = Drfl.SetRobotMode((ROBOT_MODE)req.robot_mode);
+        res.success = false;
+        res.success = Drfl.SetRobotMode((ROBOT_MODE)req.robot_mode);   
+        return true;
     }
     
     bool DRHWInterface::get_robot_mode_cb(dsr_msgs::GetRobotMode::Request& req, dsr_msgs::GetRobotMode::Response& res){
+        res.success = false;
         res.robot_mode = Drfl.GetRobotMode();
+        res.success = true;
+        return true;
     }
 
     bool DRHWInterface::set_robot_system_cb(dsr_msgs::SetRobotSystem::Request& req, dsr_msgs::SetRobotSystem::Response& res){
+        res.success = false;
         res.success = Drfl.SetRobotSystem((ROBOT_SYSTEM)req.robot_system);
+        return true;
     }
     bool DRHWInterface::get_robot_system_cb(dsr_msgs::GetRobotSystem::Request& req, dsr_msgs::GetRobotSystem::Response& res){
+        res.success = false;
         res.robot_system = Drfl.GetRobotSystem();
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_robot_state_cb(dsr_msgs::GetRobotState::Request& req, dsr_msgs::GetRobotState::Response& res){
+        res.success = false;
         res.robot_state = Drfl.GetRobotState();
+        return true;
     }
     bool DRHWInterface::set_robot_speed_mode_cb(dsr_msgs::SetRobotSpeedMode::Request& req, dsr_msgs::SetRobotSpeedMode::Response& res){
+        res.success = false;
         res.success = Drfl.SetRobotSpeedMode((SPEED_MODE)req.speed_mode);
+        return true;
     }
     bool DRHWInterface::get_robot_speed_mode_cb(dsr_msgs::GetRobotSpeedMode::Request& req, dsr_msgs::GetRobotSpeedMode::Response& res){
+        res.success = false;
         res.speed_mode = Drfl.GetRobotSpeedMode();
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res){
+        res.success = false;
         LPROBOT_POSE robot_pos = Drfl.GetCurrentPose((ROBOT_SPACE)req.space_type);
         for(int i = 0; i < NUM_TASK; i++){
             res.pos[i] = robot_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res){
+        res.success = false;
         Drfl.SetSafeStopResetType((SAFE_STOP_RESET_TYPE)req.reset_type);
         res.success = true;
+        return true;
     }
     bool DRHWInterface::get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res){
+        res.success = false;
         res.log_alarm.level = Drfl.GetLastAlarm()->_iLevel;
         res.log_alarm.group = Drfl.GetLastAlarm()->_iGroup;
         res.log_alarm.index = Drfl.GetLastAlarm()->_iIndex;
@@ -1140,12 +1179,15 @@ namespace dsr_control{
             std::string str_temp(Drfl.GetLastAlarm()->_szParam[i]);
             res.log_alarm.param[i] = str_temp;
         }
+        res.success = true;
+        return true;
     }
 
     //----- MOTION Service Call-back functions ------------------------------------------------------------
 
     bool DRHWInterface::movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_JOINT> target_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
         if(req.syncType == 0){
@@ -1156,9 +1198,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJAsync");
             res.success = Drfl.MoveJAsync(target_pos.data(), req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (BLENDING_SPEED_TYPE)req.blendType);
         }
+        return true;
     }
     bool DRHWInterface::movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> target_pos;
         std::array<float, 2> target_vel;
         std::array<float, 2> target_acc;
@@ -1174,9 +1218,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movel_cb() called and calling Drfl.MoveLAsync");
             res.success = Drfl.MoveLAsync(target_pos.data(), target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);
         }
+        return true;
     }
     bool DRHWInterface::movejx_cb(dsr_msgs::MoveJointx::Request& req, dsr_msgs::MoveJointx::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> target_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
         if(req.syncType == 0){
@@ -1187,9 +1233,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movejx_cb() called and calling Drfl.MoveJXAsync");
             res.success = Drfl.MoveJXAsync(target_pos.data(), req.sol, req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);    
         }
+        return true;
     }
     bool DRHWInterface::movec_cb(dsr_msgs::MoveCircle::Request& req, dsr_msgs::MoveCircle::Response& res)
     {
+        res.success = false;
         float fTargetPos[2][NUM_TASK];
         float fTargetVel[2];
         float fTargetAcc[2];
@@ -1211,9 +1259,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveCAsync");
             res.success = Drfl.MoveCAsync(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);  
         }
+        return true;
     }
     bool DRHWInterface::movesj_cb(dsr_msgs::MoveSplineJoint::Request& req, dsr_msgs::MoveSplineJoint::Response& res)
     {
+        res.success = false;
         float fTargetPos[MAX_SPLINE_POINT][NUM_JOINT];
 
         for(int i=0; i<req.posCnt; i++){
@@ -1230,9 +1280,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movesj_cb() called and calling Drfl.MoveSJAsync");
             res.success = Drfl.MoveSJAsync(fTargetPos, req.posCnt, req.vel, req.acc, req.time, (MOVE_MODE)req.mode);
         }
+        return true;
     }
     bool DRHWInterface::movesx_cb(dsr_msgs::MoveSplineTask::Request& req, dsr_msgs::MoveSplineTask::Response& res)
     {
+        res.success = false;
         float fTargetPos[MAX_SPLINE_POINT][NUM_TASK];
         float fTargetVel[2];
         float fTargetAcc[2];
@@ -1257,10 +1309,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movesx_cb() called and calling Drfl.MoveSXAsync");
             res.success = Drfl.MoveSXAsync(fTargetPos, req.posCnt, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (SPLINE_VELOCITY_OPTION)req.opt);
         }
+        return true;
     }
     bool DRHWInterface::moveb_cb(dsr_msgs::MoveBlending::Request& req, dsr_msgs::MoveBlending::Response& res)
     {
-
+        res.success = false;
         MOVE_POSB posb[req.posCnt];
         for(int i=0; i<req.posCnt; i++){
             std_msgs::Float64MultiArray segment = req.segment.at(i);
@@ -1299,9 +1352,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::moveb_cb() called and calling Drfl.MoveBAsync");
             res.success = Drfl.MoveBAsync(posb, req.posCnt, target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref);
         }
+        return true;
     }
     bool DRHWInterface::movespiral_cb(dsr_msgs::MoveSpiral::Request& req, dsr_msgs::MoveSpiral::Response& res)
     {
+        res.success = false;
         std::array<float, 2> target_vel;
         std::array<float, 2> target_acc;
         std::copy(req.vel.cbegin(), req.vel.cend(), target_vel.begin());
@@ -1315,9 +1370,11 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::movespiral_cb() called and calling Drfl.MoveSpiralAsync");
             res.success = Drfl.MoveSpiralAsync((TASK_AXIS)req.taskAxis, req.revolution, req.maxRadius, req.maxLength, target_vel.data(), target_acc.data(), req.time, (MOVE_REFERENCE)req.ref);
         }
+        return true;
     }
     bool DRHWInterface::moveperiodic_cb(dsr_msgs::MovePeriodic::Request& req, dsr_msgs::MovePeriodic::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> target_amp;
         std::array<float, NUM_TASK> target_periodic;
         std::copy(req.amp.cbegin(), req.amp.cend(), target_amp.begin());
@@ -1330,24 +1387,30 @@ namespace dsr_control{
             //ROS_INFO("DRHWInterface::moveperiodic_cb() called and calling Drfl.MovePeriodicAsync");
             res.success = Drfl.MovePeriodicAsync(target_amp.data(), target_periodic.data(), req.acc, req.repeat, (MOVE_REFERENCE)req.ref);
         }
+        return true;
     }
 
     bool DRHWInterface::movewait_cb(dsr_msgs::MoveWait::Request& req, dsr_msgs::MoveWait::Response& res)
     {
+        res.success = false;
         //ROS_INFO("DRHWInterface::movewait_cb() called and calling Drfl.MoveWait");
         res.success = Drfl.MoveWait();
+        return true;
     }
 
     bool DRHWInterface::jog_cb(dsr_msgs::Jog::Request& req, dsr_msgs::Jog::Response& res)
     {
+        res.success = false;
         ROS_INFO("DRHWInterface::jog_cb() called and calling Drfl.Jog");
         ROS_INFO("req.jog_axis = %d, req.move_reference=%d req.speed=%f",req.jog_axis, req.move_reference, req.speed);    
 
         res.success = Drfl.Jog((JOG_AXIS)req.jog_axis, (MOVE_REFERENCE)req.move_reference, req.speed);
+        return true;
     }
 
     bool DRHWInterface::jog_multi_cb(dsr_msgs::JogMulti::Request& req, dsr_msgs::JogMulti::Response& res)
     {
+        res.success = false;
         ROS_INFO("DRHWInterface::jog_multi_cb() called and calling Drfl.MultiJog");
         ROS_INFO("req.jog_axis = %f,%f,%f,%f,%f,%f",req.jog_axis[0],req.jog_axis[1],req.jog_axis[2],req.jog_axis[3],req.jog_axis[4],req.jog_axis[5]);    
 
@@ -1355,24 +1418,32 @@ namespace dsr_control{
         std::copy(req.jog_axis.cbegin(), req.jog_axis.cend(), target_jog.begin());
 
         res.success = Drfl.MultiJog(target_jog.data(), (MOVE_REFERENCE)req.move_reference, req.speed);
+        return true;
     }
 
     bool DRHWInterface::move_stop_cb(dsr_msgs::MoveStop::Request& req, dsr_msgs::MoveStop::Response& res)
     {
+        res.success = false;
         res.success = Drfl.MoveStop((STOP_TYPE)req.stop_mode);
+        return true;
     }
 
     bool DRHWInterface::move_resume_cb(dsr_msgs::MoveResume::Request& req, dsr_msgs::MoveResume::Response& res)
     {
+        res.success = false;
         res.success = Drfl.MoveResume();
+        return true;
     }
     
     bool DRHWInterface::move_pause_cb(dsr_msgs::MovePause::Request& req, dsr_msgs::MovePause::Response& res)
     {
+        res.success = false;
         res.success = Drfl.MovePause();
+        return true;
     }
     bool DRHWInterface::trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> target_pos;
         std::array<float, NUM_TASK> delta_pos;
  
@@ -1383,10 +1454,13 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.trans_pos[i] = robot_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
 
     bool DRHWInterface::fkin_cb(dsr_msgs::Fkin::Request& req, dsr_msgs::Fkin::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> joint_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), joint_pos.begin());
   
@@ -1399,9 +1473,12 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.conv_posx[i] = task_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::ikin_cb(dsr_msgs::Ikin::Request& req, dsr_msgs::Ikin::Response& res)
     {       
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
   
@@ -1415,47 +1492,59 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.conv_posj[i] = joint_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< set_ref_coord_cb >");
         ROS_INFO("    coord = %d",req.coord);      
     #endif
 
         res.success = Drfl.SetReferenceCoordinate((COORDINATE_SYSTEM)req.coord);
+        return true;
     }
     bool DRHWInterface::move_home_cb(dsr_msgs::MoveHome::Request& req, dsr_msgs::MoveHome::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< move_home_cb >");
         ROS_INFO("    target = %d",req.target);      
     #endif
 
         if(0 == req.target) 
-            res.res = Drfl.Home(1);
+            res.success = Drfl.Home(1);
         else 
-            res.res = Drfl.UserHome(1);
+            res.success = Drfl.UserHome(1);
+        return true;
     }
     bool DRHWInterface::check_motion_cb(dsr_msgs::CheckMotion::Request& req, dsr_msgs::CheckMotion::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< check_motion_cb >");
     #endif
 
         res.status = Drfl.CheckMotion();
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::change_operation_speed_cb(dsr_msgs::ChangeOperationSpeed::Request& req, dsr_msgs::ChangeOperationSpeed::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< change_operation_speed_cb >");
         ROS_INFO("    speed = %f",(float)req.speed);
     #endif
 
         res.success = Drfl.PlayDrlSpeed((float)req.speed);
+        return true;
     }
     bool DRHWInterface::enable_alter_motion_cb(dsr_msgs::EnableAlterMotion::Request& req, dsr_msgs::EnableAlterMotion::Response& res)
     {
+        res.success = false;
         std::array<float, 2> limit;
         std::array<float, 2> limit_per;
         std::copy(req.limit_dPOS.cbegin(), req.limit_dPOS.cend(), limit.begin());
@@ -1471,9 +1560,11 @@ namespace dsr_control{
     #endif
 
         res.success = Drfl.EnableAlterMotion((int)req.n, (PATH_MODE)req.mode, (COORDINATE_SYSTEM)req.ref, limit.data(), limit_per.data());
+        return true;
     }
     bool DRHWInterface::alter_motion_cb(dsr_msgs::AlterMotion::Request& req, dsr_msgs::AlterMotion::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> pos_alter;
         std::copy(req.pos.cbegin(), req.pos.cend(), pos_alter.begin());
  
@@ -1483,23 +1574,28 @@ namespace dsr_control{
     #endif
 
         res.success = Drfl.AlterMotion(pos_alter.data());
+        return true;
     }
     bool DRHWInterface::disable_alter_motion_cb(dsr_msgs::DisableAlterMotion::Request& req, dsr_msgs::DisableAlterMotion::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< disable_alter_motion_cb >");
     #endif
 
         res.success = Drfl.DisableAlterMotion();
+        return true;
     }
     bool DRHWInterface::set_singularity_handling_cb(dsr_msgs::SetSingularityHandling::Request& req, dsr_msgs::SetSingularityHandling::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< set_singularity_handling_cb >");
         ROS_INFO("    mode = %d",req.mode);
     #endif
 
         res.success = Drfl.SetSingularityHandling((SINGULARITY_AVOIDANCE)req.mode);
+        return true;
     }
 
 
@@ -1507,22 +1603,29 @@ namespace dsr_control{
 
     bool DRHWInterface::get_control_mode_cb(dsr_msgs::GetControlMode::Request& req, dsr_msgs::GetControlMode::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_control_mode_cb >");
     #endif
         //NO API , get mon_data      
         res.control_mode = g_stDrState.nActualMode;
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_control_space_cb(dsr_msgs::GetControlSpace::Request& req, dsr_msgs::GetControlSpace::Response& res)              
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_control_space_cb >");
     #endif
         //NO API , get mon_data
         res.space = g_stDrState.nActualSpace;
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_current_posj_cb(dsr_msgs::GetCurrentPosj::Request& req, dsr_msgs::GetCurrentPosj::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_current_posj_cb >");
     #endif
@@ -1530,9 +1633,12 @@ namespace dsr_control{
         for(int i = 0; i < NUM_TASK; i++){
             res.pos[i] = robot_pos->_fPosition[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_current_velj_cb(dsr_msgs::GetCurrentVelj::Request& req, dsr_msgs::GetCurrentVelj::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_current_velj_cb >");
     #endif
@@ -1541,9 +1647,12 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.joint_speed[i] = g_stDrState.fCurrentVelj[i];
         }
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_desired_posj_cb(dsr_msgs::GetDesiredPosj::Request& req, dsr_msgs::GetDesiredPosj::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_desired_posj_cb >");
     #endif
@@ -1551,9 +1660,12 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.pos[i] = g_stDrState.fTargetPosj[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_desired_velj_cb(dsr_msgs::GetDesiredVelj::Request& req, dsr_msgs::GetDesiredVelj::Response& res)              
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_desired_velj_cb >");
     #endif
@@ -1561,10 +1673,13 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.joint_vel[i] = g_stDrState.fTargetVelj[i];
         }
+        res.success = true;        
+        return true;
     }
 
     bool DRHWInterface::get_current_posx_cb(dsr_msgs::GetCurrentPosx::Request& req, dsr_msgs::GetCurrentPosx::Response& res)               
     {
+        res.success = false;
         std_msgs::Float64MultiArray arr;
 
     #if (_DEBUG_DSR_CTL)
@@ -1578,9 +1693,12 @@ namespace dsr_control{
         }
         arr.data.push_back(cur_posx->_iTargetSol);
         res.task_pos_info.push_back(arr);
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_current_velx_cb(dsr_msgs::GetCurrentVelx::Request& req, dsr_msgs::GetCurrentVelx::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_current_velx_cb >");
     #endif
@@ -1588,10 +1706,13 @@ namespace dsr_control{
         //NO API , get mon_data
         for(int i=0; i<NUM_TASK; i++){
             res.vel[i] = g_stDrState.fCurrentVelx[i];
-        }    
+        }
+        res.success = true;            
+        return true;
     }
     bool DRHWInterface::get_desired_posx_cb(dsr_msgs::GetDesiredPosx::Request& req, dsr_msgs::GetDesiredPosx::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_desired_posx_cb >");
     #endif
@@ -1599,19 +1720,25 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.pos[i] = task_pos->_fPosition[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_desired_velx_cb(dsr_msgs::GetDesiredVelx::Request& req, dsr_msgs::GetDesiredVelx::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_desired_velx_cb >");
     #endif
         //NO API , get mon_data
         for(int i=0; i<NUM_TASK; i++){
             res.vel[i] = g_stDrState.fTargetVelx[i];
-        }            
+        }
+        res.success = true;                    
+        return true;
     }
     bool DRHWInterface::get_current_tool_flange_posx_cb(dsr_msgs::GetCurrentToolFlangePosx::Request& req, dsr_msgs::GetCurrentToolFlangePosx::Response& res)                                                          
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_current_tool_flange_posx_cb >");
     #endif
@@ -1619,16 +1746,22 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.pos[i] = g_stDrState.fCurrentToolPosx[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_current_solution_space_cb(dsr_msgs::GetCurrentSolutionSpace::Request& req, dsr_msgs::GetCurrentSolutionSpace::Response& res)     
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_current_solution_space_cb >");
     #endif
         res.sol_space = Drfl.GetCurrentSolutionSpace();
+        res.success = true;
+        return true;
     }    
     bool DRHWInterface::get_current_rotm_cb(dsr_msgs::GetCurrentRotm::Request& req, dsr_msgs::GetCurrentRotm::Response& res)               
     {
+        res.success = false;
         std_msgs::Float64MultiArray arr;
 
     #if (_DEBUG_DSR_CTL)
@@ -1642,9 +1775,12 @@ namespace dsr_control{
             }
             res.rot_matrix.push_back(arr);
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_joint_torque_cb(dsr_msgs::GetJointTorque::Request& req, dsr_msgs::GetJointTorque::Response& res)               
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_joint_torque_cb >");
     #endif
@@ -1652,9 +1788,12 @@ namespace dsr_control{
         for(int i = 0; i < NUM_TASK; i++){
             res.jts[i] = g_stDrState.fActualJTS[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_external_torque_cb(dsr_msgs::GetExternalTorque::Request& req, dsr_msgs::GetExternalTorque::Response& res)           
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_external_torque_cb >");
     #endif
@@ -1662,9 +1801,12 @@ namespace dsr_control{
         for(int i = 0; i < NUM_TASK; i++){
             res.ext_torque[i] = g_stDrState.fActualEJT[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_tool_force_cb(dsr_msgs::GetToolForce::Request& req, dsr_msgs::GetToolForce::Response& res)                 
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_tool_force_cb >");
     #endif
@@ -1672,9 +1814,12 @@ namespace dsr_control{
         for(int i = 0; i < NUM_TASK; i++){
             res.tool_force[i] = g_stDrState.fActualETT[i];
         }
+        res.success = true;        
+        return true;
     }
     bool DRHWInterface::get_solution_space_cb(dsr_msgs::GetSolutionSpace::Request& req, dsr_msgs::GetSolutionSpace::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
   
@@ -1683,9 +1828,12 @@ namespace dsr_control{
         ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
     #endif
         res.sol_space = Drfl.GetSolutionSpace(task_pos.data());
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_orientation_error_cb(dsr_msgs::GetOrientationError::Request& req, dsr_msgs::GetOrientationError::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos1;
         std::array<float, NUM_TASK> task_pos2;
 
@@ -1699,25 +1847,31 @@ namespace dsr_control{
         ROS_INFO("    axis = %d",req.axis);
     #endif
         res.ori_error = Drfl.CalOrientationError(task_pos1.data(), task_pos2.data(), (TASK_AXIS)req.axis);
+        res.success = true;
+        return true;
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     bool DRHWInterface::get_workpiece_weight_cb(dsr_msgs::GetWorkpieceWeight::Request& req, dsr_msgs::GetWorkpieceWeight::Response& res)
     {
-        printf("            get_workpiece_weight_cb 111\n");
-
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_workpiece_weight_cb >");
     #endif
         res.weight = Drfl.MeasurePayload();
+        res.success = true;
+        return true;
     } 
     bool DRHWInterface::reset_workpiece_weight_cb(dsr_msgs::ResetWorkpieceWeight::Request& req, dsr_msgs::ResetWorkpieceWeight::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< reset_workpiece_weight_cb >");
     #endif
-        res.res = Drfl.ResetPayload();
+        res.success = Drfl.ResetPayload();
+
+        return true;
     } 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1725,6 +1879,7 @@ namespace dsr_control{
 
     bool DRHWInterface::parallel_axis1_cb(dsr_msgs::ParallelAxis1::Request& req, dsr_msgs::ParallelAxis1::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos1;
         std::array<float, NUM_TASK> task_pos2;
         std::array<float, NUM_TASK> task_pos3;
@@ -1739,10 +1894,13 @@ namespace dsr_control{
         ROS_INFO("    x2 = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos2[0],task_pos2[1],task_pos2[2],task_pos2[3],task_pos2[4],task_pos2[5]);
         ROS_INFO("    x3 = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos3[0],task_pos3[1],task_pos3[2],task_pos3[3],task_pos3[4],task_pos3[5]);
     #endif
-        res.res = Drfl.ParallelAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+        res.success = Drfl.ParallelAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+
+        return true;
     }
     bool DRHWInterface::parallel_axis2_cb(dsr_msgs::ParallelAxis2::Request& req, dsr_msgs::ParallelAxis2::Response& res)
     {
+        res.success = false;
         std::array<float, 3> vector;
  
         std::copy(req.vect.cbegin(), req.vect.cend(), vector.begin());
@@ -1753,10 +1911,13 @@ namespace dsr_control{
         ROS_INFO("    axis = %d",req.axis);
         ROS_INFO("    ref  = %d",req.ref);
     #endif
-        res.res = Drfl.ParallelAxis2(vector.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+        res.success = Drfl.ParallelAxis2(vector.data(), (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+
+        return true;
     }
     bool DRHWInterface::align_axis1_cb(dsr_msgs::AlignAxis1::Request& req, dsr_msgs::AlignAxis1::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos1;
         std::array<float, NUM_TASK> task_pos2;
         std::array<float, NUM_TASK> task_pos3;
@@ -1780,10 +1941,13 @@ namespace dsr_control{
         ROS_INFO("    axis = %d",req.axis);
         ROS_INFO("    ref  = %d",req.ref);
     #endif
-        res.res = Drfl.AlignAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+        res.success = Drfl.AlignAxis1(task_pos1.data(), task_pos2.data(), task_pos3.data(), fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+
+        return true;
     }
     bool DRHWInterface::align_axis2_cb(dsr_msgs::AlignAxis2::Request& req, dsr_msgs::AlignAxis2::Response& res)
     {
+        res.success = false;
         float fTargetVec[3] = {0, };
         float fSourceVec[3] = {0, };
 
@@ -1800,28 +1964,36 @@ namespace dsr_control{
         ROS_INFO("    axis = %d",req.axis);
         ROS_INFO("    ref  = %d",req.ref);
     #endif
-        res.res = Drfl.AlignAxis2(fTargetVec, fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+        res.success = Drfl.AlignAxis2(fTargetVec, fSourceVec, (TASK_AXIS)req.axis, (COORDINATE_SYSTEM)req.ref);
+
+        return true;
     }
     bool DRHWInterface::is_done_bolt_tightening_cb(dsr_msgs::IsDoneBoltTightening::Request& req, dsr_msgs::IsDoneBoltTightening::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< is_done_bolt_tightening_cb >");
         ROS_INFO("    m       = %f",req.m);
         ROS_INFO("    timeout = %f",req.timeout);
         ROS_INFO("    axis    = %d",req.axis);
     #endif
-        res.res = Drfl.WaitForBoltTightening((FORCE_AXIS)req.axis, req.m, req.timeout);
+        res.success = Drfl.WaitForBoltTightening((FORCE_AXIS)req.axis, req.m, req.timeout);
+
+        return true;
     }
     bool DRHWInterface::release_compliance_ctrl_cb(dsr_msgs::ReleaseComplianceCtrl::Request& req, dsr_msgs::ReleaseComplianceCtrl::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< release_compliance_ctrl_cb >");
     #endif
-        res.res = Drfl.LeaveTaskCompliance();
-        ///res.res = Drfl.LeaveJointCompliance();
+        res.success = Drfl.LeaveTaskCompliance();
+
+        return true;
     }
     bool DRHWInterface::task_compliance_ctrl_cb(dsr_msgs::TaskComplianceCtrl::Request& req, dsr_msgs::TaskComplianceCtrl::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> stiffnesses;
  
         std::copy(req.stx.cbegin(), req.stx.cend(), stiffnesses.begin());
@@ -1832,10 +2004,13 @@ namespace dsr_control{
         ROS_INFO("    ref     = %d",req.ref);
         ROS_INFO("    timeout = %f",req.time);
     #endif
-        res.res = Drfl.EnterTaskCompliance(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+        res.success = Drfl.EnterTaskCompliance(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+
+        return true;
     }
     bool DRHWInterface::set_stiffnessx_cb(dsr_msgs::SetStiffnessx::Request& req, dsr_msgs::SetStiffnessx::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> stiffnesses;
  
         std::copy(req.stx.cbegin(), req.stx.cend(), stiffnesses.begin());
@@ -1846,10 +2021,13 @@ namespace dsr_control{
         ROS_INFO("    ref     = %d",req.ref);
         ROS_INFO("    timeout = %f",req.time);
     #endif
-        res.res = Drfl.SetTaskStiffness(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+        res.success = Drfl.SetTaskStiffness(stiffnesses.data(), (COORDINATE_SYSTEM)req.ref, req.time);
+
+        return true;
     }
     bool DRHWInterface::calc_coord_cb(dsr_msgs::CalcCoord::Request& req, dsr_msgs::CalcCoord::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos1;
         std::array<float, NUM_TASK> task_pos2;
         std::array<float, NUM_TASK> task_pos3;
@@ -1874,10 +2052,13 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.conv_posx[i] = task_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
     
     bool DRHWInterface::set_user_cart_coord1_cb(dsr_msgs::SetUserCartCoord1::Request& req, dsr_msgs::SetUserCartCoord1::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
  
         std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
@@ -1888,9 +2069,12 @@ namespace dsr_control{
         ROS_INFO("    ref = %d",req.ref);
     #endif
         res.id = Drfl.ConfigUserCoordinate(0, task_pos.data(), (COORDINATE_SYSTEM)req.ref);  
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::set_user_cart_coord2_cb(dsr_msgs::SetUserCartCoord2::Request& req, dsr_msgs::SetUserCartCoord2::Response& res)
     {
+        res.success = false;
         //std::array<float, NUM_TASK> task_pos1;
         //std::array<float, NUM_TASK> task_pos2;
         //std::array<float, NUM_TASK> task_pos3;
@@ -1918,9 +2102,12 @@ namespace dsr_control{
         ROS_INFO("    ref = %d",req.ref);
     #endif
         res.id = Drfl.ConfigUserCoordinateSystem(fTargetPos, fTargetOrg, (COORDINATE_SYSTEM)req.ref);
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::set_user_cart_coord3_cb(dsr_msgs::SetUserCartCoord3::Request& req, dsr_msgs::SetUserCartCoord3::Response& res)
     {
+        res.success = false;
         float fTargetVec[2][3] = {0, };
         float fTargetOrg[3] = {0, };
 
@@ -1942,10 +2129,13 @@ namespace dsr_control{
         ROS_INFO("    ref = %d",req.ref);
     #endif
         res.id = Drfl.ConfigUserCoordinateSystemEx(fTargetVec, fTargetOrg, (COORDINATE_SYSTEM)req.ref);
+        res.success = true;
+        return true;
     }
     
     bool DRHWInterface::overwrite_user_cart_coord_cb(dsr_msgs::OverwriteUserCartCoord::Request& req, dsr_msgs::OverwriteUserCartCoord::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
  
         std::copy(req.pos.cbegin(),req.pos.cend(),task_pos.begin());
@@ -1957,9 +2147,12 @@ namespace dsr_control{
         ROS_INFO("    ref = %d",req.ref);
     #endif
         res.id = Drfl.UpdateUserCoordinate(0, req.id, task_pos.data(), (COORDINATE_SYSTEM)req.ref);  //0=AUTO 
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::get_user_cart_coord_cb(dsr_msgs::GetUserCartCoord::Request& req, dsr_msgs::GetUserCartCoord::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< get_user_cart_coord_cb >");
         ROS_INFO("    id  = %d",req.id);
@@ -1969,9 +2162,12 @@ namespace dsr_control{
             res.conv_posx[i] = result->_fTargetPos[i];
         }
         res.ref = result->_iTargetRef;
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::set_desired_force_cb(dsr_msgs::SetDesiredForce::Request& req, dsr_msgs::SetDesiredForce::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> feedback;
         std::array<unsigned char, NUM_TASK> direction;
  
@@ -1986,17 +2182,23 @@ namespace dsr_control{
         ROS_INFO("    time  = %f", req.time); 
         ROS_INFO("    mod   = %d", req.mod);
     #endif
-        res.res = Drfl.SetDesiredForce(feedback.data(), direction.data(), (COORDINATE_SYSTEM)req.ref, req.time, (FORCE_MODE)req.mod);
+        res.success = Drfl.SetDesiredForce(feedback.data(), direction.data(), (COORDINATE_SYSTEM)req.ref, req.time, (FORCE_MODE)req.mod);
+
+        return true;
     }
     bool DRHWInterface::release_force_cb(dsr_msgs::ReleaseForce::Request& req, dsr_msgs::ReleaseForce::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< release_force_cb >");
     #endif
-        res.res = Drfl.ResetDesiredForce(req.time);
+        res.success = Drfl.ResetDesiredForce(req.time);
+
+        return true;
     }
     bool DRHWInterface::check_position_condition_cb(dsr_msgs::CheckPositionCondition::Request& req, dsr_msgs::CheckPositionCondition::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
   
@@ -2013,9 +2215,11 @@ namespace dsr_control{
             res.success = Drfl.WaitForPositionCondition   ((FORCE_AXIS)req.axis, req.min, req.max, (COORDINATE_SYSTEM)req.ref);
         else            //DR_MV_MOD_REL
             res.success = Drfl.WaitForPositionConditionRel((FORCE_AXIS)req.axis, req.min, req.max, task_pos.data(), (COORDINATE_SYSTEM)req.ref);
+        return true;
     }
     bool DRHWInterface::check_force_condition_cb(dsr_msgs::CheckForceCondition::Request& req, dsr_msgs::CheckForceCondition::Response& res)
     {
+        res.success = false;
     #if (_DEBUG_DSR_CTL)
         ROS_INFO("< check_force_condition_cb >");
         ROS_INFO("    axis = %d", req.axis);
@@ -2024,9 +2228,11 @@ namespace dsr_control{
         ROS_INFO("    ref  = %d", req.ref);
     #endif
         res.success = Drfl.WaitForForceCondition((FORCE_AXIS)req.axis, req.min, req.max, (COORDINATE_SYSTEM)req.ref);
+        return true;
     }
     bool DRHWInterface::check_orientation_condition1_cb(dsr_msgs::CheckOrientationCondition1::Request& req, dsr_msgs::CheckOrientationCondition1::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos1;
         std::array<float, NUM_TASK> task_pos2;
         std::copy(req.min.cbegin(), req.min.cend(), task_pos1.begin());
@@ -2041,9 +2247,11 @@ namespace dsr_control{
         ROS_INFO("    mode = %d", req.mode);
     #endif
         res.success = Drfl.WaitForOrientationCondition((FORCE_AXIS)req.axis , task_pos1.data(), task_pos2.data(), (COORDINATE_SYSTEM)req.ref);
+        return true;
     }
     bool DRHWInterface::check_orientation_condition2_cb(dsr_msgs::CheckOrientationCondition2::Request& req, dsr_msgs::CheckOrientationCondition2::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
  
         std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
@@ -2058,9 +2266,11 @@ namespace dsr_control{
         ROS_INFO("    pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
     #endif
         res.success = Drfl.WaitForOrientationConditionRel((FORCE_AXIS)req.axis , req.min, req.max, task_pos.data(), (COORDINATE_SYSTEM)req.ref);
+        return true;
     }
     bool DRHWInterface::coord_transform_cb(dsr_msgs::CoordTransform::Request& req, dsr_msgs::CoordTransform::Response& res)
     {
+        res.success = false;
         std::array<float, NUM_TASK> task_pos;
  
         std::copy(req.pos_in.cbegin(), req.pos_in.cend(), task_pos.begin());
@@ -2075,157 +2285,407 @@ namespace dsr_control{
         for(int i=0; i<NUM_TASK; i++){
             res.conv_posx[i] = result_pos->_fPosition[i];
         }
+        res.success = true;
+        return true;
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool DRHWInterface::set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_digital_output_cb() called and calling Drfl.SetCtrlBoxDigitalOutput");
-        req.index -=1;
-        res.success = Drfl.SetCtrlBoxDigitalOutput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index, req.value);
+        res.success = false;
+
+        if((req.index < DR_DIO_MIN_INDEX) || (req.index > DR_DIO_MAX_INDEX)){
+            ROS_ERROR("set_digital_output(index=%d, value=%d): index(%d) is out of range. (normal range: %d ~ %d)",req.index ,req.value ,req.index, DR_DIO_MIN_INDEX, DR_DIO_MAX_INDEX);
+        }       
+        else if((req.value < 0) || (req.value > 1)){
+            ROS_ERROR("set_digital_output(index=%d, value=%d): value(%d) is out of range. [normal range: 0 or 1]",req.index ,req.value ,req.value);
+        }       
+        else{
+            req.index -=1;
+            res.success = Drfl.SetCtrlBoxDigitalOutput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index, req.value);
+        }
+
+        return true;
+    }
+    bool DRHWInterface::get_digital_output_cb(dsr_msgs::GetCtrlBoxDigitalOutput::Request& req, dsr_msgs::GetCtrlBoxDigitalOutput::Response& res)
+    {
+        //ROS_INFO("DRHWInterface::get_digital_output_cb() called and calling Drfl.GetCtrlBoxDigitalOutput");
+        res.success = false;
+
+        if((req.index < DR_DIO_MIN_INDEX) || (req.index > DR_DIO_MAX_INDEX)){
+            ROS_ERROR("get_digital_output(index=%d): index(%d) is out of range. (normal range: %d ~ %d)",req.index ,req.index, DR_DIO_MIN_INDEX, DR_DIO_MAX_INDEX);
+        }       
+        else{
+            req.index -=1;
+            res.value = Drfl.GetCtrlBoxDigitalOutput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index);
+            res.success = true;
+        }
+
+        return true;
     }
     bool DRHWInterface::get_digital_input_cb(dsr_msgs::GetCtrlBoxDigitalInput::Request& req, dsr_msgs::GetCtrlBoxDigitalInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_digital_input_cb() called and calling Drfl.GetCtrlBoxDigitalInput");
-        req.index -=1;
-        res.value = Drfl.GetCtrlBoxDigitalInput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index);
+        res.success = false;
+
+        if((req.index < DR_DIO_MIN_INDEX) || (req.index > DR_DIO_MAX_INDEX)){
+            ROS_ERROR("get_digital_input(index=%d): index(%d) is out of range. [normal range: %d ~ %d]",req.index ,req.index, DR_DIO_MIN_INDEX, DR_DIO_MAX_INDEX);
+        }       
+        else{
+            req.index -=1;
+            res.value = Drfl.GetCtrlBoxDigitalInput((GPIO_CTRLBOX_DIGITAL_INDEX)req.index);
+            res.success = true;
+        }
+
+        return true;
     }
     bool DRHWInterface::set_tool_digital_output_cb(dsr_msgs::SetToolDigitalOutput::Request& req, dsr_msgs::SetToolDigitalOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_tool_digital_output_cb() called and calling Drfl.SetToolDigitalOutput");
-        req.index -=1;
-        res.success = Drfl.SetToolDigitalOutput((GPIO_TOOL_DIGITAL_INDEX)req.index, req.value);
+        res.success = false;
+
+        if((req.index < DR_TDIO_MIN_INDEX) || (req.index > DR_TDIO_MAX_INDEX)){
+            ROS_ERROR("set_tool_digital_output(index=%d, value=%d): index(%d) is out of range. [normal range: %d ~ %d]",req.index ,req.value ,req.index, DR_TDIO_MIN_INDEX, DR_TDIO_MAX_INDEX);
+        }       
+        else if((req.value < 0) || (req.value > 1)){
+            ROS_ERROR("set_tool_digital_output(index=%d, value=%d): value(%d) is out of range. [normal range: 0 or 1]",req.index ,req.value ,req.value);
+        }
+        else{       
+            req.index -=1;
+            res.success = Drfl.SetToolDigitalOutput((GPIO_TOOL_DIGITAL_INDEX)req.index, req.value);
+        }
+
+        return true;
+    }
+    bool DRHWInterface::get_tool_digital_output_cb(dsr_msgs::GetToolDigitalOutput::Request& req, dsr_msgs::GetToolDigitalOutput::Response& res)
+    {
+        //ROS_INFO("DRHWInterface::get_tool_digital_output_cb() called and calling Drfl.GetToolDigitalOutput");
+        res.success = false;
+
+        if((req.index < DR_TDIO_MIN_INDEX) || (req.index > DR_TDIO_MAX_INDEX)){
+            ROS_ERROR("get_tool_digital_output(index=%d): index(%d) is out of range. [normal range: %d ~ %d]",req.index ,req.index, DR_TDIO_MIN_INDEX, DR_TDIO_MAX_INDEX);
+        }       
+        else{       
+            req.index -=1;
+            res.value = Drfl.GetToolDigitalOutput((GPIO_TOOL_DIGITAL_INDEX)req.index);
+            res.success = true;
+        }
+
+        return true;
     }
     bool DRHWInterface::get_tool_digital_input_cb(dsr_msgs::GetToolDigitalInput::Request& req, dsr_msgs::GetToolDigitalInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_tool_digital_input_cb() called and calling Drfl.GetToolDigitalInput");
-        req.index -=1;
-        res.value = Drfl.GetToolDigitalInput((GPIO_TOOL_DIGITAL_INDEX)req.index);
+        res.success = false;
+        if((req.index < DR_TDIO_MIN_INDEX) || (req.index > DR_TDIO_MAX_INDEX)){
+            ROS_ERROR("get_tool_digital_input(index=%d): index(%d) is out of range. [normal range: %d ~ %d]",req.index ,req.index, DR_TDIO_MIN_INDEX, DR_TDIO_MAX_INDEX);
+        }       
+        else{
+            req.index -=1;
+            res.value = Drfl.GetToolDigitalInput((GPIO_TOOL_DIGITAL_INDEX)req.index);
+            res.success = true;
+        }
+
+        return true;
     }
     bool DRHWInterface::set_analog_output_cb(dsr_msgs::SetCtrlBoxAnalogOutput::Request& req, dsr_msgs::SetCtrlBoxAnalogOutput::Response& res)
-    {
+    {        
         //ROS_INFO("DRHWInterface::set_analog_output_cb() called and calling Drfl.SetCtrlBoxAnalogOutput");
-        req.channel -=1;
-        res.success = Drfl.SetCtrlBoxAnalogOutput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, req.value);
+        res.success = false;
+        bool bIsError = 0;   
+
+        if((req.channel < 1) || (req.channel > 2)){
+            ROS_ERROR("set_analog_output(channel=%d, value=%f): channel(%d) is out of range. [normal range: 1 or 2]",req.channel ,req.value, req.channel);
+            bIsError = 1;
+        }       
+        else
+        {
+            if(req.channel == 1){                
+                if(g_nAnalogOutputModeCh1==DR_ANALOG_CURRENT){
+                    if((req.value < 4.0) || (req.value > 20.0)){
+                        ROS_ERROR("set_analog_output(channel=%d, value=%f): value(%f) is out of range. [normal range: 4.0 ~ 20.0]",req.channel ,req.value ,req.value);
+                        bIsError = 1;
+                    }
+                }
+                else if(g_nAnalogOutputModeCh1==DR_ANALOG_VOLTAGE){
+                    if((req.value < 0.0) || (req.value > 10.0)){
+                        ROS_ERROR("set_analog_output(channel=%d, value=%f): value(%f) is out of range. [normal range: 0.0 ~ 10.0]",req.channel ,req.value ,req.value);
+                        bIsError = 1;
+                    }
+                }         
+                else{
+                    ROS_ERROR("set_analog_output(channel=%d, value=%f): Analog output mode(ch%d) is not set",req.channel ,req.value, req.channel);
+                    bIsError = 1;
+                }    
+            }
+            if(req.channel == 2){                
+                if(g_nAnalogOutputModeCh2==DR_ANALOG_CURRENT){
+                    if((req.value < 4.0) || (req.value > 20.0)){
+                        ROS_ERROR("set_analog_output(channel=%d, value=%f): value(%f) is out of range. [normal range: 4.0 ~ 20.0]",req.channel ,req.value ,req.value);
+                        bIsError = 1;
+                    }
+                }
+                else if(g_nAnalogOutputModeCh2==DR_ANALOG_VOLTAGE){
+                    if((req.value < 0.0) || (req.value > 10.0)){
+                        ROS_ERROR("set_analog_output(channel=%d, value=%f): value(%f) is out of range. [normal range: 0.0 ~ 10.0]",req.channel ,req.value ,req.value);
+                        bIsError = 1;
+                    }
+                }         
+                else{
+                    ROS_ERROR("set_analog_output(channel=%d, value=%f): Analog output mode(ch%d) is not set",req.channel ,req.value, req.channel);
+                    bIsError = 1;
+                }    
+            }
+        }
+        if(!bIsError)
+        {
+            req.channel -=1;
+            res.success = Drfl.SetCtrlBoxAnalogOutput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, req.value);
+        }
+
+        return true;
     }
     bool DRHWInterface::get_analog_input_cb(dsr_msgs::GetCtrlBoxAnalogInput::Request& req, dsr_msgs::GetCtrlBoxAnalogInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_analog_input_cb() called and calling Drfl.GetCtrlBoxAnalogInput");
-        req.channel -=1;
-        res.value = Drfl.GetCtrlBoxAnalogInput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel);
+        res.success = false;
+        bool bIsError = 0;   
+
+        if((req.channel < 1) || (req.channel > 2)){
+            ROS_ERROR("get_analog_input(channel=%d): channel(%d) is out of range. [normal range: 1 or 2]",req.channel ,req.channel);
+            bIsError = 1;
+        }       
+        else{
+            if(req.channel == 1){
+                if(g_nAnalogOutputModeCh1 == -1){
+                    ROS_ERROR("get_analog_input(channel=%d): Analog output mode(ch%d) is not set",req.channel ,req.channel);
+                    bIsError = 1;
+                }                                    
+            }
+            if(req.channel == 2){
+                if(g_nAnalogOutputModeCh2 == -1){
+                    ROS_ERROR("get_analog_input(channel=%d): Analog output mode(ch%d) is not set",req.channel ,req.channel);
+                    bIsError = 1;
+                }                                    
+            }
+        }
+
+        if(!bIsError){
+            req.channel -=1;
+            res.value = Drfl.GetCtrlBoxAnalogInput((GPIO_CTRLBOX_ANALOG_INDEX)req.channel);
+            res.success = true;
+        }
+
+        return true;
     }
     bool DRHWInterface::set_analog_output_type_cb(dsr_msgs::SetCtrlBoxAnalogOutputType::Request& req, dsr_msgs::SetCtrlBoxAnalogOutputType::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_analog_output_type_cb() called and calling Drfl.SetCtrlBoxAnalogOutputType");
-        req.channel -=1;
-        res.success = Drfl.SetCtrlBoxAnalogOutputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
+        res.success = false;
+
+        if((req.channel < 1) || (req.channel > 2)){
+            ROS_ERROR("set_analog_output_type(channel=%d, mode=%d): channel(%d) is out of range. [normal range: 1 or 2]",req.channel ,req.mode, req.channel);
+        }       
+        else if((req.mode < 0) || (req.mode > 1)){
+            ROS_ERROR("set_analog_output_type(channel=%d, mode=%d): mode(%d) is out of range. [normal range: 0 or 1]",req.channel ,req.mode, req.mode);
+        }       
+        else{
+            if(req.channel == 1) g_nAnalogOutputModeCh1 = req.mode;    
+            if(req.channel == 2) g_nAnalogOutputModeCh2 = req.mode;    
+                    
+            req.channel -=1;
+            res.success = Drfl.SetCtrlBoxAnalogOutputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
+        }
+
+        return true;
     }
     bool DRHWInterface::set_analog_input_type_cb(dsr_msgs::SetCtrlBoxAnalogInputType::Request& req, dsr_msgs::SetCtrlBoxAnalogInputType::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_analog_input_type_cb() called and calling Drfl.SetCtrlBoxAnalogInputType");
-        req.channel -=1;
-        res.success = Drfl.SetCtrlBoxAnalogInputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
+        res.success = false;
+
+        if((req.channel < 1) || (req.channel > 2)){
+            ROS_ERROR("set_analog_input_type(channel=%d, mode=%d): channel(%d) is out of range. [normal range: 1 or 2]",req.channel ,req.mode, req.channel);
+        }       
+        else if((req.mode < 0) || (req.mode > 1)){
+            ROS_ERROR("set_analog_input_type(channel=%d, mode=%d): mode(%d) is out of range. [normal range: 0 or 1]",req.channel ,req.mode, req.mode);
+        }       
+        else{
+            if(req.channel == 1) g_nAnalogOutputModeCh1 = req.mode;    
+            if(req.channel == 2) g_nAnalogOutputModeCh2 = req.mode;    
+
+            req.channel -=1;
+            res.success = Drfl.SetCtrlBoxAnalogInputType((GPIO_CTRLBOX_ANALOG_INDEX)req.channel, (GPIO_ANALOG_TYPE)req.mode);
+        }
+
+        return true;
     }
     bool DRHWInterface::set_modbus_output_cb(dsr_msgs::SetModbusOutput::Request& req, dsr_msgs::SetModbusOutput::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_modbus_output_cb() called and calling Drfl.SetModbusOutput");
+        res.success = false;
         res.success = Drfl.SetModbusValue(req.name, (unsigned short)req.value);
+        return true;
     }
     bool DRHWInterface::get_modbus_input_cb(dsr_msgs::GetModbusInput::Request& req, dsr_msgs::GetModbusInput::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_modbus_input_cb() called and calling Drfl.GetModbusInput");
         res.value = Drfl.GetModbusValue(req.name);
+        return true;
     }
     bool DRHWInterface::config_create_modbus_cb(dsr_msgs::ConfigCreateModbus::Request& req, dsr_msgs::ConfigCreateModbus::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_create_modbus_cb() called and calling Drfl.ConfigCreateModbus");
+        res.success = false;
         res.success = Drfl.ConfigCreateModbus(req.name, req.ip, (unsigned short)req.port, (MODBUS_REGISTER_TYPE)req.reg_type, (unsigned short)req.index, (unsigned short)req.value, (int)req.slave_id);
+        return true;
     }
     bool DRHWInterface::config_delete_modbus_cb(dsr_msgs::ConfigDeleteModbus::Request& req, dsr_msgs::ConfigDeleteModbus::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_delete_modbus_cb() called and calling Drfl.ConfigDeleteModbus");
+        res.success = false;
         res.success = Drfl.ConfigDeleteModbus(req.name);
+        return true;
     }
     bool DRHWInterface::drl_pause_cb(dsr_msgs::DrlPause::Request& req, dsr_msgs::DrlPause::Response& res)
     {
         //ROS_INFO("DRHWInterface::drl_pause_cb() called and calling Drfl.DrlPause");
-        res.success = Drfl.PlayDrlPause();
+        res.success = false;
+
+        if(m_bIsEmulatorMode)
+            ROS_ERROR("The drl service cannot be used in emulator mode (available in real mode).");
+        else 
+            res.success = Drfl.PlayDrlPause();
+
+        return true;
     }
     bool DRHWInterface::drl_start_cb(dsr_msgs::DrlStart::Request& req, dsr_msgs::DrlStart::Response& res)
     {
         //ROS_INFO("DRHWInterface::drl_start_cb() called and calling Drfl.DrlStart");
-        res.success = Drfl.PlayDrlStart((ROBOT_SYSTEM)req.robotSystem, req.code);
+        res.success = false;
+
+        if(m_bIsEmulatorMode)
+            ROS_ERROR("The drl service cannot be used in emulator mode (available in real mode).");
+        else 
+            res.success = Drfl.PlayDrlStart((ROBOT_SYSTEM)req.robotSystem, req.code);
+
+        return true;
     }
     bool DRHWInterface::drl_stop_cb(dsr_msgs::DrlStop::Request& req, dsr_msgs::DrlStop::Response& res)
     {
         //ROS_INFO("DRHWInterface::drl_stop_cb() called and calling Drfl.DrlStop");
-        res.success = Drfl.PlayDrlStop((STOP_TYPE)req.stop_mode);
+        res.success = false;
+
+        if(m_bIsEmulatorMode)
+            ROS_ERROR("The drl service cannot be used in emulator mode (available in real mode).");
+        else 
+            res.success = Drfl.PlayDrlStop((STOP_TYPE)req.stop_mode);
+
+        return true;
     }
     bool DRHWInterface::drl_resume_cb(dsr_msgs::DrlResume::Request& req, dsr_msgs::DrlResume::Response& res)
     {
         //ROS_INFO("DRHWInterface::drl_resume_cb() called and calling Drfl.DrlResume");
-        res.success = Drfl.PlayDrlResume();
+        res.success = false;
+
+        if(m_bIsEmulatorMode)
+            ROS_ERROR("The drl service cannot be used in emulator mode (available in real mode).");
+        else 
+            res.success = Drfl.PlayDrlResume();
+
+        return true;
     }
     bool DRHWInterface::get_drl_state_cb(dsr_msgs::GetDrlState::Request& req, dsr_msgs::GetDrlState::Response& res)
     {
-        res.drl_state = Drfl.GetProgramState();
+        res.success = false;
+
+        if(m_bIsEmulatorMode)
+            ROS_ERROR("The drl service cannot be used in emulator mode (available in real mode).");
+        else{ 
+            res.drl_state = Drfl.GetProgramState();
+            res.success = true;
+        }    
+
+        return true;
     }
     bool DRHWInterface::set_current_tcp_cb(dsr_msgs::SetCurrentTcp::Request& req, dsr_msgs::SetCurrentTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_current_tcp_cb() called and calling Drfl.SetCurrentTCP");
+        res.success = false;
         res.success = Drfl.SetCurrentTCP(req.name);
+        return true;
     }
     bool DRHWInterface::get_current_tcp_cb(dsr_msgs::GetCurrentTcp::Request& req, dsr_msgs::GetCurrentTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tcp_cb() called and calling Drfl.GetCurrentTCP");
+        res.success = false;
         res.info = Drfl.GetCurrentTCP();
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::config_create_tcp_cb(dsr_msgs::ConfigCreateTcp::Request& req, dsr_msgs::ConfigCreateTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_create_tcp_cb() called and calling Drfl.ConfigCreateTCP");
+        res.success = false;
         std::array<float, 6> target_pos;
         std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
         res.success = Drfl.ConfigCreateTCP(req.name, target_pos.data());
+        return true;
     }
     bool DRHWInterface::config_delete_tcp_cb(dsr_msgs::ConfigDeleteTcp::Request& req, dsr_msgs::ConfigDeleteTcp::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_delete_tcp_cb() called and calling Drfl.ConfigDeleteTCP");
+        res.success = false;
         res.success = Drfl.ConfigDeleteTCP(req.name);
+        return true;
     }
 
     bool DRHWInterface::set_current_tool_cb(dsr_msgs::SetCurrentTool::Request& req, dsr_msgs::SetCurrentTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::set_current_tool_cb() called and calling Drfl.SetCurrentTool");
+        res.success = false;
         res.success = Drfl.SetCurrentTool(req.name);
+        return true;
     }
     bool DRHWInterface::get_current_tool_cb(dsr_msgs::GetCurrentTool::Request& req, dsr_msgs::GetCurrentTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::get_current_tool_cb() called and calling Drfl.GetCurrentTool %s", Drfl.GetCurrentTool().c_str());
+        res.success = false;
         res.info = Drfl.GetCurrentTool();
+        res.success = true;
+        return true;
     }
     bool DRHWInterface::config_create_tool_cb(dsr_msgs::ConfigCreateTool::Request& req, dsr_msgs::ConfigCreateTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_create_tool_cb() called and calling Drfl.ConfigCreateTool");
+        res.success = false;
         std::array<float, 3> target_cog;
         std::array<float, 6> target_inertia;
         std::copy(req.cog.cbegin(), req.cog.cend(), target_cog.begin());
         std::copy(req.inertia.cbegin(), req.inertia.cend(), target_inertia.begin());
         res.success = Drfl.ConfigCreateTool(req.name, req.weight, target_cog.data(), target_inertia.data());
+        return true;
     }
     bool DRHWInterface::config_delete_tool_cb(dsr_msgs::ConfigDeleteTool::Request& req, dsr_msgs::ConfigDeleteTool::Response& res)
     {
         //ROS_INFO("DRHWInterface::config_delete_tool_cb() called and calling Drfl.ConfigDeleteTool");
+        res.success = false;
         res.success = Drfl.ConfigDeleteTool(req.name);
+        return true;
     }
     bool DRHWInterface::set_tool_shape_cb(dsr_msgs::SetToolShape::Request& req, dsr_msgs::SetToolShape::Response& res)
     {
+        res.success = false;
         res.success = Drfl.SetCurrentToolShape(req.name);
+        return true;
     }
 
     //Gripper Service
 
     bool DRHWInterface::robotiq_2f_move_cb(dsr_msgs::Robotiq2FMove::Request& req, dsr_msgs::Robotiq2FMove::Response& res)
     {
+        res.success = false;
         //ROS_INFO("DRHWInterface::gripper_move_cb() called and calling Nothing");
         /*
         if(mode == "robotiq_2f"){
@@ -2249,8 +2709,11 @@ namespace dsr_control{
             ros::Duration(0.01).sleep();
         }
         res.success = true;
+        return true;
     }
-    bool DRHWInterface::robotiq_2f_open_cb(dsr_msgs::Robotiq2FOpen::Request& req, dsr_msgs::Robotiq2FOpen::Response& res){
+    bool DRHWInterface::robotiq_2f_open_cb(dsr_msgs::Robotiq2FOpen::Request& req, dsr_msgs::Robotiq2FOpen::Response& res)
+    {
+        res.success = false;
         float goal_pos = 0.8;
         while(abs(goal_pos - joints[6].pos) > 0.01){
             if(goal_pos > joints[6].pos){    
@@ -2262,9 +2725,11 @@ namespace dsr_control{
             ros::Duration(0.01).sleep();
         }
         res.success = true;
-        
+        return true;      
     }
-    bool DRHWInterface::robotiq_2f_close_cb(dsr_msgs::Robotiq2FClose::Request& req, dsr_msgs::Robotiq2FClose::Response& res){
+    bool DRHWInterface::robotiq_2f_close_cb(dsr_msgs::Robotiq2FClose::Request& req, dsr_msgs::Robotiq2FClose::Response& res)
+    {
+        res.success = false;
         float goal_pos = 0.0;
 
         while(abs(goal_pos - joints[6].pos) > 0.01){
@@ -2277,13 +2742,17 @@ namespace dsr_control{
             ros::Duration(0.01).sleep();
         }
         res.success = true;
+        return true;
     }
 
-    bool DRHWInterface::serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response &res){
+    bool DRHWInterface::serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response &res)
+    {
+        res.success = false;
         std_msgs::String send_data;
         send_data.data = req.data;
         m_PubSerialWrite.publish(send_data);
         res.success = true;
+         return true;
     }
 
 }

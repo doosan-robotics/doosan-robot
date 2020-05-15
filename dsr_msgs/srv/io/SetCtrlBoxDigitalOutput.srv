@@ -5,4 +5,4 @@
 int8       index    # ctrlbox digital output port(1 ~ 16)
 int8       value    # 0 : ON, 1 : OFF
 ---
-bool success
+bool        success

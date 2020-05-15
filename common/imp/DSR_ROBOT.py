@@ -143,6 +143,8 @@ _ros_set_analog_output          = rospy.ServiceProxy(_srv_name_prefix +"/io/set_
 _ros_get_analog_input           = rospy.ServiceProxy(_srv_name_prefix +"/io/get_analog_input", GetCtrlBoxAnalogInput)
 _ros_set_mode_analog_output     = rospy.ServiceProxy(_srv_name_prefix +"/io/set_analog_output_type", SetCtrlBoxAnalogOutputType)
 _ros_set_mode_analog_input      = rospy.ServiceProxy(_srv_name_prefix +"/io/set_analog_input_type", SetCtrlBoxAnalogInputType)
+_ros_get_digital_output         = rospy.ServiceProxy(_srv_name_prefix +"/io/get_digital_output", GetCtrlBoxDigitalOutput)
+_ros_get_tool_digital_output    = rospy.ServiceProxy(_srv_name_prefix +"/io/get_tool_digital_output", GetToolDigitalOutput)
 
 #  Modbus Operations
 _ros_set_modbus_output          = rospy.ServiceProxy(_srv_name_prefix +"/modbus/set_modbus_output", SetModbusOutput)
@@ -2186,8 +2188,7 @@ def  move_home(target=None):
 
     if __ROS__:
         srv = _ros_move_home(_target)    
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         ret = PythonMgr.py_move_home(_target)
 
@@ -2367,8 +2368,7 @@ def reset_workpiece_weight():
 
     if __ROS__:
         srv = _ros_reset_workpiece_weight()  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_reset_workpiece_weight()
@@ -2526,8 +2526,7 @@ def parallel_axis(*args, **kargs):
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
         if __ROS__:
             srv = _ros_parallel_axis1(_x1, _x2, _x3, _axis, _ref)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             ret = PythonMgr.py_parallel_axis(_x1, _x2, _x3, _axis, _ref)
         #print_ext_result("{0} = PythonMgr.py_parallel_axis_ref(x1:{1}, x2:{2}, x3:{3}, axis:{4}, ref:{5})".format(ret, _x1, _x2, _x3, _axis, _ref))
@@ -2536,8 +2535,7 @@ def parallel_axis(*args, **kargs):
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
         if __ROS__:
             srv = _ros_parallel_axis2(_vect, _axis, _ref)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             ret = PythonMgr.py_parallel_axis_ex(_vect, _axis, _ref)
         #print_ext_result("{0} = PythonMgr.py_parallel_axis_ex_ref(vector:{1}, axis:{2}, ref:{3})".format(ret, dr_form(_vect), _axis, _ref))
@@ -2546,16 +2544,14 @@ def parallel_axis(*args, **kargs):
         if _x1 != None:
             if __ROS__:
                 srv = _ros_parallel_axis1(_x1, _x2, _x3, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_parallel_axis(_x1, _x2, _x3, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_parallel_axis(x1:{1}, x2:{2}, x3:{3}, axis:{4}), ref:{5})".format(ret, _x1, _x2, _x3, _axis, _ref))
         else:
             if __ROS__:
                 srv = _ros_parallel_axis2(_vect, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_parallel_axis_ex(_vect, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_parallel_axis_ex(vector:{1}, axis:{2}, ref:{3})".format(ret, dr_form(_vect), _axis, _ref))
@@ -2715,8 +2711,7 @@ def align_axis(*args, **kargs):
 
         if __ROS__:
             srv = _ros_align_axis1(_x1, _x2, _x3, norm_pos, _axis, _ref)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             ret = PythonMgr.py_align_axis(_x1, _x2, _x3, norm_pos, _axis, _ref)
 
@@ -2728,8 +2723,7 @@ def align_axis(*args, **kargs):
 
         if __ROS__:
             srv = _ros_align_axis2(_vect, norm_pos, _axis, _ref)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             ret = PythonMgr.py_align_axis_ex(_vect, norm_pos, _axis, _ref)
 
@@ -2740,8 +2734,7 @@ def align_axis(*args, **kargs):
         if _x1 != None:
             if __ROS__:
                 srv = _ros_align_axis1(_x1, _x2, _x3, norm_pos, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_align_axis(_x1, _x2, _x3, norm_pos, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_align_axis(x1:{1}, x2:{2}, x3:{3}, pos:{4}, axis:{5}, ref{6})" \
@@ -2750,8 +2743,7 @@ def align_axis(*args, **kargs):
 
             if __ROS__:
                 srv = _ros_align_axis2(_vect, norm_pos, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_align_axis_ex(_vect, norm_pos, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_align_axis_ex(vect:{1}, pos{2}, axis:{3}, ref{4})" \
@@ -2779,8 +2771,7 @@ def is_done_bolt_tightening(m=0, timeout=0, axis=None):
 
     if __ROS__:
         srv = _ros_is_done_bolt_tightening(m, timeout, axis)  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_is_done_bolt_tightening(m, timeout, axis)
@@ -2793,8 +2784,7 @@ def release_compliance_ctrl():
 
     if __ROS__:
         srv = _ros_release_compliance_ctrl()  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_release_compliance_ctrl()
@@ -2827,8 +2817,7 @@ def task_compliance_ctrl(stx=[3000, 3000, 3000, 200, 200, 200], time=0):
 
     if __ROS__:
         srv = _ros_task_compliance_ctrl(stx, _ref, _time)  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_task_compliance_ctrl(stx, _ref, _time)
@@ -2862,8 +2851,7 @@ def set_stiffnessx(stx=[500, 500, 500, 100, 100, 100], time=0):
 
     if __ROS__:
         srv = _ros_set_stiffnessx(stx, _ref, _time)  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_set_stiffnessx(stx, _ref, _time)
@@ -3372,8 +3360,7 @@ def set_desired_force(fd=[0, 0, 0, 0, 0, 0], dir=[0, 0, 0, 0, 0, 0], time=0, mod
 
     if __ROS__:
         srv = _ros_set_desired_force(fd, dir, _ref, _time, _mod)  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_set_desired_force(fd, dir, _ref, _time, _mod)
@@ -3396,8 +3383,7 @@ def release_force(time=0):
 
     if __ROS__:
         srv = _ros_release_force(_time)  
-        #ret = srv.res
-        ret = 0 if (srv.res == True) else -1
+        ret = 0 if (srv.success == True) else -1
     else:
         # C function call
         ret = PythonMgr.py_release_force(_time)
@@ -3811,6 +3797,23 @@ def set_digital_output(index, val=None):
         print_ext_result("{0} = PythonMgr.py_set_digital_output(index:{1}, val:{2})".format(ret, index, val))
     return ret
 
+def get_digital_output(index):
+    if type(index) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : index")
+
+    if index < DR_DIO_MIN_INDEX or index > DR_DIO_MAX_INDEX:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : index")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_get_digital_output(index)
+        value = srv.value
+    else:
+        value = PythonMgr.py_get_digital_output(index)
+        print_ext_result("{0} = PythonMgr.py_get_digital_output(index:{1})".format(value, index))
+    return value
+
+
 def set_analog_output(ch, val):
     global _g_analog_output_mode_ch1
     global _g_analog_output_mode_ch2
@@ -3942,6 +3945,23 @@ def set_tool_digital_output(index, val=None):
         ret = PythonMgr.py_set_tool_digital_output(index, val)
         print_ext_result("{0} = PythonMgr.py_set_tool_digital_output(index:{1}, val:{2})".format(ret, index, val))
     return ret
+
+def get_tool_digital_output(index):
+    if type(index) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : index")
+
+    if index < DR_TDIO_MIN_INDEX or index > DR_TDIO_MAX_INDEX:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : index")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_get_tool_digital_output(index)
+        value = srv.value
+    else:
+        value = PythonMgr.py_get_tool_digital_output(index)
+        print_ext_result("{0} = PythonMgr.py_get_tool_digital_output(index:{1})".format(value, index))
+    return value
+
 
 ##### Modbus #########################################################################################################################
 
@@ -4339,6 +4359,8 @@ class CDsrRobot:
         self._ros_get_analog_input           = rospy.ServiceProxy(self._srv_name_prefix +"/io/get_analog_input", GetCtrlBoxAnalogInput)
         self._ros_set_mode_analog_output     = rospy.ServiceProxy(self._srv_name_prefix +"/io/set_analog_output_type", SetCtrlBoxAnalogOutputType)
         self._ros_set_mode_analog_input      = rospy.ServiceProxy(self._srv_name_prefix +"/io/set_analog_input_type", SetCtrlBoxAnalogInputType)
+        self._ros_get_digital_output         = rospy.ServiceProxy(self._srv_name_prefix +"/io/get_digital_output", GetCtrlBoxDigitalOutput)
+        self._ros_get_tool_digital_output    = rospy.ServiceProxy(self._srv_name_prefix +"/io/get_tool_digital_output", GetToolDigitalOutput)
 
         #  Modbus Operations
         self._ros_set_modbus_output          = rospy.ServiceProxy(self._srv_name_prefix +"/modbus/set_modbus_output", SetModbusOutput)
@@ -6006,8 +6028,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_move_home(_target)    
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             ret = PythonMgr.py_move_home(_target)
     
@@ -6186,8 +6207,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_reset_workpiece_weight()  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_reset_workpiece_weight()
@@ -6345,8 +6365,7 @@ class CDsrRobot:
                 raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
             if __ROS__:
                 srv = self._ros_parallel_axis1(_x1, _x2, _x3, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_parallel_axis(_x1, _x2, _x3, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_parallel_axis_ref(x1:{1}, x2:{2}, x3:{3}, axis:{4}, ref:{5})".format(ret, _x1, _x2, _x3, _axis, _ref))
@@ -6355,8 +6374,7 @@ class CDsrRobot:
                 raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref({0})".format(_ref))
             if __ROS__:
                 srv = self._ros_parallel_axis2(_vect, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_parallel_axis_ex(_vect, _axis, _ref)
             #print_ext_result("{0} = PythonMgr.py_parallel_axis_ex_ref(vector:{1}, axis:{2}, ref:{3})".format(ret, dr_form(_vect), _axis, _ref))
@@ -6365,16 +6383,14 @@ class CDsrRobot:
             if _x1 != None:
                 if __ROS__:
                     srv = self._ros_parallel_axis1(_x1, _x2, _x3, _axis, _ref)  
-                    #ret = srv.res
-                    ret = 0 if (srv.res == True) else -1
+                    ret = 0 if (srv.success == True) else -1
                 else:
                     ret = PythonMgr.py_parallel_axis(_x1, _x2, _x3, _axis, _ref)
                 #print_ext_result("{0} = PythonMgr.py_parallel_axis(x1:{1}, x2:{2}, x3:{3}, axis:{4}), ref:{5})".format(ret, _x1, _x2, _x3, _axis, _ref))
             else:
                 if __ROS__:
                     srv = self._ros_parallel_axis2(_vect, _axis, _ref)  
-                    #ret = srv.res
-                    ret = 0 if (srv.res == True) else -1
+                    ret = 0 if (srv.success == True) else -1
                 else:
                     ret = PythonMgr.py_parallel_axis_ex(_vect, _axis, _ref)
                 #print_ext_result("{0} = PythonMgr.py_parallel_axis_ex(vector:{1}, axis:{2}, ref:{3})".format(ret, dr_form(_vect), _axis, _ref))
@@ -6534,8 +6550,7 @@ class CDsrRobot:
     
             if __ROS__:
                 srv = self._ros_align_axis1(_x1, _x2, _x3, norm_pos, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_align_axis(_x1, _x2, _x3, norm_pos, _axis, _ref)
     
@@ -6547,8 +6562,7 @@ class CDsrRobot:
     
             if __ROS__:
                 srv = self._ros_align_axis2(_vect, norm_pos, _axis, _ref)  
-                #ret = srv.res
-                ret = 0 if (srv.res == True) else -1
+                ret = 0 if (srv.success == True) else -1
             else:
                 ret = PythonMgr.py_align_axis_ex(_vect, norm_pos, _axis, _ref)
     
@@ -6559,8 +6573,7 @@ class CDsrRobot:
             if _x1 != None:
                 if __ROS__:
                     srv = self._ros_align_axis1(_x1, _x2, _x3, norm_pos, _axis, _ref)  
-                    #ret = srv.res
-                    ret = 0 if (srv.res == True) else -1
+                    ret = 0 if (srv.success == True) else -1
                 else:
                     ret = PythonMgr.py_align_axis(_x1, _x2, _x3, norm_pos, _axis, _ref)
                 #print_ext_result("{0} = PythonMgr.py_align_axis(x1:{1}, x2:{2}, x3:{3}, pos:{4}, axis:{5}, ref{6})" \
@@ -6569,8 +6582,7 @@ class CDsrRobot:
             
                 if __ROS__:
                     srv = self._ros_align_axis2(_vect, norm_pos, _axis, _ref)  
-                    #ret = srv.res
-                    ret = 0 if (srv.res == True) else -1
+                    ret = 0 if (srv.success == True) else -1
                 else:
                     ret = PythonMgr.py_align_axis_ex(_vect, norm_pos, _axis, _ref)
                 #print_ext_result("{0} = PythonMgr.py_align_axis_ex(vect:{1}, pos{2}, axis:{3}, ref{4})" \
@@ -6598,8 +6610,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_is_done_bolt_tightening(m, timeout, axis)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_is_done_bolt_tightening(m, timeout, axis)
@@ -6612,8 +6623,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_release_compliance_ctrl()  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_release_compliance_ctrl()
@@ -6646,8 +6656,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_task_compliance_ctrl(stx, _ref, _time)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_task_compliance_ctrl(stx, _ref, _time)
@@ -6681,8 +6690,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_set_stiffnessx(stx, _ref, _time)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_set_stiffnessx(stx, _ref, _time)
@@ -7191,8 +7199,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_set_desired_force(fd, dir, _ref, _time, _mod)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_set_desired_force(fd, dir, _ref, _time, _mod)
@@ -7215,8 +7222,7 @@ class CDsrRobot:
     
         if __ROS__:
             srv = self._ros_release_force(_time)  
-            #ret = srv.res
-            ret = 0 if (srv.res == True) else -1
+            ret = 0 if (srv.success == True) else -1
         else:
             # C function call
             ret = PythonMgr.py_release_force(_time)
@@ -7629,6 +7635,23 @@ class CDsrRobot:
             ret = PythonMgr.py_set_digital_output(index, val)
             print_ext_result("{0} = PythonMgr.py_set_digital_output(index:{1}, val:{2})".format(ret, index, val))
         return ret
+
+    def get_digital_output(self, index):
+        if type(index) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : index")
+    
+        if index < DR_DIO_MIN_INDEX or index > DR_DIO_MAX_INDEX:
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : index")
+    
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_get_digital_output(index)
+            value = srv.value
+        else:
+            value = PythonMgr.py_get_digital_output(index)
+            print_ext_result("{0} = PythonMgr.py_get_digital_output(index:{1})".format(value, index))
+        return value
+
     
     def set_analog_output(self, ch, val):
         #for ros global _g_analog_output_mode_ch1
@@ -7761,8 +7784,24 @@ class CDsrRobot:
             ret = PythonMgr.py_set_tool_digital_output(index, val)
             print_ext_result("{0} = PythonMgr.py_set_tool_digital_output(index:{1}, val:{2})".format(ret, index, val))
         return ret
+     
+    def get_tool_digital_output(self, index):
+        if type(index) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : index")
     
+        if index < DR_TDIO_MIN_INDEX or index > DR_TDIO_MAX_INDEX:
+            raise DR_Error(DR_ERROR_VALUE, "Invalid value : index")
     
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_get_tool_digital_output(index)
+            value = srv.value
+        else:
+            value = PythonMgr.py_get_tool_digital_output(index)
+            print_ext_result("{0} = PythonMgr.py_get_tool_digital_output(index:{1})".format(value, index))
+        return value
+
+
     ##### Modbus #########################################################################################################################
     
     def add_modbus_signal(self, ip, port, name, reg_type, index, value=0, slaveid=255):

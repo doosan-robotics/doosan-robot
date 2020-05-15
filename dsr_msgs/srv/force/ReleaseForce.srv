@@ -4,4 +4,4 @@
 
 float64    time # 0          # Time needed to reduce the force (0 ~ 1.0) 
 ---
-int8       res               # 0=success, otherwise fail 
+bool       success 

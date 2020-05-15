@@ -1,9 +1,8 @@
 #____________________________________________________________________________________________
-# get_modbus_input  
-# This service reads the signal from the Modbus system.
+# get_digital_output  
 #____________________________________________________________________________________________
 
-string      name    # modbus signal symbol
+int8       index    # ctrlbox digital output port(1 ~ 16)
 ---
-int32       value    # modbus signal value
-bool        success
+int8       value    # Current output status (0 : ON, 1 : OFF)
+bool       success
