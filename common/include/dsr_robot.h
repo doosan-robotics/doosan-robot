@@ -151,6 +151,8 @@
 #include <dsr_msgs/GetCtrlBoxAnalogInput.h>
 #include <dsr_msgs/SetCtrlBoxAnalogOutputType.h>
 #include <dsr_msgs/SetCtrlBoxAnalogInputType.h>
+#include <dsr_msgs/GetCtrlBoxDigitalOutput.h>
+#include <dsr_msgs/GetToolDigitalOutput.h>
 
 #include <dsr_msgs/SetModbusOutput.h>
 #include <dsr_msgs/GetModbusInput.h>

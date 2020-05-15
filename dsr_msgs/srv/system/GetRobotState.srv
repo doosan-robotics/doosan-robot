@@ -19,3 +19,4 @@ int8 robot_state    # 0 : STATE_INITIALIZING
                     # 13: STATE_RESERVED3
                     # 14: STATE_RESERVED4
                     # 15: STATE_NOT_READY
+bool        success                    

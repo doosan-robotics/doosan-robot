@@ -6,3 +6,4 @@
 float64[6] pos               # joint angle list [degree] 
 ---
 int8       sol_space         # solution space : 0 ~ 7
+bool       success

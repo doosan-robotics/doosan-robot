@@ -4,4 +4,5 @@
 # This service returns the current solution space value.
 
 ---
-int8       sol_space         # solution space : 0 ~ 7
+int8        sol_space         # solution space : 0 ~ 7
+bool        success

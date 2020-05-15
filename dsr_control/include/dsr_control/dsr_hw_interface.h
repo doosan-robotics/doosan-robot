@@ -153,6 +153,8 @@
 #include <dsr_msgs/GetCtrlBoxAnalogInput.h>
 #include <dsr_msgs/SetCtrlBoxAnalogOutputType.h>
 #include <dsr_msgs/SetCtrlBoxAnalogInputType.h>
+#include <dsr_msgs/GetCtrlBoxDigitalOutput.h>
+#include <dsr_msgs/GetToolDigitalOutput.h>
 
 //modbus
 #include <dsr_msgs/SetModbusOutput.h>
@@ -205,6 +207,171 @@
 #endif
 #define deg2rad(deg)  ((deg) * PI / 180.0)
 #define rad2deg(rad)  ((rad) * 180.0 / PI)
+
+//_____ defines for Dooan Robot Controller _______________
+#define POINT_COUNT         6
+
+// solution space
+#define DR_SOL_MIN          0
+#define DR_SOL_MAX          7
+
+// posb seg_type
+#define DR_LINE             0
+#define DR_CIRCLE           1
+
+// move reference
+#define DR_BASE             0
+#define DR_TOOL             1
+#define DR_WORLD            2
+#define DR_TC_USER_MIN      101
+#define DR_TC_USER_MAX      200
+
+// move mod
+#define DR_MV_MOD_ABS       0
+#define DR_MV_MOD_REL       1
+
+// move reaction
+#define DR_MV_RA_NONE       0
+#define DR_MV_RA_DUPLICATE  0
+#define DR_MV_RA_OVERRIDE   1
+
+// move command type
+#define DR_MV_COMMAND_NORM  0
+
+// movesx velocity
+#define DR_MVS_VEL_NONE     0
+#define DR_MVS_VEL_CONST    1
+
+// motion state
+#define DR_STATE_IDLE       0
+#define DR_STATE_INIT       1
+#define DR_STATE_BUSY       2
+#define DR_STATE_BLEND      3
+#define DR_STATE_ACC        4
+#define DR_STATE_CRZ        5
+#define DR_STATE_DEC        6
+
+// axis
+#define DR_AXIS_X           0
+#define DR_AXIS_Y           1
+#define DR_AXIS_Z           2
+#define DR_AXIS_A          10
+#define DR_AXIS_B          11
+#define DR_AXIS_C          12
+
+// collision sensitivity
+#define DR_COLSENS_DEFAULT 20
+#define DR_COLSENS_MIN      1   
+#define DR_COLSENS_MAX    300
+
+// speed
+#define DR_OP_SPEED_MIN     1
+#define DR_OP_SPEED_MAX   100
+
+// stop
+#define DR_QSTOP_STO        0
+#define DR_QSTOP            1
+#define DR_SSTOP            2
+#define DR_HOLD             3
+
+#define DR_STOP_FIRST       DR_QSTOP_STO
+#define DR_STOP_LAST        DR_HOLD
+
+// condition
+#define DR_COND_NONE        -10000
+
+// digital I/O
+#define DR_DIO_MIN_INDEX    1
+#define DR_DIO_MAX_INDEX    16  
+
+// tool digital I/O
+#define DR_TDIO_MIN_INDEX   1
+#define DR_TDIO_MAX_INDEX   6
+
+// I/O value
+#define ON                  1
+#define OFF                 0
+
+// Analog I/O mode
+#define DR_ANALOG_CURRENT   0
+#define DR_ANALOG_VOLTAGE   1
+
+// modbus type
+#define DR_MODBUS_DIG_INPUT     0
+#define DR_MODBUS_DIG_OUTPUT    1
+#define DR_MODBUS_REG_INPUT     2
+#define DR_MODBUS_REG_OUTPUT    3
+#define DR_DISCRETE_INPUT       0
+#define DR_COIL                 1
+#define DR_INPUT_REGISTER       2
+#define DR_HOLDING_REGISTER     3
+
+#define DR_MODBUS_ACCESS_MAX    32
+#define DR_MAX_MODBUS_NAME_SIZE 32
+
+// tp_popup pm_type
+#define DR_PM_MESSAGE           0
+#define DR_PM_WARNING           1
+#define DR_PM_ALARM             2
+
+// tp_get_user_input type
+#define DR_VAR_INT              0
+#define DR_VAR_FLOAT            1
+#define DR_VAR_STR              2
+#define DR_VAR_BOOL             3   
+
+// len
+#define DR_VELJ_DT_LEN          6
+#define DR_ACCJ_DT_LEN          6
+
+#define DR_VELX_DT_LEN          2
+#define DR_ACCX_DT_LEN          2
+
+#define DR_ANGLE_DT_LEN         2
+#define DR_COG_DT_LEN           3
+#define DR_WEIGHT_DT_LEN        3
+#define DR_VECTOR_DT_LEN        3
+#define DR_ST_DT_LEN            6
+#define DR_FD_DT_LEN            6
+#define DR_DIR_DT_LEN           6
+#define DR_INERTIA_DT_LEN       6
+#define DR_VECTOR_U1_LEN        3
+#define DR_VECTOR_V1_LEN        3
+
+#define DR_AVOID                0
+#define DR_TASK_STOP            1
+
+#define DR_FIFO                 0
+#define DR_LIFO                 1
+
+#define DR_FC_MOD_ABS           0
+#define DR_FC_MOD_REL           1
+
+#define DR_GLOBAL_VAR_TYPE_BOOL         0
+#define DR_GLOBAL_VAR_TYPE_INT          1
+#define DR_GLOBAL_VAR_TYPE_FLOAT        2
+#define DR_GLOBAL_VAR_TYPE_STR          3
+#define DR_GLOBAL_VAR_TYPE_POSJ         4
+#define DR_GLOBAL_VAR_TYPE_POSX         5
+#define DR_GLOBAL_VAR_TYPE_UNKNOWN      6
+
+#define DR_IE_SLAVE_GPR_ADDR_START      0
+#define DR_IE_SLAVE_GPR_ADDR_END       23
+#define DR_IE_SLAVE_GPR_ADDR_END_BIT   63
+
+#define DR_DPOS                         0
+#define DR_DVEL                         1
+
+#define DR_HOME_TARGET_MECHANIC         0
+#define DR_HOME_TARGET_USER             1
+
+#define DR_MV_ORI_TEACH                 0    
+#define DR_MV_ORI_FIXED                 1    
+#define DR_MV_ORI_RADIAL                2    
+
+#define DR_MV_APP_NONE                  0
+#define DR_MV_APP_WELD                  1
+//________________________________________________________
 
 typedef struct {
     int	    nLevel;         // INFO =1, WARN =2, ERROR =3 
@@ -334,7 +501,9 @@ namespace dsr_control{
         std::string GetRobotModel();
 
     private:
-        int m_nVersionDRCF;
+        int  m_nVersionDRCF;
+        bool m_bIsEmulatorMode; 
+
         ros::NodeHandle private_nh_;
 
         std::string m_strRobotName;
@@ -347,7 +516,7 @@ namespace dsr_control{
         ros::ServiceServer m_nh_aux_control_service[32];
         ros::ServiceServer m_nh_force_service[32];
 
-        ros::ServiceServer m_nh_io_service[8];
+        ros::ServiceServer m_nh_io_service[10];
         ros::ServiceServer m_nh_modbus_service[4];
         ros::ServiceServer m_nh_drl_service[10];
         ros::ServiceServer m_nh_tcp_service[4];
@@ -504,8 +673,10 @@ namespace dsr_control{
 
         //----- IO
         bool set_digital_output_cb(dsr_msgs::SetCtrlBoxDigitalOutput::Request& req, dsr_msgs::SetCtrlBoxDigitalOutput::Response& res);
+        bool get_digital_output_cb(dsr_msgs::GetCtrlBoxDigitalOutput::Request& req, dsr_msgs::GetCtrlBoxDigitalOutput::Response& res);
         bool get_digital_input_cb(dsr_msgs::GetCtrlBoxDigitalInput::Request& req, dsr_msgs::GetCtrlBoxDigitalInput::Response& res);
         bool set_tool_digital_output_cb(dsr_msgs::SetToolDigitalOutput::Request& req, dsr_msgs::SetToolDigitalOutput::Response& res);
+        bool get_tool_digital_output_cb(dsr_msgs::GetToolDigitalOutput::Request& req, dsr_msgs::GetToolDigitalOutput::Response& res);
         bool get_tool_digital_input_cb(dsr_msgs::GetToolDigitalInput::Request& req, dsr_msgs::GetToolDigitalInput::Response& res);
 
         bool set_analog_output_cb(dsr_msgs::SetCtrlBoxAnalogOutput::Request& req, dsr_msgs::SetCtrlBoxAnalogOutput::Response& res);

@@ -5,3 +5,4 @@
 int8        channel    # 1 = ch1, 2= ch2
 ---
 float64     value
+bool        success

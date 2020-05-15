@@ -240,7 +240,7 @@ namespace DRAFramework
         DRFL_API bool _SetToolDigitalOutput(LPROBOTCONTROL pCtrl, GPIO_TOOL_DIGITAL_INDEX eGpioIndex, bool bOnOff);
         // get digital input on flange
         DRFL_API bool _GetToolDigitalInput(LPROBOTCONTROL pCtrl, GPIO_TOOL_DIGITAL_INDEX eGpioIndex);
-
+        DRFL_API bool _GetToolDigitalOutput(LPROBOTCONTROL pCtrl, GPIO_TOOL_DIGITAL_INDEX eGpioIndex);
         // set digital ouput on control-box
         DRFL_API bool _SetCtrlBoxDigitalOutput(LPROBOTCONTROL pCtrl, GPIO_CTRLBOX_DIGITAL_INDEX eGpioIndex, bool bOnOff);
         DRFL_API bool _GetCtrlBoxDigitalOutput(LPROBOTCONTROL pCtrl, GPIO_CTRLBOX_DIGITAL_INDEX eGpioIndex);
@@ -536,6 +536,7 @@ namespace DRAFramework
         bool SetToolDigitalOutput(GPIO_TOOL_DIGITAL_INDEX eGpioIndex, bool bOnOff) { return _SetToolDigitalOutput(_rbtCtrl, eGpioIndex, bOnOff); };
         // get digital input on flange
         bool GetToolDigitalInput(GPIO_TOOL_DIGITAL_INDEX eGpioIndex) { return _GetToolDigitalInput(_rbtCtrl, eGpioIndex); };
+        bool GetToolDigitalOutput(GPIO_TOOL_DIGITAL_INDEX eGpioIndex) { return _GetToolDigitalOutput(_rbtCtrl, eGpioIndex); };
         // set digital ouput on control-box
         bool SetCtrlBoxDigitalOutput(GPIO_CTRLBOX_DIGITAL_INDEX eGpioIndex, bool bOnOff) { return _SetCtrlBoxDigitalOutput(_rbtCtrl, eGpioIndex, bOnOff); };
         bool GetCtrlBoxDigitalOutput(GPIO_CTRLBOX_DIGITAL_INDEX eGpioIndex) { return _GetCtrlBoxDigitalOutput(_rbtCtrl, eGpioIndex); };
