@@ -14,3 +14,4 @@ int8       mod               # input mode(only valid when the number of input po
                              # 1: defining z-axis based on the z direction of x1 
 ---
 float64[6] conv_posx         # task pos(posx) 
+bool       success

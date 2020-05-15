@@ -8,3 +8,4 @@ int8       target           # DR_HOME_TARGET_MECHANIC(0) : Mechanical home, join
                             # DR_HOME_TARGET_USER(1)     : user home
 ---
 int8       res              # 0=success, otherwise fail 
+bool       success

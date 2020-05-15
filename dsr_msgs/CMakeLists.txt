@@ -112,14 +112,16 @@ add_service_files(
     ./tcp/GetCurrentTcp.srv
 
     ./io/SetToolDigitalOutput.srv
+    ./io/GetToolDigitalOutput.srv
     ./io/GetToolDigitalInput.srv
     ./io/SetCtrlBoxDigitalOutput.srv
+    ./io/GetCtrlBoxDigitalOutput.srv  
     ./io/GetCtrlBoxDigitalInput.srv
     ./io/SetCtrlBoxAnalogInputType.srv
     ./io/SetCtrlBoxAnalogOutputType.srv
     ./io/SetCtrlBoxAnalogOutput.srv
     ./io/GetCtrlBoxAnalogInput.srv
-
+    
     ./modbus/ConfigCreateModbus.srv
     ./modbus/ConfigDeleteModbus.srv
     ./modbus/SetModbusOutput.srv

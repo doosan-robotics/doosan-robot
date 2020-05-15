@@ -1,7 +1,9 @@
 #____________________________________________________________________________________________
-# get_desired_velj()  
+# get_tool_digital_output  
+# This service gets the current tool io output status.
 #____________________________________________________________________________________________
 
+int8       index   # flange digital output port(1 ~ 6)
 ---
-float64[6] joint_vel               # Target joint velocity 
+int8       value   # Current output status (0 : ON, 1 : OFF)
 bool       success
