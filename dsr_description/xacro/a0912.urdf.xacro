@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="a0509" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="a0912" >
 
   <xacro:arg name="color"   default="white"/>
   <xacro:arg name="gripper" default="none"/>
@@ -9,12 +9,12 @@
   <xacro:property name="gr" value="$(arg gripper)"/>
   
   <xacro:if value="${cr == 'white'}">
-     <xacro:include filename="$(find dsr_description)/xacro/macro.a0509.white.xacro" />
+     <xacro:include filename="$(find dsr_description)/xacro/macro.a0912.white.xacro" />
   </xacro:if>
   <xacro:if value="${cr == 'blue'}">
-     <xacro:include filename="$(find dsr_description)/xacro/macro.a0509.blue.xacro" />
+     <xacro:include filename="$(find dsr_description)/xacro/macro.a0912.blue.xacro" />
   </xacro:if>
-  <xacro:a0509 namespace="$(arg namespace)"/>
+  <xacro:a0912 namespace="$(arg namespace)"/>
 
   <link name="world" />
   <xacro:if value="${gr == 'robotiq_2f'}">
