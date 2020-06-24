@@ -21,11 +21,11 @@ catkin_package(
 
 
 SET( COMMON_INC_FILES
-  ../common/include
+  ../../include
 )
 
 SET( COMMON_SRC_FILES
-  ../common/src/dsr_robot.cpp
+  ../../src/dsr_robot.cpp
 )
 
 include_directories(
