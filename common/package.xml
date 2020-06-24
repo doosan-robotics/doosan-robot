@@ -15,4 +15,17 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>control_toolbox</build_depend>
+  <build_depend>xmlrpcpp</build_depend>
+  
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>control_toolbox</exec_depend>
+  <exec_depend>xmlrpcpp</exec_depend>
+  
+  <export>
+    <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />
+  </export>
 </package>

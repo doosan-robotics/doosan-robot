@@ -9,7 +9,7 @@
   <xacro:property name="gr" value="$(arg gripper)"/>
 
   <xacro:if value="${cr == 'white'}">
-    <xacro:include filename="$(find dsr_description)/xacro/macro.a0509mobile.blue.xacro" />
+    <xacro:include filename="$(find dsr_description)/xacro/macro.a0509mobile.white.xacro" />
   </xacro:if>
   <xacro:if value="${cr == 'blue'}">
     <xacro:include filename="$(find dsr_description)/xacro/macro.a0509mobile.blue.xacro" />
