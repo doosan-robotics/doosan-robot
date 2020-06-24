@@ -193,7 +193,7 @@ int CDsrRobot::get_current_solution_space()
     if(srvGetCurrentSolutionSpace.call(srv))
     {         
         //ROS_INFO("receive srv, srv.response.success: %ld\n", (long int)srv.response.success);
-        return (srv.response.solution_space);
+        return (srv.response.sol_space);
     }
     else
     {    
