@@ -7,9 +7,9 @@
 	<arg name="mode" default="virtual"/>
 	<arg name="model" default="m1013"/>
 	<arg name="color" default="color"/>
-        <arg name="gripper" default="none"/>
+    <arg name="gripper" default="none"/>
 	<arg name="mobile" default="none"/>
-        <arg name="yaml" default="dsr_control"/>
+    <arg name="yaml" default="dsr_control"/>
 
 	<!-- Run Doosan Robot emulator in virtual mode -->
         <group if="$(eval arg('mode') == 'virtual')">         	
@@ -25,9 +25,9 @@
 
 	<!--node pkg="dsr_control" type="run.sh" name="foo"/-->
 	<!--node pkg="aliencontrol" type="aliencontrol" name="aliencontrol"-->
-    		<!--param name="cmd" value="run.sh"/-->
-		<!--param name="cmd" value="xterm -e top"/-->
-    		<!--param name="cmd" value="xterm -e hello"/-->
+    <!--param name="cmd" value="run.sh"/-->
+	<!--param name="cmd" value="xterm -e top"/-->
+    <!--param name="cmd" value="xterm -e hello"/-->
 	<!--/node-->
 
 	<node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)$(arg model)" respawn="false" output="screen">
