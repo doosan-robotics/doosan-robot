@@ -17,9 +17,9 @@
   <arg name="yaw" default="0"/>
 
   <!-- doosan robot & mobile-robot PID configurations from YAML file to parameter server -->
-  <group ns="$(arg ns)">
+  <!--group ns="$(arg ns)">
     <rosparam file="$(find dsr_gazebo)/config/gazebo_ros_control_params.yaml" command="load"/>
-  </group>
+  </group-->
 
   <group if="$(eval arg('gripper') == 'none')">
     <!-- gazebo를 위한 controller -->
