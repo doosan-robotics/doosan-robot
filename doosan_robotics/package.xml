@@ -29,6 +29,10 @@
   <exec_depend>moveit_config_m0617</exec_depend>
   <exec_depend>moveit_config_m1013</exec_depend>
   <exec_depend>moveit_config_m1509</exec_depend>
+  <exec_depend>moveit_config_a0509</exec_depend>
+  <exec_depend>moveit_config_a0912</exec_depend>
+  <exec_depend>moveit_config_h2017</exec_depend>
+  <exec_depend>moveit_config_h2515</exec_depend>
 
   <build_depend>joint_state_controller</build_depend>
   <build_depend>position_controllers</build_depend>
