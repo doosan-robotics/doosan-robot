@@ -75,6 +75,20 @@
             <arg name="color" value="$(arg color)"/>
         </include>
     </group>
+
+    <group if="$(eval arg('model') == 'h2017')">
+        <include file="$(find moveit_config_h2017)/launch/h2017.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
+
+    <group if="$(eval arg('model') == 'h2515')">
+        <include file="$(find moveit_config_h2515)/launch/h2515.launch" ns="$(arg ns)$(arg model)">
+            <arg name="fake_execution" value="false"/>
+            <arg name="color" value="$(arg color)"/>
+        </include>
+    </group>
     
 
 </launch>
