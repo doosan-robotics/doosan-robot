@@ -79,10 +79,10 @@ ___
 ___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host := ROBOT_IP defalut = 192.168.127.100   
+>host := ROBOT_IP defalut = 127.0.0.1 
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> defalut = virtual  
-model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
+model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> defalut = m1013  
 color := ROBOT_COLOR <white  /  blue> defalut = white  
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
@@ -114,13 +114,13 @@ ___
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
-   >host:= ROBOT_IP defalut = 192.168.127.100  ##Emulator IP = 127.0.0.1   
+   >host:= ROBOT_IP defalut = 127.0.0.1  ##controller IP = 192.168.127.100 
     port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-    model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
-    color:= ROBOT_COLOR <white  /  blue> defalut = white  
-    gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
-    mobile:= USE_MOBILE <none  /  husky> defalut = none  
+    model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509> defalut = m1013  
+    color:= ROBOT_COLOR <white / blue> defalut = white  
+    gripper:= USE_GRIPPER <none / robotiq_2f> defalut = none  
+    mobile:= USE_MOBILE <none / husky> defalut = none  
 
     roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
     roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.127.100
