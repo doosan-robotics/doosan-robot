@@ -253,10 +253,14 @@ data: [10, 10, 40, 10, 60, 10]"
 ```
 #### Service Call
 ```bash
-rosservice call /dsr/set_joint_move "jointAngle: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointVelocity: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-radius: 0.0"
+rosservice call /dsr01m1013/motion/move_joint "pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+vel: 0.0
+acc: 0.0
+time: 0.0
+radius: 0.0
+mode: 0
+blendType: 0
+syncType: 0"
 ```
 ___
 # manuals
