@@ -5824,14 +5824,13 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : mod")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
         # ROS Service call
         if __ROS__:
             seg = _ros_listToFloat64MultiArray(_ros_seg_list)
-            srv = self._ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, mod, _ref, _async)    
+            srv = self._ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, _ref, mod, _async)    
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:
@@ -5841,12 +5840,12 @@ class CDsrRobot:
         return ret
     
     def move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=0)
+        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=0)
         return ret
     def amove_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=1)
+        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=1)
         return ret
-    def _move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, async=0):
+    def _move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, _async=0):
         # rev
         if type(rev) != int and type(rev) != float:
             raise DR_Error(DR_ERROR_TYPE, "Invalid type : rev")
@@ -5933,7 +5932,6 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
@@ -5949,12 +5947,12 @@ class CDsrRobot:
         return ret
     
     def move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL):
-        ret = self._move_periodic(amp, period, atime, repeat, ref, async=0)
+        ret = self._move_periodic(amp, period, atime, repeat, ref, _async=0)
         return ret
     def amove_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL):
-        ret = self._move_periodic(amp, period, atime, repeat, ref, async=1)
+        ret = self._move_periodic(amp, period, atime, repeat, ref, _async=1)
         return ret
-    def _move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL, async=0):
+    def _move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL, _async=0):
         _amp = [POINT_COUNT]
         _period = [POINT_COUNT]
         _atime =0.0
@@ -6012,7 +6010,6 @@ class CDsrRobot:
             _ref = ref
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     

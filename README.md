@@ -75,10 +75,10 @@ ___
 ___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host := ROBOT_IP defalut = 192.168.127.100   
+>host := ROBOT_IP defalut = 127.0.0.1 
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> defalut = virtual  
-model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
+model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> defalut = m1013  
 color := ROBOT_COLOR <white  /  blue> defalut = white  
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
@@ -110,13 +110,13 @@ ___
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
-   >host:= ROBOT_IP defalut = 192.168.127.100  ##Emulator IP = 127.0.0.1   
+   >host:= ROBOT_IP defalut = 127.0.0.1  ##controller IP = 192.168.127.100 
     port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-    model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
-    color:= ROBOT_COLOR <white  /  blue> defalut = white  
-    gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
-    mobile:= USE_MOBILE <none  /  husky> defalut = none  
+    model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509> defalut = m1013  
+    color:= ROBOT_COLOR <white / blue> defalut = white  
+    gripper:= USE_GRIPPER <none / robotiq_2f> defalut = none  
+    mobile:= USE_MOBILE <none / husky> defalut = none  
 
     roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
     roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.127.100
@@ -183,6 +183,30 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
 
 
 
+###### robot + mobile
+> insert argument mobile:=husky
+- single robot on mobile
+```bash
+roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
+  
+<run application node>
+  rosrun dsr_example_py single_robot_mobile.py
+```
+
+> _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
+> <img src="https://user-images.githubusercontent.com/47092672/55622399-10092580-57db-11e9-9ee0-f3c04a5569de.png" width="70%">
+
+- multi robot on mobile
+```bash
+roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
+
+<run application node>
+  rosrun dsr_example_py multi_robot_mobile.py  
+```
+
+> _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
+> <img src="https://user-images.githubusercontent.com/47092672/55622397-10092580-57db-11e9-8fe8-4d711725ac45.png" width="70%">
+
     
 #### gazebo+rviz+virtual
     roslaunch dsr_launcher single_robot_rviz_gazebo.launch
@@ -225,10 +249,14 @@ data: [10, 10, 40, 10, 60, 10]"
 ```
 #### Service Call
 ```bash
-rosservice call /dsr/set_joint_move "jointAngle: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointVelocity: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-radius: 0.0"
+rosservice call /dsr01m1013/motion/move_joint "pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+vel: 0.0
+acc: 0.0
+time: 0.0
+radius: 0.0
+mode: 0
+blendType: 0
+syncType: 0"
 ```
 ___
 # manuals
@@ -237,3 +265,13 @@ ___
 
 
 [Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver1.12_20200522%28EN.%29.pdf)
+
+# demo
+
+### Doosan-Robots In Gazebo
+
+<img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
+
+### Doosan-Robots & Mobile in Rviz 
+
+<img src="https://user-images.githubusercontent.com/47092672/55624380-9ecc7100-57e0-11e9-8854-f6d8ca3561e7.png" width="80%">
