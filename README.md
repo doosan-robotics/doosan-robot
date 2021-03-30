@@ -1,3 +1,5 @@
+
+
 # [Doosan Robotics](http://www.doosanrobotics.com/kr/)
 [![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
@@ -7,17 +9,22 @@
 [Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
 
 # *build* 
-##### *Doosan Robot ROS Package is implemented at ROS-Kinetic.*
-    ### We recoomand the /home/<user_home>/catkin_ws/src
+##### *Doosan Robot ROS Package is implemented at ROS-Noetic.*
+    ### We recommand the /home/<user_home>/catkin_ws/src
     cd ~/catkin_ws/src
     git clone https://github.com/doosan-robotics/doosan-robot
-    rosdep install --from-paths doosan-robot --ignore-src --rosdistro kinetic -r -y
+    rosdep install --from-paths doosan-robot --ignore-src --rosdistro noetic -r -y
     cd ~/catkin_ws
     catkin_make
     source ./devel/setup.bash
 
 #### package list
-    sudo apt-get install ros-kinetic-rqt* ros-kinetic-moveit* ros-kinetic-industrial-core ros-kinetic-gazebo-ros-control ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-serial
+    sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-industrial-core ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control
+    
+##### Serial Package source build
+    ### Noetic distro does not support serial package, so you have to install it manually.
+    cd ~/catkin_ws/src
+    git clone https://github.com/wjwwood/serial.git
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode
@@ -74,10 +81,10 @@ ___
 ___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host := ROBOT_IP defalut = 192.168.127.100   
+>host := ROBOT_IP defalut = 127.0.0.1 
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> defalut = virtual  
-model := ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
+model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> defalut = m1013  
 color := ROBOT_COLOR <white  /  blue> defalut = white  
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
@@ -93,7 +100,7 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
 ##### *How to use MoveIt Commander*
 ###### _You can run Moveit with CLI commands through the moveit commander package._
 ###### _You can install the "moveit_commander" package using below command._
-    sudo apt-get install ros-kinetic-moveit-commander
+    sudo apt-get install ros-noetic-moveit-commander
 ##### *MoveitCommander usage example*
 	roslaunch dsr_control dsr_moveit.launch model:=m1013
 	In another terminal 
@@ -109,13 +116,13 @@ ___
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
-   >host:= ROBOT_IP defalut = 192.168.127.100  ##Emulator IP = 127.0.0.1   
+   >host:= ROBOT_IP defalut = 127.0.0.1  ##controller IP = 192.168.127.100 
     port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-    model:= ROBOT_MODEL <m0609  /  0617/  m1013  /  m1509 / a0509> defalut = m1013  
-    color:= ROBOT_COLOR <white  /  blue> defalut = white  
-    gripper:= USE_GRIPPER <none  /  robotiq_2f> defalut = none  
-    mobile:= USE_MOBILE <none  /  husky> defalut = none  
+    model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509> defalut = m1013  
+    color:= ROBOT_COLOR <white / blue> defalut = white  
+    gripper:= USE_GRIPPER <none / robotiq_2f> defalut = none  
+    mobile:= USE_MOBILE <none / husky> defalut = none  
 
     roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
     roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.127.100
@@ -144,6 +151,26 @@ ___
 > _$ rosrun dsr_example_py single_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
 
+
+###### multi robot
+    <launch>
+      - multi robot in rviz : 
+      roslaunch dsr_launcher multi_robot_rviz.launch
+      - multi robot in gazebo : 
+      roslaunch dsr_launcher multi_robot_gazebo.launch
+      - multi robot in rviz + gazebo : 
+      roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
+    <run application node>
+      rosrun dsr_example_py multi_robot_simple.py
+    <ex>
+        roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
+        rosrun dsr_example_py multi_robot.py  
+
+> _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
+
+> _$ rosrun dsr_example_py multi_robot.py_
+> <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
+
 ###### robot + gripper
 > insert argument gripper:=robotiq_2f  
 - single robot + gripper
@@ -159,6 +186,32 @@ rosrun serial_example_node serial_example_node ttyUSB0 115200
 rostopic echo /serial_read
 rostopic pub /serial_write std_msgs/String 'data: 100'
 ```
+
+
+
+###### robot + mobile
+> insert argument mobile:=husky
+- single robot on mobile
+```bash
+roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
+  
+<run application node>
+  rosrun dsr_example_py single_robot_mobile.py
+```
+
+> _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
+> <img src="https://user-images.githubusercontent.com/47092672/55622399-10092580-57db-11e9-9ee0-f3c04a5569de.png" width="70%">
+
+- multi robot on mobile
+```bash
+roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
+
+<run application node>
+  rosrun dsr_example_py multi_robot_mobile.py  
+```
+
+> _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
+> <img src="https://user-images.githubusercontent.com/47092672/55622397-10092580-57db-11e9-8fe8-4d711725ac45.png" width="70%">
 
     
 #### gazebo+rviz+virtual
@@ -189,12 +242,28 @@ rostopic pub /serial_write std_msgs/String 'data: 100'
   </include>
 ```  
 
+#### Run multi-robot by command line
+```bash
+roslaunch dsr_launcher multi_robot_gazebo.launch
+rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64MultiArray "layout:
+  dim:
+  - label: ''
+    size: 0
+    stride: 0
+    data_offset: 0
+data: [10, 10, 40, 10, 60, 10]"
+```
 #### Service Call
 ```bash
-rosservice call /dsr/set_joint_move "jointAngle: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointVelocity: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-jointAcceleration: [50.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-radius: 0.0"
+rosservice call /dsr01m1013/motion/move_joint "pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+vel: 0.0
+acc: 0.0
+time: 0.0
+radius: 0.0
+mode: 0
+blendType: 0
+syncType: 0"
+
 ```
 ___
 # manuals
@@ -203,3 +272,13 @@ ___
 
 
 [Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver1.12_20200522%28EN.%29.pdf)
+
+# demo
+
+### Doosan-Robots In Gazebo
+
+<img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
+
+### Doosan-Robots & Mobile in Rviz 
+
+<img src="https://user-images.githubusercontent.com/47092672/55624380-9ecc7100-57e0-11e9-8854-f6d8ca3561e7.png" width="80%">
