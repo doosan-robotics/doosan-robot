@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="gui"   default="true"/>
+  <arg name="rviz"  default="true"/>
+  <arg name="world" default="empty.world"/>
+
+  <arg name="host" default="127.0.0.1"/>
+	<arg name="port" default="12345"/>
+  <arg name="mode" default="virtual"/>
+  <arg name="model" default="m1013"/>
+  <arg name="color" default="white"/>
+  <arg name="gripper" default="none"/>
+  <arg name="mobile" default="none"/>
+  <!--use moveit : controller=:trajectory / else: controller:=position-->
+  <arg name="controller" default="trajectory"/>
+
+  <!-- Spawn the arms. -->
+  <!-- include file="$(find dsr_bringup)/launch/dsr_base.launch"-->
+  <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
+    <arg name="ns"            value="dsr01"/>
+    <arg name="host"          value="$(arg host)"/>
+    <arg name="port"          value="$(arg port)"/>
+    <arg name="mode"          value="$(arg mode)"/>
+    <arg name="model"         value="$(arg model)"/>
+    <arg name="color"         value="$(arg color)"/>
+    <arg name="gripper"       value="$(arg gripper)"/>
+    <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="controller"        value="$(arg controller)"/>
+
+    <arg name="x"             value="0"/>
+    <arg name="y"             value="0"/>
+    <arg name="yaw"           value="0"/>
+  </include>
+  <!-- model에 따른 moveit 실행 -->
+  <group if="$(eval arg('model') == 'm0609')">
+      <include file="$(find moveit_config_m0609)/launch/m0609.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+  <group if="$(eval arg('model') == 'm0617')">
+      <include file="$(find moveit_config_m0617)/launch/m0617.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+  <group if="$(eval arg('model') == 'm1013')">
+      <include file="$(find moveit_config_m1013)/launch/m1013.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+  <group if="$(eval arg('model') == 'm1509')">
+      <include file="$(find moveit_config_m1509)/launch/m1509.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+
+  <group if="$(eval arg('model') == 'a0509')">
+      <include file="$(find moveit_config_a0509)/launch/a0509.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+
+  <group if="$(eval arg('model') == 'a0912')">
+      <include file="$(find moveit_config_a0912)/launch/a0912.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+
+  <group if="$(eval arg('model') == 'h2017')">
+      <include file="$(find moveit_config_h2017)/launch/h2017.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+
+  <group if="$(eval arg('model') == 'h2515')">
+      <include file="$(find moveit_config_h2515)/launch/h2515.launch" ns="dsr01$(arg model)">
+          <arg name="fake_execution" value="false"/>
+          <arg name="color" value="$(arg color)"/>
+      </include>
+  </group>
+  
+
+  
+  <!-- View in RVIZ. -->
+  <!--group if="$(arg rviz)"-->
+    <!--node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/-->
+  <!--/group-->
+</launch>

@@ -15,6 +15,8 @@
   <arg name="roll" default="0"/>
   <arg name="pitch" default="0"/>
   <arg name="yaw" default="0"/>
+  <!--use moveit : controller=:trajectory / else: controller:=position-->
+  <arg name="controller" default="position"/>
 
   <!-- doosan robot & mobile-robot PID configurations from YAML file to parameter server -->
   <!--group ns="$(arg ns)">
@@ -41,6 +43,7 @@
       <arg name="gripper"       value="$(arg gripper)"/>
       <arg name="mobile"        value="$(arg mobile)"/>
       <arg name="yaml"          value="dsr_control"/>
+      <arg name="controller"        value="$(arg controller)"/>
     </include>
   </group>
 
@@ -64,6 +67,7 @@
       <arg name="gripper"       value="$(arg gripper)"/>
       <arg name="mobile"        value="$(arg mobile)"/>
       <arg name="yaml"          value="dsr_control_robotiq_2f"/>
+      <arg name="controller"        value="$(arg controller)"/>
     </include>
   </group>
 
