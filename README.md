@@ -203,9 +203,3 @@ ___
 
 
 [Manual(Eng)](http://wiki.ros.org/doosan-robotics?action=AttachFile&do=get&target=Doosan_Robotics_ROS_Manual_ver1.12_20200522%28EN.%29.pdf)
-
-# demo
-
-### Doosan-Robots In Gazebo
-
-<img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
