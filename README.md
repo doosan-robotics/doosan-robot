@@ -18,11 +18,6 @@
 
 #### package list
     sudo apt-get install ros-kinetic-rqt* ros-kinetic-moveit* ros-kinetic-industrial-core ros-kinetic-gazebo-ros-control ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-serial
-    
-__packages for mobile robot__
-
-    sudo apt-get install ros-kinetic-lms1xx ros-kinetic-interactive-marker-twist-server ros-kinetic-twist-mux ros-kinetic-imu-tools ros-kinetic-controller-manager ros-kinetic-robot-localization
-
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode
@@ -149,26 +144,6 @@ ___
 > _$ rosrun dsr_example_py single_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
 
-
-###### multi robot
-    <launch>
-      - multi robot in rviz : 
-      roslaunch dsr_launcher multi_robot_rviz.launch
-      - multi robot in gazebo : 
-      roslaunch dsr_launcher multi_robot_gazebo.launch
-      - multi robot in rviz + gazebo : 
-      roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-    <run application node>
-      rosrun dsr_example_py multi_robot_simple.py
-    <ex>
-        roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-        rosrun dsr_example_py multi_robot.py  
-
-> _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
-
-> _$ rosrun dsr_example_py multi_robot.py_
-> <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
-
 ###### robot + gripper
 > insert argument gripper:=robotiq_2f  
 - single robot + gripper
@@ -184,32 +159,6 @@ rosrun serial_example_node serial_example_node ttyUSB0 115200
 rostopic echo /serial_read
 rostopic pub /serial_write std_msgs/String 'data: 100'
 ```
-
-
-
-###### robot + mobile
-> insert argument mobile:=husky
-- single robot on mobile
-```bash
-roslaunch dsr_launcher single_robot_rviz.launch mobile:=husky
-  
-<run application node>
-  rosrun dsr_example_py single_robot_mobile.py
-```
-
-> _$ roslaunch dsr_launcher single_robot_rviz mobile:=husky color:=blue_  
-> <img src="https://user-images.githubusercontent.com/47092672/55622399-10092580-57db-11e9-9ee0-f3c04a5569de.png" width="70%">
-
-- multi robot on mobile
-```bash
-roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
-
-<run application node>
-  rosrun dsr_example_py multi_robot_mobile.py  
-```
-
-> _$ roslaunch dsr_launcher multi_robot_rviz mobile:=husky_
-> <img src="https://user-images.githubusercontent.com/47092672/55622397-10092580-57db-11e9-8fe8-4d711725ac45.png" width="70%">
 
     
 #### gazebo+rviz+virtual
@@ -240,17 +189,6 @@ roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
   </include>
 ```  
 
-#### Run multi-robot by command line
-```bash
-roslaunch dsr_launcher test.launch
-rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64MultiArray "layout:
-  dim:
-  - label: ''
-    size: 0
-    stride: 0
-    data_offset: 0
-data: [10, 10, 40, 10, 60, 10]"
-```
 #### Service Call
 ```bash
 rosservice call /dsr/set_joint_move "jointAngle: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -271,7 +209,3 @@ ___
 ### Doosan-Robots In Gazebo
 
 <img src="https://user-images.githubusercontent.com/47092672/55624381-9f650780-57e0-11e9-80aa-0f26ec528987.png" width="80%">
-
-### Doosan-Robots & Mobile in Rviz 
-
-<img src="https://user-images.githubusercontent.com/47092672/55624380-9ecc7100-57e0-11e9-8854-f6d8ca3561e7.png" width="80%">
