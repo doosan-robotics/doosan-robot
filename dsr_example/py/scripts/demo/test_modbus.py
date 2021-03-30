@@ -108,28 +108,46 @@ def thread_subscriber():
 if __name__ == "__main__":
     rospy.init_node('dsr_simple_test_py')
     rospy.on_shutdown(shutdown)
-
+    #set_robot_mode(ROBOT_MODE_MANUAL)
     t1 = threading.Thread(target=thread_subscriber)
     t1.daemon = True 
     t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
     rospy.loginfo(str(MODBUS_REGISTER_TYPE_DISCRETE_INPUTS))
-    ip = "192.168.137.2"#string값
+    ip = "192.168.137.150"#string값
     port = 502
     add_modbus_signal(ip, port, "ACT", DR_MODBUS_REG_OUTPUT, 0, 0) #modbus signal ACT 등록 : action request & gripper option
     add_modbus_signal(ip, port, "WID", DR_MODBUS_REG_OUTPUT, 1, 0) # modbus signal WID등록 : Gripper Position
     add_modbus_signal(ip, port, "FOR", DR_MODBUS_REG_OUTPUT, 2, 0) # modbus signal FOR 등록 : Gripper Force & Gripper Speed
     wait(1)
+    pos_ready = [2, 0.2, 105, -181, -77, -45]
+    
+    movej(pos_ready, 60, 30)
     set_modbus_output("ACT", 2304) # action request = 0x09 & gripper options = 0x00 / Gripper 활성화 신호와 Gripper 이동 요청 명령을 1로 set
     set_modbus_output("WID", 0) # Gripper Position 을 최소 위치로 변경 (Open) / Gripper options2 = 0x00 & gripper position = 0x00
     set_modbus_output("FOR", 65535) # Speed = 0xFF / Force = 0xFF
     
-    while not rospy.is_shutdown():
-        set_modbus_output("ro2", 80)
-        set_modbus_output("do1", 1)
+    wait(2)
+    pos_1 = [5.477921009063721, 15.57923698425293, 117.46717071533203, -187.10777282714844, -47.733306884765625, -44.358455657958984]
+    movej(pos_1, 60, 30)
+    set_modbus_output("ACT", 2304) # action request = 0x09 & gripper options = 0x00 / Gripper 활성화 신호와 Gripper 이동 요청 명령을 1로 set
+    set_modbus_output("WID", 255) # Gripper Position 을 최소 위치로 변경 (Open) / Gripper options2 = 0x00 & gripper position = 0x00
+    set_modbus_output("FOR", 65535) # Speed = 0xFF / Force = 0xFF
+    wait(2)
+    x = [0, 0, 100, 0, 0, 0]
+    movel(x, 60, 30, mod = DR_MV_MOD_REL)
+    
+    pos_2 = [-5.254105091094971, -7.432934284210205, 129.5436248779297, -186.1969757080078, -57.51133346557617, -56.630428314208984]
+    movej(pos_2, 60, 30)
 
-        if get_modbus_input("di1") == 1:
-            set_modbus_output("ro1", 30)
+    pos_3 = [-7.5329999923706055, -0.23423683643341064, 134.00205993652344, -186.6237335205078, -47.584686279296875, -56.85720443725586]
+    movej(pos_3, 30, 30)
+    
+
+    set_modbus_output("WID", 0)
+    
+    while not rospy.is_shutdown():
+        pass
 
     print 'good bye!'

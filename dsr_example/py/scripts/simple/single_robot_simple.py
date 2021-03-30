@@ -13,7 +13,7 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m1013"
+ROBOT_MODEL  = "m0609"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     accx=[100, 100]
 
     p1= posj(0,0,0,0,0,0)                    #joint
-    p2= posj(0.0, 0.0, 90.0, 0.0, 90.0, 0.0) #joint
+    p2= posj(10.0, 10.0, 130.0, 10.0, 90.0, 10.0) #joint
 
     x1= posx(400, 500, 800.0, 0.0, 180.0, 0.0) #task
     x2= posx(400, 500, 500.0, 0.0, 180.0, 0.0) #task
