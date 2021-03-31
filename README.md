@@ -6,7 +6,11 @@
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 # *overview*
 
-[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)
+[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be) 
+
+[Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A) 
+
+[Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-Noetic.*
@@ -156,7 +160,7 @@ ___
 roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
-  rosrun dsr_example_py pick_and_place.py
+  rosrun dsr_example_py pick_and_place_simple.py
 ```
 - Serial Test(Loopback)
 ```bash
