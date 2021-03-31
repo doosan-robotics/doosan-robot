@@ -78,22 +78,39 @@ if __name__ == "__main__":
 
     while not rospy.is_shutdown():
         movej(p0, vel=60, acc=30)
+        print("movej(p0)")
+        wait(1)
 
         movej(p1, vel=60, acc=30)
+        print("movej(p1)")
+        wait(1)
 
         movel(x1, velx, accx, time=2, mod=DR_MV_MOD_REL)
+        print("movel(x1)")
+        wait(1)
+
         srv_robotiq_2f_move(0.8) #close
         #robotiq_2f_close()
         rospy.sleep(1)
+
         movel(x2, velx, accx, time=2, mod=DR_MV_MOD_REL)
+        print("movel(x2)")
+        wait(1)
 
         movej(p2, vel=60, acc=30)
+        print("movej(p2)")
+        wait(1)
 
         movel(x1, velx, accx, time=2, mod=DR_MV_MOD_REL)
+        print("movel(x1)")
+        wait(1)
+
         #robotiq_2f_open()
         srv_robotiq_2f_move(0) #open
         rospy.sleep(1)
         movel(x2, velx, accx, time=2, mod=DR_MV_MOD_REL)
+        print("movel(x2)")
+        wait(1)
 
         
 
