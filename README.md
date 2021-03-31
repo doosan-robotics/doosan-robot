@@ -7,9 +7,9 @@
 
 # *Precautions*
 ### Features not currently supported
-Robotiq description cannot be called on gazebo simulation.   
-Mobile (Husky) simulation not available   
-Does not support the use of multi robots (only supports single robots) 
+> __Robotiq description cannot be called on gazebo simulation.__   
+__Mobile (Husky) simulation not available__   
+__Does not support the use of multi robots (only supports single robots)__
 
 
 # *overview*
