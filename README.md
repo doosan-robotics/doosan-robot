@@ -179,7 +179,7 @@ ___
 roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
 
 <run application node>
-  rosrun dsr_example_py pick_and_place.py
+  rosrun dsr_example_py pick_and_place_simple.py
 ```
 - Serial Test(Loopback)
 ```bash
