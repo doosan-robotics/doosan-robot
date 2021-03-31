@@ -1106,12 +1106,12 @@ def set_ref_coord(coord):
     return ret
 
 def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-    ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
+    ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, _async=0)
     return ret
 def amovej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-    ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=1)
+    ret = _movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, _async=1)
     return ret
-def _movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, async=0):
+def _movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
     # _pos
     _pos = get_posj(pos)
 
@@ -1199,26 +1199,49 @@ def _movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, 
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : ra")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
     # ROS service call
     if __ROS__: 
-        srv = _ros_movej(_pos, _vel[0], _acc[0], _time, mod, _radius, ra, _async)
+        srv = _ros_movej(_pos, _vel[0], _acc[0], _time, _radius, mod, ra, _async)
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:   
         ret = PythonMgr.py_movej(_pos, _vel, _acc, _time, _radius, mod, ra, _async)
     return ret
 
+'''
+def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
+    print("<DSR_ROBOT.py> movej called")
+    print("<DSR_ROBOT.py> movej called")
+    print("<DSR_ROBOT.py> movej called")
+
+    if time == None:
+        time = 0.0
+
+    if radius == None:
+        radius = 0.0
+
+    # ROS service call
+    if __ROS__: 
+
+        #OK srv = _ros_movej([float(x) for x in pos], float(vel), float(acc), float(time), float(radius), int(mod), int(ra), int(_async))
+        srv = _ros_movej(pos, vel, acc, time, radius, mod, ra, _async)
+
+        #ret = srv.success
+        ret = 0 if (srv.success == True) else -1
+    else:   
+        ret = PythonMgr.py_movej(_pos, _vel, _acc, _time, _radius, mod, ra, _async)
+    return ret
+'''
 def movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None):
-    ret = _movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, async=0)
+    ret = _movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, _async=0)
     return ret 
 def amovejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None):
-    ret = _movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, async=1)
+    ret = _movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, _async=1)
     return ret 
-def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None, async=0):
+def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None, _async=0):
     # _pos
     _pos = get_posx(pos)
 
@@ -1326,13 +1349,12 @@ def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_M
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : sol")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
     # ROS service call
     if __ROS__: 
-        srv = _ros_movejx(_pos, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, sol, _async)   
+        srv = _ros_movejx(_pos, _vel[0], _acc[0], _time, _radius, _ref, mod, ra, sol, _async)   
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:    
@@ -1342,12 +1364,12 @@ def _movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_M
     return ret
 
 def movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-    ret = _movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, async=0)
+    ret = _movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, _async=0)
     return ret
 def amovel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-    ret = _movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, async=1)
+    ret = _movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, _async=1)
     return ret
-def _movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, async=0):
+def _movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
     # _pos
     _pos = get_normal_pos(pos, def_type=posx)
 
@@ -1466,7 +1488,6 @@ def _movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_
         qcommand = 1
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
@@ -1482,12 +1503,12 @@ def _movel(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_
     return ret
 
 def movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None):
-    ret = _movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, async=0)
+    ret = _movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, _async=0)
     return ret
 def amovec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None):
-    ret = _movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, async=1)
+    ret = _movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, _async=1)
     return ret
-def _movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None, async=0):
+def _movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None, _async=0):
 
     # _pos1, _pos2
     
@@ -1627,7 +1648,6 @@ def _movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod
         qcommand = 1
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
@@ -1636,7 +1656,7 @@ def _movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod
         # make multi pos
         _circle_pos = _ros_listToFloat64MultiArray([_pos1, _pos2])
         #print(_circle_pos)
-        srv = _ros_movec(_circle_pos, _vel, _acc, _time, mod, _ref, _angle[0], _angle[1], _radius, ra, _async) 
+        srv = _ros_movec(_circle_pos, _vel, _acc, _time, _radius, _ref, mod, _angle[0], _angle[1], ra, _async) 
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:   
@@ -1646,12 +1666,12 @@ def _movec(pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod
     return ret
 
 def movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None):
-    ret = _movesj(pos_list, vel, acc, time, mod, v, a, t, async=0)
+    ret = _movesj(pos_list, vel, acc, time, mod, v, a, t, _async=0)
     return ret
 def amovesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None):
-    ret = _movesj(pos_list, vel, acc, time, mod, v, a, t, async=1)
+    ret = _movesj(pos_list, vel, acc, time, mod, v, a, t, _async=1)
     return ret
-def _movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None, async=0):
+def _movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None, _async=0):
     # pos_list
     if type(pos_list) != list:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : pos_list")
@@ -1721,7 +1741,6 @@ def _movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None,
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : mod")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
@@ -1739,12 +1758,12 @@ def _movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None,
     return ret
 
 def movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None):
-    ret = _movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, async=0)
+    ret = _movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, _async=0)
     return ret
 def amovesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None):
-    ret = _movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, async=1)
+    ret = _movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, _async=1)
     return ret
-def _movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None, async=0):
+def _movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None, _async=0):
     # pos_list
     if type(pos_list) != list:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : pos_list")
@@ -1842,14 +1861,13 @@ def _movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_AB
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : vel_opt")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
     # ROS service call
     if __ROS__:
         _spline_posx = _ros_listToFloat64MultiArray(pos_list)
-        srv = _ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, mod, _ref, vel_opt, _async)
+        srv = _ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, _ref, mod, vel_opt, _async)
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:
@@ -1859,12 +1877,12 @@ def _movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_AB
     return ret
 
 def moveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None):
-    ret = _moveb(seg_list, vel, acc, ref, time, mod, v, a, t, async=0)
+    ret = _moveb(seg_list, vel, acc, ref, time, mod, v, a, t, _async=0)
     return ret
 def amoveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None):
-    ret = _moveb(seg_list, vel, acc, ref, time, mod, v, a, t, async=1)
+    ret = _moveb(seg_list, vel, acc, ref, time, mod, v, a, t, _async=1)
     return ret
-def _moveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None, async=0):
+def _moveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None, _async=0):
 
     # seg_list
     if type(seg_list) != list:
@@ -1975,14 +1993,13 @@ def _moveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS,
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : mod")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
     # ROS Service call
     if __ROS__:
         seg = _ros_listToFloat64MultiArray(_ros_seg_list)
-        srv = _ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, mod, _ref, _async)    
+        srv = _ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, _ref, mod, _async)    
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:
@@ -1992,12 +2009,12 @@ def _moveb(seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS,
     return ret
 
 def move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-    ret = _move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=0)
+    ret = _move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=0)
     return ret
 def amove_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-    ret = _move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=1)
+    ret = _move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=1)
     return ret
-def _move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, async=0):
+def _move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, _async=0):
     # rev
     if type(rev) != int and type(rev) != float:
         raise DR_Error(DR_ERROR_TYPE, "Invalid type : rev")
@@ -2084,7 +2101,6 @@ def _move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR
         raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref")
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
@@ -2100,12 +2116,12 @@ def _move_spiral(rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR
     return ret
 
 def move_periodic(amp, period, atime=None, repeat=None, ref=DR_TOOL):
-    ret = _move_periodic(amp, period, atime, repeat, ref, async=0)
+    ret = _move_periodic(amp, period, atime, repeat, ref, _async=0)
     return ret
 def amove_periodic(amp, period, atime=None, repeat=None, ref=DR_TOOL):
-    ret = _move_periodic(amp, period, atime, repeat, ref, async=1)
+    ret = _move_periodic(amp, period, atime, repeat, ref, _async=1)
     return ret
-def _move_periodic(amp, period, atime=None, repeat=None, ref=DR_TOOL, async=0):
+def _move_periodic(amp, period, atime=None, repeat=None, ref=DR_TOOL, _async=0):
     _amp = [POINT_COUNT]
     _period = [POINT_COUNT]
     _atime =0.0
@@ -2163,7 +2179,6 @@ def _move_periodic(amp, period, atime=None, repeat=None, ref=DR_TOOL, async=0):
         _ref = ref
 
     # _async
-    _async = async
     if 1 == _async:
         _radius = 0   
 
@@ -4946,12 +4961,12 @@ class CDsrRobot:
         #print_result("{0} = set_ref_coord(coord:{1})".format(ret, coord))
         return ret
     def movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-        ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=0)
+        ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, _async=0)
         return ret
     def amovej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-        ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, async=1)
+        ret = self._movej(pos, vel, acc, time, radius, mod, ra, v, a, t, r, _async=1)
         return ret
-    def _movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, async=0):
+    def _movej(self, pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
         # _pos
         _pos = get_posj(pos)
     
@@ -5039,13 +5054,12 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : ra")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
         # ROS service call
         if __ROS__: 
-            srv = self._ros_movej(_pos, _vel[0], _acc[0], _time, mod, _radius, ra, _async)
+            srv = self._ros_movej(_pos, _vel[0], _acc[0], _time, _radius, mod, ra, _async)
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:   
@@ -5053,12 +5067,12 @@ class CDsrRobot:
         return ret
     
     def movejx(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None):
-        ret = self._movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, async=0)
+        ret = self._movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, _async=0)
         return ret 
     def amovejx(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None):
-        ret = self._movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, async=1)
+        ret = self._movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, _async=1)
         return ret 
-    def _movejx(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None, async=0):
+    def _movejx(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None, _async=0):
         # _pos
         _pos = get_posx(pos)
     
@@ -5166,13 +5180,12 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : sol")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
         # ROS service call
         if __ROS__: 
-            srv = self._ros_movejx(_pos, _vel[0], _acc[0], _time, mod, _ref, _radius, ra, sol, _async)   
+            srv = self._ros_movejx(_pos, _vel[0], _acc[0], _time, _radius, _ref, mod, ra, sol, _async)   
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:    
@@ -5182,12 +5195,12 @@ class CDsrRobot:
         return ret
     
     def movel(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-        ret = self._movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, async=0)
+        ret = self._movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, _async=0)
         return ret
     def amovel(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None):
-        ret = self._movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, async=1)
+        ret = self._movel(pos, vel, acc, time, radius, ref, mod, ra, v, a, t, r, _async=1)
         return ret
-    def _movel(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, async=0):
+    def _movel(self, pos, vel=None, acc=None, time=None, radius=None, ref=None, mod=DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
         # _pos
         _pos = get_normal_pos(pos, def_type=posx)
     
@@ -5306,7 +5319,6 @@ class CDsrRobot:
             qcommand = 1
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
@@ -5322,12 +5334,12 @@ class CDsrRobot:
         return ret
     
     def movec(self, pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None):
-        ret = self._movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, async=0)
+        ret = self._movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, _async=0)
         return ret
     def amovec(self, pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None):
-        ret = self._movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, async=1)
+        ret = self._movec(pos1, pos2, vel, acc, time, radius, ref, mod, angle, ra, v, a, t, r, an, _async=1)
         return ret
-    def _movec(self, pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None, async=0):
+    def _movec(self, pos1, pos2, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, angle=None, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, an=None, _async=0):
     
         # _pos1, _pos2
     
@@ -5467,7 +5479,6 @@ class CDsrRobot:
             qcommand = 1
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
@@ -5476,7 +5487,7 @@ class CDsrRobot:
             # make multi pos
             _circle_pos = _ros_listToFloat64MultiArray([_pos1, _pos2])
             #print(_circle_pos)
-            srv = self._ros_movec(_circle_pos, _vel, _acc, _time, mod, _ref, _angle[0], _angle[1], _radius, ra, _async) 
+            srv = self._ros_movec(_circle_pos, _vel, _acc, _time, _radius, _ref, mod, _angle[0], _angle[1], ra, _async) 
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:   
@@ -5486,12 +5497,12 @@ class CDsrRobot:
         return ret
     
     def movesj(self, pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None):
-        ret = self._movesj(pos_list, vel, acc, time, mod, v, a, t, async=0)
+        ret = self._movesj(pos_list, vel, acc, time, mod, v, a, t, _async=0)
         return ret
     def amovesj(self, pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None):
-        ret = self._movesj(pos_list, vel, acc, time, mod, v, a, t, async=1)
+        ret = self._movesj(pos_list, vel, acc, time, mod, v, a, t, _async=1)
         return ret
-    def _movesj(self, pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None, async=0):
+    def _movesj(self, pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None, a=None, t=None, _async=0):
         # pos_list
         if type(pos_list) != list:
             raise DR_Error(DR_ERROR_TYPE, "Invalid type : pos_list")
@@ -5561,7 +5572,6 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : mod")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
@@ -5579,12 +5589,12 @@ class CDsrRobot:
         return ret
     
     def movesx(self, pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None):
-        ret = self._movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, async=0)
+        ret = self._movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, _async=0)
         return ret
     def amovesx(self, pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None):
-        ret = self._movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, async=1)
+        ret = self._movesx(pos_list, vel, acc, time, ref, mod, vel_opt, v, a, t, _async=1)
         return ret
-    def _movesx(self, pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None, async=0):
+    def _movesx(self, pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_ABS, vel_opt=DR_MVS_VEL_NONE, v=None, a=None, t=None, _async=0):
         # pos_list
         if type(pos_list) != list:
             raise DR_Error(DR_ERROR_TYPE, "Invalid type : pos_list")
@@ -5682,14 +5692,13 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : vel_opt")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
         # ROS service call
         if __ROS__:
             _spline_posx = _ros_listToFloat64MultiArray(pos_list)
-            srv = self._ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, mod, _ref, vel_opt, _async)
+            srv = self._ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, _ref, mod, vel_opt, _async)
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:
@@ -5699,12 +5708,12 @@ class CDsrRobot:
         return ret
     
     def moveb(self, seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None):
-        ret = self._moveb(seg_list, vel, acc, ref, time, mod, v, a, t, async=0)
+        ret = self._moveb(seg_list, vel, acc, ref, time, mod, v, a, t, _async=0)
         return ret
     def amoveb(self, seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None):
-        ret = self._moveb(seg_list, vel, acc, ref, time, mod, v, a, t, async=1)
+        ret = self._moveb(seg_list, vel, acc, ref, time, mod, v, a, t, _async=1)
         return ret
-    def _moveb(self, seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None, async=0):
+    def _moveb(self, seg_list, vel=None, acc=None, ref=None, time=None, mod=DR_MV_MOD_ABS, v=None, a=None, t=None, _async=0):
     
         # seg_list
         if type(seg_list) != list:
@@ -5815,14 +5824,13 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : mod")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
         # ROS Service call
         if __ROS__:
             seg = _ros_listToFloat64MultiArray(_ros_seg_list)
-            srv = self._ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, mod, _ref, _async)    
+            srv = self._ros_moveb(seg, len(_ros_seg_list), _vel, _acc, _time, _ref, mod, _async)    
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:
@@ -5832,12 +5840,12 @@ class CDsrRobot:
         return ret
     
     def move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=0)
+        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=0)
         return ret
     def amove_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None):
-        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, async=1)
+        ret = self._move_spiral(rev, rmax, lmax, vel, acc, time, axis, ref, v, a, t, _async=1)
         return ret
-    def _move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, async=0):
+    def _move_spiral(self, rev=10, rmax=10, lmax=0, vel=None, acc=None, time=None, axis=DR_AXIS_Z, ref=DR_TOOL, v=None, a=None, t=None, _async=0):
         # rev
         if type(rev) != int and type(rev) != float:
             raise DR_Error(DR_ERROR_TYPE, "Invalid type : rev")
@@ -5924,7 +5932,6 @@ class CDsrRobot:
             raise DR_Error(DR_ERROR_VALUE, "Invalid value : ref")
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     
@@ -5940,12 +5947,12 @@ class CDsrRobot:
         return ret
     
     def move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL):
-        ret = self._move_periodic(amp, period, atime, repeat, ref, async=0)
+        ret = self._move_periodic(amp, period, atime, repeat, ref, _async=0)
         return ret
     def amove_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL):
-        ret = self._move_periodic(amp, period, atime, repeat, ref, async=1)
+        ret = self._move_periodic(amp, period, atime, repeat, ref, _async=1)
         return ret
-    def _move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL, async=0):
+    def _move_periodic(self, amp, period, atime=None, repeat=None, ref=DR_TOOL, _async=0):
         _amp = [POINT_COUNT]
         _period = [POINT_COUNT]
         _atime =0.0
@@ -6003,7 +6010,6 @@ class CDsrRobot:
             _ref = ref
     
         # _async
-        _async = async
         if 1 == _async:
             _radius = 0   
     

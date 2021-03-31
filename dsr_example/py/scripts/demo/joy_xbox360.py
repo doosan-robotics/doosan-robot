@@ -28,9 +28,9 @@ m_joyJogFlag = 0
 m_joyJogVel = 0.0
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -154,4 +154,4 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         pass
 
-    print 'good bye!'
+    print('good bye!')

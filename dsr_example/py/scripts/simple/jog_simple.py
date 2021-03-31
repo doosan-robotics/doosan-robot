@@ -26,9 +26,9 @@ REF      = 0
 SPEED      = 10
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
     VEL = 0
     jog(JOG_AXIS, REF, SPEED)
     pub_stop.publish(stop_mode=1) # STOP_TYPE_QUICK
@@ -60,4 +60,4 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         pass
 
-    print 'good bye!'
+    print('good bye!')

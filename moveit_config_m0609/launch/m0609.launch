@@ -24,6 +24,7 @@
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find moveit_config_m0609)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
+    <arg name="color" value="$(arg color)"/>
   </include>
 
   <!-- If needed, broadcast static tf for robot root -->

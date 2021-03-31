@@ -51,9 +51,9 @@ def SET_ROBOT2(id, model):
     ROBOT_ID2 = id; ROBOT_MODEL2= model   
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop1.publish(stop_mode=1) #STOP_TYPE_QUICK)
     pub_stop2.publish(stop_mode=1)
@@ -181,4 +181,4 @@ if __name__ == "__main__":
         r1.moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
         r2.moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
-    print 'good bye!'
+    print('good bye!')

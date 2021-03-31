@@ -25,11 +25,11 @@ def show_epilog():
 class create_robot_model():
     def __init__(self, base_file=None):
         if base_file:
-            self.data = yaml.load(base_file)
+            self.data = yaml.safe_load(base_file)
         else:
             self.data = {}
     def write(self, f):
-        f.write(yaml.dump(self.data, default_flow_style=False))
+        f.write(str(yaml.dump(self.data, default_flow_style=False)).encode())
 
     def add_display(self, name, class_name, topic=None, color=None, fields={}, enabled=True):
         d = {'Name': name, 'Class': class_name, 'Enabled': enabled}
@@ -42,8 +42,13 @@ class create_robot_model():
 
     def add_model(self, parameter='robot_description', tf_prefix=None):
         fields = {'Robot Description': parameter}
+        
         if tf_prefix:
+            print("tf_prefix :::: type {},  {}".format(type(tf_prefix),tf_prefix))
             fields['TF Prefix'] = tf_prefix
+        #if fixed_frame:
+        #    print("tf_prefix :::: type {},  {}".format(type(tf_prefix),tf_prefix))
+        #    fields['TF Prefix'] = tf_prefix
         self.add_display(tf_prefix[1:], 'rviz/RobotModel', fields=fields)
 
 
@@ -67,7 +72,8 @@ if __name__=="__main__":
                 models.append(p)
         r = create_robot_model(get('package://dsr_launcher/rviz/default.rviz'))
         for m in models:
-            r.add_model(m, m[0:-18])
+            r.add_model(m, "")
+            #r.add_model(m, m[0:-18])
         temp = tempfile.NamedTemporaryFile()
         r.write(temp)
         temp.flush()

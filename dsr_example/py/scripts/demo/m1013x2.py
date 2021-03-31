@@ -22,9 +22,9 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop_r1.publish(stop_mode=STOP_TYPE_QUICK)
     pub_stop_r2.publish(stop_mode=STOP_TYPE_QUICK)
@@ -280,4 +280,4 @@ if __name__ == "__main__":
         r1.move_wait(); r2.move_wait() 
     #----------------------------------------------------------------------
 
-    print 'good bye!'
+    print('good bye!')

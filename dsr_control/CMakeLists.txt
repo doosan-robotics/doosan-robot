@@ -50,6 +50,8 @@ if($ENV{ROS_DISTRO} STREQUAL "kinetic")
   endif()
 elseif($ENV{ROS_DISTRO} STREQUAL "melodic")
   LINK_DIRECTORIES ("${COMMON_LIB_FILES}/$ENV{ROS_DISTRO}/x86_64")
+elseif($ENV{ROS_DISTRO} STREQUAL "noetic")
+  LINK_DIRECTORIES ("${COMMON_LIB_FILES}/$ENV{ROS_DISTRO}/x86_64")
 else()
     message("Unknown ROS distro:")
     message($ENV{ROS_DISTRO})
@@ -68,10 +70,6 @@ install(TARGETS dsr_control_node
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY launch
-   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-install(DIRECTORY config
+install(DIRECTORY config launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

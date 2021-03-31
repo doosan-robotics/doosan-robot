@@ -10,20 +10,22 @@
     <arg name="gripper" default="none"/>
 	<arg name="mobile" default="none"/>
     <arg name="yaml" default="dsr_control"/>
+    <!--use moveit : controller=:trajectory / else: controller:=position-->
+    <arg name="controller" default="position"/>
 
 	<!-- Run Doosan Robot emulator in virtual mode -->
-        <group if="$(eval arg('mode') == 'virtual')">         	
-            <node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"  ns="$(arg ns)"
-                                    args="$(arg port) $(arg model)" />
+    <group if="$(eval arg('mode') == 'virtual')">         	
+        <node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"  ns="$(arg ns)"
+            args="$(arg port) $(arg model)" />
 	</group>
 
 	<!-- 제어기를 위한 position_controller, joint_state 정의 -->
 	<rosparam command="load" file="$(find dsr_control)/config/$(arg yaml).yaml" ns="$(arg ns)$(arg model)" />
-	<node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-				args="dsr_joint_position_controller dsr_joint_publisher" ns="$(arg ns)$(arg model)">
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+				args="dsr_joint_$(arg controller)_controller dsr_joint_publisher" ns="$(arg ns)$(arg model)">
 	</node>
 
-	<!--node pkg="dsr_control" type="run.sh" name="foo"/-->
+    <!--node pkg="dsr_control" type="run.sh" name="foo"/-->
 	<!--node pkg="aliencontrol" type="aliencontrol" name="aliencontrol"-->
     <!--param name="cmd" value="run.sh"/-->
 	<!--param name="cmd" value="xterm -e top"/-->
@@ -39,8 +41,8 @@
 		<param name="port" value="$(arg port)"/>
 		<param name="mode" value="$(arg mode)" />
 		<param name="model" value="$(arg model)" />
-                <param name="gripper" value="$(arg gripper)"/>
-	    	<param name="mobile" value="$(arg mobile)" />
+        <param name="gripper" value="$(arg gripper)"/>
+	    <param name="mobile" value="$(arg mobile)" />
 
 		<!--gazebo를 위한 joint position 명령-->
 		<remap from="/dsr_joint_position_controller/command" to="/$(arg ns)/dsr_joint_position_controller/command" />

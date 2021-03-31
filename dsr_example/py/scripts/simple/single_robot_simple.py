@@ -13,16 +13,16 @@ sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../.
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "a0912"
+ROBOT_MODEL  = "m1013"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -106,9 +106,9 @@ if __name__ == "__main__":
     rospy.init_node('single_robot_simple_py')
     rospy.on_shutdown(shutdown)
     set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
-    t1 = threading.Thread(target=thread_subscriber)
-    t1.daemon = True 
-    t1.start()
+    #t1 = threading.Thread(target=thread_subscriber)
+    #t1.daemon = True 
+    #t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
 
@@ -166,10 +166,15 @@ if __name__ == "__main__":
     b_list1 = [seg11, seg12, seg14, seg15, seg16] 
 
     while not rospy.is_shutdown():
-        movej(p2, vel=100, acc=100)
-       # movejx(x1, vel=30, acc=60, sol=0)
+        ###movej(p2, vel=100, acc=100)
+        movej([0.0, 0.0, 90.0, 0.0, 90.0, 0.0], vel=100.1, acc=100.1)
+    
+        #movejx(x1, vel=30, acc=60, sol=0)
         #movel(x2, velx, accx)
-        movej(p1, vel=100, acc=100)
+
+        ###movej(p1, vel=100, acc=100)
+        movej([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], vel=100.1, acc=100.1)
+
        # movec(c1, c2, velx, accx)
        # movesj(qlist, vel=100, acc=100)
        # movesx(xlist, vel=100, acc=100)
@@ -177,4 +182,4 @@ if __name__ == "__main__":
        # move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
        # moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
-    print 'good bye!'
+    print('good bye!')

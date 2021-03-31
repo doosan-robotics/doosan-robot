@@ -81,9 +81,9 @@ RobotSync = CRobotSync(NUM_ROBOT)
 
 def shutdown():
  
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop_r1.publish(stop_mode=STOP_TYPE_QUICK)
     pub_stop_r2.publish(stop_mode=STOP_TYPE_QUICK)
@@ -268,4 +268,4 @@ if __name__ == "__main__":
 
     #----------------------------------------------------------------------
 
-    print 'good bye!'
+    print('good bye!')

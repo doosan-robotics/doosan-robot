@@ -11,7 +11,7 @@ FIND_PACKAGE(catkin REQUIRED COMPONENTS
   xmlrpcpp
 )
 
-FIND_PACKAGE(gazebo REQUIRED)
+#for noetic FIND_PACKAGE(gazebo REQUIRED)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS thread)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
@@ -33,15 +33,15 @@ INCLUDE_DIRECTORIES(
   include
 )
 
-ADD_LIBRARY(gazebo_mimic_joint_plugin servicepack/plugin/robotiq_gazebo/src/mimic_joint_plugin.cpp)
-TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
-  ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARIES})
+#for noetic ADD_LIBRARY(gazebo_mimic_joint_plugin servicepack/plugin/robotiq_gazebo/src/mimic_joint_plugin.cpp)
+#for noetic TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
+#for noetic  ${catkin_LIBRARIES}
+#for noetic  ${GAZEBO_LIBRARIES})
 
-ADD_LIBRARY(gazebo_disable_link_plugin servicepack/plugin/robotiq_gazebo/src/disable_link_plugin.cpp)
-TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
-  ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARIES})
+#for noetic ADD_LIBRARY(gazebo_disable_link_plugin servicepack/plugin/robotiq_gazebo/src/disable_link_plugin.cpp)
+#for noetic TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
+#for noetic  ${catkin_LIBRARIES}
+#for noetic  ${GAZEBO_LIBRARIES})
 
 install(PROGRAMS 
     bin/DRCF/DRCF32 bin/DRCF/DRCF64 bin/DRCF/run_drcf.sh

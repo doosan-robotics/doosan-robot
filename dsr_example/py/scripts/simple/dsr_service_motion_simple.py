@@ -20,9 +20,9 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -106,9 +106,9 @@ if __name__ == "__main__":
     rospy.init_node('dsr_service_motion_simple_py')
     rospy.on_shutdown(shutdown)
 
-    t1 = threading.Thread(target=thread_subscriber)
-    t1.daemon = True 
-    t1.start()
+    #t1 = threading.Thread(target=thread_subscriber)
+    #t1.daemon = True 
+    #t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
 
@@ -169,9 +169,9 @@ if __name__ == "__main__":
         movel(x2, velx, accx)
         movec(c1, c2, velx, accx)
         movesj(qlist, vel=100, acc=100)
-        movesx(xlist, vel=100, acc=100)
+        # OMG movesx(xlist, vel=100, acc=100)
         move_spiral(rev=9.5,rmax=20.0,lmax=50.0,time=20.0,axis=DR_AXIS_Z,ref=DR_TOOL)
         move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
         moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
-    print 'good bye!'
+    print('good bye!')

@@ -29,9 +29,9 @@ def SET_ROBOT(id, model):
     ROBOT_ID = id; ROBOT_MODEL= model   
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=1) #STOP_TYPE_QUICK)
     return 0
@@ -89,4 +89,4 @@ if __name__ == "__main__":
 
         
 
-    print 'good bye!'
+    print('good bye!')

@@ -35,9 +35,9 @@ g_sock = client_socket_open("192.168.137.2", 10004)
 print("stop_watch server connect O.K!")
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -194,4 +194,4 @@ if __name__ == "__main__":
 
     client_socket_close(g_sock)
 
-    print 'good bye!'
+    print('good bye!')

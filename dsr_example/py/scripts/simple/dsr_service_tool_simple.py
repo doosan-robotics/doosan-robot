@@ -20,9 +20,9 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -125,4 +125,4 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         pass
 
-    print 'good bye!'
+    print('good bye!')

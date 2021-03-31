@@ -23,9 +23,9 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -127,4 +127,4 @@ if __name__ == "__main__":
         if get_modbus_input("di1") == 1:
             set_modbus_output("ro1", 30)
 
-    print 'good bye!'
+    print('good bye!')

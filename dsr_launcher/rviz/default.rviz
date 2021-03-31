@@ -52,7 +52,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: base_0 # for noetic version
     Frame Rate: 30
   Name: root
   Tools:
