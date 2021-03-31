@@ -19,7 +19,7 @@
     source ./devel/setup.bash
 
 #### package list
-    sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-industrial-core ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control
+    sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
     
 ##### Serial Package source build
     ### Noetic distro does not support serial package, so you have to install it manually.
