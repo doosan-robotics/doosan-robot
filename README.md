@@ -24,17 +24,18 @@ __Does not support the use of multi robots (only supports single robots)__
     cd ~/catkin_ws/src
     git clone -b noetic-devel --single-branch https://github.com/doosan-robotics/doosan-robot
     rosdep install --from-paths doosan-robot --ignore-src --rosdistro noetic -r -y
+    
+    ##### Serial Package source build
+    ### Noetic distro does not support serial package, so you have to install it manually.
+    cd ~/catkin_ws/src
+    git clone https://github.com/wjwwood/serial.git
+    
     cd ~/catkin_ws
     catkin_make
     source ./devel/setup.bash
 
 #### package list
     sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
-    
-##### Serial Package source build
-    ### Noetic distro does not support serial package, so you have to install it manually.
-    cd ~/catkin_ws/src
-    git clone https://github.com/wjwwood/serial.git
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode
