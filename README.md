@@ -12,7 +12,7 @@
 ##### *Doosan Robot ROS Package is implemented at ROS-Noetic.*
     ### We recommand the /home/<user_home>/catkin_ws/src
     cd ~/catkin_ws/src
-    git clone https://github.com/doosan-robotics/doosan-robot
+    git clone -b noetic-devel --single-branch https://github.com/doosan-robotics/doosan-robot
     rosdep install --from-paths doosan-robot --ignore-src --rosdistro noetic -r -y
     cd ~/catkin_ws
     catkin_make
