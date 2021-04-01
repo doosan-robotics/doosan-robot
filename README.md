@@ -1,14 +1,14 @@
+
 # [Doosan Robotics](http://www.doosanrobotics.com/kr/)
 [![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 # *overview*
 
-[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be) 
-
-[Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A) 
-
-[Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc)
+[Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)   
+<img src="https://user-images.githubusercontent.com/47092672/113229859-c1f86100-92d2-11eb-8242-3aa7e7f7ef88.png" width="50%">  
+[Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A)   
+[Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-Kinetic.*
@@ -60,7 +60,7 @@ roslaunch dsr_description a0509.launch
 <img src="https://user-images.githubusercontent.com/47092672/55622394-0f708f00-57db-11e9-8625-a344513a5d3a.png" width="70%">
 
 > + In dsr_description, the user can use joint_state_publisher to move the robot.
-> + [Joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
+> + [joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
 
 > $ _roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f_ 
 
