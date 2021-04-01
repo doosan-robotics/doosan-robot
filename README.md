@@ -16,7 +16,7 @@ __Does not support the use of multi robots (only supports single robots)__
 # *overview*
 
 [Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)   
-<img src="https://user-images.githubusercontent.com/47092672/113229859-c1f86100-92d2-11eb-8242-3aa7e7f7ef88.png" width="50%">
+<img src="https://user-images.githubusercontent.com/47092672/113229859-c1f86100-92d2-11eb-8242-3aa7e7f7ef88.png" width="50%">  
 [Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A)   
 [Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
