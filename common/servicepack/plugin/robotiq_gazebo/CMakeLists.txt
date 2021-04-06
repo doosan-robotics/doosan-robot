@@ -30,12 +30,28 @@ INCLUDE_DIRECTORIES(
   include
 )
 
-ADD_LIBRARY(gazebo_mimic_joint_plugin src/mimic_joint_plugin.cpp)
-TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
-  ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARIES})
-
-ADD_LIBRARY(gazebo_disable_link_plugin src/disable_link_plugin.cpp)
-TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
-  ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARIES})
+if($ENV{ROS_DISTRO} STREQUAL "kinetic")
+  ADD_LIBRARY(gazebo_mimic_joint_plugin kinetic/src/mimic_joint_plugin.cpp)
+  TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
+    ${catkin_LIBRARIES}
+    ${GAZEBO_LIBRARIES})
+  
+  ADD_LIBRARY(gazebo_disable_link_plugin kinetic/src/disable_link_plugin.cpp)
+  TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
+    ${catkin_LIBRARIES}
+    ${GAZEBO_LIBRARIES})
+  
+elseif($ENV{ROS_DISTRO} STREQUAL "melodic")
+  ADD_LIBRARY(gazebo_mimic_joint_plugin melodic/src/mimic_joint_plugin.cpp)
+  TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
+    ${catkin_LIBRARIES}
+    ${GAZEBO_LIBRARIES})
+  
+  ADD_LIBRARY(gazebo_disable_link_plugin melodic/src/disable_link_plugin.cpp)
+  TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
+    ${catkin_LIBRARIES}
+    ${GAZEBO_LIBRARIES})
+elseif($ENV{ROS_DISTRO} STREQUAL "noetic")
+    message("Unknown ROS distro:")
+    message($ENV{ROS_DISTRO})
+endif()

@@ -44,12 +44,22 @@ INCLUDE_DIRECTORIES(
 )
 
 if($ENV{ROS_DISTRO} STREQUAL "kinetic")
-    ADD_LIBRARY(gazebo_mimic_joint_plugin servicepack/plugin/robotiq_gazebo/src/mimic_joint_plugin.cpp)
+    ADD_LIBRARY(gazebo_mimic_joint_plugin servicepack/plugin/robotiq_gazebo/kinetic/src/mimic_joint_plugin.cpp)
     TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
       ${catkin_LIBRARIES}
       ${GAZEBO_LIBRARIES})
+
+    ADD_LIBRARY(gazebo_disable_link_plugin servicepack/plugin/robotiq_gazebo/kinetic/src/disable_link_plugin.cpp)
+    TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
+      ${catkin_LIBRARIES}
+      ${GAZEBO_LIBRARIES})
 elseif($ENV{ROS_DISTRO} STREQUAL "melodic")
-    ADD_LIBRARY(gazebo_disable_link_plugin servicepack/plugin/robotiq_gazebo/src/disable_link_plugin.cpp)
+    ADD_LIBRARY(gazebo_mimic_joint_plugin servicepack/plugin/robotiq_gazebo/melodic/src/mimic_joint_plugin.cpp)
+    TARGET_LINK_LIBRARIES(gazebo_mimic_joint_plugin
+      ${catkin_LIBRARIES}
+      ${GAZEBO_LIBRARIES})
+
+    ADD_LIBRARY(gazebo_disable_link_plugin servicepack/plugin/robotiq_gazebo/melodic/src/disable_link_plugin.cpp)
     TARGET_LINK_LIBRARIES(gazebo_disable_link_plugin
       ${catkin_LIBRARIES}
       ${GAZEBO_LIBRARIES})

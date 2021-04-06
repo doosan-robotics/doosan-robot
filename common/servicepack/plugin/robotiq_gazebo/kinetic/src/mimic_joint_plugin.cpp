@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "../include/robotiq_gazebo/mimic_joint_plugin.h"
+#include "../include/mimic_joint_plugin.h"
 
 namespace gazebo
 {

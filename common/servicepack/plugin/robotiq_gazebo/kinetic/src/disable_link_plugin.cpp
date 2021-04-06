@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "../include/robotiq_gazebo/disable_link_plugin.h"
+#include "../include/disable_link_plugin.h"
 
 namespace gazebo
 {
