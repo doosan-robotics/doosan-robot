@@ -99,6 +99,9 @@ mobile := USE_MOBILE <none  /  husky> defalut = none
     roslaunch dsr_launcher dsr_moveit.launch model:=m1509 mode:=virtual
     roslaunch dsr_launcher dsr_moveit.launch model:=a0509 mode:=virtual
 
+### dsr_moveit + gazebo
+    roslaunch dsr_launcher dsr_moveit_gazebo.launch
+
 ##### *How to use MoveIt Commander*
 ###### _You can run Moveit with CLI commands through the moveit commander package._
 ###### _You can install the "moveit_commander" package using below command._
@@ -166,11 +169,11 @@ ___
       rosrun dsr_example_py multi_robot_simple.py
     <ex>
         roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-        rosrun dsr_example_py multi_robot.py  
+        rosrun dsr_example_py multi_robot_simple.py  
 
 > _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
 
-> _$ rosrun dsr_example_py multi_robot.py_
+> _$ rosrun dsr_example_py multi_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
 
 ###### robot + gripper
@@ -246,7 +249,7 @@ roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
 #### Run multi-robot by command line
 ```bash
-roslaunch dsr_launcher test.launch
+roslaunch dsr_launcher multi_robot_rviz.launch
 rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64MultiArray "layout:
   dim:
   - label: ''
