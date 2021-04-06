@@ -9,20 +9,20 @@ import os
 import threading, time
 import sys
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"
-ROBOT_MODEL  = "m0609"
+ROBOT_MODEL  = "m1013"
 import DR_init
 DR_init.__dsr__id = ROBOT_ID
 DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     accx=[100, 100]
 
     p1= posj(0,0,0,0,0,0)                    #joint
-    p2= posj(10.0, 10.0, 130.0, 10.0, 90.0, 10.0) #joint
+    p2= posj(0.0, 0.0, 90.0, 0.0, 90.0, 0.0) #joint
 
     x1= posx(400, 500, 800.0, 0.0, 180.0, 0.0) #task
     x2= posx(400, 500, 500.0, 0.0, 180.0, 0.0) #task
@@ -177,4 +177,4 @@ if __name__ == "__main__":
        # move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
        # moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
-    print 'good bye!'
+    print('good bye!')

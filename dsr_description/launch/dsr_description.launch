@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
+    <arg name="ros_version" default="$(env ROS_DISTRO)"/>
 	<arg name="ns"      default="dsr"/>
 	<arg name="model"   default="m1013"/>
 	<arg name="color"   default="white"/>    

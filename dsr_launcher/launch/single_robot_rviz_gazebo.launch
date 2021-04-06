@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
+  <arg name="ros_version" default="$(env ROS_DISTRO)"/>
   <arg name="gui"   default="true"/>
   <arg name="rviz"  default="true"/>
   <arg name="world" default="empty.world"/>
@@ -40,6 +41,14 @@
 
   <!-- View in RVIZ. -->
   <group if="$(arg rviz)">
-    <node name="dmodel" pkg="dsr_launcher" type="dmodel.py"/>
+    <group if="$(eval arg('ros_version') == 'kinetic')">
+      <node name="dmodel" pkg="dsr_launcher" type="dmodel_kinetic.py"/>
+    </group> 
+    <group if="$(eval arg('ros_version') == 'melodic')">
+      <node name="dmodel" pkg="dsr_launcher" type="dmodel_melodic.py"/>
+    </group> 
+    <group if="$(eval arg('ros_version') == 'noetic')">
+      <node name="dmodel" pkg="dsr_launcher" type="dmodel_noetic.py"/>
+    </group> 
   </group> 
 </launch>

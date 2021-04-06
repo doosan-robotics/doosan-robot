@@ -19,14 +19,32 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+if($ENV{ROS_DISTRO} STREQUAL "kinetic")
+  SET( COMMON_INC_FILES
+    ../../include
+  )
+  SET( COMMON_SRC_FILES
+    ../../src/dsr_robot.cpp
+  )
+elseif($ENV{ROS_DISTRO} STREQUAL "melodic")
+  SET( COMMON_INC_FILES
+    ../../include
+  )
+  SET( COMMON_SRC_FILES
+    ../../src/dsr_robot.cpp
+  )
+elseif($ENV{ROS_DISTRO} STREQUAL "noetic")
+  SET( COMMON_INC_FILES
+    ../common/include
+  )
+  SET( COMMON_SRC_FILES
+    ../common/src/dsr_robot.cpp
+  )
+else()
+    message("Unknown ROS distro:")
+    message($ENV{ROS_DISTRO})
+endif()
 
-SET( COMMON_INC_FILES
-  ../../include
-)
-
-SET( COMMON_SRC_FILES
-  ../../src/dsr_robot.cpp
-)
 
 include_directories(
   include  

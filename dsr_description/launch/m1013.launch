@@ -2,6 +2,7 @@
 
 
 <launch>
+    <arg name="ros_version" default="$(env ROS_DISTRO)"/>
     <arg name="model"   default="m1013"/>
     <arg name="ns"      default="dsr"/>
     <arg name="gui"     default="True" />
@@ -10,24 +11,55 @@
     <arg name="gripper" default="none"/>
 
     <param name="robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro' '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)"/>
-.
 
-    <group if="$(eval arg('remap') == False)">
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
-        </node>
-
-        <!-- Send joint values -->
-        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-        <param name="/use_gui" value="true"/>
-        </node>
+    <group if="$(eval arg('ros_version') == 'kinetic')">
+        <group if="$(eval arg('remap') == False)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+            </node>
+            <!-- Send joint values -->
+            <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+            <param name="/use_gui" value="true"/>
+            </node>
+        </group>
+        <group if="$(eval arg('remap') == True)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+                <remap from="/joint_states" to="/dsr/joint_states"/>
+            </node>
+        </group>
     </group>
 
-    <group if="$(eval arg('remap') == True)">
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
-            <remap from="/joint_states" to="/dsr/joint_states"/>
-        </node>
+    <group if="$(eval arg('ros_version') == 'melodic')">
+        <group if="$(eval arg('remap') == False)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+            </node>
+            <!-- Send joint values -->
+            <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+            <param name="/use_gui" value="true"/>
+            </node>
+        </group>
+        <group if="$(eval arg('remap') == True)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" output="screen" respawn="false">
+                <remap from="/joint_states" to="/dsr/joint_states"/>
+            </node>
+        </group>
+    </group>
+
+    <group if="$(eval arg('ros_version') == 'noetic')">
+        <group if="$(eval arg('remap') == False)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" respawn="false">
+            </node>   
+            <!-- Send joint values -->
+            <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+            <param name="/use_gui" value="true"/>
+            </node>
+        </group>
+        <group if="$(eval arg('remap') == True)">
+            <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" respawn="false">
+                <remap from="/joint_states" to="/dsr/joint_states"/>
+            </node>
+        </group>
     </group>
 
     <!-- Show in Rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/m1013.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/default.rviz"/>
 </launch>

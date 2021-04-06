@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>doosan_robotics</name>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <description>The doosan_robotics metapackage</description>
 
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
@@ -55,5 +55,9 @@
   <build_depend>imu_tools</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>robot_localization</build_depend>
+
+  <!--for melodic-->	
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>moveit_simple_controller_manager</exec_depend>  
 </package>
 
