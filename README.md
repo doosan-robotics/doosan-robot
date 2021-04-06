@@ -91,20 +91,23 @@ color := ROBOT_COLOR <white  /  blue> defalut = white
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
 
-#### dsr_control + dsr_moveit_config
-    roslaunch dsr_control dsr_moveit.launch
-    roslaunch dsr_control dsr_moveit.launch model:=m0609 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m0617 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m1013 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=a0509 mode:=virtual
+#### dsr_moveit
+    roslaunch dsr_launcher dsr_moveit.launch
+    roslaunch dsr_launcher dsr_moveit.launch model:=m0609 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m0617 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m1013 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m1509 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=a0509 mode:=virtual
+
+### dsr_moveit + gazebo
+    roslaunch dsr_launcher dsr_moveit_gazebo.launch
 
 ##### *How to use MoveIt Commander*
 ###### _You can run Moveit with CLI commands through the moveit commander package._
 ###### _You can install the "moveit_commander" package using below command._
     sudo apt-get install ros-kinetic-moveit-commander
 ##### *MoveitCommander usage example*
-	roslaunch dsr_control dsr_moveit.launch model:=m1013
+	roslaunch dsr_launcher dsr_moveit.launch model:=m1013
 	In another terminal 
 	ROS_NAMESPACE=/dsr01m1013 rosrun moveit_commander moveit_commander_cmdline.py robot_description:=/dsr01m1013/robot_description   
 ###### *moveit commander CLI is executed.*    
@@ -166,11 +169,11 @@ ___
       rosrun dsr_example_py multi_robot_simple.py
     <ex>
         roslaunch dsr_launcher multi_robot_rviz_gazebo.launch
-        rosrun dsr_example_py multi_robot.py  
+        rosrun dsr_example_py multi_robot_simple.py  
 
 > _$ roslaunch dsr_launcher multi_robot_rviz_gazebo.launch_
 
-> _$ rosrun dsr_example_py multi_robot.py_
+> _$ rosrun dsr_example_py multi_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55622398-10092580-57db-11e9-8a23-b9dae4131897.png" width="70%">
 
 ###### robot + gripper
@@ -246,7 +249,7 @@ roslaunch dsr_launcher multi_robot_rviz.launch mobile:=husky
 
 #### Run multi-robot by command line
 ```bash
-roslaunch dsr_launcher test.launch
+roslaunch dsr_launcher multi_robot_rviz.launch
 rostopic pub /dsr01m1013/joint_position_controller/command std_msgs/Float64MultiArray "layout:
   dim:
   - label: ''
