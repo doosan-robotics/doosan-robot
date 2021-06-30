@@ -29,5 +29,5 @@
     </group>
 
     <!-- Show in Rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/m0609.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/default.rviz"/>
 </launch>

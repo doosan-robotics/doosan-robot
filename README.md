@@ -1,6 +1,3 @@
-
-
-
 # [Doosan Robotics](http://www.doosanrobotics.com/kr/)
 [![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
@@ -102,20 +99,23 @@ color := ROBOT_COLOR <white  /  blue> defalut = white
 gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
 mobile := USE_MOBILE <none  /  husky> defalut = none  
 
-#### dsr_control + dsr_moveit_config
-    roslaunch dsr_control dsr_moveit.launch
-    roslaunch dsr_control dsr_moveit.launch model:=m0609 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m0617 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m1013 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=m1509 mode:=virtual
-    roslaunch dsr_control dsr_moveit.launch model:=a0509 mode:=virtual
+#### dsr_moveit
+    roslaunch dsr_launcher dsr_moveit.launch
+    roslaunch dsr_launcher dsr_moveit.launch model:=m0609 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m0617 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m1013 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=m1509 mode:=virtual
+    roslaunch dsr_launcher dsr_moveit.launch model:=a0509 mode:=virtual
+
+### dsr_moveit + gazebo
+    roslaunch dsr_launcher dsr_moveit_gazebo.launch
 
 ##### *How to use MoveIt Commander*
 ###### _You can run Moveit with CLI commands through the moveit commander package._
 ###### _You can install the "moveit_commander" package using below command._
     sudo apt-get install ros-noetic-moveit-commander
 ##### *MoveitCommander usage example*
-	roslaunch dsr_control dsr_moveit.launch model:=m1013
+	roslaunch dsr_launcher dsr_moveit.launch model:=m1013
 	In another terminal 
 	ROS_NAMESPACE=/dsr01m1013 rosrun moveit_commander moveit_commander_cmdline.py robot_description:=/dsr01m1013/robot_description   
 ###### *moveit commander CLI is executed.*    
@@ -216,7 +216,6 @@ radius: 0.0
 mode: 0
 blendType: 0
 syncType: 0"
-
 ```
 ___
 # manuals

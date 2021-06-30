@@ -41,8 +41,8 @@
 		<param name="port" value="$(arg port)"/>
 		<param name="mode" value="$(arg mode)" />
 		<param name="model" value="$(arg model)" />
-        <param name="gripper" value="$(arg gripper)"/>
-	    <param name="mobile" value="$(arg mobile)" />
+                <param name="gripper" value="$(arg gripper)"/>
+	    	<param name="mobile" value="$(arg mobile)" />
 
 		<!--gazebo를 위한 joint position 명령-->
 		<remap from="/dsr_joint_position_controller/command" to="/$(arg ns)/dsr_joint_position_controller/command" />

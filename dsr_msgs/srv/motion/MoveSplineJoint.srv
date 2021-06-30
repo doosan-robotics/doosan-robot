@@ -5,8 +5,8 @@
 
 std_msgs/Float64MultiArray[] pos         # target [100][6] pos
 int8       posCnt                        # target cnt 
-float64    vel                           # set velocity: [deg/sec]
-float64    acc                           # set acceleration: [deg/sec2] 
+float64[6] vel                           # set joint velocity: [deg/sec]
+float64[6] acc                           # set joint acceleration: [deg/sec2] 
 float64    time #= 0.0                   # Time [sec] 
 int8       mode #= 0                     # MOVE_MODE_ABSOLUTE=0, MOVE_MODE_RELATIVE=1 
 int8       syncType #=0                  # SYNC = 0, ASYNC = 1
