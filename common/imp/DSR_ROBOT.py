@@ -5,8 +5,8 @@
 # @file     DSR_ROBOT.py
 # @brief    Doosan Robotics ROS service I/F module
 # @author   kabdol2<kabkyoum.kim@doosan.com>   
-# @version  0.20
-# @Last update date     2019-11-21
+# @version  0.21
+# @Last update date     2021-04-06
 # @details
 #
 # history
@@ -1211,30 +1211,6 @@ def _movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, 
         ret = PythonMgr.py_movej(_pos, _vel, _acc, _time, _radius, mod, ra, _async)
     return ret
 
-'''
-def movej(pos, vel=None, acc=None, time=None, radius=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, v=None, a=None, t=None, r=None, _async=0):
-    print("<DSR_ROBOT.py> movej called")
-    print("<DSR_ROBOT.py> movej called")
-    print("<DSR_ROBOT.py> movej called")
-
-    if time == None:
-        time = 0.0
-
-    if radius == None:
-        radius = 0.0
-
-    # ROS service call
-    if __ROS__: 
-
-        #OK srv = _ros_movej([float(x) for x in pos], float(vel), float(acc), float(time), float(radius), int(mod), int(ra), int(_async))
-        srv = _ros_movej(pos, vel, acc, time, radius, mod, ra, _async)
-
-        #ret = srv.success
-        ret = 0 if (srv.success == True) else -1
-    else:   
-        ret = PythonMgr.py_movej(_pos, _vel, _acc, _time, _radius, mod, ra, _async)
-    return ret
-'''
 def movejx(pos, vel=None, acc=None, time=None, radius=None, ref=None, mod= DR_MV_MOD_ABS, ra=DR_MV_RA_DUPLICATE, sol=0, v=None, a=None, t=None, r=None):
     ret = _movejx(pos, vel, acc, time, radius, ref, mod, ra, sol, v, a, t, r, _async=0)
     return ret 
@@ -1748,7 +1724,7 @@ def _movesj(pos_list, vel=None, acc=None, time=None, mod= DR_MV_MOD_ABS, v=None,
     if __ROS__:
         # make multi pos
         _spline_posj = _ros_listToFloat64MultiArray(pos_list)
-        srv = _ros_movesj(_spline_posj, len(_spline_posj), vel, acc, _time, mod, _async)
+        srv = _ros_movesj(_spline_posj, len(_spline_posj), _vel, _acc, _time, mod, _async)
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:    
@@ -1867,7 +1843,7 @@ def _movesx(pos_list, vel=None, acc=None, time=None, ref=None, mod= DR_MV_MOD_AB
     # ROS service call
     if __ROS__:
         _spline_posx = _ros_listToFloat64MultiArray(pos_list)
-        srv = _ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, _ref, mod, vel_opt, _async)
+        srv = _ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, mod, _ref, vel_opt, _async)
         #ret = srv.success
         ret = 0 if (srv.success == True) else -1
     else:
@@ -5579,7 +5555,7 @@ class CDsrRobot:
         if __ROS__:
             # make multi pos
             _spline_posj = _ros_listToFloat64MultiArray(pos_list)
-            srv = self._ros_movesj(_spline_posj, len(_spline_posj), vel, acc, _time, mod, _async)
+            srv = self._ros_movesj(_spline_posj, len(_spline_posj), _vel, _acc, _time, mod, _async)
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:    
@@ -5698,7 +5674,7 @@ class CDsrRobot:
         # ROS service call
         if __ROS__:
             _spline_posx = _ros_listToFloat64MultiArray(pos_list)
-            srv = self._ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, _ref, mod, vel_opt, _async)
+            srv = self._ros_movesx(_spline_posx, len(_spline_posx), _vel, _acc, _time, mod, _ref, vel_opt, _async)
             #ret = srv.success
             ret = 0 if (srv.success == True) else -1
         else:
