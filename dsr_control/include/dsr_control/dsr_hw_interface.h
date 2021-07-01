@@ -199,7 +199,7 @@
 #include <control_msgs/FollowJointTrajectoryActionGoal.h>
 
 ///#include "DRFL.h"
-#include "../../../common/include/DRFL.h"
+#include "../../../common/include/DRFLEx.h"
 #include "../../../common/include/dsr_serial.h"
 
 #ifndef PI
