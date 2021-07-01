@@ -2,8 +2,8 @@
 Changelog for package moveit_config_m0609
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * add h-seires model
 * Contributors: doosan-robotics
 

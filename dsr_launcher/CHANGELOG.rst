@@ -2,8 +2,8 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * moveit gazebo connection
 * Contributors: dra
 

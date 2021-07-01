@@ -2,8 +2,8 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * add h-seires model
 * update a A-seeries Model and package tree
 * Update package.xml

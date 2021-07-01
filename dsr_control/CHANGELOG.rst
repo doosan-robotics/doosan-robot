@@ -2,8 +2,8 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * update DRFL
 * moveit gazebo connection
 * add h-seires model

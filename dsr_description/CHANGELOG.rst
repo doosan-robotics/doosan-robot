@@ -2,8 +2,8 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * update DRFL
 * update dynamic parameter
 * moveit gazebo connection
