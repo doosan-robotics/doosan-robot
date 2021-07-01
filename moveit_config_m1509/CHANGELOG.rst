@@ -2,8 +2,8 @@
 Changelog for package moveit_config_m1509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update moveit_config arguments
 * Contributors: doosan-robotics
 

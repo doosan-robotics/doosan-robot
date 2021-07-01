@@ -2,8 +2,8 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update DRFL
 * update 1.2.0
 * moveit gazebo connect

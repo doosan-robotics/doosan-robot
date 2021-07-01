@@ -2,8 +2,8 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update moveit_config arguments
 * add a0912 model
 * Contributors: doosan-robotics

@@ -2,8 +2,8 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * permission and encoding
 * update 1.2.0
 * update example

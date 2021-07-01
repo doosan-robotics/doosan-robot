@@ -2,8 +2,8 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update DRFL
 * update robotiq_plugin
 * permission and encoding

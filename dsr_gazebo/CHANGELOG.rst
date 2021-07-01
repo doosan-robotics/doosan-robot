@@ -2,8 +2,8 @@
 Changelog for package dsr_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update 1.2.0
 * moveit gazebo connect
 * Merge pull request `#61 <https://github.com/doosan-robotics/doosan-robot/issues/61>`_ from fmessmer/fix_install_tags

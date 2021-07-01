@@ -2,8 +2,8 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2021-07-01)
+------------------
 * update 1.2.0
 * add h-series moveit_config
 * update common package tree
