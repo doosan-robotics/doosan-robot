@@ -2,6 +2,12 @@
 Changelog for package dsr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update services
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

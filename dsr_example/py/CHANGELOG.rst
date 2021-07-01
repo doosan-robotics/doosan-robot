@@ -2,6 +2,15 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* permission and encoding
+* update 1.2.0
+* update example
+* add collision model(cylinder)
+* add a0912 model
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.0.4

@@ -2,6 +2,14 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update robotiq_plugin
+* permission and encoding
+* update 1.2.0
+* moveit gazebo connect
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 

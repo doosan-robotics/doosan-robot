@@ -2,6 +2,19 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update robotiq_plugin
+* permission and encoding
+* update 1.2.0
+* update DSR_ROBOT.py
+* update DSR_ROBOT.py
+* update common package tree
+* modify robotiq_2f in gazebo
+* update services
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

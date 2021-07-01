@@ -2,6 +2,12 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update moveit_config arguments
+* add h-series moveit_config
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 

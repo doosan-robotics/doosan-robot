@@ -2,6 +2,11 @@
 Changelog for package moveit_config_m1013
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update moveit_config arguments
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0
