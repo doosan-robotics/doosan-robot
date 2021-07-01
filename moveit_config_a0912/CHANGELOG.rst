@@ -2,8 +2,8 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * add h-series model
 * update a A-series Model and package tree
 * Contributors: doosan-robotics

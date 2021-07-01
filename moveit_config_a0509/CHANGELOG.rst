@@ -2,8 +2,8 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2021-07-01)
+------------------
 * update kinetic
 * add h-series model
 * Contributors: doosan-robotics, dra
