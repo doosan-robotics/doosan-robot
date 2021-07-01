@@ -2,6 +2,15 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update noetic
+* update common package tree
+* add a0912 model
+* update services
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

@@ -2,6 +2,12 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update noetic
+* update common package tree
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 

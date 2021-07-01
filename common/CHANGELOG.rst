@@ -2,6 +2,16 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update emulator and example
+* update noetic
+* update common package tree
+* modify robotiq_2f in gazebo
+* update services
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

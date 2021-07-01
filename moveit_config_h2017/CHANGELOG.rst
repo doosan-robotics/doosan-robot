@@ -2,6 +2,11 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update noetic
+* Contributors: dra
+
 1.1.0 (2020-04-29)
 ------------------
 

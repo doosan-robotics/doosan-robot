@@ -2,6 +2,12 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* delete multi launch
+* update noetic
+* Contributors: dra
+
 1.1.0 (2020-04-29)
 ------------------
 
