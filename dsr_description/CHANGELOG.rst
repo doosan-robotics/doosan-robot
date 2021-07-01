@@ -2,6 +2,15 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update kinetic
+* add h-series model
+* add collision model(cylinder)
+* update a A-series Model and package tree
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * URDF Files

@@ -2,6 +2,11 @@
 Changelog for package dsr_example_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update kinetic
+* Contributors: dra
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.0.4

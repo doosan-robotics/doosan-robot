@@ -2,6 +2,13 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update kinetic
+* update meta package
+* update a A-series Model and package tree
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 

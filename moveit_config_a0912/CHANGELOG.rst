@@ -2,6 +2,12 @@
 Changelog for package moveit_config_a0509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add h-series model
+* update a A-series Model and package tree
+* Contributors: doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 
