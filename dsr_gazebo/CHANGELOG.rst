@@ -2,6 +2,12 @@
 Changelog for package dsr_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* moveit gazebo connection
+* delete gazebo pid param
+* Contributors: dra, ros.robotics
+
 1.1.0 (2020-04-29)
 ------------------
 

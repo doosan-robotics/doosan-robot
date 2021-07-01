@@ -2,6 +2,14 @@
 Changelog for package doosan_robotics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add h-seires model
+* update a A-seeries Model and package tree
+* Update package.xml
+  update dep package for melodic
+* Contributors: doosan robotics ros master, doosan-robotics
+
 1.1.0 (2020-04-29)
 ------------------
 

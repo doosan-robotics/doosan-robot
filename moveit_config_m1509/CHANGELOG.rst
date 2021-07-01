@@ -2,6 +2,11 @@
 Changelog for package moveit_config_m1509
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update Melodic
+* Contributors: dra
+
 1.1.0 (2020-04-29)
 ------------------
 

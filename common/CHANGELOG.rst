@@ -2,6 +2,16 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update Melodic
+* moveit gazebo connection
+* update robotiq_2f_plugin to melodic version
+* update a A-seeries Model and package tree
+* update services
+* Contributors: doosan-robotics, dra, ros.robotics
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

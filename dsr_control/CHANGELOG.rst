@@ -2,6 +2,15 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* moveit gazebo connection
+* add h-seires model
+* update a A-seeries Model and package tree
+* update services
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * 1.1.0

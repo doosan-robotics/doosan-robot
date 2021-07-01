@@ -2,6 +2,16 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update DRFL
+* update dynamic parameter
+* moveit gazebo connection
+* add h-seires model
+* modify husky mass
+* update a A-seeries Model and package tree
+* Contributors: doosan-robotics, dra
+
 1.1.0 (2020-04-29)
 ------------------
 * URDF Files
