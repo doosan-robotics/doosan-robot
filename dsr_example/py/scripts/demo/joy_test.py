@@ -10,7 +10,7 @@ import threading, time
 import sys
 from sensor_msgs.msg import Joy    # Joy package import 
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"         # Robot Model & Robot ID identify namespace 
@@ -39,9 +39,9 @@ from DSR_ROBOT import *
 jog_multi = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/jog_multi', JogMultiAxis, queue_size=1) # Publish multi-jog topic
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -141,4 +141,4 @@ if __name__ == "__main__":
             jog_multi.publish([0,0,0,0,0,0], MOVE_REFERENCE_BASE, 0)        
             FLAG_CONTROL = -1
 
-    print 'good bye!'
+    print('good bye!')

@@ -10,7 +10,7 @@ import threading, time
 import sys
 from sensor_msgs.msg import Joy
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 from DR_tcp_client import *
 
@@ -35,9 +35,9 @@ g_sock = client_socket_open("192.168.137.2", 10004)
 print("stop_watch server connect O.K!")
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -194,4 +194,4 @@ if __name__ == "__main__":
 
     client_socket_close(g_sock)
 
-    print 'good bye!'
+    print('good bye!')

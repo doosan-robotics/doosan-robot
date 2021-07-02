@@ -10,7 +10,7 @@ import threading, time
 import sys
 from sensor_msgs.msg import Joy
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"
@@ -26,9 +26,9 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -152,4 +152,4 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         pass
 
-    print 'good bye!'
+    print('good bye!')

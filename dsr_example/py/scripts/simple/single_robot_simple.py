@@ -9,7 +9,7 @@ import os
 import threading, time
 import sys
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"
@@ -20,9 +20,9 @@ DR_init.__dsr__model = ROBOT_MODEL
 from DSR_ROBOT import *
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
 
     pub_stop.publish(stop_mode=STOP_TYPE_QUICK)
     return 0
@@ -177,4 +177,4 @@ if __name__ == "__main__":
        # move_periodic(amp =[10,0,0,0,30,0], period=1.0, atime=0.2, repeat=5, ref=DR_TOOL)
        # moveb(b_list1, vel=150, acc=250, ref=DR_BASE, mod=DR_MV_MOD_ABS)
 
-    print 'good bye!'
+    print('good bye!')

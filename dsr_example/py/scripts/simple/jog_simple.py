@@ -10,7 +10,7 @@ import os
 import threading, time
 import sys
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"
@@ -26,9 +26,9 @@ REF      = 0
 SPEED      = 10
 
 def shutdown():
-    print "shutdown time!"
-    print "shutdown time!"
-    print "shutdown time!"
+    print("shutdown time!")
+    print("shutdown time!")
+    print("shutdown time!")
     VEL = 0
     jog(JOG_AXIS, REF, SPEED)
     pub_stop.publish(stop_mode=1) # STOP_TYPE_QUICK
@@ -60,4 +60,4 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         pass
 
-    print 'good bye!'
+    print('good bye!')
