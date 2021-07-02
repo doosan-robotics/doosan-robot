@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Run Emulator of the Doosan Robot Controller"
+echo "Run Emulator of the Doosan Robot Controller (for kinetic)"
 
 #echo "Total Param = $#, PROG: $0, param1 =$1, param1 =$2"
 #$1 = server port : 12345 
