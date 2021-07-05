@@ -10,7 +10,7 @@ import threading, time
 import sys
 from sensor_msgs.msg import Joy
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 from DR_tcp_client import *
 

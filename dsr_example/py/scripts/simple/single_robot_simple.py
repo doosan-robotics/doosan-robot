@@ -9,7 +9,7 @@ import os
 import threading, time
 import sys
 sys.dont_write_bytecode = True
-sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import pass : DSR_ROBOT.py 
+sys.path.append( os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../../common/imp")) ) # get import path : DSR_ROBOT.py 
 
 # for single robot 
 ROBOT_ID     = "dsr01"
@@ -106,9 +106,9 @@ if __name__ == "__main__":
     rospy.init_node('single_robot_simple_py')
     rospy.on_shutdown(shutdown)
     set_robot_mode  = rospy.ServiceProxy('/'+ROBOT_ID +ROBOT_MODEL+'/system/set_robot_mode', SetRobotMode)
-    #t1 = threading.Thread(target=thread_subscriber)
-    #t1.daemon = True 
-    #t1.start()
+    t1 = threading.Thread(target=thread_subscriber)
+    t1.daemon = True 
+    t1.start()
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
 
@@ -166,15 +166,10 @@ if __name__ == "__main__":
     b_list1 = [seg11, seg12, seg14, seg15, seg16] 
 
     while not rospy.is_shutdown():
-        ###movej(p2, vel=100, acc=100)
-        movej([0.0, 0.0, 90.0, 0.0, 90.0, 0.0], vel=100.1, acc=100.1)
-    
-        #movejx(x1, vel=30, acc=60, sol=0)
+        movej(p2, vel=100, acc=100)
+       # movejx(x1, vel=30, acc=60, sol=0)
         #movel(x2, velx, accx)
-
-        ###movej(p1, vel=100, acc=100)
-        movej([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], vel=100.1, acc=100.1)
-
+        movej(p1, vel=100, acc=100)
        # movec(c1, c2, velx, accx)
        # movesj(qlist, vel=100, acc=100)
        # movesx(xlist, vel=100, acc=100)
