@@ -70,6 +70,8 @@
 #include <dsr_msgs/GetCurrentPose.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetLastAlarm.h>
+#include <dsr_msgs/ManageAccessControl.h>
+#include <dsr_msgs/SetRobotControl.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -511,7 +513,7 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
-        ros::ServiceServer m_nh_system[14];
+        ros::ServiceServer m_nh_system[20];
         ros::ServiceServer m_nh_motion_service[32];
         ros::ServiceServer m_nh_aux_control_service[32];
         ros::ServiceServer m_nh_force_service[32];

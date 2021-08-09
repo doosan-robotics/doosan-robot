@@ -729,6 +729,8 @@ namespace dsr_control{
         m_nh_system[9] = private_nh_.advertiseService("system/get_last_alarm", &DRHWInterface::get_last_alarm_cb, this);
         m_nh_system[10]= private_nh_.advertiseService("system/get_robot_state", &DRHWInterface::get_robot_state_cb, this);
         m_nh_system[11]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
+        m_nh_system[12]= private_nh_.advertiseService("system/set_robot_control", &DRHWInterface::set_robot_control_cb, this);
+        m_nh_system[13]= private_nh_.advertiseService("system/manage_access_control", &DRHWInterface::manage_access_control_cb, this);
 
         //  motion Operations
         m_nh_motion_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
@@ -1179,6 +1181,20 @@ namespace dsr_control{
             std::string str_temp(Drfl.get_last_alarm()->_szParam[i]);
             res.log_alarm.param[i] = str_temp;
         }
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res){
+        res.success = false;
+        Drfl.set_robot_control((ROBOT_CONTROL)req.robot_control);
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res){
+        res.success = false;
+        Drfl.manage_access_control((MANAGE_ACCESS_CONTROL)req.access_control);
         res.success = true;
         return true;
     }

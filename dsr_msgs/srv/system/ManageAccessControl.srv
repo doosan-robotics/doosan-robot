@@ -1,0 +1,10 @@
+#____________________________________________________________________________________________
+# manage_access_control
+#____________________________________________________________________________________________
+
+int8 access_control  # 0 : MANAGE_ACCESS_CONTROL_FORCE_REQUEST
+                     # 1 : MANAGE_ACCESS_CONTROL_REQUEST
+                     # 2 : MANAGE_ACCESS_CONTROL_RESPONSE_YES
+                     # 3 : MANAGE_ACCESS_CONTROL_RESPONSE_NO
+---
+bool success
