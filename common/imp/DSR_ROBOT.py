@@ -57,6 +57,8 @@ _ros_get_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/
 _ros_set_safe_stop_reset_type   = rospy.ServiceProxy(_srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
 _ros_get_last_alarm             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
 _ros_get_current_pose           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+_ros_set_robot_control          = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_control", SetRobotControl)
+_ros_manage_access_control      = rospy.ServiceProxy(_srv_name_prefix +"/system/manage_access_control", ManageAccessControl)
 
 #  motion Operations
 _ros_movej                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_joint", MoveJoint)
@@ -638,6 +640,26 @@ def get_current_pose(space_type):
     if __ROS__:
         srv = _ros_get_current_pose(space_type)
     return srv.pos
+
+def set_robot_control(robot_control):
+    if type(robot_control) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_control")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_set_robot_control(robot_control)
+        ret = 0 if (srv.success == True) else -1
+    return ret
+
+def manage_access_control(access_control):
+    if type(access_control) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : access_control")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_manage_access_control(access_control)
+        ret = 0 if (srv.success == True) else -1
+    return ret
 
 def get_current_solution_space():
     # ROS service call
@@ -4257,6 +4279,8 @@ class CDsrRobot:
         self._ros_set_safe_stop_reset_type  = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
         self._ros_get_last_alarm            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
         self._ros_get_current_pose          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+        self._ros_set_robot_control         = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_control", SetRobotControl)
+        self._ros_manage_access_control     = rospy.ServiceProxy(self._srv_name_prefix +"/system/manage_access_control", ManageAccessControl)
         
 
         #  motion Operations
@@ -4472,6 +4496,26 @@ class CDsrRobot:
             srv = self._ros_get_current_pose(space_type)
         return srv.pos
     
+    def set_robot_control(self, robot_control):
+        if type(robot_control) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_control")
+
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_set_robot_control(robot_control)
+            ret = 0 if (srv.success == True) else -1
+        return ret
+
+    def manage_access_control(self, access_control):
+        if type(access_control) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : access_control")
+
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_manage_access_control(access_control)
+            ret = 0 if (srv.success == True) else -1
+        return ret
+
     def get_current_solution_space(self):
         # ROS service call
         if __ROS__:
