@@ -449,6 +449,28 @@ namespace dsr_control{
         PubRobotError.publish(msg);
     }
 
+    void DRHWInterface::OnTpPopupCB(LPMESSAGE_POPUP tPopup)
+    {
+        ROS_INFO("OnTpPopup");
+    }
+
+    void DRHWInterface::OnTpLogCB(char* strLog)
+    {
+        ROS_INFO("OnTpLog");
+        cout << strLog << endl;
+    }
+    
+    void DRHWInterface::onTpProgressCB(LPMESSAGE_PROGRESS tProgress)
+    {
+        ROS_INFO("OnTpProgress");
+    }
+    
+    void DRHWInterface::OnTpGetUserInputCB(LPMESSAGE_INPUT tInput)
+    {
+        ROS_INFO("OnTpGetUserInput");
+    }
+
+
     //----- register the call-back functions end -------------------------------------
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -895,6 +917,11 @@ namespace dsr_control{
         Drfl.set_on_monitoring_state(OnMonitoringStateCB);
         Drfl.set_on_monitoring_access_control(OnMonitoringAccessControlCB);
         Drfl.set_on_log_alarm(OnLogAlarm);
+        Drfl.set_on_tp_popup(OnTpPopupCB);
+        Drfl.set_on_tp_log(OnTpLogCB);
+        Drfl.set_on_tp_get_user_input(OnTpGetUserInputCB);
+        //Drfl.set_on_tp_progress(OnTpProgressCB);
+
         ROS_INFO("[dsr_hw_interface] init() ==> arm is standby");
         std::string host;
         std::string mode;

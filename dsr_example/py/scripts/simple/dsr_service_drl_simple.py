@@ -116,9 +116,9 @@ if __name__ == "__main__":
 
     pub_stop = rospy.Publisher('/'+ROBOT_ID +ROBOT_MODEL+'/stop', RobotStop, queue_size=10)           
     set_robot_mode(ROBOT_MODE_AUTONOMOUS)
-    drlCodeMove = "set_velj(50)\nset_accj(50)\nmovej([0,0,90,0,90,0])\n"
+    drlCodeMove = "tp_log(str(33333))"
     drlCodeReset = "movej([0,0,0,0,0,0])\n"
-    drl_script_run(ROBOT_SYSTEM_REAL, drlCodeMove + drlCodeReset)
+    drl_script_run(ROBOT_SYSTEM_REAL, drlCodeMove)
     while not rospy.is_shutdown():
         pass
     print('good bye!')
