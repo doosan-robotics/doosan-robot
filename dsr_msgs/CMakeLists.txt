@@ -29,6 +29,8 @@ add_service_files(
     ./system/SetSafeStopResetType.srv
     ./system/GetLastAlarm.srv
     ./system/GetRobotState.srv
+    ./system/SetRobotControl.srv
+    ./system/ManageAccessControl.srv
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv
