@@ -1,0 +1,19 @@
+#____________________________________________________________________________________________
+# set_robot_control
+#____________________________________________________________________________________________
+
+int8 robot_control # 0 : CONTROL_INIT_CONFIG
+                   # 1 : CONTROL_ENABLE_OPERATION
+                   # 2 : CONTROL_RESET_SAFET_STOP
+                   # 3 : CONTROL_RESET_SAFE_STOP = CONTROL_RESET_SAFET_STOP,
+                   # 4 : CONTROL_RESET_SAFET_OFF,
+                   # 5 : CONTROL_RESET_SAFE_OFF = CONTROL_RESET_SAFET_OFF,
+                   # 6 : CONTROL_SERVO_ON = CONTROL_RESET_SAFET_OFF,
+                   # 7 : CONTROL_RECOVERY_SAFE_STOP,
+                   # 8 : CONTROL_RECOVERY_SAFE_OFF,
+                   # 9 : CONTROL_RECOVERY_BACKDRIVE,
+                   # 10: CONTROL_RESET_RECOVERY,
+                   # 11: CONTROL_LAST
+---
+bool success    
+                   

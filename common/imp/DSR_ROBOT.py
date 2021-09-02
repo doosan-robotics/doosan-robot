@@ -29,6 +29,8 @@ from DR_common import *
 from dsr_msgs.msg import *
 from dsr_msgs.srv import *
 
+from math import *
+
 import DR_init
 #print("robot_id ={0}".format(DR_init.__dsr__id) )
 #print("robot_model ={0}".format(DR_init.__dsr__model) )
@@ -57,6 +59,8 @@ _ros_get_robot_speed_mode       = rospy.ServiceProxy(_srv_name_prefix +"/system/
 _ros_set_safe_stop_reset_type   = rospy.ServiceProxy(_srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
 _ros_get_last_alarm             = rospy.ServiceProxy(_srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
 _ros_get_current_pose           = rospy.ServiceProxy(_srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+_ros_set_robot_control          = rospy.ServiceProxy(_srv_name_prefix +"/system/set_robot_control", SetRobotControl)
+_ros_manage_access_control      = rospy.ServiceProxy(_srv_name_prefix +"/system/manage_access_control", ManageAccessControl)
 
 #  motion Operations
 _ros_movej                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_joint", MoveJoint)
@@ -563,6 +567,328 @@ def _ros_Float64MultiArrayTolist(multi_arr_f64):
     #print(len(_res))
     return _res
 
+##### MATH ################################################################################################################################
+
+class mat(list):
+    ##
+    # @brief      생성자
+    # @details    list에서 상속받은 class이므로, list 객체를 초기화한다.
+    # @return     없음
+    # @exception  없음
+    #
+    def __init__(self, data):
+        list.__init__(self, data)
+
+    ##
+    # @brief      matrix의 dimension을 구한다.
+    # @param      mat - matrix (2 dimension list)
+    # @return     row, col
+    #               row - row의 개수
+    #               col - col의 개수
+    # @exception  없음
+    #
+    def _get_dimension(self, mat):
+        row = len(mat)
+        col = len(mat[0])
+
+        # print("row={0}, col={1}".format(row, col))
+        return row, col
+
+    ##
+    # @brief      operator - (단항)
+    # @details    자신(matrix)의 모든 item을 negative 계산한 새로운 matrix를 리턴한다.
+    # @return     matrix - negative 계산한 새로운 matrix
+    # @exception  없음
+    #
+    def __neg__(self):
+        row, col = self._get_dimension(self)
+
+        result = [[0] * col for x in range(row)]
+
+        for i in range(row):
+            for j in range(col):
+                result[i][j] = -self[i][j]
+
+        return mat(result)
+
+    ##
+    # @brief      operator +
+    # @details    자신(matrix)과 other의 matrix + 연산을 계산한 새로운 matrix를 리턴한다.
+    # @param      other - matrix (2 dimension list)
+    # @return     matrix - + 계산한 matrix
+    # @exception  - DR_ERROR_TYPE : argument의 type 비정상
+    #
+    def __add__(self, other):
+        row_a, col_a = self._get_dimension(self)
+        row_b, col_b = self._get_dimension(other)
+
+        if row_a != row_b or col_a != col_b:
+            raise DR_Error(DR_ERROR_TYPE, "Inconsistant type : self, other")
+
+        result = [[0] * col_a for x in range(row_a)]
+
+        for i in range(row_a):
+            for j in range(col_b):
+                result[i][j] = self[i][j] + other[i][j]
+
+        return mat(result)
+
+    ##
+    # @brief      operator - (이항)
+    # @details    자신(matrix)과 other의 matrix - 연산을 계산한 새로운 matrix를 리턴한다.
+    # @param      other - matrix (2 dimension list)
+    # @return     matrix - -를 계산한 matrix
+    # @exception  - DR_ERROR_TYPE : argument의 type 비정상
+    #
+    def __sub__(self, other):
+        row_a, col_a = self._get_dimension(self)
+        row_b, col_b = self._get_dimension(other)
+
+        if row_a != row_b or col_a != col_b:
+            raise DR_Error(DR_ERROR_TYPE, "Inconsistant type : self, other")
+
+        result = [[0] * col_a for x in range(row_a)]
+
+        for i in range(row_a):
+            for j in range(col_b):
+                result[i][j] = self[i][j] - other[i][j]
+
+        return mat(result)
+
+    '''
+    __matmul__(@) 연산자 오버로딩은 python3.5 이상 부터 지원 가능   
+    현재 리눅스에서는 python3.2를 쓰고 있어서 연산자 오버로딩 사용할 수 없어서
+    matrix_mul(A, B) 함수를 이용하여 matrix 곱하기를 수행함. by kabdol2 2017/04/27        
+    '''
+
+    ##
+    # @brief      operator @
+    # @details    자신(matrix)과 other의 matrix 행렬곱 연산을 계산한 새로운 matrix를 리턴한다.
+    # @param      other - matrix (2 dimension list)
+    # @return     matrix - 행렬곱 계산한 matrix
+    # @exception  없음
+    #
+    def __matmul__(self, other):
+        row_a, col_a = self._get_dimension(self)
+        row_b, col_b = self._get_dimension(other)
+
+        result = [[0] * col_b for x in range(row_a)]
+
+        for i in range(row_a):
+            for j in range(col_b):
+                temp = 0
+
+                for k in range(row_b):
+                    temp += self[i][k] * other[k][j]
+
+                result[i][j] = temp
+
+        return mat(result)
+
+def r2d(x):
+    if type(x) != int and type(x) != float:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : x")
+
+    return degrees(x)
+
+def d2r(x):
+    if type(x) != int and type(x) != float:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : x")
+
+    return radians(x)
+
+def _rotm2eul(rotm, flip=0):
+    # rotm
+    if type(rotm) != list or len(rotm) != 3:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : rotm")
+
+    for item in rotm:
+        if type(item) != list or len(item) != 3:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : rotm[item]")
+
+    if is_number(rotm) != True:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : rotm({0})".format(rotm))
+
+    # rotation matrix (-1 ~ 1)
+    for i in range(3):
+        for j in range(3):
+            if rotm[i][j] < -1 or rotm[i][j] > 1:
+                raise DR_Error(DR_ERROR_VALUE, "Invalid value : rotm[item]")
+
+    # rotation matrix (epsilon 미만의 값은 0으로 처리)
+    for i in range(3):
+        for j in range(3):
+            if abs(rotm[i][j]) < sys.float_info.epsilon:
+                rotm[i][j] = 0
+
+    # flip
+    if type(flip) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : flip")
+
+    if flip != 0 and flip != 1:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : flip({0})".format(flip))
+
+    r11 = rotm[0][0]
+    r12 = rotm[0][1]
+    r13 = rotm[0][2]
+    r21 = rotm[1][0]
+    r22 = rotm[1][1]
+    r23 = rotm[1][2]
+    r31 = rotm[2][0]
+    r32 = rotm[2][1]
+    r33 = rotm[2][2]
+
+    # calculate rx, ry, rz
+    if abs(r13) < sys.float_info.epsilon and abs(r23) < sys.float_info.epsilon:
+        rx = 0
+        sp = 0
+        cp = 1
+
+        ry = atan2(cp * r13 + sp * r23, r33)
+        rz = atan2(-sp * r11 + cp * r21, -sp * r12 + cp * r22)
+    else:
+        if flip == 0:
+            rx = atan2(r23, r13)
+            # ry = atan2(sqrt(r13 * r13 + r23 * r23), r33)
+            # rz = atan2(r32, -r31)
+        else: # -> (flip == 1)
+            rx = atan2(-r23, -r13)
+            #ry = atan2(-sqrt(r13 * r13 + r23 * r23), r33)
+            #rz = atan2(-r32, r31)
+        
+        sp = sin(rx)
+        cp = cos(rx)
+
+        ry = atan2(cp * r13 + sp * r23, r33)
+        rz = atan2(-sp * r11 + cp * r21, -sp * r12 + cp * r22)
+       
+
+    eulv = [r2d(rx), r2d(ry), r2d(rz)]
+
+    return eulv
+
+def _eul2rotm(eulv):
+    # eulv
+    if type(eulv) != list or len(eulv) != 3:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : eulv")
+
+    if is_number(eulv) != True:
+        raise DR_Error(DR_ERROR_VALUE, "Invalid value : eulv({0})".format(eulv))
+
+    rotm = [[0] * 3 for i in range(3)]
+
+    rx_r = d2r(eulv[0])
+    ry_r = d2r(eulv[1])
+    rz_r = d2r(eulv[2])
+
+    sin_rx = sin(rx_r)
+    cos_rx = cos(rx_r)
+
+    sin_ry = sin(ry_r)
+    cos_ry = cos(ry_r)
+
+    sin_rz = sin(rz_r)
+    cos_rz = cos(rz_r)
+
+    # rotation matrix
+    rotm[0][0] = (cos_rx * cos_ry * cos_rz) - (sin_rx * sin_rz)
+    rotm[0][1] = -(cos_rx * cos_ry * sin_rz) - (sin_rx * cos_rz)
+    rotm[0][2] = cos_rx * sin_ry
+
+    rotm[1][0] = (sin_rx * cos_ry * cos_rz) + (cos_rx * sin_rz)
+    rotm[1][1] = -(sin_rx * cos_ry * sin_rz) + (cos_rx * cos_rz)
+    rotm[1][2] = sin_rx * sin_ry
+    
+    rotm[2][0] = -(sin_ry * cos_rz)
+    rotm[2][1] = sin_ry * sin_rz
+    rotm[2][2] = cos_ry
+
+    return rotm
+
+def cal_matrix(matrix):
+    row = len(matrix)
+    col = len(matrix[0])
+
+    return row, col
+
+def matrix_mul(A, B):
+    row_a, col_a = cal_matrix(A)
+    row_b, col_b = cal_matrix(B)
+
+    result = [[0] * col_b for x in range(row_a)]
+
+    for i in range(row_a):
+        for j in range(col_b):
+            temp = 0
+            for k in range(row_b):
+                temp += A[i][k] * B[k][j]
+
+            result[i][j] = temp
+
+    return result
+
+def transpose(mat):
+    row = len(mat)
+    col = len(mat[0])
+
+    # row -> col, col -> row
+    result = [[0] * row for x in range(col)]
+
+    for i in range(row):
+        for j in range(col):
+            result[j][i] = mat[i][j]
+
+    return result
+
+def htrans(posx1, posx2):
+    _posx1 = get_posx(posx1)
+    _posx2 = get_posx(posx2)
+
+    x1 = _posx1[0]
+    y1 = _posx1[1]
+    z1 = _posx1[2]
+    rx1 = _posx1[3]
+    ry1 = _posx1[4]
+    rz1 = _posx1[5]
+
+    x2 = _posx2[0]
+    y2 = _posx2[1]
+    z2 = _posx2[2]
+    rx2 = _posx2[3]
+    ry2 = _posx2[4]
+    rz2 = _posx2[5]
+
+    # trans, rotm
+    trans1 = [x1, y1, z1]
+    rotm1 = _eul2rotm([rx1, ry1, rz1])
+
+    trans2 = [x2, y2, z2]
+    rotm2 = _eul2rotm([rx2, ry2, rz2])
+
+    # result
+    #result_rotm = mat(rotm1) @ mat(rotm2)  #support in python3.5
+    result_rotm = matrix_mul(mat(rotm1), mat(rotm2))
+    
+    transp_trans1 = transpose([trans1])
+    transp_trans2 = transpose([trans2])
+
+    #temp = mat(transp_trans1) + (mat(rotm1) @ mat(transp_trans2))  #support in python3.5
+    temp = mat(transp_trans1) + matrix_mul(mat(rotm1), mat(transp_trans2)) 
+
+    result_trans = transpose(temp)
+
+    result_eulv = _rotm2eul(result_rotm)
+
+    result_posx = result_trans[0] + result_eulv
+    # result_posx = posx(result_posx)
+
+    #--------------------------------------------------------------------------------------
+    #DRCF._report_line_off_sleep(0.0001)
+    #DRCF._line_call_back_func_enable()
+    #--------------------------------------------------------------------------------------
+    #DRCF.python_sleep(_G_DRL_MATH_SLEEP)    #cpu 과부화 회피용
+
+    return result_posx
 
 ##### SYSTEM ##############################################################################################################################
 def set_robot_mode(robot_mode):
@@ -638,6 +964,26 @@ def get_current_pose(space_type):
     if __ROS__:
         srv = _ros_get_current_pose(space_type)
     return srv.pos
+
+def set_robot_control(robot_control):
+    if type(robot_control) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_control")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_set_robot_control(robot_control)
+        ret = 0 if (srv.success == True) else -1
+    return ret
+
+def manage_access_control(access_control):
+    if type(access_control) != int:
+        raise DR_Error(DR_ERROR_TYPE, "Invalid type : access_control")
+
+    # ROS service call
+    if __ROS__:
+        srv = _ros_manage_access_control(access_control)
+        ret = 0 if (srv.success == True) else -1
+    return ret
 
 def get_current_solution_space():
     # ROS service call
@@ -4257,6 +4603,8 @@ class CDsrRobot:
         self._ros_set_safe_stop_reset_type  = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_safe_stop_reset_type", SetSafeStopResetType)
         self._ros_get_last_alarm            = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_last_alarm", GetLastAlarm)
         self._ros_get_current_pose          = rospy.ServiceProxy(self._srv_name_prefix +"/system/get_current_pose", GetCurrentPose)
+        self._ros_set_robot_control         = rospy.ServiceProxy(self._srv_name_prefix +"/system/set_robot_control", SetRobotControl)
+        self._ros_manage_access_control     = rospy.ServiceProxy(self._srv_name_prefix +"/system/manage_access_control", ManageAccessControl)
         
 
         #  motion Operations
@@ -4472,6 +4820,26 @@ class CDsrRobot:
             srv = self._ros_get_current_pose(space_type)
         return srv.pos
     
+    def set_robot_control(self, robot_control):
+        if type(robot_control) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : robot_control")
+
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_set_robot_control(robot_control)
+            ret = 0 if (srv.success == True) else -1
+        return ret
+
+    def manage_access_control(self, access_control):
+        if type(access_control) != int:
+            raise DR_Error(DR_ERROR_TYPE, "Invalid type : access_control")
+
+        # ROS service call
+        if __ROS__:
+            srv = self._ros_manage_access_control(access_control)
+            ret = 0 if (srv.success == True) else -1
+        return ret
+
     def get_current_solution_space(self):
         # ROS service call
         if __ROS__:
