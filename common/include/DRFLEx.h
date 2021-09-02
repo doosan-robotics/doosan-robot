@@ -66,7 +66,7 @@ namespace DRAFramework
     typedef void (*TOnMonitoringDataExCB)(const LPMONITORING_DATA_EX);
     typedef void (*TOnMonitoringCtrlIOExCB)(const LPMONITORING_CTRLIO_EX);
     typedef void (*TOnTpPopupCB)(LPMESSAGE_POPUP);
-    typedef void (*TOnTpLogCB)(const char*);
+    typedef void (*TOnTpLogCB)(char[256]);
     typedef void (*TOnTpGetUserInputCB)(LPMESSAGE_INPUT);
     typedef void (*TOnTpProgressCB)(LPMESSAGE_PROGRESS); 
     

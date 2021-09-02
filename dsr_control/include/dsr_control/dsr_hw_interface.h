@@ -70,6 +70,8 @@
 #include <dsr_msgs/GetCurrentPose.h>
 #include <dsr_msgs/SetSafeStopResetType.h>
 #include <dsr_msgs/GetLastAlarm.h>
+#include <dsr_msgs/ManageAccessControl.h>
+#include <dsr_msgs/SetRobotControl.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -497,6 +499,11 @@ namespace dsr_control{
         static void OnMonitoringAccessControlCB(const MONITORING_ACCESS_CONTROL eAccCtrl);
         static void OnLogAlarm(LPLOG_ALARM pLogAlarm);
 
+        static void OnTpPopupCB(LPMESSAGE_POPUP tPopup);
+        static void OnTpLogCB(char* strLog);
+        static void onTpProgressCB(LPMESSAGE_PROGRESS tProgress);
+        static void OnTpGetUserInputCB(LPMESSAGE_INPUT tInput);
+
         std::string GetRobotName();
         std::string GetRobotModel();
 
@@ -511,7 +518,7 @@ namespace dsr_control{
         std::string m_strRobotGripper;
 
         //----- Service ---------------------------------------------------------------
-        ros::ServiceServer m_nh_system[14];
+        ros::ServiceServer m_nh_system[20];
         ros::ServiceServer m_nh_motion_service[32];
         ros::ServiceServer m_nh_aux_control_service[32];
         ros::ServiceServer m_nh_force_service[32];
@@ -581,7 +588,9 @@ namespace dsr_control{
         bool get_current_pose_cb(dsr_msgs::GetCurrentPose::Request& req, dsr_msgs::GetCurrentPose::Response& res);
         bool set_safe_stop_reset_type_cb(dsr_msgs::SetSafeStopResetType::Request& req, dsr_msgs::SetSafeStopResetType::Response& res);
         bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
-    
+        bool set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res);
+        bool manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res);
+
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
