@@ -499,6 +499,11 @@ namespace dsr_control{
         static void OnMonitoringAccessControlCB(const MONITORING_ACCESS_CONTROL eAccCtrl);
         static void OnLogAlarm(LPLOG_ALARM pLogAlarm);
 
+        static void OnTpPopupCB(LPMESSAGE_POPUP tPopup);
+        static void OnTpLogCB(char* strLog);
+        static void onTpProgressCB(LPMESSAGE_PROGRESS tProgress);
+        static void OnTpGetUserInputCB(LPMESSAGE_INPUT tInput);
+
         std::string GetRobotName();
         std::string GetRobotModel();
 
