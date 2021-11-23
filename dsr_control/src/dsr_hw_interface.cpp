@@ -454,7 +454,7 @@ namespace dsr_control{
         ROS_INFO("OnTpPopup");
     }
 
-    void DRHWInterface::OnTpLogCB(char* strLog)
+    void DRHWInterface::OnTpLogCB(const char* strLog)
     {
         ROS_INFO("OnTpLog");
         cout << strLog << endl;
@@ -753,6 +753,7 @@ namespace dsr_control{
         m_nh_system[11]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
         m_nh_system[12]= private_nh_.advertiseService("system/set_robot_control", &DRHWInterface::set_robot_control_cb, this);
         m_nh_system[13]= private_nh_.advertiseService("system/manage_access_control", &DRHWInterface::manage_access_control_cb, this);
+        m_nh_system[14]= private_nh_.advertiseService("system/release_protective_stop", &DRHWInterface::release_protective_stop_cb, this);
 
         //  motion Operations
         m_nh_motion_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
@@ -1222,6 +1223,13 @@ namespace dsr_control{
     bool DRHWInterface::manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res){
         res.success = false;
         Drfl.manage_access_control((MANAGE_ACCESS_CONTROL)req.access_control);
+        res.success = true;
+        return true;
+    }
+    
+    bool DRHWInterface::release_protective_stop_cb(dsr_msgs::ReleaseProtectiveStop::Request& req, dsr_msgs::ReleaseProtectiveStop::Response& res){
+        res.success = false;
+        Drfl.release_protective_stop((RELEASE_MODE)req.release_mode);
         res.success = true;
         return true;
     }
