@@ -72,6 +72,7 @@
 #include <dsr_msgs/GetLastAlarm.h>
 #include <dsr_msgs/ManageAccessControl.h>
 #include <dsr_msgs/SetRobotControl.h>
+#include <dsr_msgs/ReleaseProtectiveStop.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -500,7 +501,7 @@ namespace dsr_control{
         static void OnLogAlarm(LPLOG_ALARM pLogAlarm);
 
         static void OnTpPopupCB(LPMESSAGE_POPUP tPopup);
-        static void OnTpLogCB(char* strLog);
+        static void OnTpLogCB(const char* strLog);
         static void onTpProgressCB(LPMESSAGE_PROGRESS tProgress);
         static void OnTpGetUserInputCB(LPMESSAGE_INPUT tInput);
 
@@ -590,6 +591,7 @@ namespace dsr_control{
         bool get_last_alarm_cb(dsr_msgs::GetLastAlarm::Request& req, dsr_msgs::GetLastAlarm::Response& res);
         bool set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res);
         bool manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res);
+        bool release_protective_stop_cb(dsr_msgs::ReleaseProtectiveStop::Request& req, dsr_msgs::ReleaseProtectiveStop::Response& res);
 
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);

@@ -91,6 +91,9 @@ namespace DRAFramework
     typedef void (*TOnMonitoringSpeedModeCB)(const MONITORING_SPEED);
     typedef void (*TOnMasteringNeedCB)();
     typedef void (*TOnDisconnectedCB)();
+
+
+    typedef void (*TOnRTMonitoringDataCB)(const LPRT_OUTPUT_DATA_LIST);
     
     
 #ifdef __cplusplus

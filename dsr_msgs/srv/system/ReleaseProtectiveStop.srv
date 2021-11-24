@@ -1,0 +1,7 @@
+#____________________________________________________________________________________________
+# release_protective_stop
+#____________________________________________________________________________________________
+
+int8 release_mode     # 0=RELEASE_MODE_STOP, 1=RELEASE_MODE_RESUME, 2=RELEASE_MODE_RELEASE, 3=RELEASE_MODE_RESET
+---
+bool success
