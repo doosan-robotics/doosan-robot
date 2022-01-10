@@ -57,6 +57,11 @@
 #include <dsr_msgs/RobotState.h>
 #include <dsr_msgs/RobotStop.h>
 #include <dsr_msgs/JogMultiAxis.h>
+#include <dsr_msgs/AlterMotionStream.h>
+#include <dsr_msgs/ServoJStream.h>
+#include <dsr_msgs/ServoLStream.h>
+#include <dsr_msgs/SpeedJStream.h>
+#include <dsr_msgs/SpeedLStream.h>
 
 // service
 //system
@@ -92,6 +97,7 @@
 #include <dsr_msgs/Trans.h>
 #include <dsr_msgs/Fkin.h>
 #include <dsr_msgs/Ikin.h>
+#include <dsr_msgs/IkinEx.h>
 #include <dsr_msgs/SetRefCoord.h>
 #include <dsr_msgs/MoveHome.h>
 #include <dsr_msgs/CheckMotion.h>
@@ -500,7 +506,7 @@ namespace dsr_control{
         static void OnLogAlarm(LPLOG_ALARM pLogAlarm);
 
         static void OnTpPopupCB(LPMESSAGE_POPUP tPopup);
-        static void OnTpLogCB(char* strLog);
+        static void OnTpLogCB(const char* strLog);
         static void onTpProgressCB(LPMESSAGE_PROGRESS tProgress);
         static void OnTpGetUserInputCB(LPMESSAGE_INPUT tInput);
 
@@ -537,12 +543,22 @@ namespace dsr_control{
         ros::Publisher m_PubtoGazebo;
         ros::Publisher m_PubSerialWrite;
         ros::Publisher m_PubJogMultiAxis;
+        ros::Publisher m_PubAlterMotionStream;
+        ros::Publisher m_PubServoJStream;
+        ros::Publisher m_PubServoLStream;
+        ros::Publisher m_PubSpeedJStream;
+        ros::Publisher m_PubSpeedLStream;
 
         //----- Subscriber ------------------------------------------------------------
         ros::Subscriber m_sub_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
         ros::Subscriber m_SubSerialRead;
         ros::Subscriber m_sub_jog_multi_axis;
+        ros::Subscriber m_sub_alter_motion_stream;
+        ros::Subscriber m_sub_servoj_stream;
+        ros::Subscriber m_sub_servol_stream;
+        ros::Subscriber m_sub_speedj_stream;
+        ros::Subscriber m_sub_speedl_stream;
 
         // ROS Interface
         hardware_interface::JointStateInterface jnt_state_interface;
@@ -566,6 +582,11 @@ namespace dsr_control{
         void positionCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
 
         void jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg);
+        void alterCallback(const dsr_msgs::AlterMotionStream::ConstPtr& msg);
+        void servojCallback(const dsr_msgs::ServoJStream::ConstPtr& msg);
+        void servolCallback(const dsr_msgs::ServoLStream::ConstPtr& msg);
+        void speedjCallback(const dsr_msgs::SpeedJStream::ConstPtr& msg);
+        void speedlCallback(const dsr_msgs::SpeedLStream::ConstPtr& msg);
 
         //----- Threads ------------------------------------------------------------------
         boost::thread m_th_subscribe;   //subscribe thread
@@ -610,6 +631,7 @@ namespace dsr_control{
         bool trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res);
         bool fkin_cb(dsr_msgs::Fkin::Request& req, dsr_msgs::Fkin::Response& res);
         bool ikin_cb(dsr_msgs::Ikin::Request& req, dsr_msgs::Ikin::Response& res);
+        bool ikin_ex_cb(dsr_msgs::IkinEx::Request& req, dsr_msgs::IkinEx::Response& res);
         bool set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res);
         bool move_home_cb(dsr_msgs::MoveHome::Request& req, dsr_msgs::MoveHome::Response& res);
         bool check_motion_cb(dsr_msgs::CheckMotion::Request& req, dsr_msgs::CheckMotion::Response& res);

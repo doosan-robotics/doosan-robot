@@ -454,7 +454,7 @@ namespace dsr_control{
         ROS_INFO("OnTpPopup");
     }
 
-    void DRHWInterface::OnTpLogCB(char* strLog)
+    void DRHWInterface::OnTpLogCB(const char* strLog)
     {
         ROS_INFO("OnTpLog");
         cout << strLog << endl;
@@ -736,7 +736,13 @@ namespace dsr_control{
         m_PubSerialWrite = nh_temp.advertise<std_msgs::String>("serial_write", 100);
 
         // subscribe : Multi-JOG topic msg
-        m_sub_jog_multi_axis = private_nh_.subscribe("jog_multi", 10, &DRHWInterface::jogCallback, this);  
+        m_sub_jog_multi_axis = private_nh_.subscribe("jog_multi", 10, &DRHWInterface::jogCallback, this);
+        m_sub_alter_motion_stream = private_nh_.subscribe("alter_motion_stream", 20, &DRHWInterface::alterCallback, this);
+        m_sub_servoj_stream = private_nh_.subscribe("servoj_stream", 20, &DRHWInterface::servojCallback, this);
+        m_sub_servol_stream = private_nh_.subscribe("servol_stream", 20, &DRHWInterface::servolCallback, this);
+        m_sub_speedj_stream = private_nh_.subscribe("speedj_stream", 20, &DRHWInterface::speedjCallback, this);
+        m_sub_speedl_stream = private_nh_.subscribe("speedl_stream", 20, &DRHWInterface::speedlCallback, this);
+
 
         // system Operations
         m_nh_system[0] = private_nh_.advertiseService("system/set_robot_mode", &DRHWInterface::set_robot_mode_cb, this);
@@ -781,7 +787,7 @@ namespace dsr_control{
         m_nh_motion_service[23]= private_nh_.advertiseService("motion/alter_motion", &DRHWInterface::alter_motion_cb, this);
         m_nh_motion_service[24]= private_nh_.advertiseService("motion/disable_alter_motion", &DRHWInterface::disable_alter_motion_cb, this);
         m_nh_motion_service[25]= private_nh_.advertiseService("motion/set_singularity_handling", &DRHWInterface::set_singularity_handling_cb, this);
-
+        m_nh_motion_service[26]= private_nh_.advertiseService("motion/ikin_ex", &DRHWInterface::ikin_ex_cb, this);
 
         // Auxiliary Control Operations
         m_nh_aux_control_service[0]  = private_nh_.advertiseService("aux_control/get_control_mode", &DRHWInterface::get_control_mode_cb, this);                   
@@ -1079,6 +1085,62 @@ namespace dsr_control{
 
         Drfl.multi_jog(target_pos.data(), (MOVE_REFERENCE)msg->move_reference, msg->speed);
 
+    }
+
+    void DRHWInterface::alterCallback(const dsr_msgs::AlterMotionStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_pos;
+        std::copy(msg->pos.cbegin(), msg->pos.cend(), target_pos.begin());
+
+        Drfl.alter_motion(target_pos.data());
+    }
+
+    void DRHWInterface::servojCallback(const dsr_msgs::ServoJStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_pos;
+        std::copy(msg->pos.cbegin(), msg->pos.cend(), target_pos.begin());
+        std::array<float, NUM_JOINT> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_JOINT> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.servoj(target_pos.data(), target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::servolCallback(const dsr_msgs::ServoLStream::ConstPtr& msg){
+        
+        std::array<float, NUM_TASK> target_pos;
+        std::copy(msg->pos.cbegin(), msg->pos.cend(), target_pos.begin());
+        std::array<float, 2> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, 2> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.servol(target_pos.data(), target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::speedjCallback(const dsr_msgs::SpeedJStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_JOINT> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.speedj(target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::speedlCallback(const dsr_msgs::SpeedLStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, 2> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.speedl(target_vel.data(), target_acc.data(), time);
     }
 
     void DRHWInterface::trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg)
@@ -1546,6 +1608,29 @@ namespace dsr_control{
         res.success = true;
         return true;
     }
+
+    bool DRHWInterface::ikin_ex_cb(dsr_msgs::IkinEx::Request& req, dsr_msgs::IkinEx::Response& res)
+    {       
+        res.success = false;
+        std::array<float, NUM_TASK> task_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), task_pos.begin());
+  
+    #if (_DEBUG_DSR_CTL)
+        ROS_INFO("< ikin_cb >");
+        ROS_INFO("    task_pos = %7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f",task_pos[0],task_pos[1],task_pos[2],task_pos[3],task_pos[4],task_pos[5]);
+        ROS_INFO("    ref       = %d",req.ref);
+        ROS_INFO("    ref_pos_opt = %d",req.ref_pos_opt);      
+    #endif
+
+        LPINVERSE_KINEMATIC_RESPONSE joint_pos = Drfl.ikin(task_pos.data(), req.sol_space, (COORDINATE_SYSTEM)req.ref, req.ref_pos_opt);
+        for(int i=0; i<NUM_TASK; i++){
+            res.conv_posj[i] = joint_pos->_fTargetPos[i];
+        }
+        res.status = joint_pos->_iStatus;
+        res.success = true;
+        return true;
+    }
+	
     bool DRHWInterface::set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res)
     {
         res.success = false;

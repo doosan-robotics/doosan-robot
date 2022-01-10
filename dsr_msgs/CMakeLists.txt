@@ -14,6 +14,11 @@ add_message_files(
     RobotState.msg
     RobotStop.msg
     JogMultiAxis.msg
+    AlterMotionStream.msg
+    ServoJStream.msg
+    ServoLStream.msg
+    SpeedJStream.msg
+    SpeedLStream.msg
 )
 
 add_service_files(
@@ -50,6 +55,7 @@ add_service_files(
     ./motion/Trans.srv
     ./motion/Fkin.srv
     ./motion/Ikin.srv
+    ./motion/IkinEx.srv
     ./motion/SetRefCoord.srv
     ./motion/MoveHome.srv
     ./motion/CheckMotion.srv
