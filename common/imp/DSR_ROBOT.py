@@ -1377,8 +1377,8 @@ def trans(pos, delta, ref=None, ref_out=DR_BASE):
         _wait_result(proc_id)
         # get result
         pos = PythonMgr.py_get_result(proc_id)
-    trans_posx = posx(pos)
-    return trans_posx
+    #trans_posx = posx(pos)
+    return pos
 
 def fkin(pos, ref=None):
 

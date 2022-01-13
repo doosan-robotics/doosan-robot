@@ -88,6 +88,7 @@
 #define NUM_SAFETY_IN               (2)
 #define NUM_ENCORDER                (2)
 #define NUM_POWER_OUT               (1)
+#define NUM_SAFETY                  (8)
 
 #define MAX_MODBUS_TOTAL_REGISTERS  (100)
 
@@ -95,6 +96,10 @@
 
 #define MAX_SPLINE_POINT            (100)
 #define MAX_SERIAL                  (32)
+
+#define MAX_CONFIG_TCP_SIZE         (50)
+#define MAX_CONFIG_TOOL_SIZE        (50)
+
 //
 // robot state enumerated value
 //
@@ -525,9 +530,29 @@ typedef enum {
     RELEASE_MODE_RELEASE,
     RELEASE_MODE_RESET
 } RELEASE_MODE;
+
 //
-// log code(eLOG_GROUP_SYSTEMFMK) enumerated value
+// I/O direction enumerated value
 //
+enum {
+    TYPE_INPUT = 0,
+    TYPE_OUTPUT,
+    TYPE_LAST,
+};
+
+//
+// safety mode enumerated value
+//
+typedef enum {
+    SAFETY_MODE_MANUAL,
+    SAFETY_MODE_AUTONOMOUS,
+    SAFETY_MODE_RECOVERY,
+    SAFETY_MODE_BACKDRIVE,
+    SAFETY_MODE_MEASURE,
+    SAFETY_MODE_INITIALIZE,
+    SAFETY_MODE_LAST,
+
+} SAFETY_MODE;
 
 //
 // safety state enumerated value
@@ -554,6 +579,49 @@ typedef enum {
     SAFETY_STATE_DRL_HG_MOVE,  /* hand guiding MOVE */
     SAFETY_STATE_LAST
 } SAFETY_STATE;
+
+//
+// safety function error enumerated value
+//
+
+typedef enum {
+    SAFETY_FUNC_FIRST,
+    SAFETY_FUNC_STOP_STO_NOT_USE = SAFETY_FUNC_FIRST,
+    SAFETY_FUNC_STOP_SBC_NOT_USE,
+    SAFETY_FUNC_STOP_SS1_NOT_USE,
+    SAFETY_FUNC_STOP_SS2_NOT_USE,
+    SAFETY_FUNC_SIGNAL_EMG,
+    SAFETY_FUNC_SIGNAL_PRS,
+    SAFETY_FUNC_ERROR_SOS,
+    SAFETY_FUNC_ERROR_JOINT_SLP, /* joint position */
+    SAFETY_FUNC_ERROR_JOINT_SLS, /* joint speed */
+    SAFETY_FUNC_ERROR_JOINT_SLT, /* joint torque */
+    SAFETY_FUNC_ERROR_COLLISION,
+    SAFETY_FUNC_ERROR_TCP_SLP,  /* tcp position */
+    SAFETY_FUNC_ERROR_TCP_SLO,  /* tcp orientation */
+    SAFETY_FUNC_ERROR_TCP_SLS,  /* tcp speed */
+    SAFETY_FUNC_ERROR_TCP_SLF,  /* tcp force */
+    SAFETY_FUNC_ERROR_MOMENTUM,
+    SAFETY_FUNC_ERROR_POWER,
+    SAFETY_FUNC_LAST,
+    SAFETY_FUNC_ENABLE_SWITCH_RELEASE = SAFETY_FUNC_LAST
+} SAFETY_FUNC;
+
+typedef SAFETY_FUNC SAFETY_FUNC_ERROR;
+
+//
+// safety event enumerated value
+//
+typedef enum {
+    SAFETY_MODE_EVENT_ENTER,
+    SAFETY_MODE_EVENT_MOVE,
+    SAFETY_MODE_EVENT_STOP,
+    SAFETY_MODE_EVENT_LAST,
+} SAFETY_MODE_EVENT;
+
+//
+// log code(eLOG_GROUP_SYSTEMFMK) enumerated value
+//
 
 enum {
     // eLOG_GROUP_SYSTEMFMK(SYSTEM)
@@ -661,6 +729,8 @@ enum {
     OPERATION_KT_CONNECT_FAIL,
     OPERATION_KT_AUTH_FAIL,
     OPERATION_SET_IP_ADDRESS_FAIL,
+    OPERATION_RTSERVER_INFO,
+    OPERATION_RTSERVER_WARNING,
 
     /* internal user */
     OPERATION_CLIENT_AUTHENTIFICATION_COMPLETED = 3100,

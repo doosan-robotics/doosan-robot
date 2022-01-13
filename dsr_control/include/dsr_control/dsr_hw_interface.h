@@ -57,6 +57,18 @@
 #include <dsr_msgs/RobotState.h>
 #include <dsr_msgs/RobotStop.h>
 #include <dsr_msgs/JogMultiAxis.h>
+#include <dsr_msgs/AlterMotionStream.h>
+#include <dsr_msgs/ServoJStream.h>
+#include <dsr_msgs/ServoLStream.h>
+#include <dsr_msgs/SpeedJStream.h>
+#include <dsr_msgs/SpeedLStream.h>
+
+#include <dsr_msgs/RobotStateRT.h>
+#include <dsr_msgs/ServoJRTStream.h>
+#include <dsr_msgs/ServoLRTStream.h>
+#include <dsr_msgs/SpeedJRTStream.h>
+#include <dsr_msgs/SpeedLRTStream.h>
+#include <dsr_msgs/TorqueRTStream.h>
 
 // service
 //system
@@ -93,6 +105,7 @@
 #include <dsr_msgs/Trans.h>
 #include <dsr_msgs/Fkin.h>
 #include <dsr_msgs/Ikin.h>
+#include <dsr_msgs/IkinEx.h>
 #include <dsr_msgs/SetRefCoord.h>
 #include <dsr_msgs/MoveHome.h>
 #include <dsr_msgs/CheckMotion.h>
@@ -193,6 +206,24 @@
 
 //serial
 #include <dsr_msgs/SerialSendData.h>
+
+//realtime
+#include <dsr_msgs/ConnectRTControl.h>
+#include <dsr_msgs/DisconnectRTControl.h>
+#include <dsr_msgs/GetRTControlInputVersionList.h>
+#include <dsr_msgs/GetRTControlOutputVersionList.h>
+#include <dsr_msgs/GetRTControlInputDataList.h>
+#include <dsr_msgs/GetRTControlOutputDataList.h>
+#include <dsr_msgs/SetRTControlInput.h>
+#include <dsr_msgs/SetRTControlOutput.h>
+#include <dsr_msgs/StartRTControl.h>
+#include <dsr_msgs/StopRTControl.h>
+#include <dsr_msgs/SetVelJRT.h>
+#include <dsr_msgs/SetAccJRT.h>
+#include <dsr_msgs/SetVelXRT.h>
+#include <dsr_msgs/SetAccXRT.h>
+#include <dsr_msgs/ReadDataRT.h>
+#include <dsr_msgs/WriteDataRT.h>
 
 // moveit
 #include <moveit_msgs/DisplayTrajectory.h>
@@ -505,6 +536,8 @@ namespace dsr_control{
         static void onTpProgressCB(LPMESSAGE_PROGRESS tProgress);
         static void OnTpGetUserInputCB(LPMESSAGE_INPUT tInput);
 
+        static void OnRTMonitoringDataCB(LPRT_OUTPUT_DATA_LIST tData);
+
         std::string GetRobotName();
         std::string GetRobotModel();
 
@@ -532,18 +565,42 @@ namespace dsr_control{
         ros::ServiceServer m_nh_gripper_service[10];
         ros::ServiceServer m_nh_serial_service[4];
 
+        ros::ServiceServer m_nh_realtime_service[20];
+
         //----- Publisher -------------------------------------------------------------
         ros::Publisher m_PubRobotState;
         ros::Publisher m_PubRobotError;
         ros::Publisher m_PubtoGazebo;
         ros::Publisher m_PubSerialWrite;
         ros::Publisher m_PubJogMultiAxis;
+        ros::Publisher m_PubAlterMotionStream;
+        ros::Publisher m_PubServoJStream;
+        ros::Publisher m_PubServoLStream;
+        ros::Publisher m_PubSpeedJStream;
+        ros::Publisher m_PubSpeedLStream;
+
+        ros::Publisher m_PubServoJRTStream;
+        ros::Publisher m_PubServoLRTStream;
+        ros::Publisher m_PubSpeedJRTStream;
+        ros::Publisher m_PubSpeedLRTStream;
+        ros::Publisher m_PubTorqueRTStream;
 
         //----- Subscriber ------------------------------------------------------------
         ros::Subscriber m_sub_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
         ros::Subscriber m_SubSerialRead;
         ros::Subscriber m_sub_jog_multi_axis;
+        ros::Subscriber m_sub_alter_motion_stream;
+        ros::Subscriber m_sub_servoj_stream;
+        ros::Subscriber m_sub_servol_stream;
+        ros::Subscriber m_sub_speedj_stream;
+        ros::Subscriber m_sub_speedl_stream;
+
+        ros::Subscriber m_sub_servoj_rt_stream;
+        ros::Subscriber m_sub_servol_rt_stream;
+        ros::Subscriber m_sub_speedj_rt_stream;
+        ros::Subscriber m_sub_speedl_rt_stream;
+        ros::Subscriber m_sub_torque_rt_stream;
 
         // ROS Interface
         hardware_interface::JointStateInterface jnt_state_interface;
@@ -567,6 +624,18 @@ namespace dsr_control{
         void positionCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
 
         void jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg);
+        void alterCallback(const dsr_msgs::AlterMotionStream::ConstPtr& msg);
+        void servojCallback(const dsr_msgs::ServoJStream::ConstPtr& msg);
+        void servolCallback(const dsr_msgs::ServoLStream::ConstPtr& msg);
+        void speedjCallback(const dsr_msgs::SpeedJStream::ConstPtr& msg);
+        void speedlCallback(const dsr_msgs::SpeedLStream::ConstPtr& msg);
+
+        void servojRTCallback(const dsr_msgs::ServoJRTStream::ConstPtr& msg);
+        void servolRTCallback(const dsr_msgs::ServoLRTStream::ConstPtr& msg);
+        void speedjRTCallback(const dsr_msgs::SpeedJRTStream::ConstPtr& msg);
+        void speedlRTCallback(const dsr_msgs::SpeedLRTStream::ConstPtr& msg);
+        void torqueRTCallback(const dsr_msgs::TorqueRTStream::ConstPtr& msg);
+        
 
         //----- Threads ------------------------------------------------------------------
         boost::thread m_th_subscribe;   //subscribe thread
@@ -612,6 +681,7 @@ namespace dsr_control{
         bool trans_cb(dsr_msgs::Trans::Request& req, dsr_msgs::Trans::Response& res);
         bool fkin_cb(dsr_msgs::Fkin::Request& req, dsr_msgs::Fkin::Response& res);
         bool ikin_cb(dsr_msgs::Ikin::Request& req, dsr_msgs::Ikin::Response& res);
+        bool ikin_ex_cb(dsr_msgs::IkinEx::Request& req, dsr_msgs::IkinEx::Response& res);
         bool set_ref_coord_cb(dsr_msgs::SetRefCoord::Request& req, dsr_msgs::SetRefCoord::Response& res);
         bool move_home_cb(dsr_msgs::MoveHome::Request& req, dsr_msgs::MoveHome::Response& res);
         bool check_motion_cb(dsr_msgs::CheckMotion::Request& req, dsr_msgs::CheckMotion::Response& res);
@@ -716,6 +786,27 @@ namespace dsr_control{
         //----- Serial
         bool serial_send_data_cb(dsr_msgs::SerialSendData::Request& req, dsr_msgs::SerialSendData::Response& res);
 
+        //----- Real Time
+        bool connect_rt_control_cb(dsr_msgs::ConnectRTControl::Request& req, dsr_msgs::ConnectRTControl::Response& res);
+        bool disconnect_rt_control_cb(dsr_msgs::DisconnectRTControl::Request& req, dsr_msgs::DisconnectRTControl::Response& res);
+
+        bool get_rt_control_output_version_list_cb(dsr_msgs::GetRTControlOutputVersionList::Request& req, dsr_msgs::GetRTControlOutputVersionList::Response& res);
+        bool get_rt_control_input_version_list_cb(dsr_msgs::GetRTControlInputVersionList::Request& req, dsr_msgs::GetRTControlInputVersionList::Response& res);
+        bool get_rt_control_input_data_list_cb(dsr_msgs::GetRTControlInputDataList::Request& req, dsr_msgs::GetRTControlInputDataList::Response& res);
+        bool get_rt_control_output_data_list_cb(dsr_msgs::GetRTControlOutputDataList::Request& req, dsr_msgs::GetRTControlOutputDataList::Response& res);
+
+        bool set_rt_control_input_cb(dsr_msgs::SetRTControlInput::Request& req, dsr_msgs::SetRTControlInput::Response& res);
+        bool set_rt_control_output_cb(dsr_msgs::SetRTControlOutput::Request& req, dsr_msgs::SetRTControlOutput::Response& res);
+        
+        bool start_rt_control_cb(dsr_msgs::StartRTControl::Request& req, dsr_msgs::StartRTControl::Response& res);
+        bool stop_rt_control_cb(dsr_msgs::StopRTControl::Request& req, dsr_msgs::StopRTControl::Response& res);
+        
+        bool set_velj_rt_cb(dsr_msgs::SetVelJRT::Request& req, dsr_msgs::SetVelJRT::Response& res);
+        bool set_accj_rt_cb(dsr_msgs::SetAccJRT::Request& req, dsr_msgs::SetAccJRT::Response& res);
+        bool set_velx_rt_cb(dsr_msgs::SetVelXRT::Request& req, dsr_msgs::SetVelXRT::Response& res);
+        bool set_accx_rt_cb(dsr_msgs::SetAccXRT::Request& req, dsr_msgs::SetAccXRT::Response& res);
+        bool read_data_rt_cb(dsr_msgs::ReadDataRT::Request& req, dsr_msgs::ReadDataRT::Response& res);
+        bool write_data_rt_cb(dsr_msgs::WriteDataRT::Request& req, dsr_msgs::WriteDataRT::Response& res);
     };
 }
 

@@ -1,0 +1,12 @@
+#____________________________________________________________________________________________
+# ikin_ex  
+#____________________________________________________________________________________________
+
+float64[6] pos               # task pos(posx)  
+int8       sol_space         # solution space : 0 ~ 7
+int8       ref     #= 0      # DR_BASE(0), DR_WORLD(2)
+int8       ref_pos_opt	     #  
+---
+float64[6] conv_posj         # joint pos(posj)  
+bool       status
+bool       success
