@@ -41,7 +41,7 @@ float64[6]                   target_tcp_position
 # target tcp velocity w.r.t. base coordinates [mm, deg/s]
 float64[6]                   target_tcp_velocity
 # jacobian matrix=J(q) w.r.t. base coordinates
-float64[6]                   jacobian_matrix
+std_msgs/Float64MultiArray[] jacobian_matrix
 # gravity torque=g(q) [Nm]
 float64[6]                   gravity_torque
 # coriolis matrix=C(q,q_dot)  [6][6]
