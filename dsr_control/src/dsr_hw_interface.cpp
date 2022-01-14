@@ -743,6 +743,11 @@ namespace dsr_control{
         m_sub_speedj_stream = private_nh_.subscribe("speedj_stream", 20, &DRHWInterface::speedjCallback, this);
         m_sub_speedl_stream = private_nh_.subscribe("speedl_stream", 20, &DRHWInterface::speedlCallback, this);
 
+        m_sub_servoj_rt_stream = private_nh_.subscribe("servoj_rt_stream", 20, &DRHWInterface::servojRTCallback, this);
+        m_sub_servol_rt_stream = private_nh_.subscribe("servol_rt_stream", 20, &DRHWInterface::servolRTCallback, this);
+        m_sub_speedj_rt_stream = private_nh_.subscribe("speedj_rt_stream", 20, &DRHWInterface::speedjRTCallback, this);
+        m_sub_speedl_rt_stream = private_nh_.subscribe("speedl_rt_stream", 20, &DRHWInterface::speedlRTCallback, this);
+        m_sub_torque_rt_stream = private_nh_.subscribe("torque_rt_stream", 20, &DRHWInterface::torqueRTCallback, this);
 
         // system Operations
         m_nh_system[0] = private_nh_.advertiseService("system/set_robot_mode", &DRHWInterface::set_robot_mode_cb, this);
@@ -759,6 +764,7 @@ namespace dsr_control{
         m_nh_system[11]= private_nh_.advertiseService("system/get_joint_torque", &DRHWInterface::get_joint_torque_cb, this);
         m_nh_system[12]= private_nh_.advertiseService("system/set_robot_control", &DRHWInterface::set_robot_control_cb, this);
         m_nh_system[13]= private_nh_.advertiseService("system/manage_access_control", &DRHWInterface::manage_access_control_cb, this);
+        m_nh_system[14]= private_nh_.advertiseService("system/release_protective_stop", &DRHWInterface::release_protective_stop_cb, this);
 
         //  motion Operations
         m_nh_motion_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
@@ -883,6 +889,24 @@ namespace dsr_control{
 
         // Serial Operations  
         m_nh_serial_service[0] = private_nh_.advertiseService("gripper/serial_send_data", &DRHWInterface::serial_send_data_cb, this);
+
+        // Realtime Operations
+        m_nh_realtime_service[0] = private_nh_.advertiseService("realtime/connect_rt_control", &DRHWInterface::connect_rt_control_cb, this);
+        m_nh_realtime_service[1] = private_nh_.advertiseService("realtime/disconnect_rt_control", &DRHWInterface::disconnect_rt_control_cb, this);
+        m_nh_realtime_service[2] = private_nh_.advertiseService("realtime/get_rt_control_output_version_list", &DRHWInterface::get_rt_control_output_version_list_cb, this);
+        m_nh_realtime_service[3] = private_nh_.advertiseService("realtime/get_rt_control_input_version_list", &DRHWInterface::get_rt_control_input_version_list_cb, this);
+        m_nh_realtime_service[4] = private_nh_.advertiseService("realtime/get_rt_control_input_data_list", &DRHWInterface::get_rt_control_input_data_list_cb, this);
+        m_nh_realtime_service[5] = private_nh_.advertiseService("realtime/get_rt_control_output_data_list", &DRHWInterface::get_rt_control_output_data_list_cb, this);
+        m_nh_realtime_service[6] = private_nh_.advertiseService("realtime/set_rt_control_input", &DRHWInterface::set_rt_control_input_cb, this);
+        m_nh_realtime_service[7] = private_nh_.advertiseService("realtime/set_rt_control_output", &DRHWInterface::set_rt_control_output_cb, this);
+        m_nh_realtime_service[8] = private_nh_.advertiseService("realtime/start_rt_control", &DRHWInterface::start_rt_control_cb, this);
+        m_nh_realtime_service[9] = private_nh_.advertiseService("realtime/stop_rt_control", &DRHWInterface::stop_rt_control_cb, this);
+        m_nh_realtime_service[10] = private_nh_.advertiseService("realtime/set_velj_rt", &DRHWInterface::set_velj_rt_cb, this);
+        m_nh_realtime_service[11] = private_nh_.advertiseService("realtime/set_accj_rt", &DRHWInterface::set_accj_rt_cb, this);
+        m_nh_realtime_service[12] = private_nh_.advertiseService("realtime/set_velx_rt", &DRHWInterface::set_velx_rt_cb, this);
+        m_nh_realtime_service[13] = private_nh_.advertiseService("realtime/set_accx_rt", &DRHWInterface::set_accx_rt_cb, this);
+        m_nh_realtime_service[14] = private_nh_.advertiseService("realtime/read_data_rt", &DRHWInterface::read_data_rt_cb, this);
+        m_nh_realtime_service[14] = private_nh_.advertiseService("realtime/write_data_rt", &DRHWInterface::write_data_rt_cb, this);
 
         memset(&g_stDrState, 0x00, sizeof(DR_STATE)); 
         memset(&g_stDrError, 0x00, sizeof(DR_ERROR)); 
@@ -1143,6 +1167,63 @@ namespace dsr_control{
         Drfl.speedl(target_vel.data(), target_acc.data(), time);
     }
 
+    void DRHWInterface::servojRTCallback(const dsr_msgs::ServoJRTStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_pos;
+        std::copy(msg->pos.cbegin(), msg->pos.cend(), target_pos.begin());
+        std::array<float, NUM_JOINT> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_JOINT> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.servoj_rt(target_pos.data(), target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::servolRTCallback(const dsr_msgs::ServoLRTStream::ConstPtr& msg){
+        
+        std::array<float, NUM_TASK> target_pos;
+        std::copy(msg->pos.cbegin(), msg->pos.cend(), target_pos.begin());
+        std::array<float, NUM_TASK> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_TASK> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.servol_rt(target_pos.data(), target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::speedjRTCallback(const dsr_msgs::SpeedJRTStream::ConstPtr& msg){
+        
+        std::array<float, NUM_JOINT> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_JOINT> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.speedj_rt(target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::speedlRTCallback(const dsr_msgs::SpeedLRTStream::ConstPtr& msg){
+        
+        std::array<float, NUM_TASK> target_vel;
+        std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
+        std::array<float, NUM_TASK> target_acc;
+        std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
+        int time = msg->time;
+
+        Drfl.speedl_rt(target_vel.data(), target_acc.data(), time);
+    }
+
+    void DRHWInterface::torqueRTCallback(const dsr_msgs::TorqueRTStream::ConstPtr& msg){
+        
+        std::array<float, NUM_TASK> tor;
+        std::copy(msg->tor.cbegin(), msg->tor.cend(), tor.begin());
+        int time = msg->time;
+
+        Drfl.torque_rt(tor.data(), time);
+    }
+
     void DRHWInterface::trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg)
     {
         ROS_INFO("callback: Trajectory received");
@@ -1284,6 +1365,13 @@ namespace dsr_control{
     bool DRHWInterface::manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res){
         res.success = false;
         Drfl.manage_access_control((MANAGE_ACCESS_CONTROL)req.access_control);
+        res.success = true;
+        return true;
+    }
+    
+    bool DRHWInterface::release_protective_stop_cb(dsr_msgs::ReleaseProtectiveStop::Request& req, dsr_msgs::ReleaseProtectiveStop::Response& res){
+        res.success = false;
+        Drfl.release_protective_stop((RELEASE_MODE)req.release_mode);
         res.success = true;
         return true;
     }
@@ -2887,7 +2975,217 @@ namespace dsr_control{
         send_data.data = req.data;
         m_PubSerialWrite.publish(send_data);
         res.success = true;
-         return true;
+        return true;
     }
+
+    //////////////////////////// Real Time Operation //////////////////////////////////////////
+
+    bool DRHWInterface::connect_rt_control_cb(dsr_msgs::ConnectRTControl::Request& req, dsr_msgs::ConnectRTControl::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.connect_rt_control(req.ip_address, req.port);
+        return true;
+    }
+    bool DRHWInterface::disconnect_rt_control_cb(dsr_msgs::DisconnectRTControl::Request& req, dsr_msgs::DisconnectRTControl::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.disconnect_rt_control();
+        return true;
+    }
+
+    bool DRHWInterface::get_rt_control_output_version_list_cb(dsr_msgs::GetRTControlOutputVersionList::Request& req, dsr_msgs::GetRTControlOutputVersionList::Response& res)
+    {
+        res.success = false;
+        res.version = Drfl.get_rt_control_output_version_list();
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::get_rt_control_input_version_list_cb(dsr_msgs::GetRTControlInputVersionList::Request& req, dsr_msgs::GetRTControlInputVersionList::Response& res)
+    {
+        res.success = false;
+        res.version = Drfl.get_rt_control_input_version_list();
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::get_rt_control_input_data_list_cb(dsr_msgs::GetRTControlInputDataList::Request& req, dsr_msgs::GetRTControlInputDataList::Response& res)
+    {
+        res.success = false;
+        res.data = Drfl.get_rt_control_input_data_list(req.version);
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::get_rt_control_output_data_list_cb(dsr_msgs::GetRTControlOutputDataList::Request& req, dsr_msgs::GetRTControlOutputDataList::Response& res)
+    {
+        res.success = false;
+        res.data = Drfl.get_rt_control_output_data_list(req.version);
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::set_rt_control_input_cb(dsr_msgs::SetRTControlInput::Request& req, dsr_msgs::SetRTControlInput::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.set_rt_control_input(req.version, req.period, req.loss);
+        return true;
+    }
+
+    bool DRHWInterface::set_rt_control_output_cb(dsr_msgs::SetRTControlOutput::Request& req, dsr_msgs::SetRTControlOutput::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.set_rt_control_output(req.version, req.period, req.loss);
+        return true;
+    }
+    
+    bool DRHWInterface::start_rt_control_cb(dsr_msgs::StartRTControl::Request& req, dsr_msgs::StartRTControl::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.start_rt_control();
+        return true;
+    }
+
+    bool DRHWInterface::stop_rt_control_cb(dsr_msgs::StopRTControl::Request& req, dsr_msgs::StopRTControl::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.stop_rt_control();
+        return true;
+    }
+    
+    bool DRHWInterface::set_velj_rt_cb(dsr_msgs::SetVelJRT::Request& req, dsr_msgs::SetVelJRT::Response& res)
+    {
+        res.success = false;
+        std::array<float, 6> vel;
+        std::copy(req.vel.cbegin(), req.vel.cend(), vel.begin());
+        res.success = Drfl.set_velj_rt(vel.data());
+        return true;
+    }
+
+    bool DRHWInterface::set_accj_rt_cb(dsr_msgs::SetAccJRT::Request& req, dsr_msgs::SetAccJRT::Response& res)
+    {
+        res.success = false;
+        std::array<float, 6> acc;
+        std::copy(req.acc.cbegin(), req.acc.cend(), acc.begin());
+        res.success = Drfl.set_accj_rt(acc.data());
+        return true;
+    }
+
+    bool DRHWInterface::set_velx_rt_cb(dsr_msgs::SetVelXRT::Request& req, dsr_msgs::SetVelXRT::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.set_velx_rt(req.trans, req.rotation);
+        return true;
+    }
+
+    bool DRHWInterface::set_accx_rt_cb(dsr_msgs::SetAccXRT::Request& req, dsr_msgs::SetAccXRT::Response& res)
+    {
+        res.success = false;
+        res.success = Drfl.set_accx_rt(req.trans, req.rotation);
+        return true;
+    }
+
+    bool DRHWInterface::read_data_rt_cb(dsr_msgs::ReadDataRT::Request& req, dsr_msgs::ReadDataRT::Response& res)
+    {
+        LPRT_OUTPUT_DATA_LIST temp = Drfl.read_data_rt();
+        res.data.time_stamp = temp->time_stamp;
+        for(int i=0; i<6; i++){
+            res.data.actual_joint_position[i] = temp->actual_joint_position[i];
+            res.data.actual_joint_position_abs[i] = temp->actual_joint_position_abs[i];
+            res.data.actual_joint_velocity[i] = temp->actual_joint_velocity[i];
+            res.data.actual_joint_velocity_abs[i] = temp->actual_joint_velocity_abs[i];
+            res.data.actual_tcp_position[i] = temp->actual_tcp_position[i];
+            res.data.actual_tcp_velocity[i] = temp->actual_tcp_velocity[i];
+            res.data.actual_flange_position[i] = temp->actual_flange_position[i];
+            res.data.actual_flange_velocity[i] = temp->actual_flange_velocity[i];
+            res.data.actual_motor_torque[i] = temp->actual_motor_torque[i];
+            res.data.actual_joint_torque[i] = temp->actual_joint_torque[i];
+            res.data.raw_joint_torque[i] = temp->raw_joint_torque[i];
+            res.data.raw_force_torque[i] = temp->raw_force_torque[i];
+            res.data.external_joint_torque[i] = temp->external_joint_torque[i];
+            res.data.external_tcp_force[i] = temp->external_tcp_force[i];
+            res.data.target_joint_position[i] = temp->target_joint_position[i];
+            res.data.target_joint_velocity[i] = temp->target_joint_velocity[i];
+            res.data.target_joint_acceleration[i] = temp->target_joint_acceleration[i];
+            res.data.target_motor_torque[i] = temp->target_motor_torque[i];
+            res.data.target_tcp_position[i] = temp->target_tcp_position[i];
+            res.data.target_tcp_velocity[i] = temp->target_tcp_velocity[i];
+            res.data.gravity_torque[i] = temp->gravity_torque[i];
+            res.data.joint_temperature[i] = temp->joint_temperature[i];
+            res.data.goal_joint_position[i] = temp->goal_joint_position[i];
+            res.data.goal_tcp_position[i] = temp->goal_tcp_position[i];
+            res.data.goal_joint_position[i] = temp->goal_joint_position[i];
+            res.data.goal_tcp_position[i] = temp->goal_tcp_position[i];
+        }
+
+        std_msgs::Float64MultiArray arr;
+        for(int i=0; i<6; i++){
+            arr.data.clear();
+            for(int j=0; j<6; j++){
+                arr.data.push_back(temp->coriolis_matrix[i][j]);
+            }
+            res.data.coriolis_matrix.push_back(arr);
+        }
+
+        std_msgs::Float64MultiArray arr1;
+        for(int i=0; i<6; i++){
+            arr1.data.clear();
+            for(int j=0; j<6; j++){
+                arr1.data.push_back(temp->mass_matrix[i][j]);
+            }
+            res.data.mass_matrix.push_back(arr1);
+        }
+
+        std_msgs::Float64MultiArray arr2;
+        for(int i=0; i<6; i++){
+            arr2.data.clear();
+            for(int j=0; j<6; j++){
+                arr2.data.push_back(temp->jacobian_matrix[i][j]);
+            }
+            res.data.jacobian_matrix.push_back(arr2);
+        }
+
+
+        res.data.solution_space = temp->solution_space;
+        res.data.singularity = temp->singularity;
+        res.data.operation_speed_rate = temp->operation_speed_rate;
+        res.data.controller_digital_input = temp->controller_digital_input;
+        res.data.controller_digital_output = temp->controller_digital_output;
+
+        for(int i=0; i<2; i++){
+            res.data.controller_analog_input_type[i] = temp->controller_analog_input_type[i];
+            res.data.controller_analog_input[i] = temp->controller_analog_input[i];
+            res.data.controller_analog_output_type[i] = temp->controller_analog_output_type[i];
+            res.data.controller_analog_output[i] = temp->controller_analog_output[i];
+            res.data.external_encoder_strobe_count[i] = temp->external_encoder_strobe_count[i];
+            res.data.external_encoder_count[i] = temp->external_encoder_count[i];
+        }
+
+        res.data.flange_digital_input = temp->flange_digital_input;
+        res.data.flange_digital_output = temp->flange_digital_output;
+
+        for(int i=0; i<4; i++){
+            res.data.flange_analog_input[i] = temp->flange_analog_input[i];
+        }
+        res.data.robot_mode = temp->robot_mode;
+        res.data.robot_state = temp->robot_state;
+        res.data.control_mode = temp->control_mode;
+        return true;
+    }
+
+    bool DRHWInterface::write_data_rt_cb(dsr_msgs::WriteDataRT::Request& req, dsr_msgs::WriteDataRT::Response& res)
+    {
+        res.success = false;
+        std::array<float, 6> external_force_torque;
+        std::array<float, 6> external_analog_output;
+        std::array<float, 6> external_analog_input;
+
+        std::copy(req.external_force_torque.cbegin(), req.external_force_torque.cend(), external_force_torque.begin());
+        std::copy(req.external_analog_output.cbegin(), req.external_analog_output.cend(), external_analog_output.begin());
+        std::copy(req.external_analog_input.cbegin(), req.external_analog_input.cend(), external_analog_input.begin());
+
+        res.success = Drfl.write_data_rt(external_force_torque.data(), req.external_digital_input, req.external_digital_output, external_analog_input.data(), external_analog_output.data());
+        return true;
+    } 
 
 }

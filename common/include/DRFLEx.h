@@ -72,6 +72,7 @@ namespace DRAFramework
     typedef void (*TOnTpProgressCB)(LPMESSAGE_PROGRESS); 
 
     typedef void (*TOnRTMonitoringDataCB)(const LPRT_OUTPUT_DATA_LIST);
+
     typedef void (*TOnMonitoringSafetyStateCB)(const SAFETY_STATE);
     typedef void (*TOnMonitoringRobotSystemCB)(const ROBOT_SYSTEM);
     typedef void (*TOnMonitoringUpdateModuleCB)(const LPUPDATE_SW_MODULE_RESPONSE);
@@ -86,6 +87,9 @@ namespace DRAFramework
         /////DRL Wrapping/////
         //////////////////////
         
+        DRFL_API LPROBOTCONTROL _create_robot_control_udp();
+        DRFL_API void _destroy_robot_control_udp(LPROBOTCONTROL pCtrl);
+
         ////////////////////////////////////////////////////////////////////////////
         // Instance                                                               //
         ////////////////////////////////////////////////////////////////////////////
@@ -232,6 +236,7 @@ namespace DRAFramework
         DRFL_API void _set_on_monitoring_safety_stop_type(LPROBOTCONTROL pCtrl, TOnMonitoringSafetyStopTypeCB pCallbackFunc);
 
         DRFL_API void _set_on_rt_monitoring_data(LPROBOTCONTROL pCtrl, TOnRTMonitoringDataCB pCallbackFunc);
+        DRFL_API void _set_on_rt_log_alarm(LPROBOTCONTROL pCtrl,TOnLogAlarmCB pCallbackFunc);
 
         DRFL_API LPROBOT_POSE _trans(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_TASK], float fOffset[NUM_TASK], COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
         DRFL_API LPROBOT_POSE _ikin(LPROBOTCONTROL pCtrl, float fSourcePos[NUM_TASK], unsigned char iSolutionSpace, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE);
@@ -463,42 +468,44 @@ namespace DRAFramework
     class CDRFLEx : public CDRFL
     {
     public:
+        CDRFLEx() { _rbtCtrlUDP = _create_robot_control_udp(); }
+        virtual ~CDRFLEx() { _destroy_robot_control_udp(_rbtCtrlUDP);   }
         // connection
         //for ROS org bool OpenConnection(string strIpAddr = "192.168.137.100") { return _OpenConnection(_rbtCtrl, strIpAddr.c_str()); };
         bool open_connection(string strIpAddr = "192.168.137.100", unsigned int usPort= 12345) { return _open_connection(_rbtCtrl, strIpAddr.c_str(), usPort); };
         bool close_connection() { return _close_connection(_rbtCtrl); };
 
-        bool connect_rt_control(string strIpAddr = "192.168.137.100", unsigned int usPort= 12347) { return _connect_rt_control(_rbtCtrl, strIpAddr.c_str(), usPort); };
-        bool disconnect_rt_control() { return _disconnect_rt_control(_rbtCtrl); };
+        bool connect_rt_control(string strIpAddr = "192.168.137.100", unsigned int usPort= 12347) { return _connect_rt_control(_rbtCtrlUDP, strIpAddr.c_str(), usPort); };
+        bool disconnect_rt_control() { return _disconnect_rt_control(_rbtCtrlUDP); };
 
         ////////////////////////////////////////////////////////////////////////////
         // RT Control                                                             //
         ////////////////////////////////////////////////////////////////////////////   
 
-        string get_rt_control_output_version_list() { return _get_rt_control_output_version_list(_rbtCtrl); };
-        string get_rt_control_input_version_list() { return _get_rt_control_input_version_list(_rbtCtrl); };
-        string get_rt_control_input_data_list(string strVersion) { return _get_rt_control_input_data_list(_rbtCtrl, strVersion.c_str()); };
-        string get_rt_control_output_data_list(string strVersion) { return _get_rt_control_output_data_list(_rbtCtrl, strVersion.c_str()); };
-        bool set_rt_control_input(string strVersion, float fPeriod, int nLossCnt){ return _set_rt_control_input(_rbtCtrl, strVersion.c_str(), fPeriod, nLossCnt); };
-        bool set_rt_control_output(string strVersion, float fPeriod, int nLossCnt){ return _set_rt_control_output(_rbtCtrl, strVersion.c_str(), fPeriod, nLossCnt); };
+        string get_rt_control_output_version_list() { return _get_rt_control_output_version_list(_rbtCtrlUDP); };
+        string get_rt_control_input_version_list() { return _get_rt_control_input_version_list(_rbtCtrlUDP); };
+        string get_rt_control_input_data_list(string strVersion) { return _get_rt_control_input_data_list(_rbtCtrlUDP, strVersion.c_str()); };
+        string get_rt_control_output_data_list(string strVersion) { return _get_rt_control_output_data_list(_rbtCtrlUDP, strVersion.c_str()); };
+        bool set_rt_control_input(string strVersion, float fPeriod, int nLossCnt){ return _set_rt_control_input(_rbtCtrlUDP, strVersion.c_str(), fPeriod, nLossCnt); };
+        bool set_rt_control_output(string strVersion, float fPeriod, int nLossCnt){ return _set_rt_control_output(_rbtCtrlUDP, strVersion.c_str(), fPeriod, nLossCnt); };
 
-        bool start_rt_control(){ return _start_rt_control(_rbtCtrl); };
-        bool stop_rt_control(){ return _stop_rt_control(_rbtCtrl); };
+        bool start_rt_control(){ return _start_rt_control(_rbtCtrlUDP); };
+        bool stop_rt_control(){ return _stop_rt_control(_rbtCtrlUDP); };
         
-        bool set_velj_rt(float vel[NUM_JOINT]){ return _set_velj_rt(_rbtCtrl, vel); };
-        bool set_accj_rt(float acc[NUM_JOINT]){ return _set_accj_rt(_rbtCtrl, acc); };
-        bool set_velx_rt(float fTransVel, float fRotationVel){ return _set_velx_rt(_rbtCtrl, fTransVel, fRotationVel); };
-        bool set_accx_rt(float fTransAcc, float fRotationAcc){ return _set_accx_rt(_rbtCtrl, fTransAcc, fRotationAcc); };
+        bool set_velj_rt(float vel[NUM_JOINT]){ return _set_velj_rt(_rbtCtrlUDP, vel); };
+        bool set_accj_rt(float acc[NUM_JOINT]){ return _set_accj_rt(_rbtCtrlUDP, acc); };
+        bool set_velx_rt(float fTransVel, float fRotationVel){ return _set_velx_rt(_rbtCtrlUDP, fTransVel, fRotationVel); };
+        bool set_accx_rt(float fTransAcc, float fRotationAcc){ return _set_accx_rt(_rbtCtrlUDP, fTransAcc, fRotationAcc); };
 
-        LPRT_OUTPUT_DATA_LIST read_data_rt(){ return _read_data_rt(_rbtCtrl); };
-        bool write_data_rt(float fExternalForceTorque[NUM_JOINT], int iExternalDI, int iExternalDO, float fExternalAnalogInput[6], float fExternalAnalogOutput[6]){ return _write_data_rt(_rbtCtrl, fExternalForceTorque, iExternalDI, iExternalDO, fExternalAnalogInput, fExternalAnalogOutput); };
+        LPRT_OUTPUT_DATA_LIST read_data_rt(){ return _read_data_rt(_rbtCtrlUDP); };
+        bool write_data_rt(float fExternalForceTorque[NUM_JOINT], int iExternalDI, int iExternalDO, float fExternalAnalogInput[6], float fExternalAnalogOutput[6]){ return _write_data_rt(_rbtCtrlUDP, fExternalForceTorque, iExternalDI, iExternalDO, fExternalAnalogInput, fExternalAnalogOutput); };
         
-        bool servoj_rt(float fTargetPos[NUM_JOINT], float fTargetVel[NUM_JOINT], float fTargetAcc[NUM_JOINT], float fTargetTime){ return _servoj_rt(_rbtCtrl, fTargetPos, fTargetVel, fTargetAcc, fTargetTime); };
-        bool servol_rt(float fTargetPos[NUM_TASK], float fTargetVel[NUM_TASK], float fTargetAcc[NUM_TASK], float fTargetTime){ return _servol_rt(_rbtCtrl, fTargetPos, fTargetVel, fTargetAcc, fTargetTime); };
-        bool speedj_rt(float fTargetVel[NUM_JOINT], float fTargetAcc[NUM_JOINT], float fTargetTime){ return _speedj_rt(_rbtCtrl, fTargetVel, fTargetAcc, fTargetTime); };
-        bool speedl_rt(float fTargetVel[NUM_TASK], float fTargetAcc[NUM_TASK], float fTargetTime){ return _speedl_rt(_rbtCtrl, fTargetVel, fTargetAcc, fTargetTime); };
-        bool torque_rt(float fMotorTor[NUM_JOINT], float fTargetTime){ return _torque_rt(_rbtCtrl, fMotorTor, fTargetTime); };
-        //bool change_operation_speed_rt(float fSpeedRate){ return _change_operation_speed_rt(_rbtCtrl, fSpeedRate); }; //차후 개발
+        bool servoj_rt(float fTargetPos[NUM_JOINT], float fTargetVel[NUM_JOINT], float fTargetAcc[NUM_JOINT], float fTargetTime){ return _servoj_rt(_rbtCtrlUDP, fTargetPos, fTargetVel, fTargetAcc, fTargetTime); };
+        bool servol_rt(float fTargetPos[NUM_TASK], float fTargetVel[NUM_TASK], float fTargetAcc[NUM_TASK], float fTargetTime){ return _servol_rt(_rbtCtrlUDP, fTargetPos, fTargetVel, fTargetAcc, fTargetTime); };
+        bool speedj_rt(float fTargetVel[NUM_JOINT], float fTargetAcc[NUM_JOINT], float fTargetTime){ return _speedj_rt(_rbtCtrlUDP, fTargetVel, fTargetAcc, fTargetTime); };
+        bool speedl_rt(float fTargetVel[NUM_TASK], float fTargetAcc[NUM_TASK], float fTargetTime){ return _speedl_rt(_rbtCtrlUDP, fTargetVel, fTargetAcc, fTargetTime); };
+        bool torque_rt(float fMotorTor[NUM_JOINT], float fTargetTime){ return _torque_rt(_rbtCtrlUDP, fMotorTor, fTargetTime); };
+        //bool change_operation_speed_rt(float fSpeedRate){ return _change_operation_speed_rt(_rbtCtrlUDP, fSpeedRate); }; //차후 개발
 
 
         ////////////////////////////////////////////////////////////////////////////
@@ -546,7 +553,8 @@ namespace DRAFramework
         void set_on_monitoring_update_module(TOnMonitoringUpdateModuleCB pCallbackFunc) { _set_on_monitoring_update_module(_rbtCtrl, pCallbackFunc); };
         void set_on_monitoring_safety_stop_type(TOnMonitoringSafetyStopTypeCB pCallbackFunc) { _set_on_monitoring_safety_stop_type(_rbtCtrl, pCallbackFunc); };
 
-        void set_on_rt_monitoring_data(TOnRTMonitoringDataCB pCallbackFunc){ _set_on_rt_monitoring_data(_rbtCtrl, pCallbackFunc); };
+        void set_on_rt_monitoring_data(TOnRTMonitoringDataCB pCallbackFunc){ _set_on_rt_monitoring_data(_rbtCtrlUDP, pCallbackFunc); };
+        void set_on_rt_log_alarm(TOnLogAlarmCB pCallbackFunc)  { _set_on_rt_log_alarm(_rbtCtrlUDP, pCallbackFunc); };
 
         LPROBOT_POSE trans(float fSourcePos[NUM_TASK], float fOffset[NUM_TASK], COORDINATE_SYSTEM eSourceRef = COORDINATE_SYSTEM_BASE, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _trans(_rbtCtrl, fSourcePos, fOffset, eSourceRef, eTargetRef);};
         LPROBOT_POSE ikin(float fSourcePos[NUM_TASK], unsigned char iSolutionSpace, COORDINATE_SYSTEM eTargetRef = COORDINATE_SYSTEM_BASE){return _ikin(_rbtCtrl, fSourcePos, iSolutionSpace, eTargetRef); };
@@ -840,6 +848,8 @@ namespace DRAFramework
         bool save_sub_program(int iTargetType, string strFileName, string strDrlProgram){return _save_sub_program(_rbtCtrl, iTargetType, strFileName.c_str(), strDrlProgram.c_str());};
         bool setup_monitoring_version(int iVersion){ return _setup_monitoring_version(_rbtCtrl, iVersion); };
         bool system_shut_down(){return _system_shut_down(_rbtCtrl);};
+protected:
+        LPROBOTCONTROL _rbtCtrlUDP;
     };
 #endif
 }
