@@ -14,6 +14,18 @@ add_message_files(
     RobotState.msg
     RobotStop.msg
     JogMultiAxis.msg
+    AlterMotionStream.msg
+    ServoJStream.msg
+    ServoLStream.msg
+    SpeedJStream.msg
+    SpeedLStream.msg
+
+    RobotStateRT.msg
+    ServoJRTStream.msg
+    ServoLRTStream.msg
+    SpeedJRTStream.msg
+    SpeedLRTStream.msg
+    TorqueRTStream.msg
 )
 
 add_service_files(
@@ -51,6 +63,7 @@ add_service_files(
     ./motion/Trans.srv
     ./motion/Fkin.srv
     ./motion/Ikin.srv
+    ./motion/IkinEx.srv
     ./motion/SetRefCoord.srv
     ./motion/MoveHome.srv
     ./motion/CheckMotion.srv
@@ -140,6 +153,23 @@ add_service_files(
     ./gripper/Robotiq2FOpen.srv
     ./gripper/Robotiq2FMove.srv
     ./gripper/SerialSendData.srv
+
+    ./realtime/ConnectRTControl.srv
+    ./realtime/DisconnectRTControl.srv
+    ./realtime/GetRTControlInputDataList.srv
+    ./realtime/GetRTControlInputVersionList.srv
+    ./realtime/GetRTControlOutputDataList.srv
+    ./realtime/GetRTControlOutputVersionList.srv
+    ./realtime/ReadDataRT.srv
+    ./realtime/SetAccJRT.srv
+    ./realtime/SetAccXRT.srv
+    ./realtime/SetRTControlInput.srv
+    ./realtime/SetRTControlOutput.srv
+    ./realtime/SetVelJRT.srv
+    ./realtime/SetVelXRT.srv
+    ./realtime/StartRTControl.srv
+    ./realtime/StopRTControl.srv
+    ./realtime/WriteDataRT.srv
 
 )
 

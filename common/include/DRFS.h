@@ -549,13 +549,15 @@ typedef struct _RT_INPUT_DATA_LIST
     /* External Force Torque */
     float                       _fExternalForceTorque[NUM_JOINT];
     /* External Digital Input */
-    int                         _iExternalDI;
+    unsigned short              _iExternalDI;
     /* External Digital Output */
-    int                         _iExternalDO;
+    unsigned short              _iExternalDO;
     /* external analog input(6 channel) */
     float                       _fExternalAnalogInput[6];
     /* external analog output(6 channel) */
     float                       _fExternalAnalogOutput[6];
+    /* Reserved */
+    unsigned char               _iReserved[256];
 } RT_INPUT_DATA_LIST, *LPRT_INPUT_DATA_LIST;
 
 typedef struct _RT_OUTPUT_DATA_LIST
@@ -611,7 +613,7 @@ typedef struct _RT_OUTPUT_DATA_LIST
     /* mass matrix=M(q) */
     float                       mass_matrix[NUMBER_OF_JOINT][NUMBER_OF_JOINT];
     /* robot configuration */
-    int                         solution_space;
+    unsigned short              solution_space;
     /* minimum singular value */
     float                       singularity;
     /* current operation speed rate(1~100 %) */
@@ -619,23 +621,25 @@ typedef struct _RT_OUTPUT_DATA_LIST
     /* joint temperature(celsius) */
     float                       joint_temperature[NUMBER_OF_JOINT];
     /* controller digital input(16 channel) */
-    unsigned int                controller_digital_input;
+    unsigned short              controller_digital_input;
     /* controller digital output(16 channel) */
-    unsigned int                controller_digital_output;
+    unsigned short              controller_digital_output;
     /* controller analog input type(2 channel) */
-    unsigned int                controller_analog_input_type[2];
+    unsigned char               controller_analog_input_type[2];
     /* controller analog input(2 channel) */
     float                       controller_analog_input[2];
     /* controller analog output type(2 channel) */
-    unsigned int                controller_analog_output_type[2];
+    unsigned char               controller_analog_output_type[2];
     /* controller analog output(2 channel) */
     float                       controller_analog_output[2];
     /* flange digital input(A-Series: 2 channel, M/H-Series: 6 channel) */
-    int                         flange_digital_input;
+    unsigned char               flange_digital_input;
     /* flange digital output(A-Series: 2 channel, M/H-Series: 6 channel) */
-    int                         flange_digital_output;
+    unsigned char               flange_digital_output;
+    /* flange analog input(A-Series: 2 channel, M/H-Series: 4 channel) */
+    float                       flange_analog_input[4];
     /* strobe count(increased by 1 when detecting setting edge) */
-    unsigned int                external_encoder_strobe_count[2];
+    unsigned char               external_encoder_strobe_count[2];
     /* external encoder count */
     unsigned int                external_encoder_count[2];
     /* final goal joint position (reserved) */
@@ -643,16 +647,524 @@ typedef struct _RT_OUTPUT_DATA_LIST
     /* final goal tcp position (reserved) */
     float                       goal_tcp_position[NUMBER_OF_TASK];
     /* ROBOT_MODE_MANUAL(0), ROBOT_MODE_AUTONOMOUS(1), ROBOT_MODE_MEASURE(2) */
-    unsigned int                robot_mode;
+    unsigned char               robot_mode;
     /* STATE_INITIALIZING(0), STATE_STANDBY(1), STATE_MOVING(2), STATE_SAFE_OFF(3), STATE_TEACHING(4), STATE_SAFE_STOP(5), STATE_EMERGENCY_STOP, STATE_HOMMING, STATE_RECOVERY, STATE_SAFE_STOP2, STATE_SAFE_OFF2, */
-    unsigned int                robot_state;
+    unsigned char               robot_state;
     /* position control mode, torque mode */
-    unsigned int                control_mode;
+    unsigned short              control_mode;
+    /* Reserved */
+    unsigned char               reserved[256];
+    
 } RT_OUTPUT_DATA_LIST, *LPRT_OUTPUT_DATA_LIST;
 
 typedef struct _UPDATE_SW_MODULE_RESPONSE{
     unsigned char               _bStatus;
     char                        _szModuleInform[2048];
 } UPDATE_SW_MODULE_RESPONSE, *LPUPDATE_SW_MODULE_RESPONSE;
+
+typedef struct _JOINT_RANGE
+{
+    // max velocity
+    float                       _fMaxVelocity[NUMBER_OF_JOINT];
+    // max range
+    float                       _fMaxRange[NUMBER_OF_JOINT];
+    // min range
+    float                       _fMinRange[NUMBER_OF_JOINT];
+} JOINT_RANGE, *LPJOINT_RANGE;
+
+typedef struct _CONFIG_JOINT_RANGE
+{
+    /* noraml mode */
+    JOINT_RANGE                 _Normal;
+    /* reduced mode */
+    JOINT_RANGE                 _Reduced;
+
+} CONFIG_JOINT_RANGE, *LPCONFIG_JOINT_RANGE;
+
+typedef struct _GENERAL_RANGE
+{
+    // max force
+    float                       _fMaxForce;
+    // max power
+    float                       _fMaxPower;
+    // max speed
+    float                       _fMaxSpeed;
+    // max momenturm
+    float                       _fMaxMomentum;
+} GENERAL_RANGE, *LPGENERAL_RANGE;
+
+typedef struct _CONFIG_GENERAL_RANGE
+{
+    /* noraml mode */
+    GENERAL_RANGE               _Normal;
+    /* reduced mode */
+    GENERAL_RANGE               _Reduced;
+
+} CONFIG_GENERAL_RANGE, *LPCONFIG_GENERAL_RANGE;
+
+typedef struct _POINT_2D
+{
+    float                         _fXPos;
+    float                         _fYPos;
+} POINT_2D, *LPPOINT_2D;
+
+typedef struct _POINT_3D
+{
+    float           _fXPos;
+    float           _fYPos;
+    float           _fZPos;
+} POINT_3D, *LPPOINT_3D;
+
+typedef struct _LINE
+{
+    POINT_2D            _tFromPoint;
+    POINT_2D            _tToPoint;
+} LINE, *LPLINE;
+
+typedef union _CONFIG_SAFETY_FUNCTION
+{
+    /* SF05. Emergency Stop */
+    /* SF06. Proctective Stop */
+    /* SF07. StadnStill Monitoring */
+    /* SF08. Joint Angle Monitoring */
+    /* SF09. Joint Speed Monitoring */
+    /* SF10. Joint Torque Monitoring*/
+    /* SF11. Collisoin Detection */
+    /* SF12. TCP Posiiont Monitoring */
+    /* SF13. TCP Orientation Monitoring */
+    /* SF14. TCP Speed Monitoring */
+    /* SF15. TCP Force Monitoring */
+    /* SF16. Momentum Monitoring */
+    /* SF17. Power Mon. */
+
+    struct {
+        /* Standalone Workspace */
+        unsigned char           _iStdWorkSpace:4;
+        /* Collaborative Workspace */
+        unsigned char           _iColWorkSpace:4;
+    } _tStopCode[SAFETY_FUNC_LAST];
+
+    unsigned char               _iStopCode[SAFETY_FUNC_LAST];
+
+} CONFIG_SAFETY_FUNCTION, *LPCONFIG_SAFETY_FUNCTION;
+
+typedef struct _CONFIG_INSTALL_POSE
+{
+    /* robot gradinet on ground  */
+    float                       _fGradient;
+    /* robot rotation angle */
+    float                       _fRotation;
+
+} CONFIG_INSTALL_POSE, *LPCONFIG_INSTALL_POSE;
+
+typedef struct _CONFIG_SAFETY_IO
+{
+    /* Safety I/O */
+    unsigned char               _iIO[TYPE_LAST][NUM_SAFETY];
+
+} CONFIG_SAFETY_IO, *LPCONFIG_SAFETY_IO;
+
+typedef struct _CONFIG_SAFETY_IO_EX
+{
+    /* Safety I/O */
+    unsigned char               _iIO[TYPE_LAST][NUM_SAFETY];
+    /* trigger level */
+    unsigned char               _bLevel[TYPE_LAST][NUM_SAFETY];
+
+} CONFIG_SAFETY_IO_EX, *LPCONFIG_SAFETY_IO_EX;
+
+typedef union _VIRTUAL_FENCE_OBJECT
+{
+    struct _CUBE {
+        float                   _fXLoLimit;
+        float                   _fXUpLimit;
+        float                   _fYLoLimit;
+        float                   _fYUpLimit;
+        float                   _fZLoLimit;
+        float                   _fZUpLimit;
+    } _tCube;
+
+    struct _POLYGON {
+        unsigned char           _iLineCount;
+        LINE                    _tLine[6];
+        float                   _fZLoLimit;
+        float                   _fZUpLimit;
+    } _tPolygon;
+
+    struct _CYLINDER {
+        float                   _fRadius;
+        float                   _fZLoLimit;
+        float                   _fZUpLimit;
+    } _tCylinder;
+
+    unsigned char               _iBuffer[110];
+} VIRTUAL_FENCE_OBJECT, *LPVIRTUAL_FENCE_OBJECT;
+
+typedef struct _CONFIG_VIRTUAL_FENCE
+{
+    unsigned char               _iTargetRef;
+    /* fence type - cube: 0, polygon: 1, cylinder: 2 */
+    unsigned char               _iFenceType;
+    /* fence objec */
+    VIRTUAL_FENCE_OBJECT        _tFenceObject;
+} CONFIG_VIRTUAL_FENCE, *LPCONFIG_VIRTUAL_FENCE;
+
+typedef struct _CONFIG_SAFE_ZONE
+{
+    unsigned char               _iTargetRef;
+    LINE                        _tLine[2];
+    POINT_2D                    _tPoint[3];
+} CONFIG_SAFE_ZONE, *LPCONFIG_SAFE_ZONE;
+
+typedef struct _ENABLE_SAFE_ZONE
+{
+    /* region enable */
+    unsigned char                 _iRegion[3];
+} ENABLE_SAFE_ZONE, *LPENABLE_SAFE_ZONE;
+
+typedef struct _SAFETY_OBJECT_SPHERE
+{
+    /* radius */
+    float                   _fRadius;
+    /* vertex: center */
+    POINT_3D                _tTargetPos;
+} SAFETY_OBJECT_SPHERE, *LPSAFETY_OBJECT_SPHERE;
+
+typedef struct _SAFETY_OBJECT_CAPSULE
+{
+    /* radius */
+    float                   _fRadius;
+    /* vertex: low(0), high(1) */
+    POINT_3D                _tTargetPos[2];
+
+} SAFETY_OBJECT_CAPSULE, *LPSAFETY_OBJECT_CAPSULE;
+
+typedef struct _SAFETY_OBJECT_CUBE
+{
+    /*  vertex: low(0), high(1)  */
+    POINT_3D                _tTargetPos[2];
+
+} SAFETY_OBJECT_CUBE, *LPSAFETY_OBJECT_CUBE;
+
+typedef struct _SAFETY_OBJECT_OBB
+{
+    /* vetext: std(0), x-end(1), y-end(2), z-end(3) */
+    POINT_3D                _tTargetPos[4];
+
+} SAFETY_OBJECT_OBB, *LPSAFETY_OBJECT_OBB;
+
+typedef struct _SAFETY_OBJECT_POLYPRISM
+{
+    unsigned char           _iPointCount;
+    /* x,y coordinates of polygon vertices */
+    POINT_2D                _tPoint[10];
+    /* min z */
+    float                   _fZLoLimit;
+    /* max z */
+    float                   _fZUpLimit;
+
+} SAFETY_OBJECT_POLYPRISM, *LPSAFETY_OBJECT_POLYPRISM;
+
+typedef union _SAFETY_OBJECT_DATA
+{
+    SAFETY_OBJECT_SPHERE        _tSphere;
+    SAFETY_OBJECT_CAPSULE       _tCapsule;
+    SAFETY_OBJECT_CUBE          _tCube;
+    SAFETY_OBJECT_OBB           _tOBB;
+    SAFETY_OBJECT_POLYPRISM     _tPolyPrism;
+    unsigned char               _iBuffer[100];
+} SAFETY_OBJECT_DATA, *LPSAFETY_OBJECT_DATA;
+
+typedef struct _SAFETY_OBJECT
+{
+    unsigned char               _iTargetRef;
+    /*
+        geometry object type :
+        0(Sphere), 1(Capsule), 2(Cube), 3(Oriented Box), 4(Polygon-Prism)
+    */
+    unsigned char                   _iObjectType;
+    /* geometry object  data */
+    SAFETY_OBJECT_DATA              _tObject;
+
+} SAFETY_OBJECT, *LPSAFETY_OBJECT;
+
+typedef struct _CONFIG_PROTECTED_ZONE
+{
+    /* validity of safety object: 0(invalid), 1(valid) */
+    unsigned char                   _iValidity[10];
+    /* safety object */
+    SAFETY_OBJECT                   _tZone[10];
+
+} CONFIG_PROTECTED_ZONE, *LPCONFIG_PROTECTED_ZONE;
+
+typedef struct _CONFIG_COLLISION_MUTE_ZONE_PROPERTY
+{
+    char                            _szIdentifier[32];
+    unsigned char                   _iOnOff;
+#ifdef INFRACORE_PATCH        
+    unsigned char                   _iSafetyIO;
+#endif
+    float                           _fSensitivity;
+    SAFETY_OBJECT                   _tZone;
+} CONFIG_COLLISION_MUTE_ZONE_PROPERTY, *LPCONFIG_COLLISION_MUTE_ZONE_PROPERTY;
+
+typedef struct _CONFIG_COLLISION_MUTE_ZONE
+{
+    /* validity of safety object: 0(invalid), 1(valid) */
+    unsigned char                   _iValidity[10];
+    /* safety object */
+    CONFIG_COLLISION_MUTE_ZONE_PROPERTY _tProperty[10];
+
+} CONFIG_COLLISION_MUTE_ZONE, *LPCONFIG_COLLISION_MUTE_ZONE;
+
+typedef struct _SAFETY_TOOL_ORIENTATION_LIMIT
+{
+    /* direction */
+    POINT_3D                        _tTargetDir;
+    /* angle (degree) */
+    float                           _fTargetAng;
+
+} SAFETY_TOOL_ORIENTATION_LIMIT, *LPSAFETY_TOOL_ORIENTATION_LIMIT;
+
+typedef struct _CONFIG_TOOL_ORIENTATION_LIMIT_ZONE
+{
+    /* validity of safety object: 0(invalid), 1(valid) */
+    unsigned char                   _iValidity[10];
+    /* safety object */
+    SAFETY_OBJECT                   _tZone[10];
+    /* orientation limit for each zone */
+    SAFETY_TOOL_ORIENTATION_LIMIT   _tLimit[10];
+
+} CONFIG_TOOL_ORIENTATION_LIMIT_ZONE, *LPCONFIG_TOOL_ORIENTATION_LIMIT_ZONE;
+
+typedef struct _CONFIG_NUDGE
+{
+    /* enalbe/disalbe */
+    unsigned char               _bEnable;
+    /* input force */
+    float                       _fInputForce;
+    /* delay time */
+    float                       _fDelayTime;
+
+} CONFIG_NUDGE, *LPCONFIG_NUDGE;
+
+typedef struct _CONFIG_COCKPIT_EX
+{
+    /* disalbe: 0, enable: 1*/
+    unsigned char               _bEnable;
+    /* Direct Teach: 0, TCP-Z: 1, TCP-XY: 2, Orientation Only: 3, Positon Only: 4 */
+    unsigned char               _iButton[2];
+    /* disalbe: 0, enable: 1*/
+    unsigned char               _bRecoveryTeach;
+
+} CONFIG_COCKPIT_EX, *LPCONFIG_COCKPIT_EX;
+
+typedef struct _CONFIG_IDLE_OFF
+{
+    /* function enable */
+    unsigned char        _bFuncEnable;
+    /* elapse time */
+    float               _fElapseTime;
+
+} CONFIG_IDLE_OFF, *LPCONFIG_IDLE_OFF;
+
+typedef struct _WRITE_MODBUS_DATA
+{
+    /* symbol name */
+    char                        _szSymbol[MAX_SYMBOL_SIZE];
+    /* tcp address */
+    char                        _szIpAddr[16];
+    /* tcp port */
+    unsigned short              _iPort;
+    /* Slave ID*/
+    int                         _iSlaveID;
+    /* i/o type */
+    unsigned char               _iRegType;
+    /* register address */
+    unsigned short              _iRegIndex;
+    /* register value */
+    unsigned short              _iRegValue;
+
+} WRITE_MODBUS_DATA, *LPWRITE_MODBUS_DATA;
+
+typedef WRITE_MODBUS_DATA
+    WRITE_MODBUS_TCP_DATA, *LPWRITE_MODBUS_TCP_DATA;
+
+typedef struct _WRITE_MODBUS_RTU_DATA
+{
+    /* symbol name */
+    char                        _szSymbol[MAX_SYMBOL_SIZE];
+    /* tty device */
+    char                        _szttyPort[16];
+    /* Slave ID*/
+    int                         _iSlaveID;
+    /* Baud Rate */
+    int                         _iBaudRate;
+    /* Byte size */
+    int                         _iByteSize;
+    /* Parity */
+    char                        _szParity;
+    /* Stop bit */
+    int                         _iStopBit;
+    /* i/o type */
+    unsigned char               _iRegType;
+    /* register address */
+    unsigned short              _iRegIndex;
+    /* register value */
+    unsigned short              _iRegValue;
+
+} WRITE_MODBUS_RTU_DATA, *LPWRITE_MODBUS_RTU_DATA;
+
+typedef struct _MODBUS_DATA {
+
+    /*0: TCP, 1: RTU */
+    unsigned char _iType;
+
+    union {
+        /* modbus tcp */
+        WRITE_MODBUS_TCP_DATA _tcp;
+        /* modbus rtu */
+        WRITE_MODBUS_RTU_DATA _rtu;
+        /* data buffer */
+        unsigned char _szBuffer[70];
+    } _tData;
+
+} MODBUS_DATA, * LPMODBUS_DATA;
+
+typedef struct _MODBUS_DATA_LIST
+{
+    /* modbus count */
+    unsigned short              _nCount;
+    /* modbus data*/
+    MODBUS_DATA                 _tRegister[MAX_MODBUS_TOTAL_REGISTERS];
+
+} MODBUS_DATA_LIST, *LPMODBUS_DATA_LIST;
+
+typedef struct _CONFIG_WORLD_COORDINATE
+{
+    /* 설정타입: world2base: 0, base2ref: 1, world2ref: 2 */
+    /* 설정여부: 미설정: 0, 설정: 1*/
+    unsigned char               _iType;
+    /* target pose */
+    float                       _fPosition[NUMBER_OF_JOINT];
+
+} CONFIG_WORLD_COORDINATE, *LPCONFIG_WORLD_COORDINATE;
+
+typedef struct _CONFIG_CONFIGURABLE_IO
+{
+    /* Safety I/O */
+    unsigned char               _iIO[TYPE_LAST][NUM_DIGITAL];
+
+} CONFIG_CONFIGURABLE_IO, *LPCONFIG_CONFIGURABLE_IO;
+
+typedef struct _CONFIG_CONFIGURABLE_IO_EX
+{
+    /* Safety I/O */
+    unsigned char               _iIO[TYPE_LAST][NUM_DIGITAL];
+    /* trigger level */
+    unsigned char               _bLevel[TYPE_LAST][NUM_DIGITAL];
+
+} CONFIG_CONFIGURABLE_IO_EX, *LPCONFIG_CONFIGURABLE_IO_EX;
+
+typedef struct _CONFIG_TOOL_SHAPE
+{
+    /* validity of safety object: 0(invalid), 1(valid) */
+    unsigned char                   _iValidity[5];
+    /* safety object */
+    SAFETY_OBJECT                   _tShape[5];
+
+} CONFIG_TOOL_SHAPE, *LPCONFIG_TOOL_SHAPE;
+
+typedef struct _CONFIG_TOOL_SYMBOL
+{
+    /* tool name */
+    char                _szSymbol[MAX_SYMBOL_SIZE];
+    /* tool data */
+    CONFIG_TOOL         _tTool;
+
+} CONFIG_TOOL_SYMBOL, *LPCONFIG_TOOL_SYMBOL;
+
+typedef struct _CONFIG_TCP_SYMBOL
+{
+    /* tcp name */
+    char                _szSymbol[MAX_SYMBOL_SIZE];
+    /* tcp data */
+    CONFIG_TCP          _tTCP;
+
+} CONFIG_TCP_SYMBOL, *LPCONFIG_TCP_SYMBOL;
+
+typedef struct _CONFIG_TOOL_LIST
+{
+    int                         _iToolCount;
+    CONFIG_TOOL_SYMBOL          _tTooList[MAX_CONFIG_TOOL_SIZE];
+} CONFIG_TOOL_LIST, *LPCONFIG_TOOL_LIST;
+
+typedef struct _CONFIG_TOOL_SHAPE_SYMBOL
+{
+    char                _szSymbol[MAX_SYMBOL_SIZE];
+    CONFIG_TOOL_SHAPE   _tToolShape;
+} CONFIG_TOOL_SHAPE_SYMBOL, *LPCONFIG_TOOL_SHAPE_SYMBOL;
+
+typedef struct _CONFIG_TCP_LIST
+{
+    int                         _iToolCount;
+    CONFIG_TCP_SYMBOL           _tTooList[MAX_CONFIG_TCP_SIZE];
+} CONFIG_TCP_LIST, *LPCONFIG_TCP_LIST;
+
+typedef struct _CONFIG_TOOL_SHAPE_LIST
+{
+    int                         _iToolCount;
+    CONFIG_TOOL_SHAPE_SYMBOL    _tTooList[MAX_CONFIG_TOOL_SIZE];
+} CONFIG_TOOL_SHAPE_LIST, *LPCONFIG_TOOL_SHAPE_LIST;
+
+typedef struct _SAFETY_CONFIGURATION_EX
+{
+    unsigned int _iDataVersion;
+    CONFIG_JOINT_RANGE _tJointRange;
+    CONFIG_GENERAL_RANGE _tGeneralRange;
+    float _fCollisionSensitivity;
+    CONFIG_SAFETY_FUNCTION _tSafetyFunc;
+    CONFIG_TOOL_SYMBOL _tTool;
+    CONFIG_TCP_SYMBOL _tTcp;
+    CONFIG_INSTALL_POSE _tInstallPose;
+    CONFIG_SAFETY_IO _tSafetyIO;
+    //CONFIG_SAFETY_IO_EX         _tSafetyIO;
+
+    CONFIG_VIRTUAL_FENCE _tSafetySpaceVF;
+    CONFIG_SAFE_ZONE _tSafetySpaceSZ;
+    ENABLE_SAFE_ZONE _tSafetySpaceESZ;
+    CONFIG_PROTECTED_ZONE _tSafetySpacePZ;
+    CONFIG_COLLISION_MUTE_ZONE _tSafetySpaceCM;
+    CONFIG_TOOL_ORIENTATION_LIMIT_ZONE _tSafetySpaceTO;
+    CONFIG_TOOL_SHAPE _tSafetySpaceTS;
+
+    CONFIG_NUDGE _tConfigNudge;
+    CONFIG_COCKPIT_EX _tCockPit;
+    CONFIG_IDLE_OFF _tIdleOff;
+    CONFIG_TCP_LIST _tConfigTCP;
+    CONFIG_TOOL_LIST _tConfigTool;
+    CONFIG_TOOL_SHAPE_LIST _tConfigToolShape;
+
+    char                _szActiveTcp[MAX_SYMBOL_SIZE];
+    char                _szActiveTool[MAX_SYMBOL_SIZE];
+    char                _szActiveToolShape[MAX_SYMBOL_SIZE];
+
+    MODBUS_DATA_LIST _tModbusList;
+    CONFIG_WORLD_COORDINATE     _tWorld2BaseRelation;
+    float m_CwsSpeedRatio;
+    float m_IoSpeedRatio;
+
+#ifdef _UNIFY_SAFETY_ZONE
+    int _iSafetyZoneCount;
+    CONFIG_SAFETY_ZONE _tSafetyZone[20];
+#endif
+
+#ifdef _FUNC_USER_COORDINATE
+    int _iUserCoordCount;
+    CONFIG_USER_COORDINATE _tUserCoordinates[20];
+#endif
+    CONFIG_CONFIGURABLE_IO _tConfigurableIO;
+
+} SAFETY_CONFIGURATION_EX, *LPSAFETY_CONFIGURATION_EX;
 
 #pragma pack()
