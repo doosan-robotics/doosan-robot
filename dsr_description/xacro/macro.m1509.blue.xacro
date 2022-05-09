@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 
-<!-- Copy of the xacro from doosan-robots -->
-<!-- @andres.montano: Changed the orientation of the axes so that IKFast works -->
-<!-- @inigo.moreno: Added more collision cillinders -->
-<!-- @inigo.moreno: Limit joints 2, 3 and 5  -->
-
 <robot name="m1509" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:include filename="$(find dsr_description)/config/macro.gazebo.xacro" />
 	<xacro:include filename="$(find dsr_description)/config/macro.transmission.xacro" />
