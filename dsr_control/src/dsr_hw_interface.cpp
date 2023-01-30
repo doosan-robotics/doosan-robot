@@ -3043,6 +3043,11 @@ namespace dsr_control{
     {
         res.success = false;
         res.success = Drfl.start_rt_control();
+        if(!res.success) {
+            return false;
+        }
+        res.success = Drfl.set_safety_mode(SAFETY_MODE_AUTONOMOUS,
+                                 SAFETY_MODE_EVENT_MOVE);
         return true;
     }
 
