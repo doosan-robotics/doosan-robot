@@ -631,7 +631,7 @@ namespace DRAFramework
         DRL_PROGRAM_STATE get_program_state() { return _get_program_state(_rbtCtrl); };
 
         // set safe-stop reset type
-        bool set_safe_stop_reset_type(SAFE_STOP_RESET_TYPE eResetType = SAFE_STOP_RESET_TYPE_DEFAULT) { _set_safe_stop_reset_type(_rbtCtrl, eResetType); }
+        bool set_safe_stop_reset_type(SAFE_STOP_RESET_TYPE eResetType = SAFE_STOP_RESET_TYPE_DEFAULT) { return _set_safe_stop_reset_type(_rbtCtrl, eResetType); }
 
         // get roobot system alarm
         LPLOG_ALARM get_last_alarm() { return _get_last_alarm(_rbtCtrl); };
