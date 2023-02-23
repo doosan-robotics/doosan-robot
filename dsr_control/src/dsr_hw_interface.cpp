@@ -24,6 +24,7 @@ DR_ERROR    g_stDrError;
 
 int g_nAnalogOutputModeCh1;
 int g_nAnalogOutputModeCh2;
+ros::Publisher PubRobotError;
 
 
 #define STABLE_BAND_JNT     0.05
@@ -396,8 +397,7 @@ namespace dsr_control{
     void DRHWInterface::OnLogAlarm(LPLOG_ALARM pLogAlarm)
     {
         //This function is called when an error occurs.
-        ros::NodeHandlePtr node=boost::make_shared<ros::NodeHandle>();
-        ros::Publisher PubRobotError=node->advertise<dsr_msgs::RobotError>("error",100);
+        
         dsr_msgs::RobotError msg;
 
         switch(pLogAlarm->_iLevel)
@@ -882,6 +882,7 @@ namespace dsr_control{
 
     bool DRHWInterface::init()
     {
+        PubRobotError = private_nh_.advertise<dsr_msgs::RobotError>("error",1);
         ROS_INFO("[dsr_hw_interface] init() ==> setup callback fucntion");
         int nServerPort = 12345;
         ROS_INFO("INIT@@@@@@@@@@@@@@@@@@@@@@@@@");
