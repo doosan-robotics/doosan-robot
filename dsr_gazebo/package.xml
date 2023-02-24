@@ -20,6 +20,9 @@
   <depend>xacro</depend>
   <depend>urdf</depend>
 
+  <exec_depend>dsr_description</exec_depend>
+  <exec_depend>dsr_control</exec_depend>
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" gazebo_model_path="${prefix}/models"/>

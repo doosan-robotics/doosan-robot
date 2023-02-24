@@ -33,6 +33,8 @@
   <exec_depend>serial</exec_depend>
   <exec_depend>roscpp</exec_depend>
 
-  <export>
-  </export>
+  <depend>moveit_msgs</depend>
+  <depend>trajectory_msgs</depend>
+  <depend>control_msgs</depend>
+
 </package>

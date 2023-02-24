@@ -8,10 +8,14 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   serial
   roscpp
+  moveit_msgs
+  trajectory_msgs
+  control_msgs
 )
 catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp serial
+    moveit_msgs trajectory_msgs control_msgs
 )
 
 SET( COMMON_INC_FILES

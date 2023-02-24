@@ -1,0 +1,44 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup ROS"
+        uses: ros-tooling/setup-ros@v0.5
+        with:
+          required-ros-distributions: noetic
+      - name: "Build & Test"
+        uses: ros-tooling/action-ros-ci@v0.2
+        id: action_ros_ci_step
+        with:
+          target-ros1-distro: noetic
+          import-token: ${{ secrets.GITHUB_TOKEN }}
+          colcon-defaults: |
+            {
+              "build": {
+                "cmake-args": ["-DSETUPTOOLS_DEB_LAYOUT=OFF"]
+              }
+            }
+      - name: Upload colcon logs (always)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: colcon-logs
+          path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
+      - name: Upload test artifacts (on failure)
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: ${{ github.workspace }}/ros_ws/**/test_results/**/*.xml
