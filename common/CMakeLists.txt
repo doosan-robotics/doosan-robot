@@ -4,7 +4,7 @@ find_package(catkin REQUIRED)
 
 catkin_package()
 
-FIND_PACKAGE(catkin REQUIRED COMPONENTS 
+FIND_PACKAGE(catkin REQUIRED COMPONENTS
   roscpp
   gazebo_ros
   control_toolbox
@@ -16,7 +16,7 @@ FIND_PACKAGE(Boost REQUIRED COMPONENTS thread)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 CATKIN_PACKAGE(
-  DEPENDS 
+  DEPENDS
     roscpp
     gazebo_ros
     control_toolbox
@@ -43,12 +43,12 @@ INCLUDE_DIRECTORIES(
 #for noetic  ${catkin_LIBRARIES}
 #for noetic  ${GAZEBO_LIBRARIES})
 
-install(PROGRAMS 
-    bin/DRCF/DRCF32 bin/DRCF/DRCF64 bin/DRCF/run_drcf.sh
+install(PROGRAMS
+    bin/DRCF/DRCF64 bin/DRCF/run_drcf.sh
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY
-    imp bin/DRCF/config 
+    imp bin/DRCF/config
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
