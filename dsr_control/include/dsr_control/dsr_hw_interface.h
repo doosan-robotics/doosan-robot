@@ -47,6 +47,7 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
+#include <actionlib/server/simple_action_server.h>
 
 #include <std_msgs/Float64MultiArray.h>
 #include <std_msgs/String.h>
@@ -230,6 +231,7 @@
 #include <moveit_msgs/RobotTrajectory.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
 #include <control_msgs/FollowJointTrajectoryActionGoal.h>
 
 ///#include "DRFL.h"
@@ -507,6 +509,21 @@ using namespace DRAFramework;
 
 namespace dsr_control{
 
+    class JointTrajectoryAction
+    {
+    protected:
+        actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction> as_; // NodeHandle instance must be created before this line. Otherwise strange error occurs.
+        std::string action_name_;
+        // create messages that are used to published feedback/result
+        control_msgs::FollowJointTrajectoryFeedback feedback_;
+        control_msgs::FollowJointTrajectoryResult result_;
+
+    public:
+        JointTrajectoryAction(ros::NodeHandle nh, std::string name);
+
+        void trajectoryCallback(const control_msgs::FollowJointTrajectoryGoalConstPtr& msg);
+    };
+
     class DRHWInterface : public hardware_interface::RobotHW
     {
     public:
@@ -586,7 +603,7 @@ namespace dsr_control{
         ros::Publisher m_PubTorqueRTStream;
 
         //----- Subscriber ------------------------------------------------------------
-        ros::Subscriber m_sub_joint_trajectory;
+        JointTrajectoryAction m_server_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
         ros::Subscriber m_SubSerialRead;
         ros::Subscriber m_sub_jog_multi_axis;

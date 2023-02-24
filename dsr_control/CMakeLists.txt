@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   serial
   roscpp
+  actionlib
 )
 catkin_package(
   INCLUDE_DIRS include

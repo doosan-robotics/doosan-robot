@@ -14,9 +14,13 @@
     <arg name="controller" default="position"/>
 
 	<!-- Run Doosan Robot emulator in virtual mode -->
-    <group if="$(eval arg('mode') == 'virtual')">         	
-        <node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true"  ns="$(arg ns)"
-            args="$(arg port) $(arg model)" />
+	<group if="$(eval arg('mode') == 'virtual')">
+		<group if="$(eval arg('ns') == '')">
+			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true" args="$(arg port) $(arg model)" />
+		</group>
+		<group if="$(eval arg('ns') != '')">
+			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="true" ns="$(arg ns)" args="$(arg port) $(arg model)" />
+		</group>
 	</group>
 
 	<!-- 제어기를 위한 position_controller, joint_state 정의 -->
