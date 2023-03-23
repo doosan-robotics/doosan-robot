@@ -1213,7 +1213,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_JOINT> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.servoj(target_pos.data(), target_vel.data(), target_acc.data(), time);
     }
@@ -1226,7 +1226,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, 2> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.servol(target_pos.data(), target_vel.data(), target_acc.data(), time);
     }
@@ -1237,7 +1237,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_JOINT> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.speedj(target_vel.data(), target_acc.data(), time);
     }
@@ -1248,7 +1248,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, 2> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.speedl(target_vel.data(), target_acc.data(), time);
     }
@@ -1261,7 +1261,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_JOINT> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.servoj_rt(target_pos.data(), target_vel.data(), target_acc.data(), time);
     }
@@ -1274,7 +1274,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_TASK> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.servol_rt(target_pos.data(), target_vel.data(), target_acc.data(), time);
     }
@@ -1285,7 +1285,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_JOINT> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.speedj_rt(target_vel.data(), target_acc.data(), time);
     }
@@ -1296,7 +1296,7 @@ namespace dsr_control{
         std::copy(msg->vel.cbegin(), msg->vel.cend(), target_vel.begin());
         std::array<float, NUM_TASK> target_acc;
         std::copy(msg->acc.cbegin(), msg->acc.cend(), target_acc.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.speedl_rt(target_vel.data(), target_acc.data(), time);
     }
@@ -1305,7 +1305,7 @@ namespace dsr_control{
 
         std::array<float, NUM_TASK> tor;
         std::copy(msg->tor.cbegin(), msg->tor.cend(), tor.begin());
-        int time = msg->time;
+        float time = msg->time;
 
         Drfl.torque_rt(tor.data(), time);
     }
