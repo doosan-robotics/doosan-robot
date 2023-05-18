@@ -851,7 +851,7 @@ namespace dsr_control{
         m_nh_system[12]= private_nh_.advertiseService("system/set_robot_control", &DRHWInterface::set_robot_control_cb, this);
         m_nh_system[13]= private_nh_.advertiseService("system/manage_access_control", &DRHWInterface::manage_access_control_cb, this);
         m_nh_system[14]= private_nh_.advertiseService("system/release_protective_stop", &DRHWInterface::release_protective_stop_cb, this);
-
+        m_nh_system[15]= private_nh_.advertiseService("system/set_safety_mode", &DRHWInterface::set_safety_mode_cb, this);
         //  motion Operations
         m_nh_motion_service[0] = private_nh_.advertiseService("motion/move_joint", &DRHWInterface::movej_cb, this);
         m_nh_motion_service[1] = private_nh_.advertiseService("motion/move_line", &DRHWInterface::movel_cb, this);
@@ -1397,6 +1397,13 @@ namespace dsr_control{
     bool DRHWInterface::release_protective_stop_cb(dsr_msgs::ReleaseProtectiveStop::Request& req, dsr_msgs::ReleaseProtectiveStop::Response& res){
         res.success = false;
         Drfl.release_protective_stop((RELEASE_MODE)req.release_mode);
+        res.success = true;
+        return true;
+    }
+
+    bool DRHWInterface::set_safety_mode_cb(dsr_msgs::SetSafetyMode::Request& req, dsr_msgs::SetSafetyMode::Response& res){
+        res.success = false;
+        Drfl.set_safety_mode((SAFETY_MODE)req.safety_mode, (SAFETY_MODE_EVENT)req.safety_mode_event);
         res.success = true;
         return true;
     }
