@@ -3,26 +3,8 @@
     =                   Copyright (c) Doosan Robotics.                        =   
     =_______________________________________________________________________  =
     = Title             : Doosan Robot Framwork Library                       =
-    = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com> / Gong Jin-Hyuk<jinhyuk.gong@doosan.com> =
+    = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
     = Description       : -                                                   =
-    = Version           : 1.0 (GL010105) first release                        =
-    =                     1.11 (GL010105-beta) add force control              =
-    =                                    add coordinate sytem control function      =
-    =                                    fix GetCurrentTool, GetCurrentTCP function = 
-    =                     1.12 (GL010106) add monitoring data extension       =
-    =                                    add debug message                    = 
-    =                                    support over 2.5 version (parameter) =
-    =                     1.13 (GL010107) add flange_serial                   = 
-    =                                    (open, close, read, write)           =
-    =                                    add move_home(user)                  =
-    =                                    add set_user_home                    =
-    =                                    fix SWRPT-4715(recovery mode)        =
-    =                                    fix SWRPT-4697(Resolving version compatibility issues)
-    =                     1.14 (GL010108) fix TOnDisconnectedCB(reconnection) =
-    =                                    fix movesj, amovesj                  =
-    =                     1.15 (GL010109) add flange_serial_read (add timeout param)
-    =                                    fix set_user_home / move_home        =
-    =                                    fix flaneg_serial_open(baudrate param)
     ======================================================================== */
 
 /*********************************************************************
@@ -222,7 +204,11 @@ namespace DRAFramework
         // periodic motion
         DRFL_API bool _MovePeriodic(LPROBOTCONTROL pCtrl, float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned char nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL);
         DRFL_API bool _MovePeriodicAsync(LPROBOTCONTROL pCtrl, float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned char nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL);
-
+		// safe motion
+		DRFL_API bool _Safe_MoveJ(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);
+		DRFL_API bool _Safe_MoveL(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_TASK], float fTargetVel[2], float fTargetAcc[2], float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_BASE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);
+        DRFL_API bool _Safe_MoveJX(LPROBOTCONTROL pCtrl, float fTargetPos[NUM_JOINT], unsigned char iSolutionSpace, float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_BASE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE);
+        
         ////////////////////////////////////////////////////////////////////////////
         //  GPIO Operations                                                       //
         ////////////////////////////////////////////////////////////////////////////
@@ -284,7 +270,7 @@ namespace DRAFramework
         // program start
         DRFL_API bool _PlayDrlStart(LPROBOTCONTROL pCtrl, ROBOT_SYSTEM eRobotSystem, const char* lpszDrlProgram);
         // program stop
-        DRFL_API bool _PlayDrlStop(LPROBOTCONTROL pCtrl, STOP_TYPE eStopType = STOP_TYPE_QUICK);
+        DRFL_API bool _PlayDrlStop(LPROBOTCONTROL pCtrl, unsigned char eStopType = 0);
         // program Pause
         DRFL_API bool _PlayDrlPause(LPROBOTCONTROL pCtrl);
         // program Resume
@@ -292,6 +278,8 @@ namespace DRAFramework
 
         void PrintFParam(float* printArr, int iSize, string strFunc);
         void PrintUCParam(unsigned char* printArr, int iSize, string strFunc);
+        bool CheckNewFlange();
+
 #ifdef __cplusplus
     };
 #endif
@@ -432,7 +420,11 @@ namespace DRAFramework
         // motion control: move periodic motion
         bool MovePeriodic(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned int nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL) { return _MovePeriodic(_rbtCtrl, fAmplitude, fPeriodic, fAccelTime, nRepeat, eMoveReference); };
         bool MovePeriodicAsync(float fAmplitude[NUM_TASK], float fPeriodic[NUM_TASK], float fAccelTime, unsigned int nRepeat, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_TOOL) { return _MovePeriodicAsync(_rbtCtrl, fAmplitude, fPeriodic, fAccelTime, nRepeat, eMoveReference); };
-
+		// safe motion
+		bool Safe_MoveJ(float fTargetPos[NUM_JOINT], float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE) { return _Safe_MoveJ(_rbtCtrl, fTargetPos, fTargetVel, fTargetAcc, fTargetTime, eMoveMode, fBlendingRadius, eBlendingType); };
+        bool Safe_MoveL(float fTargetPos[NUM_TASK], float fTargetVel[2], float fTargetAcc[2], float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_BASE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE) { return _Safe_MoveL(_rbtCtrl, fTargetPos, fTargetVel, fTargetAcc, fTargetTime, eMoveMode, eMoveReference, fBlendingRadius, eBlendingType); }
+        bool Safe_MoveJX(float fTargetPos[NUM_JOINT], unsigned char iSolutionSpace, float fTargetVel, float fTargetAcc, float fTargetTime = 0.f, MOVE_MODE eMoveMode = MOVE_MODE_ABSOLUTE, MOVE_REFERENCE eMoveReference = MOVE_REFERENCE_BASE, float fBlendingRadius = 0.f, BLENDING_SPEED_TYPE eBlendingType = BLENDING_SPEED_TYPE_DUPLICATE) { return _Safe_MoveJX(_rbtCtrl, fTargetPos, iSolutionSpace, fTargetVel, fTargetAcc, fTargetTime, eMoveMode, eMoveReference, fBlendingRadius, eBlendingType); };
+        
 
         ////////////////////////////////////////////////////////////////////////////
         //  GPIO Operations                                                       //
@@ -494,7 +486,7 @@ namespace DRAFramework
         //program start
         bool PlayDrlStart(ROBOT_SYSTEM eRobotSystem, string strDrlProgram) { return _PlayDrlStart(_rbtCtrl, eRobotSystem, strDrlProgram.c_str()); };
         //program stop
-        bool PlayDrlStop(STOP_TYPE eStopType = STOP_TYPE_QUICK) { return _PlayDrlStop(_rbtCtrl, eStopType); };
+        bool PlayDrlStop(unsigned char eStopType = 0) { return _PlayDrlStop(_rbtCtrl, eStopType); };
         //program pause
         bool PlayDrlPause()  { return _PlayDrlPause(_rbtCtrl); };
         //program resume
