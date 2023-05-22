@@ -5,10 +5,6 @@
     = Title             : Doosan Robot Framwork Constant                      =
     = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
     = Description       : -                                                   =
-    = Version           : 1.0 (GL010105) first release                        =
-    =                     1.1 (GF020300) add force control                    =
-    =                                    add coordinate sytem control function      =
-    =                                    fix GetCurrentTool, GetCurrentTCP function = 
     ======================================================================== */
 
 /*********************************************************************
@@ -68,6 +64,7 @@
 #define NUM_TASK                 (6)
 #define NUM_FLANGE_IO            (6)
 #define NUM_BUTTON               (5)
+#define NUM_BUTTON_EX            (6)
 #define NUMBER_OF_TASK           (6)
 
 //
@@ -89,6 +86,7 @@
 #define NUM_ENCORDER                (2)
 #define NUM_POWER_OUT               (1)
 #define NUM_SAFETY                  (8)
+#define NUMBER_OF_BUTTON            (6)
 
 #define MAX_MODBUS_TOTAL_REGISTERS  (100)
 
@@ -99,7 +97,23 @@
 
 #define MAX_CONFIG_TCP_SIZE         (50)
 #define MAX_CONFIG_TOOL_SIZE        (50)
+#define IS_NEW_FLANGE_VERSION(f) ((f[3] > '1') && ((f[2] == '0') || (f[2] == '1')))
 
+#define MIN_FLANGE_AI               2
+#define MAX_FLANGE_AI               4
+
+#define NUM_AXIS                 NUMBER_OF_JOINT
+#define MAX_MODBUS_BURST_SIZE           32
+
+#define MAX_USER_COORD_MONITORING_EXT_FORCE_SIZE  10
+#define MAX_MODBUS_SLAVE_DEVICES        5
+//#define MAX_MODBUS_REGISTER_PER_DEVICE  100
+#define MAX_MODBUS_REGISTER_PER_DEVICE  50
+#define MAX_MODBUS_SLAVE_TOTAL_GPR      128
+
+#define NUM_REMOTE_CONTROL 8
+
+static float COG_DEFAULT[3] = {0.0, 0.0, 0.0};
 //
 // robot state enumerated value
 //
@@ -160,13 +174,41 @@ typedef enum {
 
 } ROBOT_SYSTEM;
 
+typedef enum
+{
+    UPDATE_TARGET_FIRST      = 0,
+    UPDATE_TARGET_INVETER_1  = UPDATE_TARGET_FIRST,
+    UPDATE_TARGET_INVETER_2  = 1,
+    UPDATE_TARGET_INVETER_3  = 2,
+    UPDATE_TARGET_INVETER_4  = 3,
+    UPDATE_TARGET_INVETER_5  = 4,
+    UPDATE_TARGET_INVETER_6  = 5,
+    UPDATE_TARGET_INVETER_LAST = UPDATE_TARGET_INVETER_6,
+    UPDATE_TARGET_SAFETYBD   = 6,
+    UPDATE_TARGET_CONTROLLER = 7,
+    UPDATE_TARGET_SVM        = 8,
+    UPDATE_TARGET_LAST       = 9,
+} UPDATE_TARGET;
+
+typedef enum {
+    ENCORDER_POLARITY_A,
+    ENCORDER_POLARITY_B,
+    ENCORDER_POLARITY_Z,
+    ENCORDER_POLARITY_S,
+    ENCORDER_POLARITY_LAST
+} ENCORDER_POLARITY;
+
+
 //
 // robot mode enumerated value
 //
 typedef enum {
     ROBOT_MODE_MANUAL,
     ROBOT_MODE_AUTONOMOUS,
+    ROBOT_MODE_RECOVERY,
+    ROBOT_MODE_BACKDRIVE,
     ROBOT_MODE_MEASURE,
+    ROBOT_MODE_INITIALIZE,
     ROBOT_MODE_LAST,
 } ROBOT_MODE;
 
@@ -192,7 +234,6 @@ typedef enum {
     JOG_AXIS_TASK_RX,
     JOG_AXIS_TASK_RY,
     JOG_AXIS_TASK_RZ,
-
 } JOG_AXIS;
 
 //
@@ -386,6 +427,11 @@ typedef enum {
 } GPIO_CTRLBOX_ANALOG_INDEX;
 
 typedef enum {
+    GPIO_TOOL_ANALOG_INDEX_1 = 0,
+    GPIO_TOOL_ANALOG_INDEX_2,
+} GPIO_TOOL_ANALOG_INDEX;
+
+typedef enum {
     GPIO_TOOL_DIGITAL_INDEX_1 = 0,
     GPIO_TOOL_DIGITAL_INDEX_2,
     GPIO_TOOL_DIGITAL_INDEX_3,
@@ -540,6 +586,22 @@ enum {
     TYPE_LAST,
 };
 
+typedef enum{
+    COG_REFERENCE_TCP = 0,
+    COG_REFERENCE_FLANGE,
+} COG_REFERENCE;
+
+typedef enum{
+    ADD_UP_REPLACE = 0,
+    ADD_UP_ADD,
+    ADD_UP_REMOVE,
+} ADD_UP;
+
+typedef enum{
+    OUTPUT_TYPE_PNP = 0,
+    OUTPUT_TYPE_NPN,
+} OUTPUT_TYPE;
+
 //
 // safety mode enumerated value
 //
@@ -690,31 +752,26 @@ enum {
     COMMAND_PAUSE_PROGRAM,
     COMMAND_RESUME_PROGRAM,
 
-    OPERATION_PROGRAM_NORMAL_STOP,              //LV1 2007
-    OPERATION_PROGRAM_FORCED_STOP,              //LV1 2008
-    OPERATION_PROGRAM_FORCED_ERROR_STOP,        //LV1 2009
+    OPERATION_PROGRAM_NORMAL_STOP,           
+    OPERATION_PROGRAM_FORCED_STOP,             
+    OPERATION_PROGRAM_FORCED_ERROR_STOP,      
 
-    OPERATION_PROGRAM_SW_ERROR,                 //LV3 2010 + "invalid the DRL script(size=0)"          [원인] CPythonManager::Run() 에서 스크립트 파일이 null 인 경우
-    OPERATION_PROGRAM_INTERNAL_ERROR,           //LV3 2011 + "Check py files in the pys_linux folder"  [원인] python 초기화 오류
-    OPERATION_PROGRAM_INIT_ERROR,               //LV3 2012 + "Check py files in the pys_linux folder"  [원인] python 초기화 오류
-    OPERATION_PROGRAM_EMPTY_SCRIPT,             //LV3 2013 + "Internal error: DRL script(size=0)"      [원인] CPythonManager::Execute() 에서 스크립트 파일이 null 인 경우
+    OPERATION_PROGRAM_SW_ERROR,               
+    OPERATION_PROGRAM_INTERNAL_ERROR,      
+    OPERATION_PROGRAM_INIT_ERROR,             
+    OPERATION_PROGRAM_EMPTY_SCRIPT,            
 
     OPERATION_PROGRAM_RUNTIME_ERROR_START,
     OPERATION_PROGRAM_SYNTAX_EXCEPTION = OPERATION_PROGRAM_RUNTIME_ERROR_START,
-                                                //LV2 2014 + python 상세에러 + "check the name of user function & rename"
-                                                             //(내부 라인번호라서 안올림) [원인] 사용자 함수명과 python 내장 함수가 같은 경우 <ex> def open()
-                                                             //2014 이 에러가 뜨면 뒤에 정상적인 스크립트를 돌려도 python 에서 exception이 계속 발생하기때문에 사용자 함수명 수정후 제어기 리부팅 필요!
 
-    OPERATION_PROGRAM_SYNTAX_ERROR,             //LV2 2015 + 줄번호+ python 상세에러 + 파일명          [원인] 문법에러
-    OPERATION_PROGRAM_RUNTIME_TYPE_ERROR,       //LV2 2016 + 줄번호+ python 상세에러 + 파일명          [원인] DRL 명령문 인수에 잘못된 타입을 준 경우 ex) movej(posj, vel='a', acc=10)
-    OPERATION_PROGRAM_RUNTIME_VALUE_ERROR,      //LV2 2017 + 줄번호+ python 상세에러 + 파일명          [원인] DRL 명령문 인수에 잘못된 범위 값을 준 경우 <ex> set_digital_output(1977, ON)
-    OPERATION_PROGRAM_RUNTIME_RUNTIME_ERROR,    //LV2 2018 + 줄번호+ python 상세에러 + 파일명          [원인] DRCF.py 에서 Run-time 오류를 일으킨 경우<ex> 소켓 관련 에러, 쓰레드 4개 초과 ...
-    OPERATION_PROGRAM_RUNTIME_EXCEPTION,        //LV2 2019 + 줄번호+ python 상세에러 + 파일명          [원인] python runtime 에러 ex) a= 1+"abc"
+    OPERATION_PROGRAM_SYNTAX_ERROR,           
+    OPERATION_PROGRAM_RUNTIME_TYPE_ERROR,   
+    OPERATION_PROGRAM_RUNTIME_VALUE_ERROR,    
+    OPERATION_PROGRAM_RUNTIME_RUNTIME_ERROR,  
+    OPERATION_PROGRAM_RUNTIME_EXCEPTION,
 
-    OPERATION_PROGRAM_RUNTIME_SVM,              //LV2 2020 + 줄번호(=SVM ERROR_CODE)
+    OPERATION_PROGRAM_RUNTIME_SVM, 
     OPERATION_PROGRAM_RUNTIME_ERROR_END = OPERATION_PROGRAM_RUNTIME_SVM,
-
-    //eLOG_GROUP_SYSTEMFMK(ETHETNET)
 
     OPERATION_SERVER_START = 3000,
     OPERATION_SERVER_STOP,
@@ -829,9 +886,7 @@ enum {
 	RC_ERROR_USERCOORD							= 1109,
 	RC_ERROR_INPUT_TCP_INFO                         = 1110,
 	RC_ERROR_INPUT_TOOL_WEIGHT_COG_INFO             = 1111,
-#ifdef _FUNC_WORKPIECEWEIGHT_CONFIG_SETTING
 	RC_ERROR_INPUT_WORKPIECE_WEIGHT                 = 1112,
-#endif
 
 
 
@@ -880,8 +935,6 @@ enum {
 	RC_ERROR_INPUT_VIRTUAL_FENCE_SETTING            = 1601, 
 	RC_ERROR_LIMIT_MAX_TCP_POSITON_VF               = 1602, 
 	RC_ERROR_INPUT_MIN_VALUE_VF                     = 1603, 
-	//												  1604 // RESERVED
-	//												  1605 // RESERVED
 
 	RC_ERROR_DRCL_STATE_INVALID_EVENT               = 1903, 
 	RC_ERROR_MATH_CALCULATION                       = 1904,
@@ -892,11 +945,8 @@ enum {
 	RC_ERROR_INPUT_REF_COORDINATE					= 1907,	//181121
 
 	RC_ERROR_INPUT_INVALID_CONTROL_CMD				= 1908, // Invalid Contorl -> Inverter Command
-
-#ifdef _FUNC_CHECK_CALIBRATION_RESULT
 	RC_ERROR_JTS_CALIBRATION_OUT_OF_RANGE				= 2301, // 210512_YLKim_Addition of Error Code
 	RC_ERROR_FTS_CALIBRATION_OUT_OF_RANGE				= 2302, // 210512_YLKim_Addition of Error Code
-#endif
 
 	RC_ERROR_LIMIT_MAX_UCPOSITON                    = 2501, 
 	RC_ERROR_LIMIT_MAX_UCVELOCITY                   = 2502, 
@@ -929,7 +979,7 @@ enum {
 	RC_ERROR_INCORRECT_FORCE_RESET					= 3404, //190513 FORCE_RESET
 
 
-    //RC_ERROR_SYSTEM_JTS_VALUE_COLLISION             = 3501,	//180719 占싱몌옙占쏙옙占쏙옙
+    //RC_ERROR_SYSTEM_JTS_VALUE_COLLISION             = 3501,	//180719 ??????????
 	RC_ERROR_SYSTEM_EXTERNER_JOINT_VALUE			= 3501,
     RC_ERROR_SYSTEM_JTS_VALUE_VF                    = 3502, 
     RC_ERROR_SYSTEM_JTS_VALUE_COMP_CTRL             = 3503,
@@ -944,7 +994,7 @@ enum {
 	//												  3901 // RESERVED
     RC_ERROR_CALC_INVERSE_KINEMATICS                = 3905,
 
-	//RC_ERROR_SYSTEM_JTS_VALUE_BOOT				= 4501, //180719 占쏙옙占쏙옙
+	//RC_ERROR_SYSTEM_JTS_VALUE_BOOT				= 4501, //180719 ??????
 
     RC_ERROR_SYSTEM_JTS_VALUE                       = 4508,
 	RC_ERROR_HW_FTS_LIMIT							= 4901,
@@ -1233,4 +1283,3 @@ enum {
     OPERATION_DETECT_CPU_RESERVED8                        = 7247,
     OPERATION_DETECT_CPU_RESERVED9                        = 7248,
 };
-

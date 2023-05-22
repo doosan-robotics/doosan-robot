@@ -86,6 +86,7 @@
 #include <dsr_msgs/ManageAccessControl.h>
 #include <dsr_msgs/SetRobotControl.h>
 #include <dsr_msgs/ReleaseProtectiveStop.h>
+#include <dsr_msgs/SetSafetyMode.h>
 
 // motion
 #include <dsr_msgs/MoveJoint.h>
@@ -678,7 +679,8 @@ namespace dsr_control{
         bool set_robot_control_cb(dsr_msgs::SetRobotControl::Request& req, dsr_msgs::SetRobotControl::Response& res);
         bool manage_access_control_cb(dsr_msgs::ManageAccessControl::Request& req, dsr_msgs::ManageAccessControl::Response& res);
         bool release_protective_stop_cb(dsr_msgs::ReleaseProtectiveStop::Request& req, dsr_msgs::ReleaseProtectiveStop::Response& res);
-
+        bool set_safety_mode_cb(dsr_msgs::SetSafetyMode::Request& req, dsr_msgs::SetSafetyMode::Response& res);
+        
         //----- MOTION
         bool movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
         bool movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
