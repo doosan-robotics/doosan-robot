@@ -44,6 +44,7 @@ add_service_files(
     ./system/SetRobotControl.srv
     ./system/ManageAccessControl.srv
     ./system/ReleaseProtectiveStop.srv
+    ./system/SetSafetyMode.srv
 
     ./motion/MoveJoint.srv
     ./motion/MoveLine.srv
