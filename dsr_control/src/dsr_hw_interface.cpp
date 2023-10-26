@@ -993,7 +993,7 @@ namespace dsr_control{
         m_nh_realtime_service[12] = private_nh_.advertiseService("realtime/set_velx_rt", &DRHWInterface::set_velx_rt_cb, this);
         m_nh_realtime_service[13] = private_nh_.advertiseService("realtime/set_accx_rt", &DRHWInterface::set_accx_rt_cb, this);
         m_nh_realtime_service[14] = private_nh_.advertiseService("realtime/read_data_rt", &DRHWInterface::read_data_rt_cb, this);
-        m_nh_realtime_service[14] = private_nh_.advertiseService("realtime/write_data_rt", &DRHWInterface::write_data_rt_cb, this);
+        m_nh_realtime_service[15] = private_nh_.advertiseService("realtime/write_data_rt", &DRHWInterface::write_data_rt_cb, this);
 
         memset(&g_stDrState, 0x00, sizeof(DR_STATE));
         memset(&g_stDrError, 0x00, sizeof(DR_ERROR));
