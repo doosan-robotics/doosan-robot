@@ -1,5 +1,4 @@
-## We no longer support the melodic version.
-## Please use our Noetic branch as main branch.
+## We no longer support the melodic version. Please use Doosan Noetic branch as main branch.
 
 # [Doosan Robotics](http://www.doosanrobotics.com/kr/)
 [![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
