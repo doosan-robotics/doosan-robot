@@ -22,7 +22,7 @@
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
           output="screen" ns="$(arg ns)$(arg model)" args="dsr_joint_publisher"/>
 
-    <param name="$(arg ns)$(arg model)/move_group/trajectory_execution/execution_duration_monitoring" value="false">
+    <param name="$(arg ns)$(arg model)/move_group/trajectory_execution/execution_duration_monitoring" value="false" />
     <!-- moveit은 멀티 arm이 안되므로 model은 참조용으로 사용 -->
     <node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)$(arg model)" respawn="false" output="screen" >
         <param name="name" value="$(arg ns)"/>
