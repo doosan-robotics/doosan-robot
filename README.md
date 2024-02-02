@@ -1,3 +1,5 @@
+## We no longer support the melodic version. Please use our Noetic branch as main branch.
+
 # [Doosan Robotics](http://www.doosanrobotics.com/kr/)
 [![license - apache 2.0](https://img.shields.io/:license-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
@@ -8,7 +10,6 @@
 [Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A)   
 [Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
-# We no longer support the melodic version. Please use our Noetic branch as main branch.
 
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-melodic.*
