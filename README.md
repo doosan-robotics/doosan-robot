@@ -8,6 +8,8 @@
 [Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A)   
 [Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
+# We no longer support the melodic version. Please use our Noetic branch as main branch.
+
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-melodic.*
     ### We recoomand the /home/<user_home>/catkin_ws/src
