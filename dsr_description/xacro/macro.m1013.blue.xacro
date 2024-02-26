@@ -14,6 +14,12 @@
 					iyz="-0.00051686"
 					izz="0.022577"/>
 			</inertial>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_0_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -39,10 +45,11 @@
 					izz="0.047056"/>
 			</inertial>
             <collision>
-                <geometry>
-                    <cylinder radius="0.1" length="0.2"/>
-                </geometry>
-            </collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_1_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -68,23 +75,35 @@
 					izz="0.85021"/>
 			</inertial>
             <collision>
-                <origin rpy="0 -1.571 0" xyz="0.3 0 0.1525" />
-                <geometry>
-                    <cylinder radius="0.08" length="0.75"/>
-                </geometry>
-            </collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_2_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/m1013_blue/MF1013_2_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_2_1.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/m1013_blue/MF1013_2_1.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_2_2.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -109,7 +128,13 @@
 					iyz="-0.00099342"
 					izz="0.011502"/>
 			</inertial>
-			<visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_3_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
+            <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/m1013_blue/MF1013_3_0.dae" scale="0.001 0.001 0.001" />
@@ -133,17 +158,23 @@
 					izz="0.030386"/>
 			</inertial>
             <collision>
-                <origin rpy="-0.55 0 0" xyz="0 0.07 -0.3" />
-                <geometry>
-                    <cylinder radius="0.07" length="0.4"/>
-                </geometry>
-            </collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_4_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/m1013_blue/MF1013_4_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_4_1.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -168,12 +199,12 @@
 					iyz="0.00042553"
 					izz="0.0088671"/>
 			</inertial>
-            <collision>
-                <origin rpy="1.571 0 0" xyz="0 0 0" />
-                <geometry>
-                    <cylinder radius="0.08" length="0.15"/>
-                </geometry>
-            </collision>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_5_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -198,6 +229,12 @@
 					iyz="4.252e-06"
 					izz="0.0061263"/>
 			</inertial>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+				<geometry>
+					<mesh filename="package://dsr_description/meshes/m1013_collision/MF1013_6_0.dae" scale="0.001 0.001 0.001" />
+				</geometry>
+			</collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
