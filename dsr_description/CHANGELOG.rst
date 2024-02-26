@@ -2,6 +2,11 @@
 Changelog for package dsr_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.2 (2024-02-26)
+------------------
+* add E0509 model & launcher
+* add collision meshes & xacro
+
 1.2.0 (2021-07-01)
 ------------------
 * update DRFL

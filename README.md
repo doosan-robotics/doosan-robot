@@ -17,6 +17,17 @@ __Does not support the use of multi robots (only supports single robots)__
 [Doosan ROS Online Lecture(Kor)](https://www.youtube.com/watch?v=TpvBziOb--A)   
 [Doosan ROS Online Lecture(Eng)](https://www.youtube.com/watch?v=KkzoS5VORPc) 
 
+
+# *install*
+#### install emulator(for virtual mode)
+##### *install Docker https://docs.docker.com/engine/install/ubuntu/*
+    docker pull doosanrobot/emulator:1.0.2
+
+
+#### package list
+    sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
+
+
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-Noetic.*
     ### We recommand the /home/<user_home>/catkin_ws/src
@@ -33,8 +44,6 @@ __Does not support the use of multi robots (only supports single robots)__
     catkin_make
     source ./devel/setup.bash
 
-#### package list
-    sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode
@@ -77,11 +86,11 @@ roslaunch dsr_description a0509.launch
 ___
 #### dsr_moveit_config
 > ###### __arguments__
-   > color:= ROBOT_COLOR <white / blue> defalut = white  
+   > color:= ROBOT_COLOR <white / blue> deflaut = white  
     
     roslaunch moveit_config_m0609 m0609.launch
     roslaunch moveit_config_m0617 m0617.launch
-    roslaunch moveit_config_m1013 m1013.launch color:=blue
+    roslaunch moveit_config_m1013 m1013.launch 
     roslaunch moveit_config_m1509 m1509.launch
     roslaunch moveit_config_a0509 a0509.launch
     
@@ -91,13 +100,13 @@ ___
 ___
 #### dsr_control _(default model:= m1013, default mode:= virtual)_
 > ###### __arguments__                    
->host := ROBOT_IP defalut = 127.0.0.1 
+>host := ROBOT_IP deflaut = 127.0.0.1 
 port := ROBOT_PORT default = 12345  
-mode := OPERATION MODE <virtual  /  real> defalut = virtual  
-model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> defalut = m1013  
-color := ROBOT_COLOR <white  /  blue> defalut = white  
-gripper := USE_GRIPPER <none  /  robotiq_2f> defalut = none  
-mobile := USE_MOBILE <none  /  husky> defalut = none  
+mode := OPERATION MODE <virtual  /  real> deflaut = virtual  
+model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> deflaut = m1013  
+color := ROBOT_COLOR <white  /  blue> deflaut = white  
+gripper := USE_GRIPPER <none  /  robotiq_2f> deflaut = none  
+mobile := USE_MOBILE <none  /  husky> deflaut = none  
 
 #### dsr_moveit
     roslaunch dsr_launcher dsr_moveit.launch
@@ -129,13 +138,14 @@ ___
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
-   >host:= ROBOT_IP defalut = 127.0.0.1  ##controller IP = 192.168.127.100 
+   >host:= ROBOT_IP deflaut = 127.0.0.1  ##controller IP = 192.168.127.100 
     port:= ROBOT_PORT default = 12345  
-    mode:= OPERATION MODE <virtual  /  real> defalut = virtual  
-    model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509> defalut = m1013  
-    color:= ROBOT_COLOR <white / blue> defalut = white  
-    gripper:= USE_GRIPPER <none / robotiq_2f> defalut = none  
-    mobile:= USE_MOBILE <none / husky> defalut = none  
+    mode:= OPERATION MODE <virtual  /  real> deflaut = virtual  
+    model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509 / e0509> deflaut = m1013  
+    color:= ROBOT_COLOR <white / blue> deflaut = white  
+    gripper:= USE_GRIPPER <none / robotiq_2f> deflaut = none  
+    mobile:= USE_MOBILE <none / husky> deflaut = none 
+    rviz:= USE Rviz <true / false > deflaut = true
 
     roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
     roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.127.100

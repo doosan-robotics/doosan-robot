@@ -2,6 +2,11 @@
 Changelog for package common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.2 (2024-02-26)
+------------------
+* update emulator to docker
+* add move_stop service
+
 1.2.0 (2021-07-01)
 ------------------
 * update DRFL

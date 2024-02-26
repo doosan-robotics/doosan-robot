@@ -2,6 +2,20 @@
 Changelog for package dsr_launcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.2 (2024-02-26)
+------------------
+* add param gui option(rviz, gazebo)
+* add E0509 model
+* fix bugs in robot_description
+
+* Contributors: Minsoo Song
+
+
+1.2.1 (2024-01-19)
+------------------
+* update single_robot_rviz
+* Contributors: Minsoo Song
+
 1.2.0 (2021-07-01)
 ------------------
 * delete multi launch

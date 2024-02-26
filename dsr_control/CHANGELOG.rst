@@ -2,6 +2,15 @@
 Changelog for package dsr_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.2 (2024-02-26)
+------------------
+* add publisher for updating joint state
+* add move_stop service
+* add managing docker emulator in control_node 
+* add optional moveit param
+
+* Contributors: Minsoo Song
+
 1.2.0 (2021-07-01)
 ------------------
 * update DRFL
