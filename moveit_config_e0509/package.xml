@@ -1,14 +1,13 @@
 <package>
 
-  <name>moveit_config_a0509</name>
+  <name>moveit_config_e0509</name>
   <version>1.2.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the a0509 with the MoveIt! Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the e0509 with the MoveIt! Motion Planning Framework
   </description>
-  <author email="jinhyuk.gong@doosan.com">jinhyuk.gong</author>
   <author email="minsoo.song@doosan.com">Minsoo Song</author>
+  <maintainer email="minsoo.song@doosan.com">Minsoo Song</maintainer>
 
-  <maintainer email="ros.robotics@doosan.com">Doosan Robotics</maintainer>
   <license>BSD</license>
 
   <url type="website">http://moveit.ros.org/</url>
