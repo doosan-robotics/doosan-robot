@@ -2,7 +2,7 @@
 
 <launch>
   <arg name="gui"   default="true"/>
-  <arg name="rviz"  default="true"/>
+  <arg name="rviz"  default="False"/>
   <arg name="world" default="empty.world"/>
 
   <arg name="host" default="127.0.0.1"/>
@@ -32,6 +32,7 @@
     <arg name="color"         value="$(arg color)"/>
     <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"        value="$(arg mobile)"/>
+    <arg name="rviz"        value="$(arg rviz)"/>
 
     <arg name="x"             value="0"/>
     <arg name="y"             value="0"/>

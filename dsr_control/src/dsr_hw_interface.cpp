@@ -160,6 +160,70 @@ namespace dsr_control{
         */
         as_.setSucceeded(result_);
     }
+    // Next Controller Version
+
+    // void JointTrajectoryAction::trajectoryCallback(const control_msgs::FollowJointTrajectoryGoalConstPtr &goal)
+    // {
+    //     ROS_INFO("callback: Trajectory received");
+    //     ROS_INFO("  goal->trajectory.points.size() =%d", (int)goal->trajectory.points.size());           //=10 가변젹
+    //     ROS_INFO("  goal->trajectory.joint_names.size() =%d", (int)goal->trajectory.joint_names.size()); //=6
+
+    //     float preTargetTime = 0.0;
+    //     float targetTime = 0.0;
+    //     int nCntTargetPos = goal->trajectory.points.size();
+    //     float fTargetPos[nCntTargetPos][NUM_JOINT] = {
+    //         0.0,
+    //     };
+    //     double dt = 0.0;
+
+    //     ros::Time begin = ros::Time::now();
+    //     Drfl.set_safety_mode((SAFETY_MODE)1, (SAFETY_MODE_EVENT)1);
+
+    //     for (int i = 0; i < nCntTargetPos; i++) //=10
+    //     {
+    //         std::array<float, NUM_JOINT> degrees;
+    //         ros::Duration d(goal->trajectory.points[i].time_from_start);
+    //         targetTime = d.toSec();
+    //         ROS_INFO("[trajectory] preTargetTime: %7.3f", preTargetTime);
+    //         ROS_INFO("[trajectory] TargetTime: %7.3f", targetTime);
+    //         dt = targetTime - preTargetTime;
+    //         preTargetTime = targetTime;
+    //         ROS_INFO("[trajectory] dt: %7.3f", dt);
+
+    //         for (int j = 0; j < goal->trajectory.joint_names.size(); j++) //=6
+    //         {
+    //             degrees[j] = rad2deg(goal->trajectory.points[i].positions[j]);
+    //             fTargetPos[i][j] = degrees[j];
+    //         }
+
+    //         ros::Duration step_duration = d - (ros::Time::now() - begin);
+    //         float blending_radius = 50;
+
+    //         if (as_.isPreemptRequested() || !ros::ok())
+    //         {
+    //             ROS_INFO("%s: Preempted", action_name_.c_str());
+    //             // set the action state to preempted
+    //             as_.setPreempted();
+    //             return;
+    //         }
+    //         ROS_INFO("[trajectory] [%02d : %.3f : %.3f] %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f", i, dt, step_duration.toSec(), rad2deg(goal->trajectory.points[i].positions[0]), rad2deg(goal->trajectory.points[i].positions[1]), rad2deg(goal->trajectory.points[i].positions[2]), rad2deg(goal->trajectory.points[i].positions[3]), rad2deg(goal->trajectory.points[i].positions[4]), rad2deg(goal->trajectory.points[i].positions[5]));
+    //         float TargetVel[6] = {100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f};
+    //         float TargetAcc[6] = {100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f};
+
+    //         Drfl.servoj(degrees.data(), TargetVel, TargetAcc, dt);
+    //         int delay;
+    //         ros::param::param<int>("~standby", delay, 5000);
+    //         usleep(delay);
+            
+    //         if(i == nCntTargetPos-1){
+    //             while ((Drfl.get_robot_state() != STATE_STANDBY)){
+    //                usleep(delay);
+    //             }
+    //             Drfl.set_safety_mode((SAFETY_MODE)1, (SAFETY_MODE_EVENT)2);
+    //             as_.setSucceeded(result_);
+    //         }
+    //     }       
+    // }
 
     //----- register the call-back functions ----------------------------------------
     void DRHWInterface::OnTpInitializingCompletedCB()
@@ -812,14 +876,17 @@ namespace dsr_control{
         m_PubRobotError = private_nh_.advertise<dsr_msgs::RobotError>("error",100);
         ///m_PubJogMultiAxis = private_nh_.advertise<dsr_msgs::JogMultiAxis>("jog_multi",100);
 
-        // gazebo에 joint position 전달
-        m_PubtoGazebo = private_nh_.advertise<std_msgs::Float64MultiArray>("/dsr_joint_position_controller/command",10);
-        // topic echo 명령으로 제어기에 전달
-        m_sub_joint_position = private_nh_.subscribe("dsr_joint_position_controller/command", 10, &DRHWInterface::positionCallback, this);
+        
+        
 
         ros::NodeHandle nh_temp;
         m_SubSerialRead = nh_temp.subscribe("serial_read", 100, &Serial_comm::read_callback, &ser_comm);
         m_PubSerialWrite = nh_temp.advertise<std_msgs::String>("serial_write", 100);
+        // gazebo에 joint position 전달
+        m_PubtoGazebo = nh_temp.advertise<std_msgs::Float64MultiArray>("/"+m_strRobotName+"/dsr_joint_position_controller/command",10);
+        // topic echo 명령으로 제어기에 전달
+        // m_sub_joint_position = private_nh_.subscribe("/dsr_joint_position_controller/command", 10, &DRHWInterface::positionCallback, this);
+        m_sub_move_gruop_joint_position = nh_temp.subscribe("/"+m_strRobotModel+"/move_group/fake_controller_joint_states", 10, &DRHWInterface::movegroupPositionCallback, this);
 
         // subscribe : Multi-JOG topic msg
         m_sub_jog_multi_axis = private_nh_.subscribe("jog_multi", 10, &DRHWInterface::jogCallback, this);
@@ -881,6 +948,9 @@ namespace dsr_control{
         m_nh_motion_service[24]= private_nh_.advertiseService("motion/disable_alter_motion", &DRHWInterface::disable_alter_motion_cb, this);
         m_nh_motion_service[25]= private_nh_.advertiseService("motion/set_singularity_handling", &DRHWInterface::set_singularity_handling_cb, this);
         m_nh_motion_service[26]= private_nh_.advertiseService("motion/ikin_ex", &DRHWInterface::ikin_ex_cb, this);
+        m_nh_motion_service[27] = private_nh_.advertiseService("motion/safe_move_joint", &DRHWInterface::safe_movej_cb, this);
+        m_nh_motion_service[28] = private_nh_.advertiseService("motion/safe_move_line", &DRHWInterface::safe_movel_cb, this);
+        m_nh_motion_service[29] = private_nh_.advertiseService("motion/safe_move_jointx", &DRHWInterface::safe_movejx_cb, this);
 
         // Auxiliary Control Operations
         m_nh_aux_control_service[0]  = private_nh_.advertiseService("aux_control/get_control_mode", &DRHWInterface::get_control_mode_cb, this);
@@ -1181,6 +1251,14 @@ namespace dsr_control{
         std::copy(msg->data.cbegin(), msg->data.cend(), target_pos.begin());
         Drfl.amovej(target_pos.data(), 50, 50);
     }
+    
+    void DRHWInterface::movegroupPositionCallback(const sensor_msgs::JointState::ConstPtr& msg){
+        // ROS_INFO("callback: Position received");
+        // std::array<float, NUM_JOINT> target_pos;
+        // std::copy(msg->position.cbegin(), msg->position.cend(), target_pos.begin());
+        // Drfl.amovej(target_pos.data(), 50, 50);
+    }
+    
 
     void DRHWInterface::jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg){
         //ROS_INFO("callback: jogCallback received");
@@ -1749,6 +1827,56 @@ namespace dsr_control{
         }
         res.status = joint_pos->_iStatus;
         res.success = true;
+        return true;
+    }
+    bool DRHWInterface::safe_movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res)
+    {
+        res.success = false;
+        std::array<float, NUM_JOINT> target_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
+        if(req.syncType == 0){
+            //ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJ");
+            res.success = Drfl.Safe_MoveJ(target_pos.data(), req.vel, req.acc, req.time, (MOVE_MODE)req.mode, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
+        }
+        else{
+            //ROS_INFO("DRHWInterface::movej_cb() called and calling Drfl.MoveJAsync");
+            res.success = Drfl.Safe_MoveJ(target_pos.data(), req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (BLENDING_SPEED_TYPE)req.blendType);
+        }
+        return true;
+    }
+    bool DRHWInterface::safe_movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res)
+    {
+        res.success = false;
+        std::array<float, NUM_TASK> target_pos;
+        std::array<float, 2> target_vel;
+        std::array<float, 2> target_acc;
+        std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
+        std::copy(req.vel.cbegin(), req.vel.cend(), target_vel.begin());
+        std::copy(req.acc.cbegin(), req.acc.cend(), target_acc.begin());
+
+        if(req.syncType == 0){
+            //ROS_INFO("DRHWInterface::movel_cb() called and calling Drfl.MoveL");
+            res.success = Drfl.Safe_MoveL(target_pos.data(), target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
+        }
+        else{
+            //ROS_INFO("DRHWInterface::movel_cb() called and calling Drfl.MoveLAsync");
+            res.success = Drfl.Safe_MoveL(target_pos.data(), target_vel.data(), target_acc.data(), req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);
+        }
+        return true;
+    }
+    bool DRHWInterface::safe_movejx_cb(dsr_msgs::MoveJointx::Request& req, dsr_msgs::MoveJointx::Response& res)
+    {
+        res.success = false;
+        std::array<float, NUM_TASK> target_pos;
+        std::copy(req.pos.cbegin(), req.pos.cend(), target_pos.begin());
+        if(req.syncType == 0){
+            //ROS_INFO("DRHWInterface::movejx_cb() called and calling Drfl.MoveJX");
+            res.success = Drfl.Safe_MoveJX(target_pos.data(), req.sol, req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
+        }
+        else{
+            //ROS_INFO("DRHWInterface::movejx_cb() called and calling Drfl.MoveJXAsync");
+            res.success = Drfl.Safe_MoveJX(target_pos.data(), req.sol, req.vel, req.acc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);
+        }
         return true;
     }
 

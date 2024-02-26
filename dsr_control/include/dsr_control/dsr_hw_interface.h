@@ -558,6 +558,17 @@ namespace dsr_control{
 
         std::string GetRobotName();
         std::string GetRobotModel();
+        std::string m_strRobotName;
+        std::string m_strRobotModel;
+        std::string m_strRobotGripper;
+        bool m_moveit;
+        struct Joint{
+            double cmd;
+            double pos;
+            double vel;
+            double eff;
+            Joint(): cmd(0), pos(0), vel(0), eff(0) {}
+        } joints[NUM_JOINT];
 
     private:
         int  m_nVersionDRCF;
@@ -565,9 +576,7 @@ namespace dsr_control{
 
         ros::NodeHandle private_nh_;
 
-        std::string m_strRobotName;
-        std::string m_strRobotModel;
-        std::string m_strRobotGripper;
+        
 
         //----- Service ---------------------------------------------------------------
         ros::ServiceServer m_nh_system[20];
@@ -606,6 +615,7 @@ namespace dsr_control{
         //----- Subscriber ------------------------------------------------------------
         JointTrajectoryAction m_server_joint_trajectory;
         ros::Subscriber m_sub_joint_position;
+        ros::Subscriber m_sub_move_gruop_joint_position;
         ros::Subscriber m_SubSerialRead;
         ros::Subscriber m_sub_jog_multi_axis;
         ros::Subscriber m_sub_alter_motion_stream;
@@ -627,19 +637,14 @@ namespace dsr_control{
 
         std::array<float, NUM_JOINT> cmd_;
         bool bCommand_;
-        struct Joint{
-            double cmd;
-            double pos;
-            double vel;
-            double eff;
-            Joint(): cmd(0), pos(0), vel(0), eff(0) {}
-        } joints[NUM_JOINT];
+        
 
         //----- SIG Handler --------------------------------------------------------------
         void sigint_handler( int signo);
 
         void trajectoryCallback(const control_msgs::FollowJointTrajectoryActionGoal::ConstPtr& msg);
         void positionCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
+        void movegroupPositionCallback(const sensor_msgs::JointState::ConstPtr& msg);
 
         void jogCallback(const dsr_msgs::JogMultiAxis::ConstPtr& msg);
         void alterCallback(const dsr_msgs::AlterMotionStream::ConstPtr& msg);
@@ -709,6 +714,9 @@ namespace dsr_control{
         bool alter_motion_cb(dsr_msgs::AlterMotion::Request& req, dsr_msgs::AlterMotion::Response& res);
         bool disable_alter_motion_cb(dsr_msgs::DisableAlterMotion::Request& req, dsr_msgs::DisableAlterMotion::Response& res);
         bool set_singularity_handling_cb(dsr_msgs::SetSingularityHandling::Request& req, dsr_msgs::SetSingularityHandling::Response& res);
+        bool safe_movej_cb(dsr_msgs::MoveJoint::Request& req, dsr_msgs::MoveJoint::Response& res);
+        bool safe_movel_cb(dsr_msgs::MoveLine::Request& req, dsr_msgs::MoveLine::Response& res);
+        bool safe_movejx_cb(dsr_msgs::MoveJointx::Request& req, dsr_msgs::MoveJointx::Response& res);
 
         //----- auxiliary_control
         bool get_control_mode_cb(dsr_msgs::GetControlMode::Request& req, dsr_msgs::GetControlMode::Response& res);               
