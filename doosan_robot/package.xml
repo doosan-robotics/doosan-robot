@@ -13,6 +13,7 @@
   <author email="kabkyoum.kim@doosan.com">Kab Kyoum Kim</author>
   <author email="jinhyuk.gong@doosan.com">Jin Hyuk Gong</author>
   <author email="jeongwoo1.lee@doosan.com">Jeongwoo Lee</author>
+  <author email="minsoo.song@doosan.com">Minsoo Song</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>doosan_robotics</run_depend>

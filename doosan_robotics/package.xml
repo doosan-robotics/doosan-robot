@@ -8,7 +8,9 @@
   <author email="jinhyuk.gong@doosan.com">Jin Hyuk Gong</author>
   <author email="jeongwoo1.lee@doosan.com">Jeongwoo Lee</author>
   <author email="zaxrok@gmail.com">Byungchul Choi</author>
+  <author email="minsoo.song@doosan.com">Minsoo Song</author>
 
+  <maintainer email="minsoo.song@doosan.com">Minsoo Song</maintainer>
   <maintainer email="ros.robotics@doosan.com">Doosan Robotics</maintainer>
 
   <license>BSD</license>

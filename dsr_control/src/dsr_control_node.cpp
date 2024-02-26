@@ -13,7 +13,7 @@
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include "dsr_control/dsr_hw_interface.h"
-#include <cstdlib> // system 함수를 사용하기 위한 헤더 파일
+#include <cstdlib> 
 #include <chrono>
 #include <thread>
 
@@ -22,7 +22,7 @@ using namespace dsr_control;
 int g_nKill_dsr_control = false;
 
 bool isEmulatorRunning() {
-    FILE *cmd_pipe = popen("docker ps -q --filter \"name=1.0.2\"", "r");
+    FILE *cmd_pipe = popen("docker ps -q --filter \"name=dsr_emulator\"", "r");
     if (!cmd_pipe) {
         ROS_ERROR("[dsr_control] An error occurred while executing the command.");
         return false;
@@ -31,15 +31,15 @@ bool isEmulatorRunning() {
     char result[1024];
     if (fgets(result, sizeof(result), cmd_pipe) != nullptr) {
         pclose(cmd_pipe);
-        return true; // "emulator" 이름의 컨테이너가 실행 중인 경우
+        return true; // In case of a container named 'dsr_emulator' running...
     }
 
     pclose(cmd_pipe);
-    return false; // "emulator" 이름의 컨테이너가 실행 중이 아닌 경우
+    return false; // In case of a container named 'dsr_emulator' not running...
 }
 
 bool stopEmulator() {
-    int result = system("docker stop 1.0.2");
+    int result = system("docker stop dsr_emulator");
     if (result != 0) {
         ROS_ERROR("[dsr_control] Error occurred while stopping the emulator container.");
         return false;

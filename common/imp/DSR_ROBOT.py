@@ -72,6 +72,7 @@ _ros_movesx                     = rospy.ServiceProxy(_srv_name_prefix +"/motion/
 _ros_moveb                      = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_blending", MoveBlending)
 _ros_move_spiral                = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_spiral", MoveSpiral)
 _ros_move_periodic              = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_periodic", MovePeriodic)
+_ros_move_stop                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_stop", MoveStop)
 _ros_move_wait                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/move_wait", MoveWait)
 _ros_jog                        = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog", Jog)
 _ros_jog_multi                  = rospy.ServiceProxy(_srv_name_prefix +"/motion/jog_multi", JogMulti)
@@ -2531,6 +2532,19 @@ def  move_home(target=None):
 
     return ret
 
+def move_stop(stop_mode=0):
+        ret = _move_stop(stop_mode)
+        return ret
+    
+def _move_stop(stop_mode):
+    if __ROS__:
+        srv = _ros_move_stop(stop_mode)  #ROS 에서는 time 인자를 사용하지 않음. 
+        #ret = srv.success
+        ret = 0 if (srv.success == True) else -1
+    else:
+        ret = PythonMgr.py_move_stop(stop_mode)
+    return ret
+
 def mwait(time=0):
     ret = _move_wait(time)
     return ret
@@ -4617,6 +4631,7 @@ class CDsrRobot:
         self._ros_moveb                      = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_blending", MoveBlending)
         self._ros_move_spiral                = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_spiral", MoveSpiral)
         self._ros_move_periodic              = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_periodic", MovePeriodic)
+        self._ros_move_stop                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_stop", MoveStop)
         self._ros_move_wait                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/move_wait", MoveWait)
         self._ros_jog                        = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog", Jog)
         self._ros_jog_multi                  = rospy.ServiceProxy(self._srv_name_prefix +"/motion/jog_multi", JogMulti)
@@ -6383,6 +6398,20 @@ class CDsrRobot:
             ret = PythonMgr.py_move_home(_target)
     
         return ret
+        
+    def move_stop(self, stop_mode=0):
+        ret = self._move_stop(stop_mode)
+        return ret
+    
+    def _move_stop(self, stop_mode):
+        if __ROS__:
+            srv = self._ros_move_stop(stop_mode)  #ROS 에서는 time 인자를 사용하지 않음. 
+            #ret = srv.success
+            ret = 0 if (srv.success == True) else -1
+        else:
+            ret = PythonMgr.py_move_stop(stop_mode)
+        return ret
+
         
     def mwait(self, time=0):
         ret = self._move_wait(time)
