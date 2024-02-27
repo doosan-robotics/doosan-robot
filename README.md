@@ -53,9 +53,9 @@ _One emulator is required for each robot_
 
 ##### Real Mode
 Use __real mode__ to drive a real robot   
-The default IP of the robot controller is _192.168.127.100_ and the port is _12345_.
+The default IP of the robot controller is _192.168.137.100_ and the port is _12345_.
 ```bash
-roslaunch dsr_launcher single_robot_gazebo.launch mode:=real host:=192.168.127.100 port:=12345
+roslaunch dsr_launcher single_robot_gazebo.launch mode:=real host:=192.168.137.100 port:=12345
 ```
 ___
 #### dsr_description
@@ -135,7 +135,7 @@ ___
 
 __If you don`t have real doosan controller, you must execute emulator before run dsr_launcer.__
 > ###### __arguments__    
-   >host:= ROBOT_IP deflaut = 127.0.0.1  ##controller IP = 192.168.127.100 
+   >host:= ROBOT_IP deflaut = 127.0.0.1  ##controller IP = 192.168.137.100 
     port:= ROBOT_PORT default = 12345  
     mode:= OPERATION MODE <virtual  /  real> deflaut = virtual  
     model:= ROBOT_MODEL <m0609 / m0617 / m1013 / m1509 / a0509 / e0509> deflaut = m1013  
@@ -145,7 +145,7 @@ __If you don`t have real doosan controller, you must execute emulator before run
     rviz:= USE Rviz <true / false > deflaut = true
 
     roslaunch dsr_launcher single_robot_rviz.launch host:=127.0.0.1 port:=12345 mode:=virtual model:=m1013 color:=blue gripper:=none mobile:=none
-    roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.127.100
+    roslaunch dsr_launcher single_robot_gazebo.launch host:=192.168.137.100
     roslaunch dsr_launcher single_robot_rviz_gazebo.launch gripper:=robotiq_2f mobile:=husky
     
 ___
@@ -176,7 +176,7 @@ ___
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns" value="dsr01"/> # Robot ID
     <arg name="model" value="m1013"/> # Robot Model
-    <arg name="host" value="192.168.127.100"/> # Robot IP
+    <arg name="host" value="192.168.137.100"/> # Robot IP
     <arg name="port" value="12345"/> # Robot Port
     <arg name="mode" value="virtual"/> # Robot Controller Mode 
     # Position & Posture in Gazebo
@@ -187,7 +187,7 @@ ___
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
     <arg name="ns" value="dsr02"/> # Secondary Robot ID
     <arg name="model" value="m1013"/> # Secondary Robot Model
-    <arg name="host" value="192.168.127.102"/> # Secondary Robot IP
+    <arg name="host" value="192.168.137.102"/> # Secondary Robot IP
     <arg name="port" value="12346"/> # Robot Port
     <arg name="mode" value="virtual"/> # Secondary Robot Controller Mode
     # Secondary Position & Posture in Gazebo
