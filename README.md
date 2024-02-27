@@ -3,13 +3,6 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![support level: community](https://img.shields.io/badge/support%20level-community-lightgray.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
-# *Precautions*
-### Features not currently supported
-> __Robotiq description cannot be called on gazebo simulation.__   
-__Mobile (Husky) simulation not available__   
-__Does not support the use of multi robots (only supports single robots)__
-
-
 # *overview*
 
 [Doosan ROS Video](https://www.youtube.com/watch?v=mE24X5PhZ4M&feature=youtu.be)   
