@@ -44,7 +44,7 @@ To utilize the new emulator in virtual mode, we rely on Docker. Please ensure Do
 ##### Virtual Mode
 If you are driveing without a real robot, use __virtual mode__   
 When ROS launches in virtual mode, the emulator(DRCF) runs automatically.
-> (DRCF) location: doosan-robot/common/bin/ DRCF
+> (DRCF) location: docker image
 
 ```bash
 roslaunch dsr_launcher single_robot_gazebo.launch mode:=virtual
@@ -62,9 +62,10 @@ ___
 ```bash
 roslaunch dsr_description m0609.launch    
 roslaunch dsr_description m1013.launch color:=blue # Change Color
-roslaunch dsr_description m1509.launch gripper:=robotiq_2f # insert robotiq gripper
-roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f # change color & insert robotiq gripper
+roslaunch dsr_description m1509.launch 
+roslaunch dsr_description m0617.launch color:=blue # change color 
 roslaunch dsr_description a0509.launch 
+roslaunch dsr_description e0509.launch    
 ```
 
 > $ _roslaunch dsr_description m1013.launch_ 
@@ -73,20 +74,21 @@ roslaunch dsr_description a0509.launch
 > + In dsr_description, the user can use joint_state_publisher to move the robot.
 > + [Joint_state_publisher](http://wiki.ros.org/joint_state_publisher)
 
-> $ _roslaunch dsr_description m0617.launch color:=blue gripper:=robotiq_2f_ 
+> $ _roslaunch dsr_description m0617.launch color:=blue 
 
 <img src="https://user-images.githubusercontent.com/47092672/55624467-f7037300-57e0-11e9-930a-ec929de3a0fa.png" width="70%">
 
 ___
 #### dsr_moveit_config
 > ###### __arguments__
-   > color:= ROBOT_COLOR <white / blue> deflaut = white  
+   > color:= ROBOT_COLOR <white / blue> deflaut = white  (e0509 has only white)
     
     roslaunch moveit_config_m0609 m0609.launch
     roslaunch moveit_config_m0617 m0617.launch
     roslaunch moveit_config_m1013 m1013.launch 
     roslaunch moveit_config_m1509 m1509.launch
     roslaunch moveit_config_a0509 a0509.launch
+    roslaunch moveit_config_a0509 e0509.launch
     
     
 <img src="https://user-images.githubusercontent.com/47092672/55613994-fd84f100-57c6-11e9-97eb-49d1d7c9e32c.png" width="70%">
@@ -97,10 +99,11 @@ ___
 >host := ROBOT_IP deflaut = 127.0.0.1 
 port := ROBOT_PORT default = 12345  
 mode := OPERATION MODE <virtual  /  real> deflaut = virtual  
-model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515> deflaut = m1013  
+model := ROBOT_MODEL <m0609  /  0617 /  m1013  /  m1509 / a0509 / a0912 / h2017 / h2515 / e0509> deflaut = m1013  
 color := ROBOT_COLOR <white  /  blue> deflaut = white  
 gripper := USE_GRIPPER <none  /  robotiq_2f> deflaut = none  
 mobile := USE_MOBILE <none  /  husky> deflaut = none  
+rviz := USE_RVIZ_GUI <true  /  false> deflaut = true  
 
 #### dsr_moveit
     roslaunch dsr_launcher dsr_moveit.launch
@@ -165,22 +168,6 @@ ___
 
 > _$ rosrun dsr_example_py single_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
-
-###### robot + gripper
-> insert argument gripper:=robotiq_2f  
-- single robot + gripper
-```bash
-roslaunch dsr_launcher single_robot_rviz.launch gripper:=robotiq_2f
-
-<run application node>
-  rosrun dsr_example_py pick_and_place_simple.py
-```
-- Serial Test(Loopback)
-```bash
-rosrun serial_example_node serial_example_node ttyUSB0 115200
-rostopic echo /serial_read
-rostopic pub /serial_write std_msgs/String 'data: 100'
-```
     
 #### gazebo+rviz+virtual
     roslaunch dsr_launcher single_robot_rviz_gazebo.launch
