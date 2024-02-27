@@ -14,8 +14,8 @@
 # *install*
 
 #### virtual mode
-##### *install Docker https://docs.docker.com/engine/install/ubuntu/*
 To utilize the new emulator in virtual mode, we rely on Docker. Please ensure Docker is installed beforehand if virtual mode is required.
+##### *install Docker https://docs.docker.com/engine/install/ubuntu/*
 #### dependency packages
     sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
 
