@@ -19,9 +19,11 @@ __Does not support the use of multi robots (only supports single robots)__
 
 
 # *install*
-#### install emulator(for virtual mode)
+
+#### virtual mode
 ##### *install Docker https://docs.docker.com/engine/install/ubuntu/*
-#### package list
+To utilize the new emulator in virtual mode, we rely on Docker. Please ensure Docker is installed beforehand if virtual mode is required.
+#### dependency packages
     sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
 
 
