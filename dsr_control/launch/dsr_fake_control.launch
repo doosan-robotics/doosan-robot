@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
 <launch>
-	<arg name="ns" default="dsr" />
-        <arg name="gripper" default="none"/>
-		<arg name="mobile"  default="none" />
-        <arg name="yaml"    default="dsr_control"/>
+	<arg name="ns" default="dsr01" />
+	<arg name="gripper" default="none"/>
+	<arg name="mobile"  default="none" />
+	<arg name="yaml"    default="dsr_control"/>
+	<arg name="model"   default="m1013"/>
+	
 
 
 	<!--mobile 구동-->
@@ -48,5 +50,10 @@
 		<rosparam command="load" file="$(find dsr_control)/config/$(arg yaml).yaml" ns="$(arg ns)" />
 		<node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="dsr_joint_position_controller" ns="$(arg ns)">
 		</node>
+		<node name="gazebo_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="$(arg ns)">
+			<param name="tf_prefix" value="$(arg ns)" />
+			<param name="robot_description" value="$(arg ns)/robot_description" />
+		</node>
 	</group>
+	
 </launch>

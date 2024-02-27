@@ -2,6 +2,11 @@
 Changelog for package moveit_config_m0617
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.2 (2024-02-26)
+------------------
+* update joint_limit
+* Contributors: Minsoo Song
+
 1.2.0 (2021-07-01)
 ------------------
 * update noetic

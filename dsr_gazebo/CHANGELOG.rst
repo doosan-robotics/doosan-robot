@@ -1,6 +1,12 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package dsr_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1.2.2 (2024-02-26)
+------------------
+* add applied pid params & fix pid error
+* add optional param for moveit
+
+* Contributors: Minsoo Song
 
 1.2.0 (2021-07-01)
 ------------------

@@ -1,10 +1,10 @@
 gazebo_ros_control/pid_gains:
-#  joint1: {p: 500.0, i: 0, d: 85}
-#  joint2: {p: 1000.0, i: 0, d: 100}
-#  joint3: {p: 1000.0, i: 0, d: 100}
-#  joint4: {p: 500.0, i: 0, d: 85}
-#  joint5: {p: 600.0, i: 0, d: 85}
-#  joint6: {p: 500.0, i: 0, d: 85}
+  joint1: {p: 5000.0, i: 5000, d: 85}
+  joint2: {p: 10000.0, i: 10000, d: 100}
+  joint3: {p: 10000.0, i: 10000, d: 100}
+  joint4: {p: 5000.0, i: 5000, d: 85}
+  joint5: {p: 6000.0, i: 6000, d: 85}
+  joint6: {p: 5000.0, i: 5000, d: 85}
 
   front_left_wheel:  {p: 500.0, i: 0.0, d: 1.0}
   front_right_wheel: {p: 500.0, i: 0.0, d: 1.0}

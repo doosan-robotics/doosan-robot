@@ -14,6 +14,12 @@
 					iyz="-5.3034e-05"
 					izz="0.021063"/>
 				</inertial>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_0_0.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -39,8 +45,9 @@
 					izz="0.044399"/>
 			</inertial>
             <collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
                 <geometry>
-                    <cylinder radius="0.08" length="0.2"/>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_1_0.dae" scale="0.001 0.001 0.001" />
                 </geometry>
             </collision>
 			<visual>
@@ -49,12 +56,24 @@
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_1_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_1_1.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_1_1.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_1_2.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -79,9 +98,9 @@
 					izz="0.67428"/>
 			</inertial>
             <collision>
-                <origin rpy="0 -1.571 0" xyz="0.3 0 0.1525" />
+				<origin rpy="0 0 0" xyz="0 0 0" />
                 <geometry>
-                    <cylinder radius="0.08" length="0.6"/>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_2_0.dae" scale="0.001 0.001 0.001" />
                 </geometry>
             </collision>
 			<visual>
@@ -90,12 +109,24 @@
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_2_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_2_1.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_2_1.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_2_2.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -120,12 +151,24 @@
 					iyz="-0.0001989"
 					izz="0.0080652"/>
 			</inertial>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_3_0.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_3_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_3_1.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -150,9 +193,9 @@
 					izz="0.017186"/>
 			</inertial>
             <collision>
-                <origin rpy="-0.46 0 0" xyz="0 0.075 -0.2" />
+				<origin rpy="0 0 0" xyz="0 0 0" />
                 <geometry>
-                    <cylinder radius="0.05" length="0.4"/>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_4_0.dae" scale="0.001 0.001 0.001" />
                 </geometry>
             </collision>
 			<visual>
@@ -161,6 +204,12 @@
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_4_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_4_1.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -186,9 +235,9 @@
 					izz="0.0090476"/>
 			</inertial>
             <collision>
-                <origin rpy="1.571 0 0" xyz="0 0 0" />
+				<origin rpy="0 0 0" xyz="0 0 0" />
                 <geometry>
-                    <cylinder radius="0.06" length="0.15"/>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_5_0.dae" scale="0.001 0.001 0.001" />
                 </geometry>
             </collision>
 			<visual>
@@ -197,6 +246,12 @@
 					<mesh filename="package://dsr_description/meshes/a0912_blue/A0912_5_0.dae" scale="0.001 0.001 0.001" />
 				</geometry>
 			</visual>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_5_1.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>
@@ -221,6 +276,12 @@
 					iyz="8.3671e-06"
 					izz="0.0059696"/>
 			</inertial>
+			<collision>
+				<origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+					<mesh filename="package://dsr_description/meshes/a0912_collision/A0912_6_0.dae" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
 			<visual>
 				<origin rpy="0 0 0" xyz="0 0 0" />
 				<geometry>

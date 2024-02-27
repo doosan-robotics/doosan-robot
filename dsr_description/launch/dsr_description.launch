@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 
 <launch>
-	<arg name="ns"      default="dsr"/>
+	<arg name="ns"      default="dsr01"/>
 	<arg name="model"   default="m1013"/>
 	<arg name="color"   default="white"/>    
     <arg name="mobile"  default="none"/>
 	<arg name="gripper" default="none"/>
+	<arg name="rviz"    default="True"/>
+	<arg name="remap"    default="True"/>
 
 	<!-- ARM 모델  -->
     <group if="$(eval arg('mobile') == 'none')">
-       <param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro'
-	                           '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)"/>
+		<param name="robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model).urdf.xacro' '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)"/>
 	</group>
 
 	<!-- ARM + Mobile 모델 -->
@@ -18,11 +19,18 @@
     	<param name="/$(arg ns)/robot_description" command="$(find xacro)/xacro '$(find dsr_description)/xacro/$(arg model)mobile.urdf.xacro'
 	    	                   '--inorder' 'namespace:=$(arg ns)' color:=$(arg color) gripper:=$(arg gripper)" />
 	</group>
+	<group if="$(eval arg('remap') == 'True')">
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" respawn="true">
+			<remap from="/joint_states" to="$(arg ns)$(arg model)/joint_states"/>
+		</node>
+	</group>
+<!-- 
+	<node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+		<remap from="/joint_states" to="$(arg ns)$(arg model)/joint_states"/>
+		<param name="/use_gui" value="true"/>
+	</node> -->
 
-	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="$(arg ns)">
-		<param name="tf_prefix" value="$(arg ns)" />
-		<param name="robot_description" value="/$(arg ns)/robot_description" />
-		<!-- joint state는 실제 로봇 제어기에서 받는다.  -->
-		<remap from="/$(arg ns)/joint_states" to="/$(arg ns)$(arg model)/joint_states" />
-	</node>
+	<group if="$(eval arg('rviz') == True)">
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dsr_description)/rviz/default.rviz"/>
+    </group>
 </launch>
