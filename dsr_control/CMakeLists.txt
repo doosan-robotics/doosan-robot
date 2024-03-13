@@ -10,10 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   actionlib
 )
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp serial
-)
 
 SET( COMMON_INC_FILES
   #../../../common/include
@@ -25,6 +21,11 @@ SET( COMMON_LIB_FILES
 
 SET( SERIAL_SRC_FILES
   ../common/src/dsr_serial.cpp
+)
+catkin_package(
+  INCLUDE_DIRS include ${COMMON_INC_FILES}
+  LIBRARIES dsr_control
+  CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp serial
 )
 
 
@@ -65,7 +66,34 @@ target_link_libraries(dsr_control_node ${catkin_LIBRARIES})
 target_link_libraries(dsr_control_node DRFL PocoFoundation PocoNet)
 
 
+
 install(TARGETS dsr_control_node
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+add_library(dsr_control
+  ${SERIAL_SRC_FILES}
+  src/dsr_hw_interface.cpp
+)
+
+target_include_directories(dsr_control
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../common/include
+)
+
+target_link_libraries(dsr_control 
+  PUBLIC
+    DRFL 
+    PocoFoundation 
+    PocoNet
+    ${catkin_LIBRARIES} 
+)
+
+
+install(TARGETS dsr_control
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -74,3 +102,4 @@ install(TARGETS dsr_control_node
 install(DIRECTORY config launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
