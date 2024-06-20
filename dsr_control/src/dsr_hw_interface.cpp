@@ -1124,7 +1124,8 @@ namespace dsr_control{
 
         ROS_INFO("host %s, port=%d bCommand: %d, mode: %s\n", host.c_str(), nServerPort, bCommand_, mode.c_str());
 
-
+        // Workaround sleep to ensure processes on server prepared.
+        ros::Duration(2).sleep();
         if(Drfl.open_connection(host, nServerPort))
         {
             //--- connect Emulator ? ------------------------------
