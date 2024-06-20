@@ -17,10 +17,10 @@
 	<!-- Run Doosan Robot emulator in virtual mode -->
 	<group if="$(eval arg('mode') == 'virtual')">
 		<group if="$(eval arg('ns') == '')">
-			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="false" args="$(arg port) $(arg model)" />
+			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="false" args="$(arg port) $(arg model) $(arg ns)" />
 		</group>
 		<group if="$(eval arg('ns') != '')">
-			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="false" ns="$(arg ns)" args="$(arg port) $(arg model)" />
+			<node name="drcf" pkg="common" type="run_drcf.sh" output="screen" required="false" ns="$(arg ns)" args="$(arg port) $(arg model) $(arg ns)" />
 		</group>
 	</group>
 
