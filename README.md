@@ -169,6 +169,20 @@ ___
 > _$ rosrun dsr_example_py single_robot_simple.py_
 > <img src="https://user-images.githubusercontent.com/47092672/55624471-fbc82700-57e0-11e9-8c1f-4fe9f526944b.png" width="70%">
     
+###### Multi Robot Usage
+<launch>
+
+      // We need to specify controller's ip and port.
+      // Additionally, we also need to specify namespace to distinguish ROS Graph constructing each robot
+      // Note: moveit does not support namespace feature in ros1, 'dsr_moveit.launcher' and 'dsr_moveit_gazebo.launcher' don't support multi robot usage.
+      roslaunch dsr_launcher single_robot.launch ns:=${NAMESPACE} ip:=${CONTROLLER_IP} port:=${CONTROLLER_PORT}
+
+      <example>
+      roslaunch gazebo_ros empty_world.launch world:=empty.world
+      roslaunch dsr_launcher single_robot.launch ns:=dsr01 mode:=virtual port:=127.0.0.1 port:=12345 x:=0 y:=0 // also specify location to distinguish in gazebo.
+      roslaunch dsr_launcher single_robot.launch ns:=dsr02 mode:=virtual port:=127.0.0.1 port:=12346 x:=1 y:=1
+
+
 #### gazebo+rviz+virtual
     roslaunch dsr_launcher single_robot_rviz_gazebo.launch
     rosrun dsr_example_py single_robot_simple.py
