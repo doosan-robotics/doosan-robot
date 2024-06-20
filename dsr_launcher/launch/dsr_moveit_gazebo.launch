@@ -28,7 +28,7 @@
   <!-- Spawn the arms. -->
   <!-- include file="$(find dsr_bringup)/launch/dsr_base.launch"-->
   <include file="$(find dsr_gazebo)/launch/dsr_base.launch">
-    <arg name="ns"            value="dsr01"/>
+    <arg name="ns"            value="$(arg ns)"/>
     <arg name="host"          value="$(arg host)"/>
     <arg name="port"          value="$(arg port)"/>
     <arg name="mode"          value="$(arg mode)"/>

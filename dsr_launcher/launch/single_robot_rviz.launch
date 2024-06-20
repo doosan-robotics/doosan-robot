@@ -29,7 +29,7 @@
 		<param name="model" value="$(arg model)"/>
 	</node> -->
   <include file="$(find dsr_control)/launch/dsr_control.launch">
-    <arg name="ns"            value="dsr01"/>
+    <arg name="ns"            value="$(arg ns)"/>
     <arg name="host"         value="$(arg host)"/>
     <arg name="port"         value="$(arg port)"/>
     <arg name="mode"           value="$(arg mode)" />
@@ -41,7 +41,7 @@
   </include>
 
   <include file="$(find dsr_description)/launch/$(arg model).launch">
-    <arg name="ns"            value="dsr01"/>
+    <arg name="ns"            value="$(arg ns)"/>
     <arg name="model"         value="$(arg model)"/>
     <arg name="color"         value="$(arg color)"/>
     <arg name="gui"           value="$(arg gui)" />
