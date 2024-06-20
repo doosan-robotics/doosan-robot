@@ -22,7 +22,7 @@ using namespace dsr_control;
 int g_nKill_dsr_control = false;
 
 bool isEmulatorRunning() {
-    FILE *cmd_pipe = popen("docker ps -q --filter \"name=dsr_emulator\"", "r");
+    FILE *cmd_pipe = popen("docker ps -q --filter name=emulator", "r");
     if (!cmd_pipe) {
         ROS_ERROR("[dsr_control] An error occurred while executing the command.");
         return false;
@@ -39,7 +39,7 @@ bool isEmulatorRunning() {
 }
 
 bool stopEmulator() {
-    int result = system("docker stop dsr_emulator");
+    int result = system("docker ps -a --filter name=emulator -q | xargs -r docker stop");
     if (result != 0) {
         ROS_ERROR("[dsr_control] Error occurred while stopping the emulator container.");
         return false;
