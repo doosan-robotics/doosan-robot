@@ -4,13 +4,15 @@
     =_______________________________________________________________________  =
     = Title             : Doosan Robot Framwork Constant                      =
     = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
+    = Maintainer        : Minsoo Song<minsoo.song@doosan.com>                 =
+    =                     Minju Lee<minju3.lee@doosan.com>                    =
     = Description       : -                                                   =
     ======================================================================== */
 
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2019, Doosan Robotics
+ *  Copyright (c) 2024, Doosan Robotics
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -41,6 +43,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+
 #pragma once
 
 #ifndef TRUE
@@ -66,6 +69,8 @@
 #define NUM_BUTTON               (5)
 #define NUM_BUTTON_EX            (6)
 #define NUMBER_OF_TASK           (6)
+#define NUMBER_OF_TASK_EX        (NUMBER_OF_TASK+1) // SUPPORT_ORIENTATION_TYPE
+#define NUMBER_OF_ITER_THRESHOULD           (2)
 
 //
 // string constants
@@ -87,6 +92,13 @@
 #define NUM_POWER_OUT               (1)
 #define NUM_SAFETY                  (8)
 #define NUMBER_OF_BUTTON            (6)
+
+
+// Version 3 support I/O
+#define NUM_DIGITAL_V3                 (32)
+#define MAX_DIGITAL_BURST_SIZE_V3      (32)
+#define NUM_SAFETY_V3                  (16)
+#define NUM_SAFETY_IN_V3               (3)
 
 #define MAX_MODBUS_TOTAL_REGISTERS  (100)
 
@@ -290,6 +302,40 @@ typedef enum {
 } MOVE_MODE;
 
 //
+// movec orientation value
+//
+typedef enum {
+    DR_MV_ORI_TEACH,
+    DR_MV_ORI_FIXED,
+    DR_MV_ORI_RADIAL,
+    DR_MV_ORI_INTENT,
+} MOVE_ORIENTATION;
+
+//
+// spiral_dir value : inward / outward
+//
+typedef enum {
+    DR_SPIRAL_OUTWARD,
+    DR_SPIRAL_INWARD,
+} SPIRAL_DIR;
+
+//
+// rot_dir value : FORWARD / REVERSE
+//
+typedef enum {
+    DR_ROT_FORWARD,
+    DR_ROT_REVERSE,
+} ROT_DIR;
+
+//
+// application option : DR_MV_APP_NONE / DR_MV_APP_WELD
+//
+typedef enum {
+    DR_MV_APP_NONE,
+    DR_MV_APP_WELD
+} DR_MV_APP;
+
+//
 // alter motion path mode enumerated value
 //
 typedef enum {
@@ -325,6 +371,14 @@ typedef enum {
     BLENDING_SPEED_TYPE_OVERRIDE,
 
 } BLENDING_SPEED_TYPE;
+
+//
+// servoj type enumerated value
+//
+typedef enum {
+    DR_SERVO_OVERRIDE = 0,
+    DR_SERVO_QUEUE = 1,
+} DR_SERVOJ_TYPE;
 
 //
 // reset safety stop type enumerated value
@@ -402,6 +456,9 @@ typedef enum{
 //
 // gpio index enumerated value
 //
+
+// V2 : Input 16, Output 16
+// V3 : Input 20, Output 16
 typedef enum {
     GPIO_CTRLBOX_DIGITAL_INDEX_1= 0,
     GPIO_CTRLBOX_DIGITAL_INDEX_2,
@@ -419,6 +476,22 @@ typedef enum {
     GPIO_CTRLBOX_DIGITAL_INDEX_14,
     GPIO_CTRLBOX_DIGITAL_INDEX_15,
     GPIO_CTRLBOX_DIGITAL_INDEX_16,
+    GPIO_CTRLBOX_DIGITAL_INDEX_17,
+    GPIO_CTRLBOX_DIGITAL_INDEX_18,
+    GPIO_CTRLBOX_DIGITAL_INDEX_19,
+    GPIO_CTRLBOX_DIGITAL_INDEX_20,
+    GPIO_CTRLBOX_DIGITAL_INDEX_21,
+    GPIO_CTRLBOX_DIGITAL_INDEX_22,
+    GPIO_CTRLBOX_DIGITAL_INDEX_23,
+    GPIO_CTRLBOX_DIGITAL_INDEX_24,
+    GPIO_CTRLBOX_DIGITAL_INDEX_25,
+    GPIO_CTRLBOX_DIGITAL_INDEX_26,
+    GPIO_CTRLBOX_DIGITAL_INDEX_27,
+    GPIO_CTRLBOX_DIGITAL_INDEX_28,
+    GPIO_CTRLBOX_DIGITAL_INDEX_29,
+    GPIO_CTRLBOX_DIGITAL_INDEX_30,
+    GPIO_CTRLBOX_DIGITAL_INDEX_31,
+    GPIO_CTRLBOX_DIGITAL_INDEX_32,
 } GPIO_CTRLBOX_DIGITAL_INDEX;
 
 typedef enum {
@@ -616,6 +689,14 @@ typedef enum {
 
 } SAFETY_MODE;
 
+typedef enum    
+{
+	SMODE_SERVO_OFF=0,
+	SMODE_SERVO_ON,
+	SMODE_HOLD, 
+	SMODE_POSITION_MODE,
+	SMODE_TORQUE_MODE,
+}SERVO_MODE;
 //
 // safety state enumerated value
 //
@@ -1283,3 +1364,4 @@ enum {
     OPERATION_DETECT_CPU_RESERVED8                        = 7247,
     OPERATION_DETECT_CPU_RESERVED9                        = 7248,
 };
+

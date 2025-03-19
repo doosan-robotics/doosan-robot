@@ -319,7 +319,7 @@
 
 // digital I/O
 #define DR_DIO_MIN_INDEX    1
-#define DR_DIO_MAX_INDEX    16  
+#define DR_DIO_MAX_INDEX    20 // In v3 controller, Input IO : 16 -> 20, Output IO : 16  
 
 // tool digital I/O
 #define DR_TDIO_MIN_INDEX   1
@@ -543,7 +543,11 @@ namespace dsr_control{
         static void OnTpInitializingCompletedCB();
 
         static void OnMonitoringCtrlIOCB (const LPMONITORING_CTRLIO pCtrlIO);
+#if DRCF_VERSION == 2
         static void OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX pCtrlIO);
+#elif DRCF_VERSION == 3
+        static void OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX2 pCtrlIO);
+#endif
         static void OnMonitoringModbusCB (const LPMONITORING_MODBUS pModbus);
         static void OnMonitoringStateCB(const ROBOT_STATE eState);
         static void OnMonitoringAccessControlCB(const MONITORING_ACCESS_CONTROL eAccCtrl);

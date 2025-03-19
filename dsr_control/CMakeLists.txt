@@ -15,6 +15,11 @@ catkin_package(
   CATKIN_DEPENDS dsr_msgs controller_manager hardware_interface roscpp serial
 )
 
+if(NOT DEFINED DRCF_VER)
+  set(DRCF_VER 2)
+endif()
+message(DRCF_VERSION : ${DRCF_VER})
+
 SET( COMMON_INC_FILES
   #../../../common/include
   ../common/include
@@ -63,7 +68,7 @@ add_dependencies(dsr_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_E
 
 target_link_libraries(dsr_control_node ${catkin_LIBRARIES})
 target_link_libraries(dsr_control_node DRFL PocoFoundation PocoNet)
-
+target_compile_definitions(dsr_control_node PUBLIC DRCF_VERSION=${DRCF_VER})
 
 install(TARGETS dsr_control_node
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

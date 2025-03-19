@@ -261,6 +261,8 @@ namespace dsr_control{
             }
         }
     }
+    // Need to distinguish compatible function.. 
+#if DRCF_VERSION == 2
     // M2.5 or higher
     void DRHWInterface::OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX pCtrlIO)
     {
@@ -289,7 +291,36 @@ namespace dsr_control{
         }
         //-------------------------------------------------------------------------
     }
+#elif DRCF_VERSION == 3
 
+    void DRHWInterface::OnMonitoringCtrlIOExCB (const LPMONITORING_CTRLIO_EX2 pCtrlIO)
+    {
+        //ROS_INFO("DRHWInterface::OnMonitoringCtrlIOExCB");
+
+        for (int i = 0; i < NUM_DIGITAL; i++){
+            if(pCtrlIO){
+                g_stDrState.bCtrlBoxDigitalOutput[i] = pCtrlIO->_tOutput._iTargetDO[i];
+                g_stDrState.bCtrlBoxDigitalInput[i]  = pCtrlIO->_tInput._iActualDI[i];
+            }
+        }
+
+        //----- In M2.5 version or higher The following variables were added -----
+        for (int i = 0; i < 3; i++)
+            g_stDrState.bActualSW[i] = pCtrlIO->_tInput._iActualSW[i];
+
+        for (int i = 0; i < 2; i++){
+            g_stDrState.bActualSI[i] = pCtrlIO->_tInput._iActualSI[i];
+            g_stDrState.fActualAI[i] = pCtrlIO->_tInput._fActualAI[i];
+            g_stDrState.iActualAT[i] = pCtrlIO->_tInput._iActualAT[i];
+            g_stDrState.fTargetAO[i] = pCtrlIO->_tOutput._fTargetAO[i];
+            g_stDrState.iTargetAT[i] = pCtrlIO->_tOutput._iTargetAT[i];
+            g_stDrState.bActualES[i] = pCtrlIO->_tEncoder._iActualES[i];
+            g_stDrState.iActualED[i] = pCtrlIO->_tEncoder._iActualED[i];
+            g_stDrState.bActualER[i] = pCtrlIO->_tEncoder._iActualER[i];
+        }
+        //-------------------------------------------------------------------------
+    }
+#endif
     // M2.4 or lower
     void DRHWInterface::OnMonitoringDataCB(const LPMONITORING_DATA pData)
     {
@@ -1557,12 +1588,13 @@ namespace dsr_control{
         ///ROS_INFO("  <xxx pos1> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[0][0],fTargetPos[0][1],fTargetPos[0][2],fTargetPos[0][3],fTargetPos[0][4],fTargetPos[0][5]);
         ///ROS_INFO("  <xxx pos2> %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f",fTargetPos[1][0],fTargetPos[1][1],fTargetPos[1][2],fTargetPos[1][3],fTargetPos[1][4],fTargetPos[1][5]);
         if(req.syncType == 0){
+            
             //ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveC");
-            res.success = Drfl.movec(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
+            res.success = Drfl.movec(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.angle1, req.angle2, req.radius, (BLENDING_SPEED_TYPE)req.blendType);
         }
         else{
             //ROS_INFO("DRHWInterface::movec_cb() called and calling Drfl.MoveCAsync");
-            res.success = Drfl.amovec(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, (BLENDING_SPEED_TYPE)req.blendType);
+            res.success = Drfl.amovec(fTargetPos, fTargetVel, fTargetAcc, req.time, (MOVE_MODE)req.mode, (MOVE_REFERENCE)req.ref, req.angle1, req.angle2, (BLENDING_SPEED_TYPE)req.blendType);
         }
         return true;
     }
