@@ -19,7 +19,6 @@ To utilize the new emulator in virtual mode, Docker is required . Please ensure 
 #### dependency packages
     sudo apt-get install ros-noetic-rqt* ros-noetic-moveit* ros-noetic-gazebo-ros-control ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-ros-controllers ros-noetic-ros-control ros-noetic-joint-state-publisher-gui ros-noetic-joint-state-publisher
 
-
 # *build* 
 ##### *Doosan Robot ROS Package is implemented at ROS-Noetic.*
     ### We recommand the /home/<user_home>/catkin_ws/src
@@ -38,6 +37,8 @@ To utilize the new emulator in virtual mode, Docker is required . Please ensure 
     catkin_make
     source ./devel/setup.bash
 
+#### Note: To use ROS with Version 3.x Controller, please ensure that you specify the build options (default: 2).
+    $ catkin_make --cmake-args -DDRCF_VER=3 
 
 # *usage* <a id="chapter-3"></a>
 #### Operation Mode

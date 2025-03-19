@@ -4,13 +4,15 @@
     =_______________________________________________________________________  =
     = Title             : Doosan Robot Framwork Structure                     =
     = Author            : Lee Jeong-Woo<jeongwoo1.lee@doosan.com>             =
+    = Maintainer        : Minsoo Song<minsoo.song@doosan.com>                 =
+    =                     Minju Lee<minju3.lee@doosan.com>                    =
     = Description       : -                                                   =
     ======================================================================== */
 
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2019, Doosan Robotics
+ *  Copyright (c) 2024, Doosan Robotics
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -312,6 +314,22 @@ typedef struct _ROBOT_MONITORING_AMODEL
 typedef ROBOT_MONITORING_AMODEL
     MONITORING_AMODEL, *LPMONITORING_AMODEL;
 
+// typedef struct _MONITORING_FORCECONTROL
+// {
+// /* digital button state */
+//     unsigned char               _iActualBS[NUMBER_OF_BUTTON];
+//     /* current sensor */
+//     float                       _fActualCS[NUMBER_OF_JOINT];
+//     /* singularity */
+//     float                       _fSingularity;
+//     /* Tool Coord External Task Force/Torque */
+//     float                       _fToolActualETT[NUMBER_OF_JOINT];
+//     /* ForceControlMode */
+//     unsigned char               _iForceControlMode[NUMBER_OF_JOINT]; // 0:Compliance, 1:Force Control, 2:None
+//     /* reference coordinate */
+//     unsigned char               _iReferenceCoord;  // 0:Base, 1:Tool, 2:World, 101~120:User Coord
+// } MONITORING_FORCECONTROL, *LPMONITORING_FORCECONTROL;
+
 typedef struct _MONITORING_FORCECONTROL
 {
 /* digital button state */
@@ -326,6 +344,19 @@ typedef struct _MONITORING_FORCECONTROL
     unsigned char               _iForceControlMode[NUMBER_OF_JOINT]; // 0:Compliance, 1:Force Control, 2:None
     /* reference coordinate */
     unsigned char               _iReferenceCoord;  // 0:Base, 1:Tool, 2:World, 101~120:User Coord
+#ifdef _FUNC_AUTO_ACCELERATION
+    /* auto acceleration mode */
+    unsigned char               _iAutoAccMode;
+#endif
+#if defined (_FUNC_E_SERIES)
+    /* reducer temperature */
+    float                       _fActualHDT[NUMBER_OF_JOINT];
+#endif
+    /* Singluar Handling Mode */
+    unsigned char               _iSingularHandlingMode;
+    /* isMoving (DRCL) */
+    unsigned char               _isMoving;
+    unsigned char               reserved[2];
 } MONITORING_FORCECONTROL, *LPMONITORING_FORCECONTROL;
 
 typedef struct _MONITORING_DATA_EX
@@ -380,20 +411,7 @@ typedef struct _READ_CTRLIO_OUTPUT
 
 } READ_CTRLIO_OUTPUT, *LPREAD_CTRLIO_OUTPUT;
 
-typedef struct _READ_CTRLIO_INPUT_EX
-{
-    /* Digtal Input data */
-    unsigned char               _iActualDI[NUM_DIGITAL];
-    /* Analog Input data */
-    float                       _fActualAI[NUM_ANALOG];
-    /* switch input data */
-    unsigned char               _iActualSW[NUM_SWITCH];
-    /* Safety Input data */
-    unsigned char               _iActualSI[NUM_SAFETY_IN];
-    /*  Analog Input type */
-    unsigned char               _iActualAT[NUM_ANALOG];
-    
-} READ_CTRLIO_INPUT_EX, *LPREAD_CTRLIO_INPUT_EX;
+
 
 typedef struct _READ_ENCODER_INPUT
 {
@@ -406,16 +424,7 @@ typedef struct _READ_ENCODER_INPUT
 
 } READ_ENCODER_INPUT, *LPREAD_ENCODER_INPUT;
 
-typedef struct _READ_CTRLIO_OUTPUT_EX
-{
-    /* Digital Output data */
-    unsigned char               _iTargetDO[NUM_DIGITAL];
-    /* Analog Output data */
-    float                       _fTargetAO[NUM_ANALOG];
-    /*  Analog Output type */
-    unsigned char               _iTargetAT[NUM_ANALOG];
 
-} READ_CTRLIO_OUTPUT_EX, *LPREAD_CTRLIO_OUTPUT_EX;
 
 typedef struct _READ_PROCESS_INPUT
 {
@@ -433,6 +442,30 @@ typedef struct _MONITORING_CTRLIO
 } MONITORING_CTRLIO, *LPMONITORING_CTRLIO;
 
 
+typedef struct _READ_CTRLIO_INPUT_EX
+{
+    /* Digtal Input data */
+    unsigned char               _iActualDI[NUM_DIGITAL];
+    /* Analog Input data */
+    float                       _fActualAI[NUM_ANALOG];
+    /* switch input data */
+    unsigned char               _iActualSW[NUM_SWITCH];
+    /* Safety Input data */
+    unsigned char               _iActualSI[NUM_SAFETY_IN];
+    /*  Analog Input type */
+    unsigned char               _iActualAT[NUM_ANALOG];
+    
+} READ_CTRLIO_INPUT_EX, *LPREAD_CTRLIO_INPUT_EX;
+typedef struct _READ_CTRLIO_OUTPUT_EX
+{
+    /* Digital Output data */
+    unsigned char               _iTargetDO[NUM_DIGITAL];
+    /* Analog Output data */
+    float                       _fTargetAO[NUM_ANALOG];
+    /*  Analog Output type */
+    unsigned char               _iTargetAT[NUM_ANALOG];
+
+} READ_CTRLIO_OUTPUT_EX, *LPREAD_CTRLIO_OUTPUT_EX;
 typedef struct _MONITORING_CTRLIO_EX
 {
     /* input data */
@@ -445,12 +478,38 @@ typedef struct _MONITORING_CTRLIO_EX
     unsigned char               _szReserved[24];
 } MONITORING_CTRLIO_EX, *LPMONITORING_CTRLIO_EX;
 
+typedef struct _READ_CTRLIO_INPUT_EX2
+{
+    /* Digtal Input data */
+    unsigned char               _iActualDI[NUM_DIGITAL_V3];
+    /* Analog Input data */
+    float                       _fActualAI[NUM_ANALOG];
+    /* switch input data */
+    unsigned char               _iActualSW[NUM_SWITCH];
+    /* Safety Input data */
+    unsigned char               _iActualSI[NUM_SAFETY_IN_V3];
+    /*  Analog Input type */
+    unsigned char               _iActualAT[NUM_ANALOG];
+
+} READ_CTRLIO_INPUT_EX2, *LPREAD_CTRLIO_INPUT_EX2;
+
+typedef struct _READ_CTRLIO_OUTPUT_EX2
+{
+    /* Digital Output data */
+    unsigned char               _iTargetDO[NUM_DIGITAL_V3];
+    /* Analog Output data */
+    float                       _fTargetAO[NUM_ANALOG];
+    /*  Analog Output type */
+    unsigned char               _iTargetAT[NUM_ANALOG];
+
+} READ_CTRLIO_OUTPUT_EX2, *LPREAD_CTRLIO_OUTPUT_EX2;
+
 typedef struct _MONITORING_CTRLIO_EX2
 {
     /* input data */
-    READ_CTRLIO_INPUT_EX        _tInput;
+    READ_CTRLIO_INPUT_EX2        _tInput;
     /* output data */
-    READ_CTRLIO_OUTPUT_EX       _tOutput;
+    READ_CTRLIO_OUTPUT_EX2       _tOutput;
     /* input encoder data*/
     READ_ENCODER_INPUT          _tEncoder;
     /* reserved data */
@@ -779,11 +838,14 @@ typedef struct _RT_OUTPUT_DATA_LIST
     float                       goal_joint_position[NUMBER_OF_JOINT];
     /* final goal tcp position (reserved) */
     float                       goal_tcp_position[NUMBER_OF_TASK];
-    /* ROBOT_MODE_MANUAL(0), ROBOT_MODE_AUTONOMOUS(1), ROBOT_MODE_MEASURE(2) */
+    /* ROBOT_MODE_MANUAL(0), ROBOT_MODE_AUTONOMOUS(1), SAFETY_MODE_RECOVERY(2)*/
+    /* Refer to 'SAFETY_MODE' struct*/
     unsigned char               robot_mode;
     /* STATE_INITIALIZING(0), STATE_STANDBY(1), STATE_MOVING(2), STATE_SAFE_OFF(3), STATE_TEACHING(4), STATE_SAFE_STOP(5), STATE_EMERGENCY_STOP, STATE_HOMMING, STATE_RECOVERY, STATE_SAFE_STOP2, STATE_SAFE_OFF2, */
+    /* Refer to 'OPERATION_STATE' struct in DRCF 'ROBOT_STATE' struct in DRFL.*/
     unsigned char               robot_state;
     /* position control mode, torque mode */
+    /* Refer to 'SERVO_MODE' struct*/
     unsigned short              control_mode;
     /* Reserved */
     unsigned char               reserved[256];
@@ -905,6 +967,19 @@ typedef struct _CONFIG_SAFETY_IO_EX
     //unsigned char               _bLevel[TYPE_LAST][NUM_SAFETY];
 
 } CONFIG_SAFETY_IO_EX, *LPCONFIG_SAFETY_IO_EX;
+
+typedef struct _CONFIG_SAFETY_IO_OP
+{
+    /* Safety I/O */
+    unsigned char               _iIO[TYPE_LAST][16];
+    /* TBSFT Input Option */
+    unsigned char               _iTBI_Op;
+    /* Reserved */
+    unsigned char               _iReserved;
+    /* Safety I/O Option */
+    unsigned char               _iIO_Op[TYPE_LAST][16];
+
+} CONFIG_SAFETY_IO_OP, *LPCONFIG_SAFETY_IO_OP;
 
 typedef union _VIRTUAL_FENCE_OBJECT
 {
@@ -1175,8 +1250,7 @@ typedef struct _MODBUS_DATA_LIST
 
 typedef struct _CONFIG_WORLD_COORDINATE
 {
-    /* \BC\B3\C1\A4Ÿ\C0\D4: world2base: 0, base2ref: 1, world2ref: 2 */
-    /* \BC\B3\C1\A4\BF\A9\BA\CE: \B9̼\B3\C1\A4: 0, \BC\B3\C1\A4: 1*/
+    /* world2base: 0, base2ref: 1, world2ref: 2 */
     unsigned char               _iType;
     /* target pose */
     float                       _fPosition[NUMBER_OF_JOINT];
@@ -1872,7 +1946,7 @@ typedef struct _CONVEYOR_COORD_EX
     int                _iDistance2Count;
     /* converyor coordination */
     POSITION            _tPosConCoord;
-    /*Base \C1\C2ǥ: 0, World \C1\C2ǥ: 2 */
+    /*Base : 0, World: 2 */
     unsigned char       _iTargetRef;
 } CONVEYOR_COORD_EX, *LPCONVEYOR_COORD_EX;
 
@@ -2027,17 +2101,12 @@ typedef struct _CONFIG_WELD_SETTING
     struct {
         /* ratio start */
         float                   _fRs;
-        /* \BA\B8ȣ\B0\A1\BD\BA\B9\E6\C3\E2\BDð\A3 */
         float                   _fTss;
-        /* \BD\C3\C0\DB\C0\FC\B7\F9\BDð\A3 */
         float                   _fTas;
-        /* \BF\EB\C1\A2\C1\B6\B0Ǻ\AF\B0\E6\BDð\A3 */
         float                   _fTwc;
         /* ratio finish */
         float                   _fRf;
-        /* \C1\BE\B7\E1\C0\FC\B7\F9\BDð\A3 */
         float                   _fTaf;
-        /* \C1\BE\B7Ẹȣ\B0\A1\BD\BA\B9\E6\C3\E2\BDð\A3 */
         float                   _fTsf;
     } _tDetail;
 } CONFIG_WELD_SETTING, *LPCONFIG_WELD_SETTING;
@@ -2215,21 +2284,21 @@ typedef struct _CONFIG_ANALOG_WELDING_SETTING
     {
         /* ratio start */
         float                   _fRs;
-        /* \BA\B8ȣ\B0\A1\BD\BA\B9\E6\C3\E2\BDð\A3 */
+        /* 보호가스방출시간 */
         float                   _fTss;
-        /* \BD\C3\C0\DB\C0\FC\B7\F9\BDð\A3 */
+        /* 시작전류시간 */
         float                   _fTas;
-        /* \BF\EB\C1\A2\C1\B6\B0Ǻ\AF\B0\E6\BDð\A3 */
+        /* 용접조건변경시간 */
         float                   _fTwc;
         /* ratio finish */
         float                   _fRf;
-        /* \C1\BE\B7\E1\C0\FC\B7\F9\BDð\A3 */
+        /* 종료전류시간 */
         float                   _fTaf;
-        /* \C1\BE\B7Ẹȣ\B0\A1\BD\BA\B9\E6\C3\E2\BDð\A3 */
+        /* 종료보호가스방출시간 */
         float                   _fTsf;
-        /* \BD\C3\C0\DB \C0\FC\BE\D0 \C1\B6\B0\C7 */
+        /* 시작 전압 조건 */
         float                   _fStartVoltage;
-        /* \C1\BE\B7\E1 \C0\FC\BE\D0 \C1\B6\B0\C7 */
+        /* 종료 전압 조건 */
         float                   _fEndVoltage;
     } _tDetail;
     float                       _fTargetFeedingSpeed;
@@ -2758,7 +2827,7 @@ typedef struct _USER_COORD_EXTERNAL_FORCE_INFO
 
 typedef struct _MEASURE_FRICTION_RESPONSE
 {
-    /* measure result : 0(\BD\C7\C6\D0), 1(\BC\BA\B0\F8) */
+    /* measure result : 0(), 1() */
     unsigned char               _iResult[NUMBER_OF_JOINT];
     /* measrue error (N/m) */
     float                       _fError[NUMBER_OF_JOINT];
@@ -2802,7 +2871,7 @@ typedef struct _POSITION_ADDTO
 
 typedef struct _MEASURE_FRICTION
 {
-    /* measure type : 0(üũ\B8\F0\BC\C7), 1(\C3\F8\C1\A4\B8\F0\BC\C7) */
+    /* measure type : */
     unsigned char               _iType;
     /* select joint */
     unsigned char               _iSelect[NUMBER_OF_JOINT];
@@ -3248,6 +3317,188 @@ typedef struct _SAFETY_CONFIGURATION_EX
     CONFIG_CONFIGURABLE_IO _tConfigurableIO;
 
 } SAFETY_CONFIGURATION_EX, *LPSAFETY_CONFIGURATION_EX;
+
+typedef struct _SAFETY_CONFIGURATION_EX2
+{
+    unsigned int _iDataVersion;
+    CONFIG_JOINT_RANGE _tJointRange;
+    CONFIG_GENERAL_RANGE _tGeneralRange;
+    float _fCollisionSensitivity;
+    CONFIG_SAFETY_FUNCTION _tSafetyFunc;
+    CONFIG_TOOL_SYMBOL _tTool;
+    CONFIG_TCP_SYMBOL _tTcp;
+    CONFIG_INSTALL_POSE _tInstallPose;
+    CONFIG_SAFETY_IO_OP _tSafetyIO;
+    //CONFIG_SAFETY_IO_EX         _tSafetyIO;
+
+    CONFIG_VIRTUAL_FENCE _tSafetySpaceVF;
+    CONFIG_SAFE_ZONE _tSafetySpaceSZ;
+    ENABLE_SAFE_ZONE _tSafetySpaceESZ;
+    CONFIG_PROTECTED_ZONE _tSafetySpacePZ;
+    CONFIG_COLLISION_MUTE_ZONE _tSafetySpaceCM;
+    CONFIG_TOOL_ORIENTATION_LIMIT_ZONE _tSafetySpaceTO;
+    CONFIG_TOOL_SHAPE _tSafetySpaceTS;
+
+    CONFIG_NUDGE _tConfigNudge;
+    CONFIG_COCKPIT_EX _tCockPit;
+    CONFIG_IDLE_OFF _tIdleOff;
+    CONFIG_TCP_LIST _tConfigTCP;
+    CONFIG_TOOL_LIST _tConfigTool;
+    CONFIG_TOOL_SHAPE_LIST _tConfigToolShape;
+
+    char                _szActiveTcp[MAX_SYMBOL_SIZE];
+    char                _szActiveTool[MAX_SYMBOL_SIZE];
+    char                _szActiveToolShape[MAX_SYMBOL_SIZE];
+
+    MODBUS_DATA_LIST _tModbusList;
+    CONFIG_WORLD_COORDINATE     _tWorld2BaseRelation;
+    float m_CwsSpeedRatio;
+    float m_IoSpeedRatio;
+
+
+    int _iSafetyZoneCount;
+    CONFIG_SAFETY_ZONE _tSafetyZone[20];
+
+
+
+    int _iUserCoordCount;
+    CONFIG_USER_COORDINATE_EX _tUserCoordinates[100];
+
+    CONFIG_CONFIGURABLE_IO _tConfigurableIO;
+
+} SAFETY_CONFIGURATION_EX2, *LPSAFETY_CONFIGURATION_EX2;
+
+
+typedef struct _POSITION_EX
+{
+	//// member variable
+	union {
+		/* posj */
+		struct {
+			/* joint position (posj) */
+			float                   _pos[NUMBER_OF_JOINT];
+			///* reserved: additional axes later */
+			//float                   _reserved[10];
+			///* dummy */
+			//unsigned char           _reserved_[8];
+		} _posj;
+
+		/* posx */
+		struct {
+			/* task position */
+			float                   _pos[NUMBER_OF_TASK_EX];
+			///* reserved: additional axes later */
+			//float                   _fReserved[9];
+			/* orientation type (0: Euler ZYZ, 1: Euler ZYX, 2: Euler XYZ, 3: Fixed XYZ, 4: Axis-Angle, 5: Quaternion ) */
+			unsigned char           _ori_type;
+			/* solution space (0~7: fixed, 255: auto) */
+			unsigned char           _sol_space;
+			/* multi turn (255: auto) */
+			unsigned char           _multi_turn;
+			///* dummy */
+			//unsigned char           _reserved[5];
+		} _posx;
+	};
+
+	unsigned char                   _pos_type;      // posx, posj
+	//unsigned char                   _reserved[3];
+
+} POSITION_EX, *LPPOSITION_EX; // SUPPORT_ORIENTATION_TYPE
+
+typedef POSITION_EX CONFIG_TCP_EX, *LPCONFIG_TCP_EX; // SUPPORT_ORIENTATION_TYPE
+
+
+typedef struct _CONFIG_TCP_SYMBOL_EX
+{
+	/* tcp name */
+	char                _szSymbol[MAX_SYMBOL_SIZE];
+	/* tcp data */
+	CONFIG_TCP_EX          _tTCP;
+
+} CONFIG_TCP_SYMBOL_EX, *LPCONFIG_TCP_SYMBOL_EX; // SUPPORT_ORIENTATION_TYPE
+
+typedef struct _CONFIG_TCP_LIST_EX
+{
+	int                         _iToolCount;
+	CONFIG_TCP_SYMBOL_EX           _tTooList[MAX_CONFIG_TCP_SIZE];
+} CONFIG_TCP_LIST_EX, *LPCONFIG_TCP_LIST_EX; // SUPPORT_ORIENTATION_TYPE
+
+typedef struct _CONFIG_WORLD_COORDINATE_EX
+{
+	/* setting type : world2base: 0, base2ref: 1, world2ref: 2 */
+	/* setting flag : disable: 0, enable: 1*/
+	unsigned char               _iType;
+	/* dummy */
+	unsigned char               _iReserved[3];
+	/* target pose */
+	POSITION_EX                 _tPosition;
+
+} CONFIG_WORLD_COORDINATE_EX, *LPCONFIG_WORLD_COORDINATE_EX; // SUPPORT_ORIENTATION_TYPE
+
+typedef struct _CONFIG_USER_COORDINATE_EX2
+{
+	/* base: 0, world: 2 */
+	unsigned char               _iTargetRef;
+	/* dummy */
+	unsigned char               _iReserved[3];
+	/* task position*/
+	POSITION_EX                 _tTargetPos;
+	/* unified id */
+	unsigned char               _iUserID;
+	/* dummy */
+	unsigned char               _iReserved_[3];
+
+} CONFIG_USER_COORDINATE_EX2, *LPCONFIG_USER_COORDINATE_EX2; // SUPPORT_ORIENTATION_TYPE
+
+typedef struct _SAFETY_CONFIGURATION_EX2_V3
+{
+	unsigned int _iDataVersion;
+	CONFIG_JOINT_RANGE _tJointRange;
+	CONFIG_GENERAL_RANGE _tGeneralRange;
+	float _fCollisionSensitivity;
+	CONFIG_SAFETY_FUNCTION _tSafetyFunc;
+	CONFIG_TOOL_SYMBOL _tTool;
+	CONFIG_TCP_SYMBOL_EX _tTcp; //v3
+	CONFIG_INSTALL_POSE _tInstallPose;
+	//CONFIG_SAFETY_IO _tSafetyIO;
+	CONFIG_SAFETY_IO_EX         _tSafetyIO;
+
+	CONFIG_VIRTUAL_FENCE _tSafetySpaceVF;
+	CONFIG_SAFE_ZONE _tSafetySpaceSZ;
+	ENABLE_SAFE_ZONE _tSafetySpaceESZ;
+	CONFIG_PROTECTED_ZONE _tSafetySpacePZ;
+	CONFIG_COLLISION_MUTE_ZONE _tSafetySpaceCM;
+	CONFIG_TOOL_ORIENTATION_LIMIT_ZONE _tSafetySpaceTO;
+	CONFIG_TOOL_SHAPE _tSafetySpaceTS;
+
+	CONFIG_NUDGE _tConfigNudge;
+	CONFIG_COCKPIT_EX _tCockPit;
+	CONFIG_IDLE_OFF _tIdleOff;
+	CONFIG_TCP_LIST_EX _tConfigTCP; //v3
+	CONFIG_TOOL_LIST _tConfigTool; 
+	CONFIG_TOOL_SHAPE_LIST _tConfigToolShape;
+
+	char                _szActiveTcp[MAX_SYMBOL_SIZE];
+	char                _szActiveTool[MAX_SYMBOL_SIZE];
+	char                _szActiveToolShape[MAX_SYMBOL_SIZE];
+
+	MODBUS_DATA_LIST _tModbusList;
+	CONFIG_WORLD_COORDINATE_EX     _tWorld2BaseRelation; //v3
+	float m_CwsSpeedRatio;
+	float m_IoSpeedRatio;
+
+
+	int _iSafetyZoneCount;
+	CONFIG_SAFETY_ZONE _tSafetyZone[20];
+
+	int _iUserCoordCount;
+	CONFIG_USER_COORDINATE_EX2 _tUserCoordinates[100]; //v3
+
+	//CONFIG_CONFIGURABLE_IO _tConfigurableIO;
+	CONFIG_CONFIGURABLE_IO_EX _tConfigurableIO;
+
+} SAFETY_CONFIGURATION_EX2_V3, *LPSAFETY_CONFIGURATION_EX2_V3;
+
 
 
 #pragma pack()

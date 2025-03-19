@@ -254,7 +254,7 @@ DR_COND_NONE = -10000
 
 # digital I/O
 DR_DIO_MIN_INDEX = 1
-DR_DIO_MAX_INDEX = 16   #8 16개로 확장됨 2017/08/18  
+DR_DIO_MAX_INDEX = 20   # In V3 controller, Input IO : 16 -> 20, Output IO : 16  
 
 # tool digital I/O
 DR_TDIO_MIN_INDEX = 1
