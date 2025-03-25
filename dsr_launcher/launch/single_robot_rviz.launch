@@ -3,10 +3,11 @@
 <launch>
 
   <arg name="ns" default="dsr01"/>
-	<arg name="host" default="127.0.0.1"/>
+	<arg name="host" default="192.168.137.50"/> 
+  <!-- <arg name="host" default="127.0.0.1"/>  -->
 	<arg name="port" default="12345"/>
-  <arg name="model" default="m1013"/>
-	<arg name="mode" default="virtual"/>
+  <arg name="model" default="m0609"/>
+	<arg name="mode" default="real"/>
   <arg name="color" default="white"/>
 	<arg name="rviz" default="True" />
   <arg name="gui"   default="False"/>
@@ -20,7 +21,7 @@
 
 	<!-- <node pkg="dsr_control" type="dsr_control_node" name="$(arg ns)" respawn="true" output="log">
 		<param name="name" value="$(arg ns)" />
-		<param name="rate" value="100" />
+		<param name="rate" value="100" />cc
 		<param name="standby" value="5000" />
 		<param name="command" value="true" />
 		<param name="host" value="$(arg host)" />
@@ -33,7 +34,7 @@
     <arg name="host"         value="$(arg host)"/>
     <arg name="port"         value="$(arg port)"/>
     <arg name="mode"           value="$(arg mode)" />
-    <arg name="model"       value="$(arg model)"/>
+    <arg name="model"       value="$(arg model)"/>c
     <arg name="color"       value="$(arg color)"/>
     <arg name="gripper"       value="$(arg gripper)"/>
     <arg name="mobile"       value="$(arg mobile)"/>
